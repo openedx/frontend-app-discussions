@@ -1,6 +1,8 @@
+.directory
 .DS_Store
 .eslintcache
 .idea
+.vscode
 node_modules
 npm-debug.log
 coverage
@@ -15,4 +17,3 @@ temp/babel-plugin-react-intl
 ### Emacs ###
 *~
 /temp
-/.vscode

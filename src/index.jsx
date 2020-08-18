@@ -11,7 +11,6 @@ import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
 import './assets/favicon.ico';
 import { DiscussionsHomeContainer } from './discussions';
 import appMessages from './i18n';

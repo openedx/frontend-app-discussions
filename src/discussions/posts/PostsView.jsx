@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Post from './post/Post';
-
+import Post, { postShape } from './post/Post';
 
 function PostsView({ posts }) {
   return (
@@ -12,7 +11,7 @@ function PostsView({ posts }) {
 }
 
 PostsView.propTypes = {
-  posts: PropTypes.array.isRequired,
+  posts: PropTypes.arrayOf(postShape).isRequired,
 };
 
 export default PostsView;

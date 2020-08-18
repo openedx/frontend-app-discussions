@@ -1,11 +1,13 @@
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import Button from '@edx/paragon/dist/Button';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
+import messages from './messages';
 
-function Comment({ comment }) {
+function Comment({ intl, comment }) {
   return (
     <div className="discussion-comment d-flex flex-column m-2 card">
       <div className="header d-flex m-1 card-header">
@@ -33,16 +35,22 @@ function Comment({ comment }) {
         {/*  TODO: Add parent group info */ }
       </div>
       <div className="actions d-flex">
-        <Button>
-          Add a response
-        </Button>
+        <Button>{ intl.formatMessage(messages.add_response) }</Button>
       </div>
     </div>
   );
 }
 
+export const commentShape = PropTypes.shape({
+  posted_on: PropTypes.string,
+  abuse_flagged: PropTypes.bool,
+  rendered_body: PropTypes.string,
+  author: PropTypes.string,
+});
+
 Comment.propTypes = {
-  comment: PropTypes.object.isRequired,
+  intl: intlShape.isRequired,
+  comment: commentShape.isRequired,
 };
 
-export default Comment;
+export default injectIntl(Comment);

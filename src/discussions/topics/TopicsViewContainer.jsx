@@ -5,7 +5,6 @@ import { selectCourseTopics } from './data/selectors';
 import { fetchCourseTopics } from './data/thunks';
 import TopicsView from './TopicsView';
 
-
 function TopicsViewContainer() {
   const { courseId } = useParams();
   const dispatch = useDispatch();

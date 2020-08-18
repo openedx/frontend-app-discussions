@@ -5,7 +5,6 @@ import CommentsView from './CommentsView';
 import { selectTopicComments } from './data/selectors';
 import { fetchTopicComments } from './data/thunks';
 
-
 function CommentsViewContainer() {
   const { threadId } = useParams();
   const dispatch = useDispatch();

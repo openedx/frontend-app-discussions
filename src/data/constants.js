@@ -32,19 +32,20 @@ export const AllPostsFilter = {
   ALL_QUESTIONS: 'all_questions',
 };
 
-
 export const TopicsFilter = {
   ALL: 'all_topics',
   COURSE_SECTION: 'course_section_topics',
   GENERAL: 'general_topics',
 };
 
-
 export const Routes = {
   TOPICS: {
-    PATH: '/courses/:courseId/discussion/forum',
+    PATH: '/discussions/:courseId/topics',
+    ALL: '/discussions/:courseId/topics',
   },
   POSTS: {
-    PATH: '/courses/:courseId/discussion/forum/:discussionId/threads/:threadId?',
+    PATH: '/discussions/:courseId/posts/:discussionId/:threadId?',
+    MY_POSTS: '/discussions/:courseId/posts/mine',
+    ALL_POSTS: '/discussions/:courseId/posts/all',
   },
 };

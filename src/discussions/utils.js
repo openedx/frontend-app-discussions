@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 export function buildIntlSelectionList(options, intl, messages) {
   return Object.values(options)
     .map(

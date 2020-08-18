@@ -1,6 +1,5 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
-
 const messages = defineMessages({
   last_response: {
     id: 'discussions.post.last-response',

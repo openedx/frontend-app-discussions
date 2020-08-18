@@ -3,7 +3,6 @@ import React from 'react';
 import { topicShape } from './topic-group/topic/Topic';
 import TopicGroup from './topic-group/TopicGroup';
 
-
 function TopicsView({ coursewareTopics, nonCoursewareTopics }) {
   return (
     <div className="discussion-topics d-flex flex-column">

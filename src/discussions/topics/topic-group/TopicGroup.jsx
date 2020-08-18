@@ -1,7 +1,6 @@
 import React from 'react';
 import Topic, { topicShape } from './topic/Topic';
 
-
 function TopicGroup({ id, name, topics }) {
   return (
     <div className="discussion-topic-group d-flex flex-column" data-topic-id={id}>

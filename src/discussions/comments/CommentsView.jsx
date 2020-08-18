@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import Comment from './comment/Comment';
-
+import Comment, { commentShape } from './comment/Comment';
 
 function CommentsView({ comments }) {
   return (
@@ -14,7 +13,7 @@ function CommentsView({ comments }) {
 }
 
 CommentsView.propTypes = {
-  comments: PropTypes.array.isRequired,
+  comments: PropTypes.arrayOf(commentShape).isRequired,
 };
 
 export default CommentsView;

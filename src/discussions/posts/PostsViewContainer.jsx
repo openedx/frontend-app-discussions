@@ -5,7 +5,6 @@ import { selectCourseThreads } from './data/selectors';
 import { fetchCourseThreads } from './data/thunks';
 import PostsView from './PostsView';
 
-
 function PostsViewContainer() {
   const { courseId, discussionId } = useParams();
   const dispatch = useDispatch();

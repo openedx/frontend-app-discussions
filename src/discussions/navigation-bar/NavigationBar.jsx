@@ -2,36 +2,35 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import SearchField from '@edx/paragon/dist/SearchField';
 import { faSortAmountDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { SelectableDropdown } from '../../components';
-import {
-  AllPostsFilter, MyPostsFilter, ThreadOrdering, TopicsFilter,
-} from '../../data/constants';
+import { Routes, ThreadOrdering } from '../../data/constants';
 import { buildIntlSelectionList } from '../utils';
 import messages from './messages';
 
-
-function SearchFilterBar({ intl }) {
-  const myPostsFilterOptions = buildIntlSelectionList(MyPostsFilter, intl, messages);
-  const allPostsFilterOptions = buildIntlSelectionList(AllPostsFilter, intl, messages);
-  const topicsFilterOptions = buildIntlSelectionList(TopicsFilter, intl, messages);
+function NavigationBar({ intl, courseId }) {
   const threadOrderingOptions = buildIntlSelectionList(ThreadOrdering, intl, messages);
   return (
     <div className="navigation-bar d-flex flex-column">
-      <div className="navigation-filter d-flex border-bottom">
-        <SelectableDropdown
-          defaultOption={MyPostsFilter.MY_POSTS}
-          options={myPostsFilterOptions}
-        />
-        <SelectableDropdown
-          defaultOption={AllPostsFilter.ALL_POSTS}
-          options={allPostsFilterOptions}
-        />
-        <SelectableDropdown
-          defaultOption={TopicsFilter.ALL}
-          options={topicsFilterOptions}
-        />
-      </div>
+      <ul className="nav">
+        <li className="nav-item">
+          <NavLink className="nav-link" to={Routes.POSTS.MY_POSTS.replace(':courseId', courseId)}>
+            { intl.formatMessage(messages.my_posts) }
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to={Routes.POSTS.ALL_POSTS.replace(':courseId', courseId)}>
+            { intl.formatMessage(messages.all_posts) }
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link" to={Routes.TOPICS.ALL.replace(':courseId', courseId)}>
+            { intl.formatMessage(messages.all_topics) }
+          </NavLink>
+        </li>
+      </ul>
       <div className="d-flex">
         <SearchField onSubmit={() => null} />
         <SelectableDropdown
@@ -48,8 +47,9 @@ function SearchFilterBar({ intl }) {
   );
 }
 
-SearchFilterBar.propTypes = {
+NavigationBar.propTypes = {
+  courseId: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(SearchFilterBar);
+export default injectIntl(NavigationBar);

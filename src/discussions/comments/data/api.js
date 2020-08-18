@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { API_BASE_URL } from '../../../data/constants';
 

@@ -1,6 +1,5 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
-
 const messages = defineMessages({
   my_posts: {
     id: 'discussions.navigation-bar.filter.my-posts',
@@ -49,7 +48,7 @@ const messages = defineMessages({
   },
   search_results: {
     id: 'discussions.navigation-bar.filter.search-results',
-    defaultMessage: '{} results',
+    defaultMessage: '{resultCount} results',
   },
   filter_all: {
     id: 'discussions.navigation-bar.filter.all',

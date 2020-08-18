@@ -1,5 +1,4 @@
 import { Dropdown } from '@edx/paragon';
-import { Consumer } from '@edx/paragon/dist/Dropdown';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
@@ -9,33 +8,29 @@ function SelectableDropdown({
   const [selected, setSelected] = useState(options.find(option => (option.value === defaultOption)));
   return (
     <Dropdown>
-      <Dropdown.Button>
+      <Dropdown.Toggle>
         { label || selected.label }
-      </Dropdown.Button>
-      <Consumer>
-        { ({ toggle }) => (
-          <Dropdown.Menu>
-            { options
-              .map(option => (
-                <Dropdown.Item
-                  type="button"
-                  key={option.value}
-                  onClick={
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        { options
+          .map(option => (
+            <Dropdown.Item
+              type="button"
+              key={option.value}
+              onClick={
                     () => {
                       setSelected(option);
-                      toggle();
                       if (onChange) {
                         onChange(option);
                       }
                     }
                   }
-                >
-                  { option.label }
-                </Dropdown.Item>
-              )) }
-          </Dropdown.Menu>
-        ) }
-      </Consumer>
+            >
+              { option.label }
+            </Dropdown.Item>
+          )) }
+      </Dropdown.Menu>
+
     </Dropdown>
   );
 }

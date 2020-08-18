@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
 import { getCourseTopics } from './api';
 import { fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess } from './slices';

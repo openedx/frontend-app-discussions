@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import { Routes } from '../../../data/constants';
 import messages from './messages';
 
-
 function Post({ post, intl }) {
   return (
     <div className="discussion-post d-flex border-bottom pl-2 pt-1 pb-1" data-post-id={post.id}>
@@ -72,9 +71,25 @@ function Post({ post, intl }) {
   );
 }
 
+export const postShape = PropTypes.shape({
+  abuse_flagged: PropTypes.bool,
+  author: PropTypes.string,
+  comment_count: PropTypes.number,
+  course_id: PropTypes.string,
+  following: PropTypes.bool,
+  id: PropTypes.string,
+  pinned: PropTypes.bool,
+  raw_body: PropTypes.string,
+  read: PropTypes.bool,
+  title: PropTypes.string,
+  topic_id: PropTypes.string,
+  type: PropTypes.string,
+  updated_at: PropTypes.string,
+});
+
 Post.propTypes = {
-  post: PropTypes.object,
-  intl: intlShape,
+  intl: intlShape.isRequired,
+  post: postShape.isRequired,
 };
 
 export default injectIntl(Post);

@@ -8,6 +8,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Routes } from '../../../../data/constants';
 
+// eslint-disable-next-line no-unused-vars
 function Topic({ id, name, topics }) {
   const { courseId } = useParams();
 
@@ -45,6 +46,7 @@ function Topic({ id, name, topics }) {
 export const topicShape = {
   name: PropTypes.string,
   id: PropTypes.string,
+  topics: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 topicShape.topics = PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired;
 Topic.propTypes = topicShape;
