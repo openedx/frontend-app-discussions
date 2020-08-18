@@ -3,9 +3,10 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { API_BASE_URL } from '../../../data/constants';
 
 export async function getCourseTopics(courseId, topicIds) {
-  const url = new URL(`${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`);
+  const url = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
+  const params = {};
   if (topicIds) {
-    url.searchParams.append('topic_id', topicIds.join(','));
+    params.topic_id = topicIds.join(',');
   }
   const { data } = await getAuthenticatedHttpClient()
     .get(url);
