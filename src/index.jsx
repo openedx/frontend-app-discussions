@@ -1,26 +1,28 @@
-import 'babel-polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
+import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
+import Header, { messages as headerMessages } from '@edx/frontend-component-header';
 import {
-  APP_INIT_ERROR, APP_READY, subscribe, initialize,
+  APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Header, { messages as headerMessages } from '@edx/frontend-component-header';
-import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 
-import appMessages from './i18n';
-import ExamplePage from './example/ExamplePage';
-
-import './index.scss';
 import './assets/favicon.ico';
+import { DiscussionsHomeContainer } from './discussions';
+import appMessages from './i18n';
+import './index.scss';
+import store from './store';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <AppProvider>
+    <AppProvider store={store}>
       <Header />
-      <ExamplePage />
+      <DiscussionsHomeContainer />
       <Footer />
     </AppProvider>,
     document.getElementById('root'),
@@ -32,6 +34,7 @@ subscribe(APP_INIT_ERROR, (error) => {
 });
 
 initialize({
+  requireAuthenticatedUser: true,
   messages: [
     appMessages,
     headerMessages,
