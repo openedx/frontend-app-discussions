@@ -44,7 +44,7 @@ export const Routes = {
     ALL: '/discussions/:courseId/topics',
   },
   POSTS: {
-    PATH: '/discussions/:courseId/posts/:discussionId/:threadId?',
+    PATH: '/discussions/:courseId/posts/:topicId/:threadId?',
     MY_POSTS: '/discussions/:courseId/posts/mine',
     ALL_POSTS: '/discussions/:courseId/posts/all',
   },

@@ -6,9 +6,9 @@ import { fetchCourseThreads } from './data/thunks';
 import PostsView from './PostsView';
 
 function PostsViewContainer() {
-  const { courseId, discussionId } = useParams();
+  const { courseId, topicId } = useParams();
   const dispatch = useDispatch();
-  const posts = useSelector(selectCourseThreads(discussionId));
+  const posts = useSelector(selectCourseThreads(topicId));
   useEffect(() => {
     // The courseId from the URL is the course we WANT to load.
     dispatch(fetchCourseThreads(courseId));

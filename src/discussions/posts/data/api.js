@@ -2,13 +2,27 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { API_BASE_URL } from '../../../data/constants';
 
+/**
+ * Fetches all the threads in the given course and topic.
+ * @param courseId
+ * @param topicIds
+ * @param page
+ * @param pageSize
+ * @param textSearch
+ * @param orderBy
+ * @param following
+ * @param view
+ * @param requestedFields
+ * @returns {Promise<*>}
+ */
 export async function getCourseThreads(
   courseId, topicIds, {
     page, pageSize, textSearch, orderBy, following, view, requestedFields,
   } = {},
 ) {
-  const url = new URL(`${API_BASE_URL}/api/discussion/v1/threads/`);
-  const paramsMap = {
+  const url = `${API_BASE_URL}/api/discussion/v1/threads/`;
+  const params = {
+    course_id: courseId,
     page,
     page_size: pageSize,
     topic_id: topicIds && topicIds.join(','),
@@ -18,18 +32,8 @@ export async function getCourseThreads(
     view,
     requested_fields: requestedFields,
   };
-  url.searchParams.append('course_id', courseId);
-  Object.keys(paramsMap)
-    .forEach(
-      (param) => {
-        const paramValue = paramsMap[param];
-        if (paramValue) {
-          url.searchParams.append(param, paramValue);
-        }
-      },
-    );
 
   const { data } = await getAuthenticatedHttpClient()
-    .get(url);
+    .get(url, { params });
   return data;
 }

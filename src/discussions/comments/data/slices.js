@@ -2,15 +2,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RequestStatus } from '../../../data/constants';
 
-function findCommentIndex(state, topicId, commentId) {
-  return state.comments[topicId].findIndex(entry => entry.id === commentId);
+function findCommentIndex(state, threadId, commentId) {
+  return state.comments[threadId].findIndex(entry => entry.id === commentId);
 }
 
 function updateCommentInState(state, comment) {
-  const topicId = comment.thread_id;
-  const index = findCommentIndex(state, topicId, comment.id);
+  const threadId = comment.thread_id;
+  const index = findCommentIndex(state, threadId, comment.id);
   if (index >= 0) {
-    state.comments[topicId][index] = comment;
+    state.comments[threadId][index] = comment;
   }
 }
 
@@ -31,9 +31,9 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCommentsSuccess: (state, { payload }) => {
-      const { data, topicId } = payload;
+      const { data, threadId } = payload;
       state.status = RequestStatus.SUCCESSFUL;
-      state.comments[topicId] = data.results;
+      state.comments[threadId] = data.results;
       state.page = data.pagination.page;
       state.totalPages = data.pagination.num_pages;
       state.totalThreads = data.pagination.count;
@@ -69,8 +69,8 @@ const commentsSlice = createSlice({
     },
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      const { data, topicId } = payload;
-      state.comments[topicId].push(data);
+      const { data, threadId } = payload;
+      state.comments[threadId].push(data);
     },
     updateCommentRequest: (state) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
@@ -95,10 +95,12 @@ const commentsSlice = createSlice({
       state.postStatus = RequestStatus.FAILED;
     },
     deleteCommentSuccess: (state, { payload }) => {
-      const { commentId, topicId } = payload;
+      const { commentId, threadId } = payload;
+      console.log(state);
+      console.log(payload);
       state.postStatus = RequestStatus.POSTED;
-      const index = findCommentIndex(state, topicId, commentId);
-      state.comments[topicId].splice(index, 1);
+      const index = findCommentIndex(state, threadId, commentId);
+      state.comments[threadId].splice(index, 1);
     },
   },
 });

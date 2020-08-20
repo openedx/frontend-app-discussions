@@ -30,8 +30,8 @@ function Post({ post, intl }) {
             <Link
               className="post-title d-flex post-tile"
               to={
-                Routes.POSTS.PATH.replace(':discussionId', post.topic_id)
-                  .replace(':courseId', post.course_id)
+                Routes.POSTS.PATH.replace(':courseId', post.course_id)
+                  .replace(':topicId', post.topic_id)
                   .replace(':threadId', post.id)
               }
             >

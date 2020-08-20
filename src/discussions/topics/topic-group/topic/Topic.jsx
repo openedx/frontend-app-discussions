@@ -17,8 +17,8 @@ function Topic({ id, name, topics }) {
       <Link
         className="topic-name"
         to={
-          Routes.POSTS.PATH.replace(':discussionId', id)
-            .replace(':courseId', courseId)
+          Routes.POSTS.PATH.replace(':courseId', courseId)
+            .replace(':topicId', id)
             .replace(':threadId', '')
         }
       >

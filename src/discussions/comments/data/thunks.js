@@ -18,12 +18,12 @@ import {
   deleteCommentFailed,
 } from './slices';
 
-export function fetchTopicComments(topicId) {
+export function fetchThreadComments(threadId) {
   return async (dispatch) => {
     try {
-      dispatch(fetchCommentsRequest({ topicId }));
-      const data = await getThreadComments(topicId);
-      dispatch(fetchCommentsSuccess({ topicId, data }));
+      dispatch(fetchCommentsRequest({ threadId }));
+      const data = await getThreadComments(threadId);
+      dispatch(fetchCommentsSuccess({ threadId, data }));
     } catch (error) {
       dispatch(fetchCommentsFailed());
       logError(error);
