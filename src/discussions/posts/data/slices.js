@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
-import { LoadingStatus } from '../../../data/constants';
+import { RequestStatus } from '../../../data/constants';
 
 function normaliseThreads(rawThreadsData) {
   const topicThreadMap = {};
@@ -18,7 +18,7 @@ function normaliseThreads(rawThreadsData) {
 const courseThreadsSlice = createSlice({
   name: 'courseThreads',
   initialState: {
-    status: LoadingStatus.LOADING,
+    status: RequestStatus.IN_PROGRESS,
     page: null,
     threads: {
       // Mapping of topic ids to threads in them
@@ -28,20 +28,20 @@ const courseThreadsSlice = createSlice({
   },
   reducers: {
     fetchCourseThreadsRequest: (state) => {
-      state.status = LoadingStatus.LOADING;
+      state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCourseThreadsSuccess: (state, { payload }) => {
-      state.status = LoadingStatus.LOADED;
+      state.status = RequestStatus.SUCCESSFUL;
       state.threads = normaliseThreads(payload.results);
       state.page = payload.pagination.page;
       state.totalPages = payload.pagination.num_pages;
       state.totalThreads = payload.pagination.count;
     },
     fetchCourseThreadsFailed: (state) => {
-      state.status = LoadingStatus.FAILED;
+      state.status = RequestStatus.FAILED;
     },
     fetchCourseThreadsDenied: (state) => {
-      state.status = LoadingStatus.DENIED;
+      state.status = RequestStatus.DENIED;
     },
   },
 });

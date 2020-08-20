@@ -10,3 +10,20 @@ export function buildIntlSelectionList(options, intl, messages) {
       ),
     );
 }
+
+/**
+ * Given a URL object, add the parameters from the supplied params object as query params.
+ * @param {URL} url A URL object to add query parameters to.
+ * @param {{}} params An object containing query parameters to set.
+ */
+export function addQueryParamsToUrl(url, params) {
+  Object.keys(params)
+    .forEach(
+      (paramName) => {
+        const paramValue = params[paramName];
+        if (paramValue) {
+          url.searchParams.set(paramName, paramValue);
+        }
+      },
+    );
+}

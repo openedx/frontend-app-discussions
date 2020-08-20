@@ -1,11 +1,11 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
-import { LoadingStatus } from '../../../data/constants';
+import { RequestStatus } from '../../../data/constants';
 
 const topicsSLice = createSlice({
   name: 'courseTopics',
   initialState: {
-    status: LoadingStatus.LOADING,
+    status: RequestStatus.IN_PROGRESS,
     topics: {
       courseware_topics: [],
       non_courseware_topics: [],
@@ -13,17 +13,17 @@ const topicsSLice = createSlice({
   },
   reducers: {
     fetchCourseTopicsRequest: (state) => {
-      state.status = LoadingStatus.LOADING;
+      state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCourseTopicsSuccess: (state, { payload }) => {
-      state.status = LoadingStatus.LOADED;
+      state.status = RequestStatus.SUCCESSFUL;
       state.topics = payload;
     },
     fetchCourseTopicsFailed: (state) => {
-      state.status = LoadingStatus.FAILED;
+      state.status = RequestStatus.FAILED;
     },
     fetchCourseTopicsDenied: (state) => {
-      state.status = LoadingStatus.DENIED;
+      state.status = RequestStatus.DENIED;
     },
   },
 });
