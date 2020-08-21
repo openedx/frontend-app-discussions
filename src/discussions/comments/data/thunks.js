@@ -33,7 +33,7 @@ export function fetchThreadComments(threadId) {
       const data = await getThreadComments(threadId);
       dispatch(fetchCommentsSuccess(data));
     } catch (error) {
-      const { httpErrorStatus } = error && error.customAttributes;
+      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
       if (httpErrorStatus === 403) {
         dispatch(fetchCommentsDenied());
       } else {
@@ -51,7 +51,7 @@ export function fetchComment(commentId) {
       const data = await getComment(commentId);
       dispatch(fetchCommentSuccess(data));
     } catch (error) {
-      const { httpErrorStatus } = error && error.customAttributes;
+      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
       if (httpErrorStatus === 403) {
         dispatch(fetchCommentDenied());
       } else {
@@ -69,7 +69,7 @@ export function editComment(commentId, comment) {
       const data = await updateComment(commentId, comment);
       dispatch(updateCommentSuccess(data));
     } catch (error) {
-      const { httpErrorStatus } = error && error.customAttributes;
+      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
       if (httpErrorStatus === 403) {
         dispatch(updateCommentDenied());
       } else {
@@ -91,7 +91,7 @@ export function addComment(comment, threadId, parentId) {
       const data = await postComment(comment, threadId, parentId);
       dispatch(postCommentSuccess(data));
     } catch (error) {
-      const { httpErrorStatus } = error && error.customAttributes;
+      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
       if (httpErrorStatus === 403) {
         dispatch(postCommentDenied());
       } else {
@@ -112,7 +112,7 @@ export function removeComment(commentId, threadId) {
         threadId,
       }));
     } catch (error) {
-      const { httpErrorStatus } = error && error.customAttributes;
+      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
       if (httpErrorStatus === 403) {
         dispatch(deleteCommentDenied());
       } else {
@@ -127,6 +127,6 @@ export function removeComment(commentId, threadId) {
 window.thunks = window.thunks ? window.thunks : {};
 window.thunks.fetchThreadComments = fetchThreadComments;
 window.thunks.fetchComment = fetchComment;
-window.thunks.postComment = postComment;
-window.thunks.updateComment = updateComment;
+window.thunks.addComment = addComment;
+window.thunks.editComment = editComment;
 window.thunks.removeComment = removeComment;

@@ -92,7 +92,7 @@ const commentsSlice = createSlice({
     },
     updateCommentSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, [payload.data]);
+      normaliseComments(state, [payload]);
       state.commentDraft = null;
     },
     deleteCommentRequest: (state) => {
