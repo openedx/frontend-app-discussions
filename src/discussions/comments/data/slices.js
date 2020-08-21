@@ -2,16 +2,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RequestStatus } from '../../../data/constants';
 
-function findCommentIndex(state, threadId, commentId) {
-  return state.comments[threadId].findIndex(entry => entry.id === commentId);
-}
-
-function updateCommentInState(state, comment) {
-  const threadId = comment.thread_id;
-  const index = findCommentIndex(state, threadId, comment.id);
-  if (index >= 0) {
-    state.comments[threadId][index] = comment;
-  }
+function normaliseComments(state, rawCommentData) {
+  const { threadCommentMap: threads, comments } = state;
+  rawCommentData.forEach(
+    comment => {
+      if (!threads[comment.thread_id]) {
+        threads[comment.thread_id] = [];
+      }
+      if (!threads[comment.thread_id].includes(comment.id)) {
+        threads[comment.thread_id].push(comment.id);
+      }
+      comments[comment.id] = comment;
+    },
+  );
 }
 
 const commentsSlice = createSlice({
@@ -19,9 +22,15 @@ const commentsSlice = createSlice({
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     page: null,
-    comments: {
-      // Map thread ids to comments
+    threadCommentMap: {
+      // Maps threads to comment ids in them.
     },
+    comments: {
+      // Map comment ids to comments.
+    },
+    // Stores the comment being posted in case it needs to be reposted due to network failure.
+    // TODO: save in localstorage so user can continue editing?
+    commentDraft: null,
     totalPages: null,
     totalThreads: null,
     postStatus: RequestStatus.SUCCESSFUL,
@@ -31,9 +40,9 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCommentsSuccess: (state, { payload }) => {
-      const { data, threadId } = payload;
+      const { data } = payload;
       state.status = RequestStatus.SUCCESSFUL;
-      state.comments[threadId] = data.results;
+      normaliseComments(state, data.results);
       state.page = data.pagination.page;
       state.totalPages = data.pagination.num_pages;
       state.totalThreads = data.pagination.count;
@@ -54,12 +63,12 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.DENIED;
     },
     fetchCommentSuccess: (state, { payload }) => {
-      const { data } = payload;
       state.status = RequestStatus.SUCCESSFUL;
-      updateCommentInState(state, data.results[0]);
+      normaliseComments(state, payload.data.results);
     },
-    postCommentRequest: (state) => {
+    postCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
+      state.commentDraft = payload;
     },
     postCommentDenied: (state) => {
       state.postStatus = RequestStatus.DENIED;
@@ -69,11 +78,12 @@ const commentsSlice = createSlice({
     },
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      const { data, threadId } = payload;
-      state.comments[threadId].push(data);
+      normaliseComments(state, [payload.data]);
+      state.commentDraft = null;
     },
-    updateCommentRequest: (state) => {
+    updateCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
+      state.commentDraft = payload;
     },
     updateCommentDenied: (state) => {
       state.postStatus = RequestStatus.DENIED;
@@ -83,7 +93,8 @@ const commentsSlice = createSlice({
     },
     updateCommentSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      updateCommentInState(state, payload.data.results[0]);
+      normaliseComments(state, [payload.data]);
+      state.commentDraft = null;
     },
     deleteCommentRequest: (state) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
@@ -95,12 +106,11 @@ const commentsSlice = createSlice({
       state.postStatus = RequestStatus.FAILED;
     },
     deleteCommentSuccess: (state, { payload }) => {
-      const { commentId, threadId } = payload;
-      console.log(state);
-      console.log(payload);
-      state.postStatus = RequestStatus.POSTED;
-      const index = findCommentIndex(state, threadId, commentId);
-      state.comments[threadId].splice(index, 1);
+      const { commentId } = payload;
+      state.postStatus = RequestStatus.SUCCESSFUL;
+      const threadId = state.comments[commentId].thread_id;
+      state.threadCommentMap[threadId] = state.threadCommentMap[threadId].filter(item => item !== commentId);
+      delete state.comments[commentId];
     },
   },
 });

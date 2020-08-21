@@ -40,3 +40,6 @@ initialize({
     footerMessages,
   ],
 });
+
+// FIXME: For testing only.
+window.store = store;

@@ -30,8 +30,7 @@ export async function getThreadComments(
     requested_fields: requestedFields,
   };
 
-  const { data } = await getAuthenticatedHttpClient()
-    .get(commentsApiUrl, { params });
+  const { data } = await getAuthenticatedHttpClient().get(commentsApiUrl, { params });
   return data;
 }
 
@@ -54,8 +53,7 @@ export async function getComment(
     page_size: pageSize,
     requested_fields: requestedFields,
   };
-  const { data } = await getAuthenticatedHttpClient()
-    .get(url, { params });
+  const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
 }
 
@@ -85,10 +83,7 @@ export async function postComment(comment, threadId, parentId) {
 export async function updateComment(commentId, comment) {
   const url = `${commentsApiUrl}${commentId}/`;
 
-  const { data } = await getAuthenticatedHttpClient()
-    .patch(url, {
-      raw_body: comment,
-    });
+  const { data } = await getAuthenticatedHttpClient().patch(url, { raw_body: comment });
   return data;
 }
 
@@ -98,9 +93,10 @@ export async function updateComment(commentId, comment) {
  */
 export async function deleteComment(commentId) {
   const url = `${commentsApiUrl}${commentId}/`;
-  await getAuthenticatedHttpClient()
-    .delete(url);
+  await getAuthenticatedHttpClient().delete(url);
 }
+
+// FIXME: For testing only.
 
 window.api = window.api ? window.api : {};
 window.api.getThreadComments = getThreadComments;

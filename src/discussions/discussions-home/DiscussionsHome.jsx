@@ -20,7 +20,7 @@ export default function DiscussionsHome() {
         </div>
         <div className="d-flex">
           <Switch>
-            <Route path={Routes.POSTS.PATH}>
+            <Route path={Routes.COMMENTS.PATH}>
               <CommentsViewContainer />
             </Route>
           </Switch>
