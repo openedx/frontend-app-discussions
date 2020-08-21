@@ -84,7 +84,7 @@ const threadsSlice = createSlice({
     },
     updateThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      normaliseThreads(state.threads, [payload]);
+      normaliseThreads(state, [payload]);
       state.threadDraft = null;
     },
     updateThreadFailed: (state) => {
@@ -117,12 +117,15 @@ export const {
   deleteThreadFailed,
   deleteThreadRequest,
   deleteThreadSuccess,
+  fetchThreadDenied,
   fetchThreadFailed,
   fetchThreadRequest,
+  fetchThreadsDenied,
   fetchThreadsFailed,
   fetchThreadsRequest,
   fetchThreadsSuccess,
   fetchThreadSuccess,
+  postThreadDenied,
   postThreadFailed,
   postThreadRequest,
   postThreadSuccess,

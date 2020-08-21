@@ -1,19 +1,29 @@
 /* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
+import { getHttpErrorStatus } from '../../utils';
 import {
-  deleteThread,
-  getThread, getThreads, postThread, updateThread,
+  deleteThread, getThread, getThreads, postThread, updateThread,
 } from './api';
 import {
+  deleteThreadDenied,
+  deleteThreadFailed,
+  deleteThreadRequest,
+  fetchThreadDenied,
   fetchThreadFailed,
   fetchThreadRequest,
+  fetchThreadsDenied,
   fetchThreadsFailed,
   fetchThreadsRequest,
   fetchThreadsSuccess,
   fetchThreadSuccess,
+  postThreadDenied,
   postThreadFailed,
   postThreadRequest,
   postThreadSuccess,
+  updateThreadDenied,
+  updateThreadFailed,
+  updateThreadRequest,
+  updateThreadSuccess,
 } from './slices';
 
 export function fetchThreads(courseId, topicIds) {
@@ -23,7 +33,11 @@ export function fetchThreads(courseId, topicIds) {
       const data = await getThreads(courseId, topicIds);
       dispatch(fetchThreadsSuccess(data));
     } catch (error) {
-      dispatch(fetchThreadsFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(fetchThreadsDenied());
+      } else {
+        dispatch(fetchThreadsFailed());
+      }
       logError(error);
     }
   };
@@ -36,7 +50,11 @@ export function fetchThread(threadId) {
       const data = await getThread(threadId);
       dispatch(fetchThreadSuccess(data));
     } catch (error) {
-      dispatch(fetchThreadFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(fetchThreadDenied());
+      } else {
+        dispatch(fetchThreadFailed());
+      }
       logError(error);
     }
   };
@@ -56,7 +74,11 @@ export function createNewThread(courseId, topicId, type, title, content, followi
       const data = await postThread(courseId, topicId, type, title, content, following);
       dispatch(postThreadSuccess(data));
     } catch (error) {
-      dispatch(postThreadFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(postThreadDenied());
+      } else {
+        dispatch(postThreadFailed());
+      }
       logError(error);
     }
   };
@@ -67,7 +89,7 @@ export function updateExistingThread(threadId, {
 }) {
   return async (dispatch) => {
     try {
-      dispatch(postThreadRequest({
+      dispatch(updateThreadRequest({
         threadId,
         flagged,
         voted,
@@ -86,9 +108,30 @@ export function updateExistingThread(threadId, {
         title,
         content,
       });
-      dispatch(postThreadSuccess(data));
+      dispatch(updateThreadSuccess(data));
     } catch (error) {
-      dispatch(postThreadFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(updateThreadDenied());
+      } else {
+        dispatch(updateThreadFailed());
+      }
+      logError(error);
+    }
+  };
+}
+
+export function removeThread(threadId) {
+  return async (dispatch) => {
+    try {
+      dispatch(deleteThreadRequest({ threadId }));
+      await deleteThread(threadId);
+      dispatch(postThreadSuccess({ threadId }));
+    } catch (error) {
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(deleteThreadDenied());
+      } else {
+        dispatch(deleteThreadFailed());
+      }
       logError(error);
     }
   };
@@ -98,6 +141,6 @@ export function updateExistingThread(threadId, {
 window.thunks = window.thunks ? window.thunks : {};
 window.thunks.fetchThreads = fetchThreads;
 window.thunks.fetchThread = fetchThread;
-window.thunks.postThread = postThread;
+window.thunks.createNewThread = createNewThread;
 window.thunks.updateExistingThread = updateExistingThread;
-window.thunks.deleteThread = deleteThread;
+window.thunks.removeThread = removeThread;

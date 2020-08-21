@@ -83,7 +83,8 @@ export async function postComment(comment, threadId, parentId) {
 export async function updateComment(commentId, comment) {
   const url = `${commentsApiUrl}${commentId}/`;
 
-  const { data } = await getAuthenticatedHttpClient().patch(url, { raw_body: comment }, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+  const { data } = await getAuthenticatedHttpClient()
+    .patch(url, { raw_body: comment }, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;
 }
 

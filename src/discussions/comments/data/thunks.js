@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
+import { getHttpErrorStatus } from '../../utils';
 import {
   deleteComment, getComment, getThreadComments, postComment, updateComment,
 } from './api';
@@ -33,8 +34,7 @@ export function fetchThreadComments(threadId) {
       const data = await getThreadComments(threadId);
       dispatch(fetchCommentsSuccess(data));
     } catch (error) {
-      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
-      if (httpErrorStatus === 403) {
+      if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentsDenied());
       } else {
         dispatch(fetchCommentsFailed());
@@ -51,8 +51,7 @@ export function fetchComment(commentId) {
       const data = await getComment(commentId);
       dispatch(fetchCommentSuccess(data));
     } catch (error) {
-      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
-      if (httpErrorStatus === 403) {
+      if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentDenied());
       } else {
         dispatch(fetchCommentFailed());
@@ -69,8 +68,7 @@ export function editComment(commentId, comment) {
       const data = await updateComment(commentId, comment);
       dispatch(updateCommentSuccess(data));
     } catch (error) {
-      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
-      if (httpErrorStatus === 403) {
+      if (getHttpErrorStatus(error) === 403) {
         dispatch(updateCommentDenied());
       } else {
         dispatch(updateCommentFailed());
@@ -91,8 +89,7 @@ export function addComment(comment, threadId, parentId) {
       const data = await postComment(comment, threadId, parentId);
       dispatch(postCommentSuccess(data));
     } catch (error) {
-      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
-      if (httpErrorStatus === 403) {
+      if (getHttpErrorStatus(error) === 403) {
         dispatch(postCommentDenied());
       } else {
         dispatch(postCommentFailed());
@@ -112,8 +109,7 @@ export function removeComment(commentId, threadId) {
         threadId,
       }));
     } catch (error) {
-      const httpErrorStatus = error && error.customAttributes && error.customAttributes.httpErrorStatus;
-      if (httpErrorStatus === 403) {
+      if (getHttpErrorStatus(error) === 403) {
         dispatch(deleteCommentDenied());
       } else {
         dispatch(deleteCommentFailed());

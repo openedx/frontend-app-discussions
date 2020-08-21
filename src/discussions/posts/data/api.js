@@ -107,7 +107,8 @@ export async function updateThread(threadId, {
     raw_body: content,
   };
 
-  const { data } = await getAuthenticatedHttpClient().patch(url, patchData);
+  const { data } = await getAuthenticatedHttpClient()
+    .patch(url, patchData, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;
 }
 
