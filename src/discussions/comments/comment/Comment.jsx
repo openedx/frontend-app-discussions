@@ -9,7 +9,7 @@ import messages from './messages';
 
 function Comment({ intl, comment }) {
   return (
-    <div className="discussion-comment d-flex flex-column m-2 card">
+    <div className="discussion-comment d-flex flex-column m-2 card" data-comment-id={comment.id}>
       <div className="header d-flex m-1 card-header">
         <div className="avatar">
           [A]

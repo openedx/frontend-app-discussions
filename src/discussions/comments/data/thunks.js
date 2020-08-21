@@ -1,21 +1,29 @@
 /* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
 import {
-  deleteComment, getComment, getThreadComments, updateComment,
+  deleteComment, getComment, getThreadComments, postComment, updateComment,
 } from './api';
 import {
+  deleteCommentDenied,
+  deleteCommentFailed,
+  deleteCommentRequest,
+  deleteCommentSuccess,
+  fetchCommentDenied,
+  fetchCommentFailed,
+  fetchCommentRequest,
+  fetchCommentsDenied,
   fetchCommentsFailed,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  fetchCommentFailed,
-  fetchCommentRequest,
   fetchCommentSuccess,
+  postCommentDenied,
+  postCommentFailed,
+  postCommentRequest,
+  postCommentSuccess,
+  updateCommentDenied,
+  updateCommentFailed,
   updateCommentRequest,
   updateCommentSuccess,
-  updateCommentFailed,
-  deleteCommentRequest,
-  deleteCommentSuccess,
-  deleteCommentFailed,
 } from './slices';
 
 export function fetchThreadComments(threadId) {
@@ -23,9 +31,14 @@ export function fetchThreadComments(threadId) {
     try {
       dispatch(fetchCommentsRequest({ threadId }));
       const data = await getThreadComments(threadId);
-      dispatch(fetchCommentsSuccess({ threadId, data }));
+      dispatch(fetchCommentsSuccess(data));
     } catch (error) {
-      dispatch(fetchCommentsFailed());
+      const { httpErrorStatus } = error && error.customAttributes;
+      if (httpErrorStatus === 403) {
+        dispatch(fetchCommentsDenied());
+      } else {
+        dispatch(fetchCommentsFailed());
+      }
       logError(error);
     }
   };
@@ -36,9 +49,14 @@ export function fetchComment(commentId) {
     try {
       dispatch(fetchCommentRequest({ commentId }));
       const data = await getComment(commentId);
-      dispatch(fetchCommentSuccess({ commentId, data }));
+      dispatch(fetchCommentSuccess(data));
     } catch (error) {
-      dispatch(fetchCommentFailed());
+      const { httpErrorStatus } = error && error.customAttributes;
+      if (httpErrorStatus === 403) {
+        dispatch(fetchCommentDenied());
+      } else {
+        dispatch(fetchCommentFailed());
+      }
       logError(error);
     }
   };
@@ -49,9 +67,36 @@ export function editComment(commentId, comment) {
     try {
       dispatch(updateCommentRequest({ commentId }));
       const data = await updateComment(commentId, comment);
-      dispatch(updateCommentSuccess({ commentId, data }));
+      dispatch(updateCommentSuccess(data));
     } catch (error) {
-      dispatch(updateCommentFailed());
+      const { httpErrorStatus } = error && error.customAttributes;
+      if (httpErrorStatus === 403) {
+        dispatch(updateCommentDenied());
+      } else {
+        dispatch(updateCommentFailed());
+      }
+      logError(error);
+    }
+  };
+}
+
+export function addComment(comment, threadId, parentId) {
+  return async (dispatch) => {
+    try {
+      dispatch(postCommentRequest({
+        comment,
+        threadId,
+        parentId,
+      }));
+      const data = await postComment(comment, threadId, parentId);
+      dispatch(postCommentSuccess(data));
+    } catch (error) {
+      const { httpErrorStatus } = error && error.customAttributes;
+      if (httpErrorStatus === 403) {
+        dispatch(postCommentDenied());
+      } else {
+        dispatch(postCommentFailed());
+      }
       logError(error);
     }
   };
@@ -62,10 +107,26 @@ export function removeComment(commentId, threadId) {
     try {
       dispatch(deleteCommentRequest({ commentId }));
       await deleteComment(commentId);
-      dispatch(deleteCommentSuccess({ commentId, threadId }));
+      dispatch(deleteCommentSuccess({
+        commentId,
+        threadId,
+      }));
     } catch (error) {
-      dispatch(deleteCommentFailed());
+      const { httpErrorStatus } = error && error.customAttributes;
+      if (httpErrorStatus === 403) {
+        dispatch(deleteCommentDenied());
+      } else {
+        dispatch(deleteCommentFailed());
+      }
       logError(error);
     }
   };
 }
+
+// FIXME: For testing only
+window.thunks = window.thunks ? window.thunks : {};
+window.thunks.fetchThreadComments = fetchThreadComments;
+window.thunks.fetchComment = fetchComment;
+window.thunks.postComment = postComment;
+window.thunks.updateComment = updateComment;
+window.thunks.removeComment = removeComment;

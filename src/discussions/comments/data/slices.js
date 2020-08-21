@@ -40,12 +40,11 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCommentsSuccess: (state, { payload }) => {
-      const { data } = payload;
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, data.results);
-      state.page = data.pagination.page;
-      state.totalPages = data.pagination.num_pages;
-      state.totalThreads = data.pagination.count;
+      normaliseComments(state, payload.results);
+      state.page = payload.pagination.page;
+      state.totalPages = payload.pagination.num_pages;
+      state.totalThreads = payload.pagination.count;
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -64,7 +63,7 @@ const commentsSlice = createSlice({
     },
     fetchCommentSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, payload.data.results);
+      normaliseComments(state, payload.results);
     },
     postCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
@@ -78,7 +77,7 @@ const commentsSlice = createSlice({
     },
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, [payload.data]);
+      normaliseComments(state, [payload]);
       state.commentDraft = null;
     },
     updateCommentRequest: (state, { payload }) => {

@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
 import {
+  deleteThread,
   getThread, getThreads, postThread, updateThread,
 } from './api';
 import {
@@ -92,3 +93,11 @@ export function updateExistingThread(threadId, {
     }
   };
 }
+
+// FIXME: For testing only
+window.thunks = window.thunks ? window.thunks : {};
+window.thunks.fetchThreads = fetchThreads;
+window.thunks.fetchThread = fetchThread;
+window.thunks.postThread = postThread;
+window.thunks.updateExistingThread = updateExistingThread;
+window.thunks.deleteThread = deleteThread;
