@@ -8,6 +8,7 @@ import {
   deleteThreadDenied,
   deleteThreadFailed,
   deleteThreadRequest,
+  deleteThreadSuccess,
   fetchThreadDenied,
   fetchThreadFailed,
   fetchThreadRequest,
@@ -125,7 +126,7 @@ export function removeThread(threadId) {
     try {
       dispatch(deleteThreadRequest({ threadId }));
       await deleteThread(threadId);
-      dispatch(postThreadSuccess({ threadId }));
+      dispatch(deleteThreadSuccess({ threadId }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(deleteThreadDenied());

@@ -4,7 +4,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 ensureConfig([
   'LMS_BASE_URL',
-], 'Comments API service');
+], 'Posts API service');
 
 const apiBaseUrl = getConfig().LMS_BASE_URL;
 
