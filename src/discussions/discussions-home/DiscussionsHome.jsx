@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Route, Switch, useParams } from 'react-router';
 import { Routes } from '../../data/constants';
 import CommentsViewContainer from '../comments/CommentsViewContainer';
@@ -26,6 +26,23 @@ export default function DiscussionsHome() {
           </Switch>
         </div>
       </div>
+      <Route
+        path="/test/:plugin"
+        render={({ match }) => {
+          const Component = React.lazy(() => import(`plugins/${match.params.plugin}`));
+          return (
+            <div style={{
+              border: 'thin solid red',
+            }}
+            >
+              <h1>Plugin: {match.params.plugin}</h1>
+              <Suspense fallback={<div>Loading........</div>}>
+                <Component settings={{ a: 1, b: 2 }} setSettings={console.log} />
+              </Suspense>
+            </div>
+          );
+        }}
+      />
     </main>
   );
 }
