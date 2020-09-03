@@ -5,6 +5,7 @@ import CommentsViewContainer from '../comments/CommentsViewContainer';
 import { NavigationBar } from '../navigation-bar';
 import PostsViewContainer from '../posts/PostsViewContainer';
 import { TopicsViewContainer } from '../topics';
+import { getPluginComponent } from '../utils';
 
 export default function DiscussionsHome() {
   const { courseId } = useParams();
@@ -29,7 +30,7 @@ export default function DiscussionsHome() {
       <Route
         path="/test/:plugin"
         render={({ match }) => {
-          const Component = React.lazy(() => import(`plugins/${match.params.plugin}`));
+          const Component = getPluginComponent(match.params.plugin);
           return (
             <div style={{
               border: 'thin solid red',
