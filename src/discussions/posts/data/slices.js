@@ -2,54 +2,68 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../data/constants';
 
-function normaliseThreads(rawThreadsData) {
-  const topicThreadMap = {};
-  rawThreadsData.forEach(
-    thread => {
-      if (!topicThreadMap[thread.topic_id]) {
-        topicThreadMap[thread.topic_id] = [];
-      }
-      topicThreadMap[thread.topic_id].push(thread);
+function normalisePosts(rawPostsData) {
+  const posts = {};
+  rawPostsData.forEach(
+    post => {
+      posts[post.id] = post;
     },
   );
-  return topicThreadMap;
+  return posts;
 }
 
-const courseThreadsSlice = createSlice({
-  name: 'courseThreads',
+function normalisePostsToTopics(rawPostsData) {
+  const topicPostMap = {};
+  rawPostsData.forEach(
+    post => {
+      if (!topicPostMap[post.topic_id]) {
+        topicPostMap[post.topic_id] = [];
+      }
+      topicPostMap[post.topic_id].push(post);
+    },
+  );
+  return topicPostMap;
+}
+
+const coursePostsSlice = createSlice({
+  name: 'coursePosts',
   initialState: {
     status: LoadingStatus.LOADING,
     page: null,
-    threads: {
-      // Mapping of topic ids to threads in them
+    posts: {
+      // Mapping of post ids to actual post objects
+    },
+    topicPostMap: {
+      // Mapping of topic ids to posts in them
     },
     totalPages: null,
     totalThreads: null,
   },
   reducers: {
-    fetchCourseThreadsRequest: (state) => {
+    fetchCoursePostsRequest: (state) => {
       state.status = LoadingStatus.LOADING;
     },
-    fetchCourseThreadsSuccess: (state, { payload }) => {
+    fetchCoursePostsSuccess: (state, { payload }) => {
       state.status = LoadingStatus.LOADED;
-      state.threads = normaliseThreads(payload.results);
+      state.posts = normalisePosts(payload.results);
+      state.topicPostMap = normalisePostsToTopics(payload.results);
       state.page = payload.pagination.page;
       state.totalPages = payload.pagination.num_pages;
       state.totalThreads = payload.pagination.count;
     },
-    fetchCourseThreadsFailed: (state) => {
+    fetchCoursePostsFailed: (state) => {
       state.status = LoadingStatus.FAILED;
     },
-    fetchCourseThreadsDenied: (state) => {
+    fetchCoursePostsDenied: (state) => {
       state.status = LoadingStatus.DENIED;
     },
   },
 });
 
 export const {
-  fetchCourseThreadsRequest,
-  fetchCourseThreadsSuccess,
-  fetchCourseThreadsFailed,
-} = courseThreadsSlice.actions;
+  fetchCoursePostsRequest,
+  fetchCoursePostsSuccess,
+  fetchCoursePostsFailed,
+} = coursePostsSlice.actions;
 
-export const courseThreadsReducer = courseThreadsSlice.reducer;
+export const coursePostsReducer = coursePostsSlice.reducer;

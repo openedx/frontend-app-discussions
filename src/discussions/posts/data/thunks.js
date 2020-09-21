@@ -1,16 +1,16 @@
 /* eslint-disable import/prefer-default-export */
 import { logError } from '@edx/frontend-platform/logging';
-import { getCourseThreads } from './api';
-import { fetchCourseThreadsFailed, fetchCourseThreadsRequest, fetchCourseThreadsSuccess } from './slices';
+import { getCoursePosts } from './api';
+import { fetchCoursePostsFailed, fetchCoursePostsRequest, fetchCoursePostsSuccess } from './slices';
 
-export function fetchCourseThreads(courseId, topicIds) {
+export function fetchCoursePosts(courseId, topicIds) {
   return async (dispatch) => {
     try {
-      dispatch(fetchCourseThreadsRequest({ courseId }));
-      const data = await getCourseThreads(courseId, topicIds);
-      dispatch(fetchCourseThreadsSuccess(data));
+      dispatch(fetchCoursePostsRequest({ courseId }));
+      const data = await getCoursePosts(courseId, topicIds);
+      dispatch(fetchCoursePostsSuccess(data));
     } catch (error) {
-      dispatch(fetchCourseThreadsFailed());
+      dispatch(fetchCoursePostsFailed());
       logError(error);
     }
   };

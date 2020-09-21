@@ -2,14 +2,32 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../data/constants';
 
-const topicsSLice = createSlice({
+function normaliseTopics(coursewareTopics = [], nonCoursewareTopics = []) {
+  const topics = {};
+  coursewareTopics.forEach(
+    category => category.children.forEach(
+      topic => {
+        topics[topic.id] = topic;
+      },
+    ),
+  );
+  nonCoursewareTopics.forEach(
+    topic => {
+      topics[topic.id] = topic;
+    },
+  );
+  return topics;
+}
+
+const topicsSlice = createSlice({
   name: 'courseTopics',
   initialState: {
     status: LoadingStatus.LOADING,
     topics: {
-      courseware_topics: [],
-      non_courseware_topics: [],
+      // Mapping of topic ids to actual topic objects
     },
+    courseware_topics: [],
+    non_courseware_topics: [],
   },
   reducers: {
     fetchCourseTopicsRequest: (state) => {
@@ -17,7 +35,9 @@ const topicsSLice = createSlice({
     },
     fetchCourseTopicsSuccess: (state, { payload }) => {
       state.status = LoadingStatus.LOADED;
-      state.topics = payload;
+      state.topics = normaliseTopics(payload.courseware_topics, payload.non_courseware_topics);
+      state.courseware_topics = payload.courseware_topics;
+      state.non_courseware_topics = payload.non_courseware_topics;
     },
     fetchCourseTopicsFailed: (state) => {
       state.status = LoadingStatus.FAILED;
@@ -32,6 +52,6 @@ export const {
   fetchCourseTopicsRequest,
   fetchCourseTopicsSuccess,
   fetchCourseTopicsFailed,
-} = topicsSLice.actions;
+} = topicsSlice.actions;
 
-export const topicsReducer = topicsSLice.reducer;
+export const topicsReducer = topicsSlice.reducer;

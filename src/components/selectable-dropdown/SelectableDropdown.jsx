@@ -8,7 +8,7 @@ function SelectableDropdown({
   const [selected, setSelected] = useState(options.find(option => (option.value === defaultOption)));
   return (
     <Dropdown>
-      <Dropdown.Toggle>
+      <Dropdown.Toggle variant="link" size="sm">
         { label || selected.label }
       </Dropdown.Toggle>
       <Dropdown.Menu>
