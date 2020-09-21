@@ -1,5 +1,8 @@
 /* eslint-disable import/prefer-default-export */
+import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
+
+import { PostsStatusFilter } from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteThread, getThread, getThreads, postThread, updateThread,
@@ -27,12 +30,41 @@ import {
   updateThreadSuccess,
 } from './slices';
 
-export function fetchThreads(courseId, topicIds) {
+/**
+ * Filters to apply to a thread/posts query.
+ * @typedef {Object} ThreadFilter
+ * @property {PostsStatusFilter} status
+ * @property {AllPostsFilter} allPosts
+ */
+
+/**
+ * Fetches the threads for the course specified va the threadIds.
+ * @param {string} courseId The course ID for the course to fetch data for.
+ * @param {[string]} topicIds List of topics to limit threads to
+ * @param {ThreadOrdering} orderBy The results will be sorted on this basis.
+ * @param {ThreadFilter} filters The set of filters to apply to the thread.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export function fetchThreads(courseId, {
+  topicIds,
+  orderBy,
+  filters = {},
+} = {}) {
+  const options = {
+    orderBy,
+    topicIds,
+  };
+  if (filters.status === PostsStatusFilter.FOLLOWING) {
+    options.following = true;
+  }
+  if (filters.status === PostsStatusFilter.UNREAD) {
+    options.view = 'unread';
+  }
   return async (dispatch) => {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
-      const data = await getThreads(courseId, topicIds);
-      dispatch(fetchThreadsSuccess(data));
+      const data = await getThreads(courseId, options);
+      dispatch(fetchThreadsSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());
@@ -49,7 +81,7 @@ export function fetchThread(threadId) {
     try {
       dispatch(fetchThreadRequest({ threadId }));
       const data = await getThread(threadId);
-      dispatch(fetchThreadSuccess(data));
+      dispatch(fetchThreadSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadDenied());
@@ -73,7 +105,7 @@ export function createNewThread(courseId, topicId, type, title, content, followi
         following,
       }));
       const data = await postThread(courseId, topicId, type, title, content, following);
-      dispatch(postThreadSuccess(data));
+      dispatch(postThreadSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(postThreadDenied());
@@ -86,7 +118,7 @@ export function createNewThread(courseId, topicId, type, title, content, followi
 }
 
 export function updateExistingThread(threadId, {
-  flagged, voted, read, topicId, type, title, content,
+  flagged, voted, read, topicId, type, title, content, following,
 }) {
   return async (dispatch) => {
     try {
@@ -99,6 +131,7 @@ export function updateExistingThread(threadId, {
         type,
         title,
         content,
+        following,
       }));
       const data = await updateThread(threadId, {
         flagged,
@@ -108,8 +141,9 @@ export function updateExistingThread(threadId, {
         type,
         title,
         content,
+        following,
       });
-      dispatch(updateThreadSuccess(data));
+      dispatch(updateThreadSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(updateThreadDenied());

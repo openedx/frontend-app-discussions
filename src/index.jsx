@@ -1,6 +1,9 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 import Header, { messages as headerMessages } from '@edx/frontend-component-header';
 import {
@@ -8,20 +11,18 @@ import {
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { DiscussionsHome } from './discussions';
+import appMessages from './i18n';
+import store from './store';
 
 import './assets/favicon.ico';
-import { DiscussionsHomeContainer } from './discussions';
-import appMessages from './i18n';
 import './index.scss';
-import store from './store';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
       <Header />
-      <DiscussionsHomeContainer />
+      <DiscussionsHome />
       <Footer />
     </AppProvider>,
     document.getElementById('root'),

@@ -1,24 +1,70 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import { Routes } from '../../../data/constants';
 import Topic, { topicShape } from './topic/Topic';
 
-function TopicGroup({ id, name, topics }) {
+function TopicGroup({
+  id,
+  name,
+  subtopics,
+  filter,
+}) {
+  const { courseId } = useParams();
+  const matchesFilter = filter
+    ? name?.toLowerCase().includes(filter)
+    : true;
+  const subtopicElements = subtopics.filter(
+    topic => (filter
+      ? topic.name.toLowerCase().includes(filter)
+      : true),
+  )
+    .map(
+      topic => (
+        <Topic
+          id={topic.id}
+          name={topic.name}
+          subtopics={topic.subtopics}
+          questions={topic.questions}
+          discussions={topic.discussions}
+          flags={topic.flags}
+          key={topic.id}
+          filter={filter}
+        />
+      ),
+    );
+  const hasFilteredSubtopics = (subtopicElements.length > 0);
+  if (!matchesFilter && !hasFilteredSubtopics) {
+    return null;
+  }
+
   return (
     <div className="discussion-topic-group d-flex flex-column" data-topic-id={id}>
-      { name && (
-        <div className="topic-name border-bottom pl-2 pt-1 pb-1">
-          { name }
-        </div>
-      ) }
-      {
-        topics.map(
-          topic => <Topic id={topic.id} name={topic.name} topics={topic.children} key={topic.id} />,
-        )
-      }
+      {name && (
+        <Link
+          className="topic-name list-group-item px-3 py-2 text-gray-300 text-decoration-none text-uppercase small"
+          to={
+            Routes.TOPICS.PATH.replace(':courseId', courseId)
+              .replace(':category?', name)
+          }
+        >
+          {name}
+        </Link>
+      )}
+      {subtopicElements}
     </div>
   );
 }
 
-TopicGroup.propTypes = topicShape;
+TopicGroup.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  subtopics: PropTypes.arrayOf(topicShape).isRequired,
+  filter: PropTypes.string.isRequired,
+};
 
 TopicGroup.defaultProps = {
   id: null,

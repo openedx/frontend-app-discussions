@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { ensureConfig, getConfig } from '@edx/frontend-platform';
+import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 ensureConfig([
@@ -15,45 +15,47 @@ const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
  * @param {string} threadId
  * @param {number=} page
  * @param {number=} pageSize
- * @param {[string]=} requestedFields
  * @returns {Promise<{}>}
  */
 export async function getThreadComments(
   threadId, {
-    page, pageSize, requestedFields,
+    page,
+    pageSize,
   } = {},
 ) {
-  const params = {
-    thread_id: threadId,
+  const params = snakeCaseObject({
+    threadId,
     page,
-    page_size: pageSize,
-    requested_fields: requestedFields,
-  };
+    pageSize,
+    requestedFields: 'profile_image',
+  });
 
-  const { data } = await getAuthenticatedHttpClient().get(commentsApiUrl, { params });
+  const { data } = await getAuthenticatedHttpClient()
+    .get(commentsApiUrl, { params });
   return data;
 }
 
 /**
- * Fetches a single comment.
+ * Fetches a responses to a comment.
  * @param {string} commentId
  * @param {number=} page
  * @param {number=} pageSize
- * @param {[string]=} requestedFields
  * @returns {Promise<{}>}
  */
-export async function getComment(
+export async function getCommentResponses(
   commentId, {
-    page, pageSize, requestedFields,
+    page,
+    pageSize,
   } = {},
 ) {
   const url = `${commentsApiUrl}${commentId}/`;
-  const params = {
+  const params = snakeCaseObject({
     page,
-    page_size: pageSize,
-    requested_fields: requestedFields,
-  };
-  const { data } = await getAuthenticatedHttpClient().get(url, { params });
+    pageSize,
+    requestedFields: 'profile_image',
+  });
+  const { data } = await getAuthenticatedHttpClient()
+    .get(url, { params });
   return data;
 }
 
@@ -66,11 +68,7 @@ export async function getComment(
  */
 export async function postComment(comment, threadId, parentId) {
   const { data } = await getAuthenticatedHttpClient()
-    .post(commentsApiUrl, {
-      thread_id: threadId,
-      raw_body: comment,
-      parent_id: parentId,
-    });
+    .post(commentsApiUrl, snakeCaseObject({ threadId, comment, parentId }));
   return data;
 }
 
@@ -94,5 +92,6 @@ export async function updateComment(commentId, comment) {
  */
 export async function deleteComment(commentId) {
   const url = `${commentsApiUrl}${commentId}/`;
-  await getAuthenticatedHttpClient().delete(url);
+  await getAuthenticatedHttpClient()
+    .delete(url);
 }

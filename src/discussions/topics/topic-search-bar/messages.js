@@ -1,0 +1,31 @@
+import { defineMessages } from '@edx/frontend-platform/i18n';
+
+const messages = defineMessages({
+  sortedBy: {
+    id: 'discussions.topics.sort.message',
+    defaultMessage: 'Sorted by {sortBy}',
+    description: 'Display text used to indicate how topics are sorted',
+  },
+  sortByLastActivity: {
+    id: 'discussions.topics.sort.last-activity',
+    defaultMessage: 'Recent activity',
+    description: 'Option in dropdown to sort topics by recent activity',
+  },
+  sortByCommentCount: {
+    id: 'discussions.topics.sort.comment-count',
+    defaultMessage: 'Most activity',
+    description: 'Option in dropdown to sort topics by most activity',
+  },
+  sortByCourseStructure: {
+    id: 'discussions.topics.sort.course-structure',
+    defaultMessage: 'Course Structure',
+    description: 'Option in dropdown to sort topics by course structure',
+  },
+  findATopic: {
+    id: 'discussions.topics.find.label',
+    defaultMessage: 'Find a topic',
+    description: 'Placeholder text in search bar',
+  },
+});
+
+export default messages;

@@ -1,56 +1,54 @@
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import Button from '@edx/paragon/dist/Button';
-import { faFlag } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsisV, faStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
 import React from 'react';
-import messages from './messages';
+import PropTypes from 'prop-types';
 
-function Comment({ intl, comment }) {
+import * as timeago from 'timeago.js';
+
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+
+import CommentIcons from '../comment-icons/CommentIcons';
+import messages from '../messages';
+
+function Comment({
+  comment,
+  intl,
+}) {
   return (
-    <div className="discussion-comment d-flex flex-column m-2 card" data-comment-id={comment.id}>
-      <div className="header d-flex m-1 card-header">
-        <div className="avatar">
-          [A]
-        </div>
-        <div className="d-flex flex-column m-1">
-          <div className="title">
-            {/* TODO: Get title from thread */ }
-            Some title
+    <div className="discussion-comment d-flex flex-column">
+      <div className="header d-flex flex-row">
+        <div className="d-flex flex-column flex-fill">
+          <h4 className="title">
+            {comment.title}
+          </h4>
+          <div className="status small">
+            {intl.formatMessage(messages.postTime, {
+              postType: comment.type,
+              relativeTime: timeago.format(comment.createdAt, intl.locale),
+            })}
+            <span className="font-weight-bold text-info-300 ml-1">{comment.author}</span>
           </div>
-          <div className="status">
-            {/* TODO: get type from thread */ }
-            discussion posted about { comment.posted_on } by { comment.author }
-          </div>
         </div>
-        <div className="d-flex icons m-1">
-          <FontAwesomeIcon icon={faStar} />
-          { comment.abuse_flagged && <FontAwesomeIcon icon={faFlag} /> }
-          <FontAwesomeIcon icon={faEllipsisV} />
+        <CommentIcons abuseFlagged={comment.abuseFlagged} following={comment.following} />
+      </div>
+      <div className="mt-2">
+        <div className="d-flex" dangerouslySetInnerHTML={{ __html: comment.renderedBody }} />
+        <div className="d-flex small text-gray-300">
+          {intl.formatMessage(messages.postVisibility, { group: comment.groupName })}
         </div>
-      </div>
-      <div className="comment-body d-flex" dangerouslySetInnerHTML={{ __html: comment.rendered_body }} />
-      <div className="visibility-comment d-flex">
-        {/*  TODO: Add parent group info */ }
-      </div>
-      <div className="actions d-flex">
-        <Button>{ intl.formatMessage(messages.add_response) }</Button>
       </div>
     </div>
   );
 }
 
 export const commentShape = PropTypes.shape({
-  posted_on: PropTypes.string,
-  abuse_flagged: PropTypes.bool,
-  rendered_body: PropTypes.string,
+  createdAt: PropTypes.string,
+  abuseFlagged: PropTypes.bool,
+  renderedBody: PropTypes.string,
   author: PropTypes.string,
 });
 
 Comment.propTypes = {
-  intl: intlShape.isRequired,
   comment: commentShape.isRequired,
+  intl: intlShape.isRequired,
 };
 
 export default injectIntl(Comment);

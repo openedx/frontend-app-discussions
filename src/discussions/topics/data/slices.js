@@ -1,15 +1,18 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
-import { RequestStatus } from '../../../data/constants';
 
-const topicsSLice = createSlice({
+import { RequestStatus, TopicOrdering } from '../../../data/constants';
+
+const topicsSlice = createSlice({
   name: 'courseTopics',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     topics: {
-      courseware_topics: [],
-      non_courseware_topics: [],
+      coursewareTopics: [],
+      nonCoursewareTopics: [],
     },
+    filter: '',
+    sortBy: TopicOrdering.BY_COURSE_STRUCTURE,
   },
   reducers: {
     fetchCourseTopicsRequest: (state) => {
@@ -25,6 +28,12 @@ const topicsSLice = createSlice({
     fetchCourseTopicsDenied: (state) => {
       state.status = RequestStatus.DENIED;
     },
+    setFilter: (state, { payload }) => {
+      state.filter = payload;
+    },
+    setSortBy: (state, { payload }) => {
+      state.sortBy = payload;
+    },
   },
 });
 
@@ -32,6 +41,8 @@ export const {
   fetchCourseTopicsRequest,
   fetchCourseTopicsSuccess,
   fetchCourseTopicsFailed,
-} = topicsSLice.actions;
+  setFilter,
+  setSortBy,
+} = topicsSlice.actions;
 
-export const topicsReducer = topicsSLice.reducer;
+export const topicsReducer = topicsSlice.reducer;

@@ -1,69 +1,95 @@
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { faQuestionCircle, faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons';
-import {
-  faCircle, faComments, faFlag, faStar as faSolidStar, faThumbtack,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Routes } from '../../../data/constants';
+import PropTypes from 'prop-types';
+
+import {
+  faQuestionCircle,
+  faStar as faEmptyStar,
+  faThumbsUp as faEmptyThumb,
+} from '@fortawesome/free-regular-svg-icons';
+import {
+  faComments,
+  faStar as faSolidStar,
+  faThumbsUp as faSolidThumb,
+  faThumbtack,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from 'react-redux';
+import * as timeago from 'timeago.js';
+
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import {
+  Avatar, IconButton, OverlayTrigger, Tooltip,
+} from '@edx/paragon';
+
+import { updateExistingThread } from '../data/thunks';
 import messages from './messages';
 
-function Post({ post, intl }) {
+export const postShape = PropTypes.shape({
+  abuseFlagged: PropTypes.bool,
+  author: PropTypes.string,
+  commentCount: PropTypes.number,
+  courseId: PropTypes.string,
+  following: PropTypes.bool,
+  id: PropTypes.string,
+  pinned: PropTypes.bool,
+  rawBody: PropTypes.string,
+  read: PropTypes.bool,
+  title: PropTypes.string,
+  topicId: PropTypes.string,
+  type: PropTypes.string,
+  updatedAt: PropTypes.string,
+});
+
+function PostTypeIcon(props) {
   return (
-    <div className="discussion-post d-flex border-bottom pl-2 pt-1 pb-1" data-post-id={post.id}>
-      <div className="d-flex post-unread-status m-1">
-        { post.read || <FontAwesomeIcon icon={faCircle} /> }
-      </div>
-      <div className="d-flex flex-column">
-        <div className="d-flex post-header">
-          <div className="d-flex user-avatar m-1">
-            [A]
-          </div>
-          <div className="d-flex post-type-icon m-1">
-            { post.type === 'question' && <FontAwesomeIcon icon={faQuestionCircle} /> }
-            { post.type === 'discussion' && <FontAwesomeIcon icon={faComments} /> }
-          </div>
-          <div className="d-flex m-1 flex-column">
-            <Link
-              className="post-title d-flex post-tile"
-              to={
-                Routes.POSTS.PATH.replace(':courseId', post.course_id)
-                  .replace(':topicId', post.topic_id)
-                  .replace(':threadId', post.id)
-              }
-            >
-              { post.title }
-            </Link>
-            <div className="d-flex">
-              <div className="post-author">
-                { post.author }
-              </div>
-              <div className="post-datetime">
-                {
-                  post.updated_at
-                    ? intl.formatMessage(messages.last_response, { time: post.updated_at })
-                    : intl.formatMessage(messages.posted_on, { time: post.created_at })
-                }
-              </div>
-            </div>
-          </div>
-          <div className="status-icons">
-            { post.abuse_flagged && <FontAwesomeIcon icon={faFlag} /> }
-            { post.pinned && <FontAwesomeIcon icon={faThumbtack} /> }
-          </div>
+    <div className="m-1">
+      {props.type === 'question' && <FontAwesomeIcon icon={faQuestionCircle} size="lg" />}
+      {props.type === 'discussion' && <FontAwesomeIcon icon={faComments} size="lg" />}
+      {props.pinned && (
+        <FontAwesomeIcon
+          icon={faThumbtack}
+          size="sm"
+          className="position-relative bg-white rounded"
+          style={{
+            left: '-0.25rem',
+            bottom: '-0.75rem',
+            padding: '0.125rem',
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+PostTypeIcon.propTypes = {
+  type: PropTypes.string.isRequired,
+  pinned: PropTypes.bool.isRequired,
+};
+
+function PostHeader({
+  intl,
+  post,
+}) {
+  return (
+    <div className="d-flex flex-fill">
+      <Avatar className="my-1" alt={post.author} src={post.authorAvatars.imageUrlSmall} />
+      <div className="d-flex flex-row flex-fill">
+        <PostTypeIcon type={post.type} pinned={post.pinned} />
+        <div className="d-flex flex-column flex-fill">
+          <span className="d-flex font-weight-bold text-gray">
+            {post.title}
+          </span>
+          <span className="d-flex small text-gray-300">
+            {post.author}{' | '}
+            <span title={post.createdAt}>
+              {intl.formatMessage(messages.postedOn, { time: timeago.format(post.createdAt, intl.locale) })}
+            </span>
+          </span>
         </div>
-        <div className="d-flex">
-          { post.raw_body }
-        </div>
-        <div className="d-flex">
-          { post.following
-            ? <FontAwesomeIcon icon={faSolidStar} />
-            : <FontAwesomeIcon icon={faEmptyStar} /> }
-          <span className="badge">
-            <FontAwesomeIcon icon={faComments} /> { post.comment_count }
+        <div className="d-flex align-items-center mr-3">
+          <FontAwesomeIcon icon={faComments} className="mr-2" />
+          <span style={{ minWidth: '2rem' }}>
+            {post.commentCount}
           </span>
         </div>
       </div>
@@ -71,21 +97,62 @@ function Post({ post, intl }) {
   );
 }
 
-export const postShape = PropTypes.shape({
-  abuse_flagged: PropTypes.bool,
-  author: PropTypes.string,
-  comment_count: PropTypes.number,
-  course_id: PropTypes.string,
-  following: PropTypes.bool,
-  id: PropTypes.string,
-  pinned: PropTypes.bool,
-  raw_body: PropTypes.string,
-  read: PropTypes.bool,
-  title: PropTypes.string,
-  topic_id: PropTypes.string,
-  type: PropTypes.string,
-  updated_at: PropTypes.string,
-});
+PostHeader.propTypes = {
+  intl: intlShape.isRequired,
+  post: postShape.isRequired,
+};
+
+function Post({
+  post,
+  intl,
+}) {
+  const dispatch = useDispatch();
+
+  return (
+    <div className="d-flex flex-column mt-2">
+      <PostHeader post={post} intl={intl} />
+      <div className="d-flex mt-2 mb-0 p-0" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
+      <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center">
+          <OverlayTrigger overlay={(
+            <Tooltip>
+              {intl.formatMessage(post.voted ? messages.removeLike : messages.like)}
+            </Tooltip>
+          )}
+          >
+            <IconButton
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(updateExistingThread(post.id, { voted: !post.voted }));
+                return false;
+              }}
+              alt="Like"
+              size="inline"
+              icon={post.voted ? faSolidThumb : faEmptyThumb}
+            />
+          </OverlayTrigger>
+          {post.voteCount}
+        </div>
+        <OverlayTrigger overlay={(
+          <Tooltip>
+            {intl.formatMessage(post.following ? messages.unfollow : messages.follow)}
+          </Tooltip>
+        )}
+        >
+          <IconButton
+            onClick={() => {
+              dispatch(updateExistingThread(post.id, { following: !post.following }));
+              return true;
+            }}
+            alt="Follow"
+            size="inline"
+            icon={post.following ? faSolidStar : faEmptyStar}
+          />
+        </OverlayTrigger>
+      </div>
+    </div>
+  );
+}
 
 Post.propTypes = {
   intl: intlShape.isRequired,

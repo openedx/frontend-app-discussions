@@ -1,22 +1,24 @@
 /* eslint-disable import/prefer-default-export */
+import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
+
 import { getHttpErrorStatus } from '../../utils';
 import {
-  deleteComment, getComment, getThreadComments, postComment, updateComment,
+  deleteComment, getCommentResponses, getThreadComments, postComment, updateComment,
 } from './api';
 import {
   deleteCommentDenied,
   deleteCommentFailed,
   deleteCommentRequest,
   deleteCommentSuccess,
-  fetchCommentDenied,
-  fetchCommentFailed,
-  fetchCommentRequest,
+  fetchCommentResponsesDenied,
+  fetchCommentResponsesFailed,
+  fetchCommentResponsesRequest,
+  fetchCommentResponsesSuccess,
   fetchCommentsDenied,
   fetchCommentsFailed,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  fetchCommentSuccess,
   postCommentDenied,
   postCommentFailed,
   postCommentRequest,
@@ -32,7 +34,7 @@ export function fetchThreadComments(threadId) {
     try {
       dispatch(fetchCommentsRequest({ threadId }));
       const data = await getThreadComments(threadId);
-      dispatch(fetchCommentsSuccess(data));
+      dispatch(fetchCommentsSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentsDenied());
@@ -44,17 +46,17 @@ export function fetchThreadComments(threadId) {
   };
 }
 
-export function fetchComment(commentId) {
+export function fetchCommentResponses(commentId) {
   return async (dispatch) => {
     try {
-      dispatch(fetchCommentRequest({ commentId }));
-      const data = await getComment(commentId);
-      dispatch(fetchCommentSuccess(data));
+      dispatch(fetchCommentResponsesRequest({ commentId }));
+      const data = await getCommentResponses(commentId);
+      dispatch(fetchCommentResponsesSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
-        dispatch(fetchCommentDenied());
+        dispatch(fetchCommentResponsesDenied());
       } else {
-        dispatch(fetchCommentFailed());
+        dispatch(fetchCommentResponsesFailed());
       }
       logError(error);
     }
@@ -66,7 +68,7 @@ export function editComment(commentId, comment) {
     try {
       dispatch(updateCommentRequest({ commentId }));
       const data = await updateComment(commentId, comment);
-      dispatch(updateCommentSuccess(data));
+      dispatch(updateCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(updateCommentDenied());
@@ -87,7 +89,7 @@ export function addComment(comment, threadId, parentId) {
         parentId,
       }));
       const data = await postComment(comment, threadId, parentId);
-      dispatch(postCommentSuccess(data));
+      dispatch(postCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(postCommentDenied());
