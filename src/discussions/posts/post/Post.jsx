@@ -3,71 +3,88 @@ import { faQuestionCircle, faStar as faEmptyStar } from '@fortawesome/free-regul
 import {
   faCircle, faComments, faFlag, faStar as faSolidStar, faThumbtack,
 } from '@fortawesome/free-solid-svg-icons';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Image } from '@edx/paragon';
+import * as timeago from 'timeago.js';
 import { Routes } from '../../../data/constants';
 import messages from './messages';
 
 function Post({ post, intl }) {
   return (
-    <div className="discussion-post d-flex border-bottom pl-2 pt-1 pb-1" data-post-id={post.id}>
-      <div className="d-flex post-unread-status m-1">
-        { post.read || <FontAwesomeIcon icon={faCircle} /> }
+    <Link
+      className="discussion-post d-flex list-group-item px-2 py-3 text-decoration-none text-gray-900"
+      data-post-id={post.id}
+      to={
+        Routes.COMMENTS.PATH.replace(':courseId', post.course_id)
+          .replace(':topicId', post.topic_id)
+          .replace(':postId', post.id)
+      }
+    >
+      <div className="post-unread-status ml-1">
+        <FontAwesomeIcon icon={faCircle} className="text-success-300" size="xs" />
       </div>
       <div className="d-flex flex-column">
         <div className="d-flex post-header">
-          <div className="d-flex user-avatar m-1">
-            [A]
-          </div>
-          <div className="d-flex post-type-icon m-1">
-            { post.type === 'question' && <FontAwesomeIcon icon={faQuestionCircle} /> }
-            { post.type === 'discussion' && <FontAwesomeIcon icon={faComments} /> }
+          <div className="d-flex user-avatar mr-1 px-0">
+            <Image
+              className="my-auto p-0"
+              src="https://source.unsplash.com/50x50/?nature,flower"
+              roundedCircle
+            />
           </div>
           <div className="d-flex m-1 flex-column">
-            <Link
-              className="post-title d-flex post-tile"
-              to={
-                Routes.POSTS.PATH.replace(':discussionId', post.topic_id)
-                  .replace(':courseId', post.course_id)
-                  .replace(':threadId', post.id)
-              }
-            >
-              { post.title }
-            </Link>
-            <div className="d-flex">
-              <div className="post-author">
+            <div className="d-flex flex-row">
+              <div className="d-flex post-type-icon m-1">
+                { post.type === 'question' && <FontAwesomeIcon icon={faQuestionCircle} /> }
+                { post.type === 'discussion' && <FontAwesomeIcon icon={faComments} /> }
+              </div>
+              <div className="post-title d-flex mx-1 font-weight-bold text-gray-700">
+                { post.title }
+              </div>
+            </div>
+            <div className="d-flex small text-gray-300">
+              <div className="post-author mx-1">
                 { post.author }
               </div>
-              <div className="post-datetime">
+              |
+              <div className="post-datetime mx-1">
                 {
                   post.updated_at
-                    ? intl.formatMessage(messages.last_response, { time: post.updated_at })
-                    : intl.formatMessage(messages.posted_on, { time: post.created_at })
+                    ? intl.formatMessage(messages.last_response, { time: timeago.format(post.updated_at) })
+                    : intl.formatMessage(messages.posted_on, { time: timeago.format(post.created_at) })
                 }
               </div>
             </div>
           </div>
-          <div className="status-icons">
-            { post.abuse_flagged && <FontAwesomeIcon icon={faFlag} /> }
-            { post.pinned && <FontAwesomeIcon icon={faThumbtack} /> }
-          </div>
         </div>
-        <div className="d-flex">
+        <div className="d-flex my-2">
           { post.raw_body }
         </div>
-        <div className="d-flex">
-          { post.following
-            ? <FontAwesomeIcon icon={faSolidStar} />
-            : <FontAwesomeIcon icon={faEmptyStar} /> }
-          <span className="badge">
+        <div className="d-flex h4 text-gray-300">
+          { post.pinned && (
+            <div className="badge mx-1">
+              <FontAwesomeIcon icon={faThumbtack} />
+            </div>
+          )}
+          <div className="badge mx-1">
+            { post.following
+              ? <FontAwesomeIcon icon={faSolidStar} />
+              : <FontAwesomeIcon icon={faEmptyStar} /> }
+          </div>
+          { post.abuse_flagged && (
+            <div className="badge mx-1">
+              <FontAwesomeIcon icon={faFlag} />
+            </div>
+          )}
+          <div className="badge mx-1">
             <FontAwesomeIcon icon={faComments} /> { post.comment_count }
-          </span>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

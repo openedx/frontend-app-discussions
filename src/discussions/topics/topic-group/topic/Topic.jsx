@@ -1,6 +1,6 @@
+/* eslint-disable no-unused-vars, react/forbid-prop-types */
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { faComments, faFlag } from '@fortawesome/free-solid-svg-icons';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,51 +8,65 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Routes } from '../../../../data/constants';
 
-// eslint-disable-next-line no-unused-vars
-function Topic({ id, name, topics }) {
+function Topic({
+  id,
+  name,
+  subtopics,
+  questions,
+  discussions,
+  flags,
+}) {
   const { courseId } = useParams();
 
   return (
-    <div className="discussion-topic d-flex flex-column border-bottom pl-2 pt-1 pb-1" data-topic-id={id}>
-      <Link
-        className="topic-name"
-        to={
-          Routes.POSTS.PATH.replace(':discussionId', id)
-            .replace(':courseId', courseId)
-            .replace(':threadId', '')
-        }
-      >
+    <Link
+      className="discussion-topic d-flex flex-column list-group-item px-3 py-2 text-gray-900 text-decoration-none"
+      data-topic-id={id}
+      to={
+        Routes.POSTS.PATH.replace(':courseId', courseId)
+          .replace(':topicId', id)
+      }
+    >
+      <div className="topic-name font-weight-bold small">
         { name }
-      </Link>
-      <div className="d-flex">
-        <span className="badge mr-1">
-          <FontAwesomeIcon icon={faQuestionCircle} />
-          22
-        </span>
-        <span className="badge mr-1">
-          <FontAwesomeIcon icon={faComments} />
-          33
-        </span>
-        <span className="badge">
-          <FontAwesomeIcon icon={faFlag} />
-          5
-        </span>
+      </div>
+      <div className="d-flex text-gray-300 h4 mt-1 mb-0">
+        <div className="badge mr-4">
+          <FontAwesomeIcon className="mr-2" icon={faQuestionCircle} />
+          {questions}
+        </div>
+        <div className="badge mr-4">
+          <FontAwesomeIcon className="mr-2" icon={faComments} />
+          {discussions}
+        </div>
+        {flags > 0 && (
+          <div className="badge">
+            <FontAwesomeIcon className="mr-2" icon={faFlag} />
+            {flags}
+          </div>
+        ) }
       </div>
 
-    </div>
+    </Link>
   );
 }
 
 export const topicShape = {
   name: PropTypes.string,
   id: PropTypes.string,
-  topics: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+  subtopics: PropTypes.array,
+  questions: PropTypes.number,
+  discussions: PropTypes.number,
+  flags: PropTypes.number,
 };
-topicShape.topics = PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired;
 Topic.propTypes = topicShape;
 Topic.defaultProps = {
   id: null,
   name: null,
+  subtopics: [],
+  questions: 0,
+  discussions: 0,
+  flags: 0,
 };
 
 export default Topic;

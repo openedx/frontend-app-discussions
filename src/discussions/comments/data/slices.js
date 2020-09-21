@@ -7,37 +7,80 @@ const commentsSlice = createSlice({
   initialState: {
     status: LoadingStatus.LOADING,
     page: null,
-    comments: {
-      // Map thread ids to comments
+    comment: {
+      // Map post ids to comment
+    },
+    replies: {
+      // Map post ids to replies
+    },
+    inlineReplies: {
+      // Map reply ids to inline replies
     },
     totalPages: null,
     totalThreads: null,
   },
   reducers: {
-    fetchCommentsRequest: (state) => {
+    fetchRepliesRequest: (state) => {
       state.status = LoadingStatus.LOADING;
     },
-    fetchCommentsSuccess: (state, { payload }) => {
-      const { data, topicId } = payload;
+    fetchRepliesSuccess: (state, { payload }) => {
+      const { data, postId } = payload;
       state.status = LoadingStatus.LOADED;
-      state.comments[topicId] = data.results;
+      state.replies[postId] = data.results;
       state.page = data.pagination.page;
       state.totalPages = data.pagination.num_pages;
       state.totalThreads = data.pagination.count;
     },
-    fetchCommentsFailed: (state) => {
+    fetchRepliesFailed: (state) => {
       state.status = LoadingStatus.FAILED;
     },
-    fetchCommentsDenied: (state) => {
+    fetchRepliesDenied: (state) => {
+      state.status = LoadingStatus.DENIED;
+    },
+    fetchCommentRequest: (state) => {
+      state.status = LoadingStatus.LOADING;
+    },
+    fetchCommentSuccess: (state, { payload }) => {
+      const { data, postId } = payload;
+      state.status = LoadingStatus.LOADED;
+      state.comment[postId] = data;
+    },
+    fetchCommentFailed: (state) => {
+      state.status = LoadingStatus.FAILED;
+    },
+    fetchCommentDenied: (state) => {
+      state.status = LoadingStatus.DENIED;
+    },
+    fetchInlineRepliesRequest: (state) => {
+      state.status = LoadingStatus.LOADING;
+    },
+    fetchInlineRepliesSuccess: (state, { payload }) => {
+      const { data, replyId } = payload;
+      state.status = LoadingStatus.LOADED;
+      state.inlineReplies[replyId] = data.results;
+      state.page = data.pagination.page;
+      state.totalPages = data.pagination.num_pages;
+      state.totalThreads = data.pagination.count;
+    },
+    fetchInlineRepliesFailed: (state) => {
+      state.status = LoadingStatus.FAILED;
+    },
+    fetchInlineRepliesDenied: (state) => {
       state.status = LoadingStatus.DENIED;
     },
   },
 });
 
 export const {
-  fetchCommentsRequest,
-  fetchCommentsSuccess,
-  fetchCommentsFailed,
+  fetchRepliesRequest,
+  fetchRepliesSuccess,
+  fetchRepliesFailed,
+  fetchCommentRequest,
+  fetchCommentSuccess,
+  fetchCommentFailed,
+  fetchInlineRepliesRequest,
+  fetchInlineRepliesSuccess,
+  fetchInlineRepliesFailed,
 } = commentsSlice.actions;
 
 export const commentsReducer = commentsSlice.reducer;

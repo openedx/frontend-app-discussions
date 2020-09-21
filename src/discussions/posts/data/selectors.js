@@ -1,4 +1,12 @@
 /* eslint-disable import/prefer-default-export */
-export const selectCourseThreads = topicId => state => state.threads.threads[topicId] || [];
+export const selectCoursePosts = topicId => state => {
+  if (topicId) {
+    return state.posts.topicPostMap[topicId] || [];
+  }
 
-export const courseTopicsStatus = state => state.topics.status;
+  return Object.values(state.posts.posts);
+};
+
+export const selectUserCoursePosts = author => state => (
+  Object.values(state.posts.posts).filter(post => post.author === author)
+);

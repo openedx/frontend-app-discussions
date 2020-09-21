@@ -1,4 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-export const selectTopicComments = topicId => state => state.comments.comments[topicId] || [];
+export const selectPostComment = postId => state => state.comments.comment[postId] || {};
 
-export const courseTopicsStatus = state => state.comments.status;
+export const selectPostReplies = postId => state => state.comments.replies[postId] || [];
+
+export const selectReplyInlineReplies = replyId => state => state.comments.inlineReplies[replyId] || [];

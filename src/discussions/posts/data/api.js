@@ -2,7 +2,7 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { API_BASE_URL } from '../../../data/constants';
 
-export async function getCourseThreads(
+export async function getCoursePosts(
   courseId, topicIds, {
     page, pageSize, textSearch, orderBy, following, view, requestedFields,
   } = {},
