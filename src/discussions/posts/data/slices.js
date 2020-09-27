@@ -36,6 +36,7 @@ const coursePostsSlice = createSlice({
     topicPostMap: {
       // Mapping of topic ids to posts in them
     },
+    postAddingInProgress: true,
     totalPages: null,
     totalThreads: null,
   },
@@ -57,6 +58,12 @@ const coursePostsSlice = createSlice({
     fetchCoursePostsDenied: (state) => {
       state.status = LoadingStatus.DENIED;
     },
+    startPostAdding: (state) => {
+      state.postAddingInProgress = true;
+    },
+    cancelPostAdding: (state) => {
+      state.postAddingInProgress = false;
+    },
   },
 });
 
@@ -64,6 +71,8 @@ export const {
   fetchCoursePostsRequest,
   fetchCoursePostsSuccess,
   fetchCoursePostsFailed,
+  startPostAdding,
+  cancelPostAdding,
 } = coursePostsSlice.actions;
 
 export const coursePostsReducer = coursePostsSlice.reducer;

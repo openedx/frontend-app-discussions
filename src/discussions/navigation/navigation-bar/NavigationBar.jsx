@@ -1,12 +1,15 @@
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Nav, SearchField } from '@edx/paragon';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import { Routes } from '../../../data/constants';
+import { startPostAdding } from '../../posts/data';
 import messages from './messages';
 
 function NavigationBar({ intl }) {
+  const dispatch = useDispatch();
   const { courseId } = useParams();
 
   const navLinks = [
@@ -44,7 +47,11 @@ function NavigationBar({ intl }) {
           placeholder="Search all posts"
           onSubmit={() => null}
         />
-        <Button variant="outline-primary" className="ml-2 rounded-lg">
+        <Button
+          variant="outline-primary"
+          className="ml-2 rounded-lg"
+          onClick={() => dispatch(startPostAdding())}
+        >
           Add Post
         </Button>
       </div>

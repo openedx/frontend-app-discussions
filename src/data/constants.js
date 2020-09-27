@@ -59,6 +59,7 @@ export const Routes = {
     PATH: '/discussions/:courseId/topics/:topicId/posts',
     MY_POSTS: '/discussions/:courseId/posts/mine',
     ALL_POSTS: '/discussions/:courseId/posts/all',
+    ADD_POST: '/discussions/:courseId/topics/:topicId/posts/add',
   },
   COMMENTS: {
     PATH: '/discussions/:courseId/topics/:topicId/posts/:postId',

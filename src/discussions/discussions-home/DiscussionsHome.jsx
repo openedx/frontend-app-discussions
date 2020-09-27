@@ -1,12 +1,14 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Route, Switch } from 'react-router';
 import { Routes } from '../../data/constants';
 import { BreadcrumbMenu, NavigationBar } from '../navigation';
+import PostAdd from '../posts/post-add/PostAdd';
 import PostsViewContainer from '../posts/PostsViewContainer';
 import TopicsViewContainer from '../topics/TopicsViewContainer';
 import CommentsViewContainer from '../comments/CommentsViewContainer';
 
-export default function DiscussionsHome() {
+function DiscussionsHome({ addingPost }) {
   return (
     <main className="container-fluid my-4">
       <div className="d-flex flex-column">
@@ -34,14 +36,24 @@ export default function DiscussionsHome() {
             </Switch>
           </div>
           <div className="d-flex w-50 pl-1">
-            <Switch>
-              <Route path={Routes.COMMENTS.PATH}>
-                <CommentsViewContainer />
-              </Route>
-            </Switch>
+            { addingPost
+              ? <PostAdd />
+              : (
+                <Switch>
+                  <Route path={Routes.COMMENTS.PATH}>
+                    <CommentsViewContainer />
+                  </Route>
+                </Switch>
+              )}
           </div>
         </div>
       </div>
     </main>
   );
 }
+
+DiscussionsHome.propTypes = {
+  addingPost: PropTypes.bool.isRequired,
+};
+
+export default DiscussionsHome;
