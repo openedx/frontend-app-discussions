@@ -5,6 +5,7 @@ import { Button, Form } from '@edx/paragon';
 import { faComments, faQuestion, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import PostEditor from '../post-editor/PostEditor';
 import { cancelPostAdding } from '../data';
 
 import messages from './messages';
@@ -71,7 +72,7 @@ function PostAdd({ intl }) {
           <Form.Label>
             {intl.formatMessage(messages.question_text)}
           </Form.Label>
-          <Form.Control as="textarea" rows="3" />
+          <PostEditor />
         </Form.Group>
 
         <Form.Group>
