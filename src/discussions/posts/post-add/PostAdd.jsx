@@ -1,5 +1,5 @@
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Form } from '@edx/paragon';
 import { faComments, faQuestion, faStar } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,9 @@ import messages from './messages';
 function PostAdd({ intl }) {
   const dispatch = useDispatch();
   const cancelAdding = () => dispatch(cancelPostAdding());
+
+  const [markdownOutput, setMarkdownOutput] = useState('');
+  const onPostEditorChange = markdown => setMarkdownOutput(markdown);
 
   return (
     <div className="mx-4 my-2">
@@ -72,7 +75,8 @@ function PostAdd({ intl }) {
           <Form.Label>
             {intl.formatMessage(messages.question_text)}
           </Form.Label>
-          <PostEditor />
+          <PostEditor onChange={onPostEditorChange} />
+          <pre>{markdownOutput}</pre>
         </Form.Group>
 
         <Form.Group>

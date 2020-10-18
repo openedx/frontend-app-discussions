@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 
+import PropTypes from 'prop-types';
+
+import { convertToRaw, EditorState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import draftToMarkdown from 'draftjs-to-markdown';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-function PostEditor() {
+function PostEditor({ onChange }) {
   const [editorState, setEditorState] = useState(
     () => EditorState.createEmpty(),
   );
+
+  const onEditorStateChange = (...props) => {
+    setEditorState(...props);
+
+    const rawContentState = convertToRaw(editorState.getCurrentContent());
+    const markdown = draftToMarkdown(rawContentState);
+
+    onChange(markdown);
+  };
 
   const toolbar = {
     options: ['inline', 'blockType', 'image', 'list', 'link', 'history'],
@@ -32,10 +44,14 @@ function PostEditor() {
         height: 'auto',
         userFocus: 'all',
       }}
-      onEditorStateChange={setEditorState}
+      onEditorStateChange={onEditorStateChange}
       toolbar={toolbar}
     />
   );
 }
+
+PostEditor.propTypes = {
+  onChange: PropTypes.func.isRequired,
+};
 
 export default PostEditor;
