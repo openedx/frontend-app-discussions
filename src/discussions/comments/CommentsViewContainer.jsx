@@ -16,9 +16,9 @@ function CommentsViewContainer() {
     dispatch(fetchPostReplies(postId));
   }, [postId]);
 
-  return (
-    <CommentsView comment={comment} replies={replies} />
-  );
+  return comment
+    ? <CommentsView comment={comment} replies={replies} />
+    : null;
 }
 
 CommentsViewContainer.propTypes = {};

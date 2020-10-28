@@ -6,22 +6,19 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Image } from '@edx/paragon';
 import * as timeago from 'timeago.js';
 import { Routes } from '../../../data/constants';
+import { DiscussionAppLink } from '../../navigation';
 import messages from './messages';
 
 function Post({ post, intl }) {
   return (
-    <Link
+    <DiscussionAppLink
       className="discussion-post d-flex list-group-item px-2 py-3 text-decoration-none text-gray-900"
       data-post-id={post.id}
-      to={
-        Routes.COMMENTS.PATH.replace(':courseId', post.course_id)
-          .replace(':topicId', post.topic_id)
-          .replace(':postId', post.id)
-      }
+      to={Routes.COMMENTS.PATH}
+      urlParams={{ postId: post.id }}
     >
       <div className="post-unread-status ml-1">
         <FontAwesomeIcon icon={faCircle} className="text-success-300" size="xs" />
@@ -84,7 +81,7 @@ function Post({ post, intl }) {
           </div>
         </div>
       </div>
-    </Link>
+    </DiscussionAppLink>
   );
 }
 

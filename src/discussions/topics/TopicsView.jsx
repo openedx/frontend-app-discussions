@@ -6,10 +6,10 @@ import TopicGroup from './topic-group/TopicGroup';
 import TopicSearchBar from './topic-search-bar/TopicSearchBar';
 
 function TopicsView({ coursewareTopics, nonCoursewareTopics }) {
-  const { category } = useParams();
+  const { categoryName } = useParams();
 
   const renderNonCoursewareTopics = () => {
-    if (nonCoursewareTopics && category === undefined) {
+    if (nonCoursewareTopics && categoryName === undefined) {
       return <TopicGroup subtopics={nonCoursewareTopics} />;
     }
 
@@ -18,8 +18,8 @@ function TopicsView({ coursewareTopics, nonCoursewareTopics }) {
 
   const renderCoursewareTopics = () => {
     const topics = (
-      category
-        ? coursewareTopics.filter(topic => topic.name === category)
+      categoryName
+        ? coursewareTopics.filter(topic => topic.name === categoryName)
         : coursewareTopics
     );
 

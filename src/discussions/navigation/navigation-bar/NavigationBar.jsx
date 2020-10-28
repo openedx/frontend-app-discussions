@@ -2,24 +2,45 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Nav, SearchField } from '@edx/paragon';
 import React from 'react';
 import { useParams } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import { Routes } from '../../../data/constants';
 import messages from './messages';
+import { buildDiscussionsUrl } from '../../utils';
 
 function NavigationBar({ intl }) {
-  const { courseId } = useParams();
+  const { embed, view, courseId } = useParams();
+  const { pathname } = useLocation();
 
   const navLinks = [
     {
-      url: Routes.POSTS.MY_POSTS.replace(':courseId', courseId),
+      url: buildDiscussionsUrl(Routes.POSTS.FILTER, {
+        embed,
+        view,
+        courseId,
+        postFilter: 'mine',
+      }),
+      extraActivePaths: [],
       label: intl.formatMessage(messages.my_posts),
     },
     {
-      url: Routes.POSTS.ALL_POSTS.replace(':courseId', courseId),
+      url: buildDiscussionsUrl(Routes.POSTS.FILTER, {
+        embed,
+        view,
+        courseId,
+        postFilter: 'all',
+      }),
+      extraActivePaths: [],
       label: intl.formatMessage(messages.all_posts),
     },
     {
-      url: Routes.TOPICS.ALL.replace(':courseId', courseId),
+      url: buildDiscussionsUrl(Routes.TOPICS.PATH, {
+        embed,
+        view,
+        courseId,
+      }),
+      extraActivePaths: [
+        Routes.TOPICS.CATEGORY,
+      ],
       label: intl.formatMessage(messages.all_topics),
     },
   ];
@@ -33,6 +54,17 @@ function NavigationBar({ intl }) {
             activeClassName="text-white bg-primary-500 border-primary-300"
             className="rounded-lg"
             to={link.url}
+            isActive={() => [link.url].concat(link.extraActivePaths).map(path => (
+              buildDiscussionsUrl(
+                path,
+                {
+                  embed,
+                  view,
+                  courseId,
+                },
+                true,
+              )
+            )).some(path => pathname.startsWith(path))}
           >
             { link.label }
           </Nav.Link>

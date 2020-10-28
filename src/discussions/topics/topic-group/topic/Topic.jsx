@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 import { Routes } from '../../../../data/constants';
+import { DiscussionAppLink } from '../../../navigation';
 
 function Topic({
   id,
@@ -16,16 +16,12 @@ function Topic({
   discussions,
   flags,
 }) {
-  const { courseId } = useParams();
-
   return (
-    <Link
+    <DiscussionAppLink
       className="discussion-topic d-flex flex-column list-group-item px-3 py-2 text-gray-900 text-decoration-none"
       data-topic-id={id}
-      to={
-        Routes.POSTS.PATH.replace(':courseId', courseId)
-          .replace(':topicId', id)
-      }
+      to={Routes.POSTS.PATH}
+      urlParams={{ topicId: id }}
     >
       <div className="topic-name font-weight-bold small">
         { name }
@@ -47,7 +43,7 @@ function Topic({
         ) }
       </div>
 
-    </Link>
+    </DiscussionAppLink>
   );
 }
 

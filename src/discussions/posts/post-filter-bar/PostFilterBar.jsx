@@ -1,6 +1,6 @@
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useParams } from 'react-router';
 import { buildIntlSelectionList } from '../../utils';
 import { SelectableDropdown } from '../../../components/selectable-dropdown';
 import {
@@ -11,10 +11,11 @@ import {
 } from '../../../data/constants';
 import messages from './messages';
 
-function PostFilterBar({ filterSelfPosts, intl }) {
+function PostFilterBar({ intl }) {
+  const { postFilter } = useParams();
   let postsFilterOptions = buildIntlSelectionList(AllPostsFilter, intl, messages);
   let defaultPostFilter = AllPostsFilter.ALL_POSTS;
-  if (filterSelfPosts) {
+  if (postFilter === 'mine') {
     postsFilterOptions = buildIntlSelectionList(MyPostsFilter, intl, messages);
     defaultPostFilter = MyPostsFilter.MY_POSTS;
   }
@@ -67,12 +68,7 @@ function PostFilterBar({ filterSelfPosts, intl }) {
 }
 
 PostFilterBar.propTypes = {
-  filterSelfPosts: PropTypes.bool,
   intl: intlShape.isRequired,
-};
-
-PostFilterBar.defaultProps = {
-  filterSelfPosts: false,
 };
 
 export default injectIntl(PostFilterBar);

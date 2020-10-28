@@ -52,20 +52,24 @@ export const TopicsFilter = {
 };
 
 export const Routes = {
-  DISCUSSIONS: {
-    PATH: '/discussions/:courseId?',
+  COMMENTS: {
+    PATH: '/:courseId/:embed(embed)?/:view(discussion|topic|post)/posts/:postId',
+  },
+  VIEWS: {
+    ALL: '/:courseId/:embed(embed)?/:view(discussion|topic|post)',
+    DISCUSSION: '/:courseId/:embed(embed)?/:view(discussion)',
+    TOPIC: '/:courseId/:embed(embed)?/:view(topic)',
+    POST: '/:courseId/:embed(embed)?/:view(post)',
+  },
+  EMBED: {
+    PATH: '/:courseId/:embed(embed)/:view(discussion|topic|post)',
   },
   POSTS: {
-    PATH: '/discussions/:courseId/topics/:topicId/posts',
-    MY_POSTS: '/discussions/:courseId/posts/mine',
-    ALL_POSTS: '/discussions/:courseId/posts/all',
-  },
-  COMMENTS: {
-    PATH: '/discussions/:courseId/topics/:topicId/posts/:postId',
+    PATH: '/:courseId/:embed(embed)?/:view(discussion|topic)/topics/:topicId',
+    FILTER: '/:courseId/:embed(embed)?/:view(discussion)/posts/:postFilter(all|mine)',
   },
   TOPICS: {
-    PATH: '/discussions/:courseId/topics/:category?',
-    ALL: '/discussions/:courseId/topics',
-    CATEGORY: '/discussions/:courseId/topics/:category',
+    PATH: '/:courseId/:embed(embed)?/:view(discussion)/topics',
+    CATEGORY: '/:courseId/:embed(embed)?/:view(discussion|topic)/category/:categoryName',
   },
 };

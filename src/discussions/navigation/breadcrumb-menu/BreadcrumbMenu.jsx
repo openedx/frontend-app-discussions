@@ -5,11 +5,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Routes } from '../../../data/constants';
 import messages from './messages';
+import { buildDiscussionsUrl } from '../../utils';
+import { selectCoursePost } from '../../posts/data/selectors';
 import { selectCourseTopic, selectTopicCategory } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 
 function BreadcrumbMenu({ intl }) {
-  const { courseId, category, topicId } = useParams();
+  const {
+    embed,
+    view,
+    courseId,
+    categoryName,
+    topicId,
+    postId,
+  } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,20 +26,31 @@ function BreadcrumbMenu({ intl }) {
     dispatch(fetchCourseTopics(courseId));
   }, [courseId]);
 
-  const topic = useSelector(selectCourseTopic(topicId));
-  const topicCategory = useSelector(selectTopicCategory(topicId));
+  const post = useSelector(selectCoursePost(postId));
+  const topic = useSelector(selectCourseTopic(post ? post.topic_id : topicId));
+  const topicCategory = useSelector(selectTopicCategory(post ? post.topic_id : topicId));
 
   const crumbs = [
     {
-      url: Routes.TOPICS.ALL.replace(':courseId', courseId),
+      url: buildDiscussionsUrl(Routes.TOPICS.PATH, { embed, view, courseId }),
       label: intl.formatMessage(messages.all_topics),
     },
     {
-      url: Routes.TOPICS.CATEGORY.replace(':courseId', courseId).replace(':category', category || (topicCategory && topicCategory.name)),
-      label: category || (topicCategory && topicCategory.name),
+      url: buildDiscussionsUrl(Routes.TOPICS.CATEGORY, {
+        embed,
+        view,
+        courseId,
+        categoryName: categoryName || (topicCategory && topicCategory.name),
+      }),
+      label: categoryName || (topicCategory && topicCategory.name),
     },
     {
-      url: Routes.POSTS.PATH.replace(':courseId', courseId).replace(':topicId', topicId),
+      url: buildDiscussionsUrl(Routes.POSTS.PATH, {
+        embed,
+        view,
+        courseId,
+        topicId: post ? post.topic_id : topicId,
+      }),
       label: (topic && topic.name) || null,
     },
   ].filter(crumb => Boolean(crumb.label));

@@ -1,8 +1,8 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
-import Header, { messages as headerMessages } from '@edx/frontend-component-header';
+import { messages as footerMessages } from '@edx/frontend-component-footer';
+import { messages as headerMessages } from '@edx/frontend-component-header';
 import {
   APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
@@ -20,9 +20,7 @@ import store from './store';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <Header />
       <DiscussionsHomeContainer />
-      <Footer />
     </AppProvider>,
     document.getElementById('root'),
   );
