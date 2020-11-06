@@ -1,4 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-export const selectCourseThreads = topicId => state => state.threads.threads[topicId] || [];
+export const selectThreads = topicId => state => (state.threads.topicThreadMap[topicId] || []).map(
+  threadId => state.threads.threads[threadId],
+);
 
-export const courseTopicsStatus = state => state.topics.status;
+export const threadsStatus = state => state.threads.status;
