@@ -55,6 +55,7 @@ const threadsSlice = createSlice({
       myPosts: MyPostsFilter.MY_POSTS,
       search: '',
     },
+    postEditorVisible: false,
     sortedBy: ThreadOrdering.BY_LAST_ACTIVITY,
   },
   reducers: {
@@ -150,6 +151,12 @@ const threadsSlice = createSlice({
     setSearchQuery: (state, { payload }) => {
       state.filters.search = payload;
     },
+    showPostEditor: (state) => {
+      state.postEditorVisible = true;
+    },
+    hidePostEditor: (state) => {
+      state.postEditorVisible = false;
+    },
   },
 });
 
@@ -179,6 +186,8 @@ export const {
   setSortedBy,
   setStatusFilter,
   setSearchQuery,
+  showPostEditor,
+  hidePostEditor,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;
