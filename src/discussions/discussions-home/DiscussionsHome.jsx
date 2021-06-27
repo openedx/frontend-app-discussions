@@ -1,15 +1,18 @@
 import React from 'react';
 
+import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router';
 
 import { PostActionsBar } from '../../components';
 import { Routes } from '../../data/constants';
 import { CommentsView } from '../comments';
 import { BreadcrumbMenu, NavigationBar } from '../navigation';
-import { PostsView } from '../posts';
+import { PostEditor, PostsView } from '../posts';
 import { TopicsView } from '../topics';
 
 export default function DiscussionsHome() {
+  const postEditorVisible = useSelector(state => state.threads.postEditorVisible);
+
   return (
     <main className="container my-4 d-flex flex-row">
       <div className="d-flex flex-column w-50 mr-1">
@@ -34,9 +37,14 @@ export default function DiscussionsHome() {
       </div>
       <div className="d-flex w-50 pl-1 flex-column">
         <PostActionsBar />
-        <Route path={Routes.COMMENTS.PATH}>
-          <CommentsView />
-        </Route>
+        {
+          postEditorVisible ? <PostEditor />
+            : (
+              <Route path={Routes.COMMENTS.PATH}>
+                <CommentsView />
+              </Route>
+            )
+        }
       </div>
     </main>
   );
