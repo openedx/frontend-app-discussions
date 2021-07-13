@@ -1,17 +1,80 @@
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
-import Post, { postShape } from './post/Post';
 
-function PostsView({ posts }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+
+import { AppContext } from '@edx/frontend-platform/react';
+import { Spinner } from '@edx/paragon';
+
+import { RequestStatus } from '../../data/constants';
+import {
+  selectAllThreads,
+  selectThreadFilters,
+  selectThreadSorting,
+  selectTopicThreads,
+  selectUserThreads,
+  threadsLoadingStatus,
+} from './data/selectors';
+import { fetchThreads } from './data/thunks';
+import PostLink from './post/PostLink';
+import PostFilterBar from './post-filter-bar/PostFilterBar';
+
+function PostsView({ showOwnPosts }) {
+  const {
+    courseId,
+    topicId,
+  } = useParams();
+  const dispatch = useDispatch();
+
+  const { authenticatedUser } = useContext(AppContext);
+  const orderBy = useSelector(selectThreadSorting());
+  const filters = useSelector(selectThreadFilters());
+  const loadingStatus = useSelector(threadsLoadingStatus());
+
+  let posts = [];
+  if (topicId) {
+    posts = useSelector(selectTopicThreads(topicId));
+  } else if (showOwnPosts) {
+    posts = useSelector(selectUserThreads(authenticatedUser.username));
+  } else {
+    posts = useSelector(selectAllThreads());
+  }
+  useEffect(() => {
+    // The courseId from the URL is the course we WANT to load.
+    dispatch(fetchThreads(courseId, {
+      orderBy,
+      filters,
+    }));
+  }, [courseId, orderBy, filters]);
+
   return (
     <div className="discussion-posts d-flex flex-column">
-      { posts.map(post => <Post post={post} key={post.id} />) }
+      <PostFilterBar filterSelfPosts={showOwnPosts} />
+      {loadingStatus === RequestStatus.IN_PROGRESS ? (
+        <div className="d-flex justify-content-center p-4">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
+      ) : (
+        <div className="list-group list-group-flush">
+          {posts.map(post => (
+            <PostLink
+              post={post}
+              key={post.id}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 PostsView.propTypes = {
-  posts: PropTypes.arrayOf(postShape).isRequired,
+  showOwnPosts: PropTypes.bool,
+};
+
+PostsView.defaultProps = {
+  showOwnPosts: false,
 };
 
 export default PostsView;

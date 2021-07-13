@@ -1,2 +1,2 @@
 /* eslint-disable import/prefer-default-export */
-export { default as PostsViewContainer } from './PostsViewContainer';
+export { default as PostsView } from './PostsView';

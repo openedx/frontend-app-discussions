@@ -1,36 +1,37 @@
-import { Dropdown } from '@edx/paragon';
+import React from 'react';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+
+import { Dropdown } from '@edx/paragon';
 
 function SelectableDropdown({
-  options, defaultOption, onChange, label,
+  options,
+  onChange,
+  label,
 }) {
-  const [selected, setSelected] = useState(options.find(option => (option.value === defaultOption)));
   return (
     <Dropdown>
-      <Dropdown.Toggle>
-        { label || selected.label }
+      <Dropdown.Toggle variant="link" size="sm">
+        {label}
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        { options
-          .map(option => (
+        {
+          options.map(option => (
             <Dropdown.Item
               type="button"
               key={option.value}
               onClick={
-                    () => {
-                      setSelected(option);
-                      if (onChange) {
-                        onChange(option);
-                      }
-                    }
+                () => {
+                  if (onChange) {
+                    onChange(option);
                   }
+                }
+              }
             >
-              { option.label }
+              {option.label}
             </Dropdown.Item>
-          )) }
+          ))
+}
       </Dropdown.Menu>
-
     </Dropdown>
   );
 }
@@ -42,7 +43,6 @@ SelectableDropdown.propTypes = {
       label: PropTypes.string,
     }),
   ).isRequired,
-  defaultOption: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   label: PropTypes.node,
 };

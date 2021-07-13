@@ -1,30 +1,57 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { topicShape } from './topic-group/topic/Topic';
-import TopicGroup from './topic-group/TopicGroup';
+import React, { useEffect } from 'react';
 
-function TopicsView({ coursewareTopics, nonCoursewareTopics }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+
+import { selectCourseTopics, selectTopicFilter } from './data/selectors';
+import { fetchCourseTopics } from './data/thunks';
+import TopicGroup from './topic-group/TopicGroup';
+import TopicSearchBar from './topic-search-bar/TopicSearchBar';
+
+function TopicsView() {
+  const dispatch = useDispatch();
+  const { courseId, category } = useParams();
+  const {
+    coursewareTopics,
+    nonCoursewareTopics,
+  } = useSelector(selectCourseTopics());
+  const filter = useSelector(selectTopicFilter());
+  const topics = (
+    category
+      ? coursewareTopics.filter(topic => topic.name === category)
+      : coursewareTopics
+  );
+  useEffect(() => {
+    // The courseId from the URL is the course we WANT to load.
+    dispatch(fetchCourseTopics(courseId));
+  }, [courseId]);
+
+  const topicElements = topics.map(
+    topicGroup => (
+      <TopicGroup
+        id={topicGroup.id}
+        name={topicGroup.name}
+        subtopics={topicGroup.children}
+        key={topicGroup.name}
+        filter={filter}
+      />
+    ),
+  );
+
+  if (nonCoursewareTopics && category === undefined) {
+    topicElements.unshift(<TopicGroup subtopics={nonCoursewareTopics} filter={filter} />);
+  }
+
   return (
-    <div className="discussion-topics d-flex flex-column">
-      { nonCoursewareTopics
-      && <TopicGroup topics={nonCoursewareTopics} /> }
-      { coursewareTopics.map(
-        topicGroup => (
-          <TopicGroup
-            id={topicGroup.id}
-            name={topicGroup.name}
-            topics={topicGroup.children}
-            key={topicGroup.name}
-          />
-        ),
-      ) }
+    <div className="discussion-topics d-flex flex-column card">
+      <TopicSearchBar />
+      <div className="list-group list-group-flush">
+        {topicElements}
+      </div>
     </div>
   );
 }
 
-TopicsView.propTypes = {
-  coursewareTopics: PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired,
-  nonCoursewareTopics: PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired,
-};
+TopicsView.propTypes = {};
 
 export default TopicsView;

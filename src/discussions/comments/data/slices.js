@@ -1,16 +1,31 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
+
 import { RequestStatus } from '../../../data/constants';
 
 function normaliseComments(state, rawCommentData) {
-  const { threadCommentMap: threads, comments } = state;
+  const {
+    threadCommentMap: threads,
+    commentResponsesMap: responses,
+    comments,
+  } = state;
   rawCommentData.forEach(
     comment => {
-      if (!threads[comment.thread_id]) {
-        threads[comment.thread_id] = [];
-      }
-      if (!threads[comment.thread_id].includes(comment.id)) {
-        threads[comment.thread_id].push(comment.id);
+      if (comment.parentId) {
+        if (!responses[comment.parentId]) {
+          responses[comment.parentId] = [];
+        }
+        if (!responses[comment.parentId].includes(comment.id)) {
+          responses[comment.parentId].push(comment.id);
+        }
+      } else {
+        if (!threads[comment.threadId]) {
+          threads[comment.threadId] = [];
+        }
+
+        if (!threads[comment.threadId].includes(comment.id)) {
+          threads[comment.threadId].push(comment.id);
+        }
       }
       comments[comment.id] = comment;
     },
@@ -24,6 +39,9 @@ const commentsSlice = createSlice({
     page: null,
     threadCommentMap: {
       // Maps threads to comment ids in them.
+    },
+    commentResponsesMap: {
+      // Maps comments to response comments in them.
     },
     comments: {
       // Map comment ids to comments.
@@ -43,7 +61,7 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.SUCCESSFUL;
       normaliseComments(state, payload.results);
       state.page = payload.pagination.page;
-      state.totalPages = payload.pagination.num_pages;
+      state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
     fetchCommentsFailed: (state) => {
@@ -52,16 +70,16 @@ const commentsSlice = createSlice({
     fetchCommentsDenied: (state) => {
       state.status = RequestStatus.DENIED;
     },
-    fetchCommentRequest: (state) => {
+    fetchCommentResponsesRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
-    fetchCommentFailed: (state) => {
+    fetchCommentResponsesFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    fetchCommentDenied: (state) => {
+    fetchCommentResponsesDenied: (state) => {
       state.status = RequestStatus.DENIED;
     },
-    fetchCommentSuccess: (state, { payload }) => {
+    fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       normaliseComments(state, payload.results);
     },
@@ -107,7 +125,7 @@ const commentsSlice = createSlice({
     deleteCommentSuccess: (state, { payload }) => {
       const { commentId } = payload;
       state.postStatus = RequestStatus.SUCCESSFUL;
-      const threadId = state.comments[commentId].thread_id;
+      const { threadId } = state.comments[commentId];
       state.threadCommentMap[threadId] = state.threadCommentMap[threadId].filter(item => item !== commentId);
       delete state.comments[commentId];
     },
@@ -115,14 +133,14 @@ const commentsSlice = createSlice({
 });
 
 export const {
-  fetchCommentDenied,
-  fetchCommentFailed,
-  fetchCommentRequest,
+  fetchCommentResponsesDenied,
+  fetchCommentResponsesFailed,
+  fetchCommentResponsesRequest,
+  fetchCommentResponsesSuccess,
   fetchCommentsDenied,
   fetchCommentsFailed,
   fetchCommentsRequest,
   fetchCommentsSuccess,
-  fetchCommentSuccess,
   postCommentDenied,
   postCommentFailed,
   postCommentRequest,

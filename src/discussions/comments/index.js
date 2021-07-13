@@ -1,2 +1,2 @@
 /* eslint-disable import/prefer-default-export */
-export { default as CommentsViewContainer } from './CommentsViewContainer';
+export { default as CommentsView } from './CommentsView';

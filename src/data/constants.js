@@ -20,9 +20,9 @@ export const RequestStatus = {
  * @enum {string}
  */
 export const ThreadOrdering = {
-  BY_LAST_ACTIVITY: 'sort_by_last_activity',
-  BY_COMMENT_COUNT: 'sort_by_comment_count',
-  BY_VOTE_COUNT: 'sort_by_vote_count',
+  BY_LAST_ACTIVITY: 'lastActivityAt',
+  BY_COMMENT_COUNT: 'commentCount',
+  BY_VOTE_COUNT: 'voteCount',
 };
 
 /**
@@ -41,9 +41,21 @@ export const ThreadViewStatus = {
  * @enum {string}
  */
 export const MyPostsFilter = {
-  MY_POSTS: 'my_posts',
-  MY_DISCUSSIONS: 'my_discussions',
-  MY_QUESTIONS: 'my_questions',
+  MY_POSTS: 'myPosts',
+  MY_DISCUSSIONS: 'myDiscussions',
+  MY_QUESTIONS: 'myQuestions',
+};
+
+/**
+ * Enum for filtering posts by status.
+ * @readonly
+ * @enum {string}
+ */
+export const PostsStatusFilter = {
+  ALL: 'filterAll',
+  UNREAD: 'filterUnread',
+  FOLLOWING: 'filterFollowing',
+  FLAGGED: 'filterFlagged',
 };
 
 /**
@@ -52,9 +64,9 @@ export const MyPostsFilter = {
  * @enum {string}
  */
 export const AllPostsFilter = {
-  ALL_POSTS: 'all_posts',
-  ALL_DISCUSSIONS: 'all_discussions',
-  ALL_QUESTIONS: 'all_questions',
+  ALL_POSTS: 'allPosts',
+  ALL_DISCUSSIONS: 'allDiscussions',
+  ALL_QUESTIONS: 'allQuestions',
 };
 
 /**
@@ -63,22 +75,32 @@ export const AllPostsFilter = {
  * @enum {string}
  */
 export const TopicsFilter = {
-  ALL: 'all_topics',
-  COURSE_SECTION: 'course_section_topics',
-  GENERAL: 'general_topics',
+  ALL: 'allTopics',
+  COURSE_SECTION: 'courseSectionTopics',
+  GENERAL: 'generalTopics',
+};
+
+export const TopicOrdering = {
+  BY_COURSE_STRUCTURE: 'sortByCourseStructure',
+  BY_LAST_ACTIVITY: 'sortByLastActivity',
+  BY_COMMENT_COUNT: 'sortByCommentCount',
 };
 
 export const Routes = {
-  TOPICS: {
-    PATH: '/discussions/:courseId/topics',
-    ALL: '/discussions/:courseId/topics',
+  DISCUSSIONS: {
+    PATH: '/discussions/:courseId?',
   },
   POSTS: {
-    PATH: '/discussions/:courseId/posts/:topicId/:threadId?',
+    PATH: '/discussions/:courseId/topics/:topicId/posts',
     MY_POSTS: '/discussions/:courseId/posts/mine',
     ALL_POSTS: '/discussions/:courseId/posts/all',
   },
   COMMENTS: {
-    PATH: '/discussions/:courseId/posts/:topicId/:threadId',
+    PATH: '/discussions/:courseId/topics/:topicId/posts/:postId',
+  },
+  TOPICS: {
+    PATH: '/discussions/:courseId/topics/:category?',
+    ALL: '/discussions/:courseId/topics',
+    CATEGORY: '/discussions/:courseId/topics/:category',
   },
 };

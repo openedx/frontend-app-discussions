@@ -1,18 +1,35 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
-import { RequestStatus } from '../../../data/constants';
+
+import {
+  AllPostsFilter,
+  MyPostsFilter,
+  PostsStatusFilter,
+  RequestStatus,
+  ThreadOrdering,
+} from '../../../data/constants';
+
+function normaliseProfileImage(currentThread, newThread) {
+  newThread.authorAvatars = newThread.users
+    ? newThread.users?.[newThread.author].profile.image
+    : currentThread.authorAvatars;
+  return newThread;
+}
 
 function normaliseThreads(state, rawThreadsData) {
-  const { topicThreadMap: topics, threads } = state;
+  const {
+    topicThreadMap: topics,
+    threads,
+  } = state;
   rawThreadsData.forEach(
     thread => {
-      if (!topics[thread.topic_id]) {
-        topics[thread.topic_id] = [];
+      if (!topics[thread.topicId]) {
+        topics[thread.topicId] = [];
       }
-      if (!topics[thread.topic_id].includes(thread.id)) {
-        topics[thread.topic_id].push(thread.id);
+      if (!topics[thread.topicId].includes(thread.id)) {
+        topics[thread.topicId].push(thread.id);
       }
-      threads[thread.id] = thread;
+      threads[thread.id] = normaliseProfileImage(threads[thread.id], thread);
     },
   );
 }
@@ -32,6 +49,13 @@ const threadsSlice = createSlice({
     totalPages: null,
     totalThreads: null,
     postStatus: RequestStatus.SUCCESSFUL,
+    filters: {
+      status: PostsStatusFilter.ALL,
+      allPosts: AllPostsFilter.ALL_POSTS,
+      myPosts: MyPostsFilter.MY_POSTS,
+      search: '',
+    },
+    sortedBy: ThreadOrdering.BY_LAST_ACTIVITY,
   },
   reducers: {
     fetchThreadsRequest: (state) => {
@@ -39,9 +63,11 @@ const threadsSlice = createSlice({
     },
     fetchThreadsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
+      state.topicThreadMap = {};
+      state.threads = {};
       normaliseThreads(state, payload.results);
       state.page = payload.pagination.page;
-      state.totalPages = payload.pagination.num_pages;
+      state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
     fetchThreadsFailed: (state) => {
@@ -98,7 +124,7 @@ const threadsSlice = createSlice({
     },
     deleteThreadSuccess: (state, { payload }) => {
       const { threadId } = payload;
-      const topicId = state.threads[threadId].topic_id;
+      const { topicId } = state.threads[threadId];
       state.postStatus = RequestStatus.SUCCESSFUL;
       state.topicThreadMap[topicId] = state.topicThreadMap[topicId].filter(item => item !== threadId);
       delete state.threads[threadId];
@@ -108,6 +134,21 @@ const threadsSlice = createSlice({
     },
     deleteThreadDenied: (state) => {
       state.postStatus = RequestStatus.DENIED;
+    },
+    setSortedBy: (state, { payload }) => {
+      state.sortedBy = payload;
+    },
+    setStatusFilter: (state, { payload }) => {
+      state.filters.status = payload;
+    },
+    setAllPostsTypeFilter: (state, { payload }) => {
+      state.filters.allPosts = payload;
+    },
+    setMyPostsTypeFilter: (state, { payload }) => {
+      state.filters.myPosts = payload;
+    },
+    setSearchQuery: (state, { payload }) => {
+      state.filters.search = payload;
     },
   },
 });
@@ -133,6 +174,11 @@ export const {
   updateThreadFailed,
   updateThreadRequest,
   updateThreadSuccess,
+  setAllPostsTypeFilter,
+  setMyPostsTypeFilter,
+  setSortedBy,
+  setStatusFilter,
+  setSearchQuery,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;
