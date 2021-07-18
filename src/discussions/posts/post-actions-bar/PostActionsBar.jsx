@@ -13,8 +13,9 @@ function PostActionsBar({ intl }) {
   return (
     <div className="d-flex justify-content-end py-1">
       <SearchField
-        placeholder={intl.formatMessage(messages.searchAllPosts)}
+        onClear={() => dispatch(setSearchQuery(''))}
         onSubmit={(value) => dispatch(setSearchQuery(value))}
+        placeholder={intl.formatMessage(messages.searchAllPosts)}
       />
       <Button variant="outline-primary" className="ml-2">
         {intl.formatMessage(messages.addAPost)}
