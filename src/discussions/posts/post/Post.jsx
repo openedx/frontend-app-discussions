@@ -1,28 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  faQuestionCircle,
-  faStar as faEmptyStar,
-  faThumbsUp as faEmptyThumb,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-  faComments,
-  faStar as faSolidStar,
-  faThumbsUp as faSolidThumb,
-  faThumbtack,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Avatar, IconButton, OverlayTrigger, Tooltip,
+  Avatar, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
+import {
+  Pin,
+  QuestionAnswer,
+  StarFilled,
+  StarOutline,
+} from '@edx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
 import messages from './messages';
+import LikeButton from './LikeButton';
 
 export const postShape = PropTypes.shape({
   abuseFlagged: PropTypes.bool,
@@ -43,18 +38,11 @@ export const postShape = PropTypes.shape({
 function PostTypeIcon(props) {
   return (
     <div className="m-1">
-      {props.type === 'question' && <FontAwesomeIcon icon={faQuestionCircle} size="lg" />}
-      {props.type === 'discussion' && <FontAwesomeIcon icon={faComments} size="lg" />}
+      {props.type === 'question' && <Icon src={QuestionAnswer} size="lg" />}
+      {props.type === 'discussion' && <Icon src={QuestionAnswer} size="lg" />}
       {props.pinned && (
-        <FontAwesomeIcon
-          icon={faThumbtack}
-          size="sm"
-          className="position-relative bg-white rounded"
-          style={{
-            left: '-0.25rem',
-            bottom: '-0.75rem',
-            padding: '0.125rem',
-          }}
+        <Icon
+          src={Pin}
         />
       )}
     </div>
@@ -71,27 +59,32 @@ function PostHeader({
   post,
 }) {
   return (
-    <div className="d-flex flex-fill">
-      <Avatar className="my-1" alt={post.author} src={post.authorAvatars.imageUrlSmall} />
-      <div className="d-flex flex-row flex-fill">
-        <PostTypeIcon type={post.type} pinned={post.pinned} />
+    <div className="d-flex flex-fill justify-content-between">
+      <Avatar className="m-2" alt={post.author} src={post.authorAvatars.imageUrlSmall} />
+      <PostTypeIcon type={post.type} pinned={post.pinned} />
+      <div className="align-items-center d-flex flex-row flex-fill">
         <div className="d-flex flex-column flex-fill">
-          <span className="d-flex font-weight-bold text-gray">
+          <span className="d-flex font-weight-bold">
             {post.title}
           </span>
-          <span className="d-flex small text-gray-300">
-            {post.author}{' | '}
+          <span className="d-flex text-gray-500 x-small">
             <span title={post.createdAt}>
-              {intl.formatMessage(messages.postedOn, { time: timeago.format(post.createdAt, intl.locale) })}
+              {intl.formatMessage(
+                messages.postedOn,
+                {
+                  author: post.author,
+                  time: timeago.format(post.createdAt, intl.locale),
+                },
+              )}
             </span>
           </span>
         </div>
-        <div className="d-flex align-items-center mr-3">
-          <FontAwesomeIcon icon={faComments} className="mr-2" />
-          <span style={{ minWidth: '2rem' }}>
-            {post.commentCount}
-          </span>
-        </div>
+      </div>
+      <div className="d-flex mr-3">
+        <Icon src={QuestionAnswer} />
+        <span style={{ minWidth: '2rem' }}>
+          {post.commentCount}
+        </span>
       </div>
     </div>
   );
@@ -109,35 +102,22 @@ function Post({
   const dispatch = useDispatch();
 
   return (
-    <div className="d-flex flex-column mt-2">
+    <div className="d-flex flex-column p-2.5 w-100">
       <PostHeader post={post} intl={intl} />
       <div className="d-flex mt-2 mb-0 p-0" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
       <div className="d-flex align-items-center">
-        <div className="d-flex align-items-center">
-          <OverlayTrigger overlay={(
+        <LikeButton
+          count={post.voteCount}
+          onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
+          voted={post.voted}
+        />
+        <OverlayTrigger
+          className="mx-2.5"
+          overlay={(
             <Tooltip>
-              {intl.formatMessage(post.voted ? messages.removeLike : messages.like)}
+              {intl.formatMessage(post.following ? messages.unfollow : messages.follow)}
             </Tooltip>
           )}
-          >
-            <IconButton
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(updateExistingThread(post.id, { voted: !post.voted }));
-                return false;
-              }}
-              alt="Like"
-              size="inline"
-              icon={post.voted ? faSolidThumb : faEmptyThumb}
-            />
-          </OverlayTrigger>
-          {post.voteCount}
-        </div>
-        <OverlayTrigger overlay={(
-          <Tooltip>
-            {intl.formatMessage(post.following ? messages.unfollow : messages.follow)}
-          </Tooltip>
-        )}
         >
           <IconButton
             onClick={() => {
@@ -145,8 +125,9 @@ function Post({
               return true;
             }}
             alt="Follow"
+            iconAs={Icon}
             size="inline"
-            icon={post.following ? faSolidStar : faEmptyStar}
+            src={post.following ? StarFilled : StarOutline}
           />
         </OverlayTrigger>
       </div>

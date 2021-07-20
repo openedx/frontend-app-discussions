@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { faSort } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { SearchField } from '@edx/paragon';
+import { Icon, SearchField } from '@edx/paragon';
+import { ArrowDropUpDown } from '@edx/paragon/icons';
 
 import { SelectableDropdown } from '../../../components';
 import { TopicOrdering } from '../../../data/constants';
@@ -27,9 +26,7 @@ function TopicSearchBar({ intl }) {
       <SelectableDropdown
         options={topicOrderingOptions}
         onChange={(option) => dispatch(setSortBy(option.value))}
-        label={
-          <FontAwesomeIcon icon={faSort} />
-        }
+        label={<Icon src={ArrowDropUpDown} />}
       />
     </div>
   );

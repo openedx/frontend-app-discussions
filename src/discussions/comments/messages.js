@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
   replyTime: {
     id: 'discussions.comments.comment.repliedTime',
-    defaultMessage: 'posted {relativeTime}',
+    defaultMessage: 'Posted {relativeTime}',
     description: 'Message about hwo long ago a reply was posted. Appears as "username posted 7 minutes ago"',
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { faCircle, faFlag } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Icon } from '@edx/paragon';
+import { Flag, Unread } from '@edx/paragon/icons';
 
 import { Routes } from '../../../data/constants';
 import messages from './messages';
@@ -24,13 +24,13 @@ function PostLink({
       }
     >
       {post.abuseFlagged && (
-        <div className="bg-gray-100 flex-fill">
-          <FontAwesomeIcon icon={faFlag} className="mx-1" />
-          {intl.formatMessage(messages.contentReported)}
+        <div className="align-items-center bg-danger-100 d-flex flex-fill p-1">
+          <Icon className="text-danger-700" src={Flag} />
+          <span className="text-gray-700 x-small">{intl.formatMessage(messages.contentReported)}</span>
         </div>
       )}
-      <div className="d-flex flex-row mb-2">
-        <FontAwesomeIcon icon={faCircle} className={`my-1 text-accent-a ${post.read && 'invisible'}`} size="xs" />
+      <div className="d-flex flex-row p-2">
+        {!post.read && <Icon className="text-brand-500" src={Unread} />}
         <Post post={post} />
       </div>
     </Link>

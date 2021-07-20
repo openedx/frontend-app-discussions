@@ -31,9 +31,13 @@ function CommentsView({ intl }) {
       <div className="mb-2">
         <div className="list-group list-group-flush">
           <Post post={thread} />
-          {
-            comments.map(reply => <Reply reply={reply} key={reply.id} />)
-          }
+          <div className="list-group">
+            {comments.map(reply => (
+              <div key={reply.id} className="list-group-item list-group-item-action">
+                <Reply reply={reply} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       <div className="actions d-flex">

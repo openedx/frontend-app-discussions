@@ -28,7 +28,7 @@ function NavigationBar({ intl }) {
   ];
 
   return (
-    <Nav variant="pills" className="border-bottom py-2">
+    <Nav variant="pills" className="py-2">
       {navLinks.map(link => (
         <Nav.Item key={link.label}>
           <Nav.Link as={NavLink} to={link.url}>
