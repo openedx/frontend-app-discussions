@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { faSort } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Icon } from '@edx/paragon';
+import { ArrowDropUpDown } from '@edx/paragon/icons';
 
 import { SelectableDropdown } from '../../../components';
 import {
@@ -71,7 +71,7 @@ function PostFilterBar({
             options={postOrderingOptions}
             onChange={(sortBy) => dispatch(setSortedBy(sortBy.value))}
             label={
-              <FontAwesomeIcon icon={faSort} aria-label="Sort" title="Sort" />
+              <Icon src={ArrowDropUpDown} aria-label="Sort" title="Sort" />
             }
           />
         </div>

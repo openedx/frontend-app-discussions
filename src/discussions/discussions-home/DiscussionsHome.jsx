@@ -12,7 +12,7 @@ import { TopicsView } from '../topics';
 export default function DiscussionsHome() {
   return (
     <main className="container my-4 d-flex flex-row">
-      <div className="d-flex flex-column w-50 mr-1 card">
+      <div className="d-flex flex-column w-50 mr-1">
         <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
         <Route
           path={[
@@ -21,14 +21,16 @@ export default function DiscussionsHome() {
           ]}
           component={BreadcrumbMenu}
         />
-        <Switch>
-          <Route path={Routes.POSTS.MY_POSTS}>
-            <PostsView showOwnPosts />
-          </Route>
-          <Route path={Routes.POSTS.ALL_POSTS} component={PostsView} />
-          <Route path={Routes.POSTS.PATH} component={PostsView} />
-          <Route path={Routes.TOPICS.PATH} component={TopicsView} />
-        </Switch>
+        <div className="card">
+          <Switch>
+            <Route path={Routes.POSTS.MY_POSTS}>
+              <PostsView showOwnPosts />
+            </Route>
+            <Route path={Routes.POSTS.ALL_POSTS} component={PostsView} />
+            <Route path={Routes.POSTS.PATH} component={PostsView} />
+            <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+          </Switch>
+        </div>
       </div>
       <div className="d-flex w-50 pl-1 flex-column">
         <PostActionsBar />

@@ -1,48 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { faFlag, faStar as faEmptyStar } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsisV, faStar as faSolidStar } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Icon } from '@edx/paragon';
+import {
+  Flag,
+  StarFilled,
+  StarOutline,
+} from '@edx/paragon/icons';
+import LikeButton from '../../posts/post/LikeButton';
 
-import { Button } from '@edx/paragon';
-
-function CommentIcons({ abuseFlagged, following }) {
+function CommentIcons(
+  {
+    abuseFlagged,
+    count,
+    following,
+    onLike,
+    voted,
+  },
+) {
   return (
     <div className="d-flex flex-column icons">
+      <LikeButton
+        count={count}
+        onClick={() => onLike && onLike()}
+        voted={voted}
+      />
       {/* Only show the star if the comment has a following attribute, indicating it can be followed */}
       { following !== undefined && (
         following
           ? (
             <Button variant="link" className="p-0" size="xs">
-              <FontAwesomeIcon icon={faSolidStar} />
+              <Icon src={StarFilled} />
             </Button>
           ) : (
             <Button variant="link" className="p-0" size="xs">
-              <FontAwesomeIcon icon={faEmptyStar} />
+              <Icon src={StarOutline} />
             </Button>
           )
       )}
-      { abuseFlagged && (
+      {abuseFlagged && (
         <Button variant="link" className="p-0" size="xs">
-          <FontAwesomeIcon icon={faFlag} />
+          <Icon src={Flag} />
         </Button>
-      ) }
-      <Button variant="link" className="p-0" size="xs">
-        <FontAwesomeIcon icon={faEllipsisV} />
-      </Button>
+      )}
     </div>
   );
 }
 
 CommentIcons.propTypes = {
   abuseFlagged: PropTypes.bool,
+  count: PropTypes.number.isRequired,
   following: PropTypes.bool,
+  onLike: PropTypes.func,
+  voted: PropTypes.bool,
 };
 
 CommentIcons.defaultProps = {
   abuseFlagged: undefined,
   following: undefined,
+  onLike: undefined,
+  voted: false,
 };
 
 export default CommentIcons;
