@@ -60,6 +60,9 @@ export function fetchThreads(courseId, {
   if (filters.status === PostsStatusFilter.UNREAD) {
     options.view = 'unread';
   }
+  if (filters.search) {
+    options.textSearch = filters.search;
+  }
   return async (dispatch) => {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
