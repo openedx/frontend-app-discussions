@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button, Form } from '@edx/paragon';
+import { Form, StatefulButton } from '@edx/paragon';
 import { Help, Post } from '@edx/paragon/icons';
 
 import { hidePostEditor } from '../data';
@@ -84,28 +84,35 @@ function PostEditor({ intl }) {
       </Form.Group>
 
       <Form.Group>
-        <Form.Check inline type="checkbox" id="follow">
-          <Form.Check.Input type="checkbox" />
-          <Form.Check.Label>
-            <span className="ml-2">{intl.formatMessage(messages.followPost)}</span>
-          </Form.Check.Label>
-        </Form.Check>
-
-        <Form.Check inline type="checkbox" id="anonymous">
-          <Form.Check.Input type="checkbox" />
-          <Form.Check.Label>
-            <span className="ml-2">{intl.formatMessage(messages.anonymousPost)}</span>
-          </Form.Check.Label>
-        </Form.Check>
+        <Form.CheckboxSet
+          name="post-options"
+          defaultValue={[messages.followPost.id]}
+          isInline
+        >
+          <Form.Checkbox value={messages.followPost.id}>
+            {intl.formatMessage(messages.followPost)}
+          </Form.Checkbox>
+          <Form.Checkbox value={messages.anonymousPost.id}>
+            {intl.formatMessage(messages.anonymousPost)}
+          </Form.Checkbox>
+        </Form.CheckboxSet>
       </Form.Group>
 
       <div className="d-flex justify-content-end">
-        <Button variant="outline-primary" onClick={cancelAdding}>
-          {intl.formatMessage(messages.cancel)}
-        </Button>
-        <Button className="ml-2" variant="primary">
-          {intl.formatMessage(messages.submit)}
-        </Button>
+        <StatefulButton
+          labels={{
+            default: intl.formatMessage(messages.cancel)
+          }}
+          variant="outline-primary"
+          onClick={cancelAdding}
+        />
+        <StatefulButton
+          labels={{
+            default: intl.formatMessage(messages.submit)
+          }}
+          className="ml-2"
+          variant="primary"
+        />
       </div>
     </Form>
   );
