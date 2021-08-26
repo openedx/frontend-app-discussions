@@ -3,15 +3,19 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
+import { ensureConfig, getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import { selectThread } from '../posts/data/selectors';
+import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import Reply from './reply/Reply';
 import messages from './messages';
+
+ensureConfig(['POST_MARK_AS_READ_DELAY'], 'Comment thread view');
 
 function CommentsView({ intl }) {
   const { postId } = useParams();
@@ -20,6 +24,14 @@ function CommentsView({ intl }) {
   const comments = useSelector(selectThreadComments(postId));
   useEffect(() => {
     dispatch(fetchThreadComments(postId));
+    const markReadTimer = setTimeout(() => {
+      if (thread && !thread.read) {
+        dispatch(markThreadAsRead(postId));
+      }
+    }, getConfig().POST_MARK_AS_READ_DELAY);
+    return () => {
+      clearTimeout(markReadTimer);
+    };
   }, [postId]);
   if (!thread) {
     return (

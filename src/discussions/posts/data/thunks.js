@@ -96,6 +96,23 @@ export function fetchThread(threadId) {
   };
 }
 
+export function markThreadAsRead(threadId) {
+  return async (dispatch) => {
+    try {
+      dispatch(updateThreadRequest({ threadId, read: true }));
+      const data = await updateThread(threadId, { read: true });
+      dispatch(updateThreadSuccess(camelCaseObject(data)));
+    } catch (error) {
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(updateThreadDenied());
+      } else {
+        dispatch(updateThreadFailed());
+      }
+      logError(error);
+    }
+  };
+}
+
 export function createNewThread(courseId, topicId, type, title, content, following = false) {
   return async (dispatch) => {
     try {
