@@ -101,14 +101,14 @@ function PostEditor({ intl }) {
       <div className="d-flex justify-content-end">
         <StatefulButton
           labels={{
-            default: intl.formatMessage(messages.cancel)
+            default: intl.formatMessage(messages.cancel),
           }}
           variant="outline-primary"
           onClick={cancelAdding}
         />
         <StatefulButton
           labels={{
-            default: intl.formatMessage(messages.submit)
+            default: intl.formatMessage(messages.submit),
           }}
           className="ml-2"
           variant="primary"
