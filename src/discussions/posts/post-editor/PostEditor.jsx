@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@edx/paragon';
+import { Card, Form, StatefulButton } from '@edx/paragon';
 import { Help, Post } from '@edx/paragon/icons';
 
 import { hidePostEditor } from '../data';
@@ -17,12 +17,18 @@ function DiscussionPostType({
   icon,
 }) {
   return (
-    <Form.Check type="radio" value={value} className="d-flex border thin p-2 mr-2 my-0">
+    <Form.Check type="radio" value={value} className="d-flex p-0 my-0 mr-3">
       {/* <Form.Check.Input type="radio" className=""/> */}
-      <Form.Check.Label className="d-flex flex-column align-items-center">
-        {icon}
-        <span>{type}</span>
-        <span className="x-small">{description}</span>
+      <Form.Check.Label>
+        <Card>
+          <Card.Body>
+            <Card.Text className="d-flex flex-column align-items-center">
+              <span className="text-gray-900">{icon}</span>
+              <span>{type}</span>
+              <span className="x-small text-gray-500">{description}</span>
+            </Card.Text>
+          </Card.Body>
+        </Card>
       </Form.Check.Label>
     </Form.Check>
   );
@@ -59,19 +65,22 @@ function PostEditor({ intl }) {
         </Form.CheckboxSet>
       </Form.Group>
 
-      <Form.Group>
+      <Form.Group className="py-2 w-50">
         <Form.Control
           as="select"
           defaultValue="General"
           aria-describedby="topicAreaInput"
           floatingLabel={intl.formatMessage(messages.topicArea)}
+          className=""
         >
           {/* TODO: topics has to be filled in another PR */}
           <option>General</option>
         </Form.Control>
       </Form.Group>
 
-      <Form.Group>
+      <div className="border-bottom my-4" />
+
+      <Form.Group className="py-2">
         <Form.Control
           type="text"
           aria-describedby="titleInput"
@@ -79,7 +88,7 @@ function PostEditor({ intl }) {
         />
       </Form.Group>
 
-      <Form.Group>
+      <Form.Group className="py-2">
         <Form.Control as="textarea" rows="3" />
       </Form.Group>
 

@@ -17,6 +17,7 @@ function PostActionsBar({ intl }) {
         onSubmit={(value) => dispatch(setSearchQuery(value))}
         placeholder={intl.formatMessage(messages.searchAllPosts)}
       />
+      <div className="border-right mr-3 ml-4" />
       <Button
         variant="outline-primary"
         className="ml-2"
