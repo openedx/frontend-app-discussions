@@ -8,7 +8,7 @@ ensureConfig([
 
 const apiBaseUrl = getConfig().LMS_BASE_URL;
 
-const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
+export const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
 
 /**
  * Returns all the comments for the specified thread.

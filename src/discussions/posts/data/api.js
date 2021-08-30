@@ -10,7 +10,7 @@ ensureConfig([
 
 const apiBaseUrl = getConfig().LMS_BASE_URL;
 
-const threadsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
+export const threadsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
 
 /**
  * Fetches all the threads in the given course and topic.
@@ -67,7 +67,7 @@ export async function getThread(threadId) {
  * Posts a new thread.
  * @param {string} courseId
  * @param {string} topicId
- * @param {string} type The thread's type (either "question" or "discussion")
+ * @param {ThreadType} type The thread's type (either "question" or "discussion")
  * @param {string} title
  * @param {string} content
  * @param {boolean} following Follow the thread after creating
@@ -91,7 +91,7 @@ export async function postThread(courseId, topicId, type, title, content, follow
  * Updates an existing thread.
  * @param {string} threadId
  * @param {string} topicId
- * @param {string} type The thread's type (either "question" or "discussion")
+ * @param {ThreadType} type The thread's type (either "question" or "discussion")
  * @param {string} title
  * @param {string} content
  * @param {boolean} flagged
@@ -121,7 +121,6 @@ export async function updateThread(threadId, {
     raw_body: content,
     following,
   });
-
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, patchData, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;

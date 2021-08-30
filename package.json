@@ -60,12 +60,14 @@
   },
   "devDependencies": {
     "@edx/frontend-build": "8.0.4",
+    "axios-mock-adapter": "1.20.0",
     "codecov": "3.8.3",
     "es-check": "5.2.3",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "glob": "7.1.7",
     "husky": "7.0.2",
     "jest": "27.1.0",
-    "reactifex": "1.1.1"
+    "reactifex": "1.1.1",
+    "rosie": "2.1.0"
   }
 }

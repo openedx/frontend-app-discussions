@@ -38,6 +38,44 @@ import {
  */
 
 /**
+ * Normalises raw data returned by threads API by mapping threads to id and
+ * mapping topic ids to threads in them.
+ * @param data
+ * @returns {{pagination, threadsById: {}, threadsInTopic: {}, avatars: {}}}
+ */
+function normaliseThreads(data) {
+  const normalized = {};
+  let threads;
+  if ('results' in data) {
+    threads = data.results;
+    normalized.pagination = data.pagination;
+  } else {
+    threads = [data];
+  }
+  const threadsInTopic = {};
+  const threadsById = {};
+  const avatars = {};
+  const ids = [];
+  threads.forEach(
+    thread => {
+      const { topicId, id } = thread;
+      ids.push(id);
+      if (!threadsInTopic[topicId]) {
+        threadsInTopic[topicId] = [];
+      }
+      if (!threadsInTopic[topicId].includes(id)) {
+        threadsInTopic[topicId].push(id);
+      }
+      threadsById[id] = thread;
+      Object.assign(avatars, thread.users);
+    },
+  );
+  return {
+    ids, threadsById, threadsInTopic, avatars, ...normalized,
+  };
+}
+
+/**
  * Fetches the threads for the course specified va the threadIds.
  * @param {string} courseId The course ID for the course to fetch data for.
  * @param {[string]} topicIds List of topics to limit threads to
@@ -49,6 +87,7 @@ export function fetchThreads(courseId, {
   topicIds,
   orderBy,
   filters = {},
+  page,
 } = {}) {
   const options = {
     orderBy,
@@ -67,7 +106,8 @@ export function fetchThreads(courseId, {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
-      dispatch(fetchThreadsSuccess(camelCaseObject(data)));
+      const normalisedData = normaliseThreads(camelCaseObject(data));
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page: page || 1 }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());
@@ -84,7 +124,7 @@ export function fetchThread(threadId) {
     try {
       dispatch(fetchThreadRequest({ threadId }));
       const data = await getThread(threadId);
-      dispatch(fetchThreadSuccess(camelCaseObject(data)));
+      dispatch(fetchThreadSuccess(normaliseThreads(camelCaseObject(data))));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadDenied());

@@ -3,49 +3,20 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus } from '../../../data/constants';
 
-function normaliseComments(state, rawCommentData) {
-  const {
-    threadCommentMap: threads,
-    commentResponsesMap: responses,
-    comments,
-  } = state;
-  rawCommentData.forEach(
-    comment => {
-      if (comment.parentId) {
-        if (!responses[comment.parentId]) {
-          responses[comment.parentId] = [];
-        }
-        if (!responses[comment.parentId].includes(comment.id)) {
-          responses[comment.parentId].push(comment.id);
-        }
-      } else {
-        if (!threads[comment.threadId]) {
-          threads[comment.threadId] = [];
-        }
-
-        if (!threads[comment.threadId].includes(comment.id)) {
-          threads[comment.threadId].push(comment.id);
-        }
-      }
-      comments[comment.id] = comment;
-    },
-  );
-}
-
 const commentsSlice = createSlice({
   name: 'comments',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    page: null,
-    threadCommentMap: {
+    commentsInThreads: {
       // Maps threads to comment ids in them.
     },
-    commentResponsesMap: {
+    commentsInComments: {
       // Maps comments to response comments in them.
     },
-    comments: {
+    commentsById: {
       // Map comment ids to comments.
     },
+    pages: {},
     // Stores the comment being posted in case it needs to be reposted due to network failure.
     // TODO: save in localstorage so user can continue editing?
     commentDraft: null,
@@ -59,8 +30,10 @@ const commentsSlice = createSlice({
     },
     fetchCommentsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, payload.results);
-      state.page = payload.pagination.page;
+      state.pages[payload.page] = payload.ids;
+      Object.assign(state.commentsInThreads, payload.commentsInThreads);
+      Object.assign(state.commentsInComments, payload.commentsInComments);
+      Object.assign(state.commentsById, payload.commentsById);
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
@@ -81,7 +54,8 @@ const commentsSlice = createSlice({
     },
     fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, payload.results);
+      Object.assign(state.commentsInComments, payload.commentsInComments);
+      Object.assign(state.commentsById, payload.commentsById);
     },
     postCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
@@ -95,7 +69,11 @@ const commentsSlice = createSlice({
     },
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, [payload]);
+      state.commentsInThreads[payload.threadId].push(payload.id);
+      if (payload.parentId) {
+        state.commentsInComments[payload.parentId].push(payload.id);
+      }
+      state.commentsById[payload.id] = payload;
       state.commentDraft = null;
     },
     updateCommentRequest: (state, { payload }) => {
@@ -110,7 +88,7 @@ const commentsSlice = createSlice({
     },
     updateCommentSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseComments(state, [payload]);
+      state.commentsById[payload.id] = payload;
       state.commentDraft = null;
     },
     deleteCommentRequest: (state) => {
@@ -124,10 +102,16 @@ const commentsSlice = createSlice({
     },
     deleteCommentSuccess: (state, { payload }) => {
       const { commentId } = payload;
+      const { threadId, parentId } = state.commentsById[commentId];
       state.postStatus = RequestStatus.SUCCESSFUL;
-      const { threadId } = state.comments[commentId];
-      state.threadCommentMap[threadId] = state.threadCommentMap[threadId].filter(item => item !== commentId);
-      delete state.comments[commentId];
+      state.commentsInThreads[threadId] = state.commentsInThreads[threadId].filter(item => item !== commentId);
+      if (parentId) {
+        state.commentsInComments[parentId] = state.commentsInComments[parentId].filter(item => item !== commentId);
+      }
+      Object.keys(state.pages).forEach(page => {
+        state.pages[page] = state.pages[page].filter(item => item !== commentId);
+      });
+      delete state.commentsById[commentId];
     },
   },
 });

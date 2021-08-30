@@ -38,13 +38,16 @@ const threadsSlice = createSlice({
   name: 'thread',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    page: null,
-    topicThreadMap: {
+    avatars: {
+      // Mapping users to avatars
+    },
+    threadsInTopic: {
       // Mapping of topic ids to thread ids in them
     },
-    threads: {
+    threadsById: {
       // Mapping of threads ids to threads in them
     },
+    pages: {},
     threadDraft: null,
     totalPages: null,
     totalThreads: null,
@@ -65,10 +68,10 @@ const threadsSlice = createSlice({
     },
     fetchThreadsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.topicThreadMap = {};
-      state.threads = {};
-      normaliseThreads(state, payload.results);
-      state.page = payload.pagination.page;
+      state.pages[payload.page] = payload.ids;
+      Object.assign(state.threadsById, payload.threadsById);
+      Object.assign(state.threadsInTopic, payload.threadsInTopic);
+      Object.assign(state.avatars, payload.avatars);
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
@@ -83,7 +86,8 @@ const threadsSlice = createSlice({
     },
     fetchThreadSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      normaliseThreads(state, [payload]);
+      Object.assign(state.threadsById, payload.threadsById);
+      Object.assign(state.avatars, payload.avatars);
     },
     fetchThreadFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -97,7 +101,11 @@ const threadsSlice = createSlice({
     },
     postThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      normaliseThreads(state, [payload]);
+      state.threadsById[payload.id] = payload;
+      state.threadsInTopic[payload.topicId].push(payload.id);
+      // Temporarily add it to the top of the list so it's visible
+      state.pages[1] = [payload.id] + (state.pages[1] || []);
+      Object.assign(state.avatars, payload.users);
       state.redirectToThread = { topicId: payload.topicId, threadId: payload.id };
       state.threadDraft = null;
     },
@@ -113,7 +121,8 @@ const threadsSlice = createSlice({
     },
     updateThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      normaliseThreads(state, [payload]);
+      Object.assign(state.threadsById[payload.id], payload);
+      Object.assign(state.avatars, payload.avatars);
       state.threadDraft = null;
     },
     updateThreadFailed: (state) => {
@@ -127,10 +136,14 @@ const threadsSlice = createSlice({
     },
     deleteThreadSuccess: (state, { payload }) => {
       const { threadId } = payload;
-      const { topicId } = state.threads[threadId];
+      const { topicId } = state.threadsById[threadId];
       state.postStatus = RequestStatus.SUCCESSFUL;
-      state.topicThreadMap[topicId] = state.topicThreadMap[topicId].filter(item => item !== threadId);
-      delete state.threads[threadId];
+      state.threadsInTopic[topicId] = state.threadsInTopic[topicId].filter(item => item !== threadId);
+      Object.keys(state.pages)
+        .forEach(page => {
+          state.pages[page] = state.pages[page].filter(item => item !== threadId);
+        });
+      delete state.threadsById[threadId];
     },
     deleteThreadFailed: (state) => {
       state.postStatus = RequestStatus.FAILED;
@@ -140,18 +153,23 @@ const threadsSlice = createSlice({
     },
     setSortedBy: (state, { payload }) => {
       state.sortedBy = payload;
+      state.pages = {};
     },
     setStatusFilter: (state, { payload }) => {
       state.filters.status = payload;
+      state.pages = {};
     },
     setAllPostsTypeFilter: (state, { payload }) => {
       state.filters.allPosts = payload;
+      state.pages = {};
     },
     setMyPostsTypeFilter: (state, { payload }) => {
       state.filters.myPosts = payload;
+      state.pages = {};
     },
     setSearchQuery: (state, { payload }) => {
       state.filters.search = payload;
+      state.pages = {};
     },
     showPostEditor: (state) => {
       state.postEditorVisible = true;
