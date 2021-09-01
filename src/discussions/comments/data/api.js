@@ -66,9 +66,9 @@ export async function getCommentResponses(
  * @param {string=} parentId ID for a comments parent.
  * @returns {Promise<{}>}
  */
-export async function postComment(comment, threadId, parentId) {
+export async function postComment(comment, threadId, parentId = null) {
   const { data } = await getAuthenticatedHttpClient()
-    .post(commentsApiUrl, snakeCaseObject({ threadId, comment, parentId }));
+    .post(commentsApiUrl, snakeCaseObject({ threadId, raw_body: comment, parentId }));
   return data;
 }
 

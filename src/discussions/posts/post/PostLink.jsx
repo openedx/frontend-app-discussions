@@ -11,7 +11,8 @@ import { Flag, Unread } from '@edx/paragon/icons';
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import messages from './messages';
-import Post, { postShape } from './Post';
+import Post from './Post';
+import { postShape } from './proptypes';
 
 function PostLink({
   post,

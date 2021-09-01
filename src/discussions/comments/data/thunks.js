@@ -126,7 +126,7 @@ export function editComment(commentId, comment) {
   };
 }
 
-export function addComment(comment, threadId, parentId) {
+export function addComment(comment, threadId, parentId = null) {
   return async (dispatch) => {
     try {
       dispatch(postCommentRequest({
