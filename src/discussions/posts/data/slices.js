@@ -12,7 +12,7 @@ import {
 function normaliseProfileImage(currentThread, newThread) {
   newThread.authorAvatars = newThread.users
     ? newThread.users?.[newThread.author].profile.image
-    : currentThread.authorAvatars;
+    : currentThread?.authorAvatars;
   return newThread;
 }
 
@@ -56,6 +56,7 @@ const threadsSlice = createSlice({
       search: '',
     },
     postEditorVisible: false,
+    redirectToThread: null,
     sortedBy: ThreadOrdering.BY_LAST_ACTIVITY,
   },
   reducers: {
@@ -97,6 +98,7 @@ const threadsSlice = createSlice({
     postThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
       normaliseThreads(state, [payload]);
+      state.redirectToThread = { topicId: payload.topicId, threadId: payload.id };
       state.threadDraft = null;
     },
     postThreadFailed: (state) => {
@@ -153,9 +155,13 @@ const threadsSlice = createSlice({
     },
     showPostEditor: (state) => {
       state.postEditorVisible = true;
+      state.redirectToThread = null;
     },
     hidePostEditor: (state) => {
       state.postEditorVisible = false;
+    },
+    clearRedirect: (state) => {
+      state.redirectToThread = null;
     },
   },
 });
@@ -188,6 +194,7 @@ export const {
   setSearchQuery,
   showPostEditor,
   hidePostEditor,
+  clearRedirect,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;

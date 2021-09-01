@@ -5,9 +5,13 @@ const messages = defineMessages({
     id: 'discussions.post.editor.type',
     defaultMessage: 'Post type',
   },
-  heading: {
-    id: 'discussions.post.editor.heading',
+  addPostHeading: {
+    id: 'discussions.post.editor.addPostHeading',
     defaultMessage: 'Add a post',
+  },
+  editPostHeading: {
+    id: 'discussions.post.editor.editPostHeading',
+    defaultMessage: 'Edit post',
   },
   typeDescription: {
     id: 'discussions.post.editor.typeDescription',
@@ -48,6 +52,14 @@ const messages = defineMessages({
   titleDescription: {
     id: 'discussions.post.editor.titleDescription',
     defaultMessage: 'Add a clear and descriptive title to encourage participation.',
+  },
+  titleError: {
+    id: 'discussions.post.editor.title.error',
+    defaultMessage: 'Post title cannot be empty.',
+  },
+  commentError: {
+    id: 'discussions.post.editor.comment.error',
+    defaultMessage: 'Post content cannot be empty.',
   },
   questionText: {
     id: 'discussions.post.editor.questionText',

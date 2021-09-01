@@ -2,12 +2,12 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   searchAllPosts: {
-    id: 'discussions.posts.action-bar.search',
+    id: 'discussions.posts.actionBar.search',
     defaultMessage: 'Search all posts',
     description: 'Placeholder text in search box',
   },
   addAPost: {
-    id: 'discussion.posts.action-bar.add',
+    id: 'discussion.posts.actionBar.add',
     defaultMessage: 'Add post',
     description: 'Button to add a new discussion post',
   },

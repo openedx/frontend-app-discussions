@@ -9,10 +9,7 @@ import {
   Avatar, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Pin,
-  QuestionAnswer,
-  StarFilled,
-  StarOutline,
+  Pin, QuestionAnswer, StarFilled, StarOutline,
 } from '@edx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
@@ -60,7 +57,7 @@ function PostHeader({
 }) {
   return (
     <div className="d-flex flex-fill justify-content-between">
-      <Avatar className="m-2" alt={post.author} src={post.authorAvatars.imageUrlSmall} />
+      <Avatar className="m-2" alt={post.author} src={post?.authorAvatars?.imageUrlSmall} />
       <PostTypeIcon type={post.type} pinned={post.pinned} />
       <div className="align-items-center d-flex flex-row flex-fill">
         <div className="d-flex flex-column flex-fill">
@@ -105,7 +102,7 @@ function Post({
   return (
     <div className="d-flex flex-column p-2.5 w-100">
       <PostHeader post={post} intl={intl} />
-      <div className="d-flex mt-2 mb-0 p-0" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
+      <div className="mt-2 mb-0 p-0" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
       <div className="d-flex align-items-center">
         <LikeButton
           count={post.voteCount}
@@ -131,6 +128,7 @@ function Post({
             src={post.following ? StarFilled : StarOutline}
           />
         </OverlayTrigger>
+        {post.following && <span>Following</span>}
       </div>
     </div>
   );

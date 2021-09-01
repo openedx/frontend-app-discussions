@@ -2,17 +2,17 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   allPosts: {
-    id: 'discussions.posts.filter.all-posts',
+    id: 'discussions.posts.filter.allPosts',
     defaultMessage: 'All posts',
     description: 'Option in dropdown to filter to all posts',
   },
   allDiscussions: {
-    id: 'discussions.posts.filter.all-discussions',
+    id: 'discussions.posts.filter.allDscussions',
     defaultMessage: 'All discussions',
     description: 'Option in dropdown to filter to all discussions',
   },
   allQuestions: {
-    id: 'discussions.posts.filter.all-questions',
+    id: 'discussions.posts.filter.allQuestions',
     defaultMessage: 'All questions',
     description: 'Option in dropdown to filter to all questions',
   },
@@ -42,17 +42,17 @@ const messages = defineMessages({
     description: 'Option in dropdown to filter to flagged posts',
   },
   myPosts: {
-    id: 'discussions.posts.filter.my-posts',
+    id: 'discussions.posts.filter.myPosts',
     defaultMessage: 'My posts',
     description: 'Option in dropdown to filter to all a user\'s posts',
   },
   myDiscussions: {
-    id: 'discussions.posts.filter.my-discussions',
+    id: 'discussions.posts.filter.myDiscussions',
     defaultMessage: 'My discussions',
     description: 'Option in dropdown to filter to all a user\'s discussions',
   },
   myQuestions: {
-    id: 'discussions.posts.filter.my-questions',
+    id: 'discussions.posts.filter.myQuestions',
     defaultMessage: 'My questions',
     description: 'Option in dropdown to filter to all a user\'s questions',
   },
@@ -62,17 +62,17 @@ const messages = defineMessages({
     description: 'Display text used to indicate how posts are sorted',
   },
   lastActivityAt: {
-    id: 'discussions.posts.sort.last-activity',
+    id: 'discussions.posts.sort.lastActivity',
     defaultMessage: 'Recent activity',
     description: 'Option in dropdown to sort posts by recent activity',
   },
   commentCount: {
-    id: 'discussions.posts.sort.comment-count',
+    id: 'discussions.posts.sort.commentCount',
     defaultMessage: 'Most activity',
     description: 'Option in dropdown to sort posts by most activity',
   },
   voteCount: {
-    id: 'discussions.posts.sort.vote-count',
+    id: 'discussions.posts.sort.voteCount',
     defaultMessage: 'Most votes',
     description: 'Option in dropdown to sort posts by most votes',
   },

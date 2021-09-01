@@ -32,7 +32,7 @@ function TopicsView() {
         id={topicGroup.name}
         name={topicGroup.name}
         subtopics={topicGroup.children}
-        key={topicGroup.name}
+        key={topicGroup.id ?? topicGroup.name}
         filter={filter}
       />
     ),
