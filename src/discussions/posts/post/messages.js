@@ -7,7 +7,7 @@ const messages = defineMessages({
   },
   postedOn: {
     id: 'discussions.post.posted-on',
-    defaultMessage: 'Posted {time} by {author}',
+    defaultMessage: 'Posted {time} by {author} {authorLabel}',
   },
   contentReported: {
     id: 'discussions.post.content-reported',
