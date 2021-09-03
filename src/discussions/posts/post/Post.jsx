@@ -16,8 +16,8 @@ import {
 } from '@edx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
-import messages from './messages';
 import LikeButton from './LikeButton';
+import messages from './messages';
 
 export const postShape = PropTypes.shape({
   abuseFlagged: PropTypes.bool,

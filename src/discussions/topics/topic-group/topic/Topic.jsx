@@ -2,10 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { generatePath, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+
 import { Icon } from '@edx/paragon';
 import { Flag, Help, QuestionAnswer } from '@edx/paragon/icons';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../../data/constants';
 
@@ -17,15 +18,15 @@ function Topic({
   flags,
 }) {
   const { courseId } = useParams();
-
+  const topicUrl = generatePath(Routes.TOPICS.TOPIC, {
+    courseId,
+    topicId: id,
+  });
   return (
     <Link
       className="discussion-topic d-flex flex-column list-group-item px-3 py-2 text-gray-900 text-decoration-none"
       data-topic-id={id}
-      to={
-        Routes.POSTS.PATH.replace(':courseId', courseId)
-          .replace(':topicId', id)
-      }
+      to={topicUrl}
     >
       <div className="topic-name font-weight-bold small">
         {name}
@@ -46,7 +47,6 @@ function Topic({
           </div>
         )}
       </div>
-
     </Link>
   );
 }

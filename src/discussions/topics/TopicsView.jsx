@@ -29,10 +29,10 @@ function TopicsView() {
   const topicElements = topics.map(
     topicGroup => (
       <TopicGroup
-        id={topicGroup.id}
+        id={topicGroup.name}
         name={topicGroup.name}
         subtopics={topicGroup.children}
-        key={topicGroup.id}
+        key={topicGroup.name}
         filter={filter}
       />
     ),
