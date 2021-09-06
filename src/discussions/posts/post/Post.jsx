@@ -74,6 +74,7 @@ function PostHeader({
                 {
                   author: post.author,
                   time: timeago.format(post.createdAt, intl.locale),
+                  authorLabel: post.authorLabel ? `(${post.authorLabel})` : '',
                 },
               )}
             </span>

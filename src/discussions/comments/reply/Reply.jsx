@@ -21,7 +21,7 @@ function ReplyHeader({ reply, intl }) {
         <div className="status small">
           <a href="#nowhere">
             <h1 className="font-weight-normal text-info-300 mr-1 small">
-              {reply.author}
+              {reply.author} {reply.authorLabel ? `(${reply.authorLabel})` : '' }
             </h1>
           </a>
           <h2 className="font-weight-normal small text-gray-500" title={reply.createdAt}>
