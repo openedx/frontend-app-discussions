@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 import Header, { messages as headerMessages } from '@edx/frontend-component-header';
 import {
-  APP_INIT_ERROR, APP_READY, initialize, subscribe,
+  APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
@@ -40,4 +40,11 @@ initialize({
     headerMessages,
     footerMessages,
   ],
+  handlers: {
+    config() {
+      mergeConfig({
+        POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 2000,
+      });
+    },
+  },
 });
