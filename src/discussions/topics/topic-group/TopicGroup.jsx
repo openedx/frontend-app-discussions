@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
@@ -46,10 +46,7 @@ function TopicGroup({
       {name && (
         <Link
           className="topic-name list-group-item px-3 py-2 text-gray-300 text-decoration-none text-uppercase small"
-          to={
-            Routes.TOPICS.PATH.replace(':courseId', courseId)
-              .replace(':category?', name)
-          }
+          to={generatePath(Routes.TOPICS.CATEGORY, { courseId, category: name })}
         >
           {name}
         </Link>
@@ -62,7 +59,7 @@ function TopicGroup({
 TopicGroup.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
-  subtopics: PropTypes.arrayOf(topicShape).isRequired,
+  subtopics: PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired,
   filter: PropTypes.string.isRequired,
 };
 

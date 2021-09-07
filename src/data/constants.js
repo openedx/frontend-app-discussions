@@ -86,21 +86,37 @@ export const TopicOrdering = {
   BY_COMMENT_COUNT: 'sortByCommentCount',
 };
 
+const BASE_PATH = '/discussions/:courseId';
+
 export const Routes = {
   DISCUSSIONS: {
-    PATH: '/discussions/:courseId?',
+    PATH: `${BASE_PATH}?`,
   },
   POSTS: {
-    PATH: '/discussions/:courseId/topics/:topicId/posts',
-    MY_POSTS: '/discussions/:courseId/posts/mine',
-    ALL_POSTS: '/discussions/:courseId/posts/all',
+    PATH: `${BASE_PATH}/topics/:topicId`,
+    MY_POSTS: `${BASE_PATH}/my-posts(/:postId)?`,
+    ALL_POSTS: `${BASE_PATH}/posts(/:postId)?`,
   },
   COMMENTS: {
-    PATH: '/discussions/:courseId/topics/:topicId/posts/:postId',
+    PATH: [
+      `${BASE_PATH}/topics/:topicId/posts/:postId`,
+      `${BASE_PATH}/posts/:postId`,
+      `${BASE_PATH}/my-posts/:postId`,
+    ],
+    PAGE: `${BASE_PATH}/:page`,
+    PAGES: {
+      topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
+      posts: `${BASE_PATH}/posts/:postId`,
+      'my-posts': `${BASE_PATH}/my-posts/:postId`,
+    },
   },
   TOPICS: {
-    PATH: '/discussions/:courseId/topics/:category?',
-    ALL: '/discussions/:courseId/topics',
-    CATEGORY: '/discussions/:courseId/topics/:category',
+    PATH: [
+      `${BASE_PATH}/topics/:topicId?`,
+      `${BASE_PATH}/category/:category`,
+    ],
+    ALL: `${BASE_PATH}/topics`,
+    CATEGORY: `${BASE_PATH}/category/:category`,
+    TOPIC: `${BASE_PATH}/topics/:topicId`,
   },
 };

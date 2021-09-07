@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -14,25 +14,24 @@ function NavigationBar({ intl }) {
 
   const navLinks = [
     {
-      url: Routes.POSTS.MY_POSTS.replace(':courseId', courseId),
-      label: intl.formatMessage(messages.myPosts),
+      route: Routes.POSTS.MY_POSTS,
+      labelMessage: messages.myPosts,
     },
     {
-      url: Routes.POSTS.ALL_POSTS.replace(':courseId', courseId),
-      label: intl.formatMessage(messages.allPosts),
+      route: Routes.POSTS.ALL_POSTS,
+      labelMessage: messages.allPosts,
     },
     {
-      url: Routes.TOPICS.ALL.replace(':courseId', courseId),
-      label: intl.formatMessage(messages.allTopics),
+      route: Routes.TOPICS.ALL,
+      labelMessage: messages.allTopics,
     },
   ];
-
   return (
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (
-        <Nav.Item key={link.label}>
-          <Nav.Link as={NavLink} to={link.url}>
-            {link.label}
+        <Nav.Item key={link.route}>
+          <Nav.Link as={NavLink} to={generatePath(link.route, { courseId })}>
+            {intl.formatMessage(link.labelMessage)}
           </Nav.Link>
         </Nav.Item>
       ))}

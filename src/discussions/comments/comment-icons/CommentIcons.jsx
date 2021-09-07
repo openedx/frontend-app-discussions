@@ -7,6 +7,7 @@ import {
   StarFilled,
   StarOutline,
 } from '@edx/paragon/icons';
+
 import LikeButton from '../../posts/post/LikeButton';
 
 function CommentIcons(

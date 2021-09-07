@@ -6,6 +6,7 @@ import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import { ThumbUpFilled, ThumbUpOutline } from '@edx/paragon/icons';
+
 import messages from './messages';
 
 function LikeButton(
