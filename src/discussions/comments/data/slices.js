@@ -16,13 +16,12 @@ const commentsSlice = createSlice({
     commentsById: {
       // Map comment ids to comments.
     },
-    pages: [],
     // Stores the comment being posted in case it needs to be reposted due to network failure.
     // TODO: save in localstorage so user can continue editing?
     commentDraft: null,
-    totalPages: null,
-    totalThreads: null,
     postStatus: RequestStatus.SUCCESSFUL,
+    pagination: {
+    },
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -30,12 +29,17 @@ const commentsSlice = createSlice({
     },
     fetchCommentsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.pages[payload.page - 1] = payload.ids;
-      state.commentsInThreads = { ...state.commentsInThreads, ...payload.commentsInThreads };
+      state.commentsInThreads[payload.threadId] = [
+        ...(state.commentsInThreads[payload.threadId] || []),
+        ...(payload.commentsInThreads[payload.threadId] || []),
+      ];
       state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
-      state.totalPages = payload.pagination.numPages;
-      state.totalThreads = payload.pagination.count;
+      state.pagination[payload.threadId] = {
+        currentPage: payload.page,
+        totalPages: payload.pagination.numPages,
+        hasMorePages: Boolean(payload.pagination.next),
+      };
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -109,7 +113,6 @@ const commentsSlice = createSlice({
       if (parentId) {
         state.commentsInComments[parentId] = state.commentsInComments[parentId].filter(item => item !== commentId);
       }
-      state.pages = state.pages.map(page => page?.filter(item => item !== commentId));
       delete state.commentsById[commentId];
     },
   },
