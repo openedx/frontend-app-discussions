@@ -135,7 +135,13 @@ describe('CommentsView', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });
 
-  it('test', async () => {
+  it('initially loads only the first page', async () => {
+    const firstPageComment = mockCommentsPaged[0][0];
+    const secondPageComment = mockCommentsPaged[1][0];
+    mockAxiosReturnPagedComments();
     renderComponent();
+
+    await screen.findByText(firstPageComment.renderedBody);
+    expect(screen.queryByText(secondPageComment.renderedBody)).not.toBeInTheDocument();
   });
 });
