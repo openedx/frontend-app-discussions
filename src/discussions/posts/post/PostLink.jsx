@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { generatePath, useRouteMatch } from 'react-router';
+import classNames from 'classnames';
+import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -8,6 +9,7 @@ import { Icon } from '@edx/paragon';
 import { Flag, Unread } from '@edx/paragon/icons';
 
 import { Routes } from '../../../data/constants';
+import { DiscussionContext } from '../../common/context';
 import messages from './messages';
 import Post, { postShape } from './Post';
 
@@ -15,7 +17,10 @@ function PostLink({
   post,
   intl,
 }) {
-  const { params: { page } } = useRouteMatch(Routes.COMMENTS.PAGE);
+  const {
+    page,
+    postId,
+  } = useContext(DiscussionContext);
   const linkUrl = generatePath(Routes.COMMENTS.PAGES[page], {
     courseId: post.courseId,
     topicId: post.topicId,
@@ -32,9 +37,10 @@ function PostLink({
           <span className="text-gray-700 x-small">{intl.formatMessage(messages.contentReported)}</span>
         </div>
       )}
-      <div className={`d-flex flex-row p-2 ${post.read ? 'bg-light-200' : ''}`}>
-        {!post.read && <Icon className="text-brand-500" src={Unread} />}
-        <Post post={post} />
+      <div className={classNames('d-flex flex-row flex-fill mw-100', { 'bg-light-200': post.read })}>
+        <Icon className={classNames('p-0 mr-n3 text-brand-500', { invisible: post.read })} src={Unread} />
+        <Post post={post} preview />
+        <div className={classNames('d-flex pl-1.5 bg-info-500', { invisible: post.id !== postId })} />
       </div>
     </Link>
   );

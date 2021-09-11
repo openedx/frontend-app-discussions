@@ -125,23 +125,23 @@ const threadsSlice = createSlice({
     },
     setSortedBy: (state, { payload }) => {
       state.sortedBy = payload;
-      state.pages = {};
+      state.pages = [];
     },
     setStatusFilter: (state, { payload }) => {
       state.filters.status = payload;
-      state.pages = {};
+      state.pages = [];
     },
     setAllPostsTypeFilter: (state, { payload }) => {
       state.filters.allPosts = payload;
-      state.pages = {};
+      state.pages = [];
     },
     setMyPostsTypeFilter: (state, { payload }) => {
       state.filters.myPosts = payload;
-      state.pages = {};
+      state.pages = [];
     },
     setSearchQuery: (state, { payload }) => {
       state.filters.search = payload;
-      state.pages = {};
+      state.pages = [];
     },
     showPostEditor: (state) => {
       state.postEditorVisible = true;

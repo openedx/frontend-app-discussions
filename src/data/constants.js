@@ -13,6 +13,27 @@ export const ThreadType = {
 };
 
 /**
+ * Edit actions for posts and comments
+ * @readonly
+ * @enum {string}
+ */
+export const ContentActions = {
+  EDIT_CONTENT: 'raw_body',
+  PIN: 'pin',
+  ENDORSE: 'endorsed',
+  CLOSE: 'closed',
+  REPORT: 'abuse_flagged',
+  DELETE: 'delete',
+  FOLLOWING: 'following',
+  CHANGE_GROUP: 'group_id',
+  MARK_READ: 'read',
+  CHANGE_TITLE: 'title',
+  CHANGE_TOPIC: 'topic_id',
+  CHANGE_TYPE: 'type',
+  VOTE: 'voted',
+};
+
+/**
  * Enum for request status.
  * @readonly
  * @enum {string}
@@ -140,3 +161,8 @@ export const Routes = {
     TOPIC: `${BASE_PATH}/topics/:topicId`,
   },
 };
+
+export const ALL_ROUTES = []
+  .concat(Routes.COMMENTS.PATH)
+  .concat(Routes.TOPICS.PATH)
+  .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS]);
