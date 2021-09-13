@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  loadMoreComments: {
+    id: 'discussions.comments.comment.loadMoreComments',
+    defaultMessage: 'Load more comments',
+    description: 'Button to load more comments of forum posts',
+  },
   submit: {
     id: 'discussions.comments.comment.submit',
     defaultMessage: 'Submit',

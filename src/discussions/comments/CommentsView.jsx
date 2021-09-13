@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -22,8 +22,10 @@ function CommentsView({ intl }) {
   const dispatch = useDispatch();
   const thread = useSelector(selectThread(postId));
   const comments = useSelector(selectThreadComments(postId));
+  const totalPages = useSelector(store => store.comments.totalPages);
+  const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
-    dispatch(fetchThreadComments(postId));
+    setCurrentPage(1);
     const markReadTimer = setTimeout(() => {
       if (thread && !thread.read) {
         dispatch(markThreadAsRead(postId));
@@ -33,6 +35,9 @@ function CommentsView({ intl }) {
       clearTimeout(markReadTimer);
     };
   }, [postId]);
+  useEffect(() => {
+    dispatch(fetchThreadComments(postId, { page: currentPage }));
+  }, [currentPage]);
   if (!thread) {
     return (
       <Spinner animation="border" variant="primary" />
@@ -49,6 +54,15 @@ function CommentsView({ intl }) {
                 <Reply reply={reply} />
               </div>
             ))}
+            {currentPage < totalPages &&
+              <div className="list-group-item list-group-item-action">
+                <Button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  block>
+                  {intl.formatMessage(messages.loadMoreComments)}
+                </Button>
+              </div>
+            }
           </div>
         </div>
       </div>
