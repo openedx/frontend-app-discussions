@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
@@ -135,6 +135,10 @@ describe('CommentsView', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });
 
+  // TODO: use test id to prevent breaking from text changes
+  const findLoadMoreCommentsButton = () =>
+    screen.findByRole('button', { name: /load more comments/i });
+
   it('initially loads only the first page', async () => {
     const firstPageComment = mockCommentsPaged[0][0];
     const secondPageComment = mockCommentsPaged[1][0];
@@ -143,5 +147,43 @@ describe('CommentsView', () => {
 
     await screen.findByText(firstPageComment.renderedBody);
     expect(screen.queryByText(secondPageComment.renderedBody)).not.toBeInTheDocument();
+  });
+
+  it('pressing load more button will load next page of comments', async () => {
+    const firstPageComment = mockCommentsPaged[0][0];
+    const secondPageComment = mockCommentsPaged[1][0];
+    mockAxiosReturnPagedComments();
+    renderComponent();
+
+    const loadMoreButton = await findLoadMoreCommentsButton();
+    fireEvent.click(loadMoreButton);
+
+    await screen.findByText(secondPageComment.renderedBody);
+  });
+
+  it('newly loaded comments are appended to the old ones', async () => {
+    const firstPageComment = mockCommentsPaged[0][0];
+    const secondPageComment = mockCommentsPaged[1][0];
+    mockAxiosReturnPagedComments();
+    renderComponent();
+
+    const loadMoreButton = await findLoadMoreCommentsButton();
+    fireEvent.click(loadMoreButton);
+
+    await screen.findByText(secondPageComment.renderedBody);
+    // check that comments from the first pages are also displayed
+    expect(screen.queryByText(firstPageComment.renderedBody)).toBeInTheDocument();
+  });
+
+  it('load more button is hidden when no more comments pages to load', async () => {
+    const totalePages = mockCommentsPaged.length;
+    mockAxiosReturnPagedComments();
+    renderComponent();
+
+    const loadMoreButton = await findLoadMoreCommentsButton();
+    for (let page = 1; page < totalePages; page++)
+      fireEvent.click(loadMoreButton);
+
+    await expect(findLoadMoreCommentsButton()).rejects.toThrow();
   });
 });
