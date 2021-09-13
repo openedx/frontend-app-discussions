@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -54,15 +54,16 @@ function CommentsView({ intl }) {
                 <Reply reply={reply} />
               </div>
             ))}
-            {currentPage < totalPages &&
+            {currentPage < totalPages && (
               <div className="list-group-item list-group-item-action">
                 <Button
                   onClick={() => setCurrentPage(currentPage + 1)}
-                  block>
+                  block
+                >
                   {intl.formatMessage(messages.loadMoreComments)}
                 </Button>
               </div>
-            }
+            )}
           </div>
         </div>
       </div>

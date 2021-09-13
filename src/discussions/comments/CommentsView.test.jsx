@@ -2,22 +2,21 @@
  * @jest-environment jsdom
  */
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router';
-import { render, screen, fireEvent } from '@testing-library/react';
+
+import { fireEvent, render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { IntlProvider } from 'react-intl';
+import { MemoryRouter, Route } from 'react-router';
+
 import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
-import { IntlProvider } from 'react-intl';
 
 import { initializeStore } from '../../store';
 import { commentsApiUrl } from './data/api';
-import { selectThreadComments } from './data/selectors';
-
 import CommentsView from './CommentsView';
 
 const postId = '1';
-let container;
 let store;
 let axiosMock;
 
@@ -30,7 +29,7 @@ const mockCommentsPaged = [
       voteCount: 0,
       author: 'testauthor',
       users: {
-        'testauthor': {
+        testauthor: {
           profile: {
             image: {
               image_url_small: '',
@@ -48,7 +47,7 @@ const mockCommentsPaged = [
       voteCount: 0,
       author: 'testauthor',
       users: {
-        'testauthor': {
+        testauthor: {
           profile: {
             image: {
               image_url_small: '',
@@ -69,8 +68,8 @@ function mockAxiosReturnPagedComments() {
   };
 
   const numPages = mockCommentsPaged.length;
-  let page = 1;
-  for (const comments of mockCommentsPaged) {
+  for (let page = 1; page <= mockCommentsPaged.length; page++) {
+    const comments = mockCommentsPaged[page - 1];
     axiosMock
       .onGet(commentsApiUrl, { params: { ...paramsTemplate, page } })
       .reply(200, {
@@ -80,23 +79,21 @@ function mockAxiosReturnPagedComments() {
           numPages,
         },
       });
-    page++;
   }
 }
 
 function renderComponent() {
-  const wrapper = render(
-    <IntlProvider locale='en'>
+  render(
+    <IntlProvider locale="en">
       <AppProvider store={store}>
         <MemoryRouter initialEntries={['comments/1']}>
-          <Route path='comments/:postId'>
+          <Route path="comments/:postId">
             <CommentsView />
           </Route>
         </MemoryRouter>
       </AppProvider>
-    </IntlProvider>
+    </IntlProvider>,
   );
-  container = wrapper.container;
 }
 
 describe('CommentsView', () => {
@@ -123,7 +120,7 @@ describe('CommentsView', () => {
           },
         },
         avatars: {
-          'testauthor': {
+          testauthor: {
             profile: {
               image: '',
             },
@@ -136,8 +133,7 @@ describe('CommentsView', () => {
   });
 
   // TODO: use test id to prevent breaking from text changes
-  const findLoadMoreCommentsButton = () =>
-    screen.findByRole('button', { name: /load more comments/i });
+  const findLoadMoreCommentsButton = () => screen.findByRole('button', { name: /load more comments/i });
 
   it('initially loads only the first page', async () => {
     const firstPageComment = mockCommentsPaged[0][0];
@@ -150,7 +146,6 @@ describe('CommentsView', () => {
   });
 
   it('pressing load more button will load next page of comments', async () => {
-    const firstPageComment = mockCommentsPaged[0][0];
     const secondPageComment = mockCommentsPaged[1][0];
     mockAxiosReturnPagedComments();
     renderComponent();
@@ -181,8 +176,9 @@ describe('CommentsView', () => {
     renderComponent();
 
     const loadMoreButton = await findLoadMoreCommentsButton();
-    for (let page = 1; page < totalePages; page++)
+    for (let page = 1; page < totalePages; page++) {
       fireEvent.click(loadMoreButton);
+    }
 
     await expect(findLoadMoreCommentsButton()).rejects.toThrow();
   });
