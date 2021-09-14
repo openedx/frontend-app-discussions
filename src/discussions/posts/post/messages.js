@@ -2,15 +2,15 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   lastResponse: {
-    id: 'discussions.post.last-response',
+    id: 'discussions.post.lastResponse',
     defaultMessage: 'Last response {time}',
   },
   postedOn: {
-    id: 'discussions.post.posted-on',
+    id: 'discussions.post.postedOn',
     defaultMessage: 'Posted {time} by {author} {authorLabel}',
   },
   contentReported: {
-    id: 'discussions.post.content-reported',
+    id: 'discussions.post.contentReported',
     defaultMessage: 'Content reported for staff review',
   },
   follow: {
@@ -29,7 +29,7 @@ const messages = defineMessages({
     description: 'Tooltip/alttext for button to like a discussion post',
   },
   removeLike: {
-    id: 'discussions.post.remove-like',
+    id: 'discussions.post.removeLike',
     defaultMessage: 'Remove like',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
   },

@@ -96,6 +96,16 @@ export const Routes = {
     PATH: `${BASE_PATH}/topics/:topicId`,
     MY_POSTS: `${BASE_PATH}/my-posts(/:postId)?`,
     ALL_POSTS: `${BASE_PATH}/posts(/:postId)?`,
+    NEW_POST: [
+      `${BASE_PATH}/topics/:topicId/posts/:postId`,
+      `${BASE_PATH}/topics/:topicId`,
+      `${BASE_PATH}`,
+    ],
+    EDIT_POST: [
+      `${BASE_PATH}/topics/:topicId/posts/:postId/edit`,
+      `${BASE_PATH}/posts/:postId/edit`,
+      `${BASE_PATH}/my-posts/:postId/edit`,
+    ],
   },
   COMMENTS: {
     PATH: [

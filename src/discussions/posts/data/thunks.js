@@ -113,7 +113,14 @@ export function markThreadAsRead(threadId) {
   };
 }
 
-export function createNewThread(courseId, topicId, type, title, content, following = false) {
+export function createNewThread({
+  courseId,
+  topicId,
+  type,
+  title,
+  content,
+  following = false,
+}) {
   return async (dispatch) => {
     try {
       dispatch(postThreadRequest({
