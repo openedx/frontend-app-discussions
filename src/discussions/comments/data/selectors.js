@@ -20,4 +20,12 @@ export const selectCommentResponses = commentId => createSelector(
   mapIdToComment,
 );
 
+export const selectAllComments = createSelector(
+  [
+    state => state.comments.pages || [],
+    selectCommentsById,
+  ],
+  (pages, comments) => pages.flatMap(ids => mapIdToComment(ids, comments)),
+);
+
 export const commentsStatus = state => state.comments.status;

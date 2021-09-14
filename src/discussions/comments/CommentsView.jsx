@@ -10,7 +10,7 @@ import { Button, Spinner } from '@edx/paragon';
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
-import { selectThreadComments } from './data/selectors';
+import { selectAllComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import Reply from './reply/Reply';
 import messages from './messages';
@@ -21,7 +21,7 @@ function CommentsView({ intl }) {
   const { postId } = useParams();
   const dispatch = useDispatch();
   const thread = useSelector(selectThread(postId));
-  const comments = useSelector(selectThreadComments(postId));
+  const comments = useSelector(selectAllComments);
   const totalPages = useSelector(store => store.comments.totalPages);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
