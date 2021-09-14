@@ -16,7 +16,7 @@ const commentsSlice = createSlice({
     commentsById: {
       // Map comment ids to comments.
     },
-    pages: {},
+    pages: [],
     // Stores the comment being posted in case it needs to be reposted due to network failure.
     // TODO: save in localstorage so user can continue editing?
     commentDraft: null,
@@ -30,10 +30,10 @@ const commentsSlice = createSlice({
     },
     fetchCommentsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.pages[payload.page] = payload.ids;
-      Object.assign(state.commentsInThreads, payload.commentsInThreads);
-      Object.assign(state.commentsInComments, payload.commentsInComments);
-      Object.assign(state.commentsById, payload.commentsById);
+      state.pages[payload.page - 1] = payload.ids;
+      state.commentsInThreads = { ...state.commentsInThreads, ...payload.commentsInThreads };
+      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
+      state.commentsById = { ...state.commentsById, ...payload.commentsById };
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
@@ -54,8 +54,8 @@ const commentsSlice = createSlice({
     },
     fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      Object.assign(state.commentsInComments, payload.commentsInComments);
-      Object.assign(state.commentsById, payload.commentsById);
+      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
+      state.commentsById = { ...state.commentsById, ...payload.commentsById };
     },
     postCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
@@ -108,9 +108,7 @@ const commentsSlice = createSlice({
       if (parentId) {
         state.commentsInComments[parentId] = state.commentsInComments[parentId].filter(item => item !== commentId);
       }
-      Object.keys(state.pages).forEach(page => {
-        state.pages[page] = state.pages[page].filter(item => item !== commentId);
-      });
+      state.pages = state.pages.map(page => page?.filter(item => item !== commentId));
       delete state.commentsById[commentId];
     },
   },

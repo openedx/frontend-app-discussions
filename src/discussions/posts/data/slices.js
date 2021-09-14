@@ -9,31 +9,6 @@ import {
   ThreadOrdering,
 } from '../../../data/constants';
 
-function normaliseProfileImage(currentThread, newThread) {
-  newThread.authorAvatars = newThread.users
-    ? newThread.users?.[newThread.author].profile.image
-    : currentThread?.authorAvatars;
-  return newThread;
-}
-
-function normaliseThreads(state, rawThreadsData) {
-  const {
-    topicThreadMap: topics,
-    threads,
-  } = state;
-  rawThreadsData.forEach(
-    thread => {
-      if (!topics[thread.topicId]) {
-        topics[thread.topicId] = [];
-      }
-      if (!topics[thread.topicId].includes(thread.id)) {
-        topics[thread.topicId].push(thread.id);
-      }
-      threads[thread.id] = normaliseProfileImage(threads[thread.id], thread);
-    },
-  );
-}
-
 const threadsSlice = createSlice({
   name: 'thread',
   initialState: {
@@ -47,7 +22,7 @@ const threadsSlice = createSlice({
     threadsById: {
       // Mapping of threads ids to threads in them
     },
-    pages: {},
+    pages: [],
     threadDraft: null,
     totalPages: null,
     totalThreads: null,
@@ -68,10 +43,10 @@ const threadsSlice = createSlice({
     },
     fetchThreadsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.pages[payload.page] = payload.ids;
-      Object.assign(state.threadsById, payload.threadsById);
-      Object.assign(state.threadsInTopic, payload.threadsInTopic);
-      Object.assign(state.avatars, payload.avatars);
+      state.pages[payload.page - 1] = payload.ids;
+      state.threadsById = { ...state.threadsById, ...payload.threadsById };
+      state.threadsInTopic = { ...state.threadsInTopic, ...payload.threadsInTopic };
+      state.avatars = { ...state.avatars, ...payload.avatars };
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
@@ -86,8 +61,8 @@ const threadsSlice = createSlice({
     },
     fetchThreadSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      Object.assign(state.threadsById, payload.threadsById);
-      Object.assign(state.avatars, payload.avatars);
+      state.threadsById = { ...state.threadsById, ...payload.threadsById };
+      state.avatars = { ...state.avatars, ...payload.avatars };
     },
     fetchThreadFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -104,8 +79,8 @@ const threadsSlice = createSlice({
       state.threadsById[payload.id] = payload;
       state.threadsInTopic[payload.topicId].push(payload.id);
       // Temporarily add it to the top of the list so it's visible
-      state.pages[1] = [payload.id] + (state.pages[1] || []);
-      Object.assign(state.avatars, payload.users);
+      state.pages[0] = [payload.id].concat(state.pages[0] || []);
+      state.avatars = { ...state.avatars, ...payload.avatars };
       state.redirectToThread = { topicId: payload.topicId, threadId: payload.id };
       state.threadDraft = null;
     },
@@ -121,8 +96,8 @@ const threadsSlice = createSlice({
     },
     updateThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      Object.assign(state.threadsById[payload.id], payload);
-      Object.assign(state.avatars, payload.avatars);
+      state.threadsById[payload.id] = { ...state.threadsById[payload.id], ...payload };
+      state.avatars = { ...state.avatars, ...payload.avatars };
       state.threadDraft = null;
     },
     updateThreadFailed: (state) => {
@@ -139,10 +114,7 @@ const threadsSlice = createSlice({
       const { topicId } = state.threadsById[threadId];
       state.postStatus = RequestStatus.SUCCESSFUL;
       state.threadsInTopic[topicId] = state.threadsInTopic[topicId].filter(item => item !== threadId);
-      Object.keys(state.pages)
-        .forEach(page => {
-          state.pages[page] = state.pages[page].filter(item => item !== threadId);
-        });
+      state.pages = state.pages.map(page => page?.filter(item => item !== threadId));
       delete state.threadsById[threadId];
     },
     deleteThreadFailed: (state) => {

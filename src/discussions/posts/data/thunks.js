@@ -54,7 +54,7 @@ function normaliseThreads(data) {
   }
   const threadsInTopic = {};
   const threadsById = {};
-  const avatars = {};
+  let avatars = {};
   const ids = [];
   threads.forEach(
     thread => {
@@ -67,7 +67,7 @@ function normaliseThreads(data) {
         threadsInTopic[topicId].push(id);
       }
       threadsById[id] = thread;
-      Object.assign(avatars, thread.users);
+      avatars = { ...avatars, ...thread.users };
     },
   );
   return {
@@ -81,17 +81,19 @@ function normaliseThreads(data) {
  * @param {[string]} topicIds List of topics to limit threads to
  * @param {ThreadOrdering} orderBy The results will be sorted on this basis.
  * @param {ThreadFilter} filters The set of filters to apply to the thread.
+ * @param {number} page Page to fetch
  * @returns {(function(*): Promise<void>)|*}
  */
 export function fetchThreads(courseId, {
   topicIds,
   orderBy,
   filters = {},
-  page,
+  page = 1,
 } = {}) {
   const options = {
     orderBy,
     topicIds,
+    page,
   };
   if (filters.status === PostsStatusFilter.FOLLOWING) {
     options.following = true;
@@ -107,7 +109,7 @@ export function fetchThreads(courseId, {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data));
-      dispatch(fetchThreadsSuccess({ ...normalisedData, page: page || 1 }));
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());

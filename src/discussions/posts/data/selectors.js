@@ -27,22 +27,20 @@ export const selectAllThreadsOnPage = (page) => createSelector(
   mapIdsToThreads,
 );
 
-export const selectAllThreads = () => state => {
-  let threads = [];
-  let page = 1;
-  while (state.threads.pages[page]?.length) {
-    threads = threads.concat(selectAllThreadsOnPage(page)(state));
-    page += 1;
-  }
-  return threads;
-};
+export const selectAllThreads = createSelector(
+  [
+    state => state.threads.pages,
+    selectThreads,
+  ],
+  (pages, threads) => pages.flatMap(ids => mapIdsToThreads(ids, threads)),
+);
 
 export const threadsLoadingStatus = () => state => state.threads.status;
 
+// TODO: eventually this should be server-side filtering
 export const selectUserThreads = author => createSelector(
-  [selectThreads],
-  (threads) => Object.values(threads)
-    .filter(thread => thread.author === author),
+  [selectAllThreads],
+  threads => threads.filter(thread => thread.author === author),
 );
 
 export const selectThreadSorting = () => state => state.threads.sortedBy;

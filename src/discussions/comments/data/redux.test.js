@@ -46,7 +46,7 @@ describe('Comments/Responses data layer tests', () => {
     expect(store.getState().comments.commentsInThreads)
       .toEqual({ 'test-thread': ['comment-1', 'comment-2', 'comment-3'] });
     expect(store.getState().comments.pages)
-      .toEqual({ 1: ['comment-1', 'comment-2', 'comment-3'] });
+      .toEqual([['comment-1', 'comment-2', 'comment-3']]);
     expect(Object.keys(store.getState().comments.commentsById))
       .toEqual(['comment-1', 'comment-2', 'comment-3']);
     expect(store.getState().comments.commentsById['comment-1'])
@@ -137,7 +137,7 @@ describe('Comments/Responses data layer tests', () => {
 
     expect(store.getState().comments.commentsById)
       .toHaveProperty(commentId);
-    expect(store.getState().comments.pages[1])
+    expect(store.getState().comments.pages[0])
       .toContain(commentId);
 
     axiosMock.onDelete(`${commentsApiUrl}${commentId}/`)
@@ -148,7 +148,7 @@ describe('Comments/Responses data layer tests', () => {
     expect(store.getState().comments.commentsById)
       .not
       .toHaveProperty(commentId);
-    expect(store.getState().comments.pages[1])
+    expect(store.getState().comments.pages[0])
       .not
       .toContain(commentId);
     expect(store.getState().comments.commentsInThreads[threadId])

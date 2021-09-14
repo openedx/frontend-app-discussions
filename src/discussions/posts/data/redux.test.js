@@ -47,7 +47,7 @@ describe('Threads/Posts data layer tests', () => {
     expect(store.getState().threads.threadsInTopic)
       .toEqual({ 'test-topic': ['thread-1', 'thread-2', 'thread-3'] });
     expect(store.getState().threads.pages)
-      .toEqual({ 1: ['thread-1', 'thread-2', 'thread-3'] });
+      .toEqual([['thread-1', 'thread-2', 'thread-3']]);
     expect(Object.keys(store.getState().threads.threadsById))
       .toEqual(['thread-1', 'thread-2', 'thread-3']);
     expect(store.getState().threads.threadsById['thread-1'])
@@ -133,7 +133,7 @@ describe('Threads/Posts data layer tests', () => {
     expect(store.getState().threads.threadsById)
       .not
       .toHaveProperty(threadId);
-    expect(store.getState().threads.pages[1])
+    expect(store.getState().threads.pages[0])
       .not
       .toContain(threadId);
     expect(store.getState().threads.threadsInTopic['test-topic'])

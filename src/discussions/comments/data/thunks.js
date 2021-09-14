@@ -72,14 +72,14 @@ function normaliseComments(data) {
   };
 }
 
-export function fetchThreadComments(threadId, { page } = {}) {
+export function fetchThreadComments(threadId, { page = 1 } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentsRequest({ threadId }));
       const data = await getThreadComments(threadId, { page });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
-        page: page || 1,
+        page,
       }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
