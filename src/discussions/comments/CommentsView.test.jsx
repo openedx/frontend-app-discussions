@@ -68,7 +68,7 @@ function mockAxiosReturnPagedComments() {
   };
 
   const numPages = mockCommentsPaged.length;
-  for (let page = 1; page <= mockCommentsPaged.length; page++) {
+  for (let page = 1; page <= numPages; page++) {
     const comments = mockCommentsPaged[page - 1];
     axiosMock
       .onGet(commentsApiUrl, { params: { ...paramsTemplate, page } })
@@ -77,6 +77,7 @@ function mockAxiosReturnPagedComments() {
         pagination: {
           page,
           numPages,
+          next: page < numPages ? page + 1 : null,
         },
       });
   }
@@ -172,6 +173,7 @@ describe('CommentsView', () => {
 
   it('load more button is hidden when no more comments pages to load', async () => {
     const totalePages = mockCommentsPaged.length;
+    const lastPageComment = mockCommentsPaged[totalePages - 1][0];
     mockAxiosReturnPagedComments();
     renderComponent();
 
@@ -180,6 +182,7 @@ describe('CommentsView', () => {
       fireEvent.click(loadMoreButton);
     }
 
+    await screen.findByText(lastPageComment.renderedBody);
     await expect(findLoadMoreCommentsButton()).rejects.toThrow();
   });
 });

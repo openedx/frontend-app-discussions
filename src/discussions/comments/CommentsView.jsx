@@ -22,7 +22,7 @@ function CommentsView({ intl }) {
   const dispatch = useDispatch();
   const thread = useSelector(selectThread(postId));
   const comments = useSelector(selectAllComments);
-  const totalPages = useSelector(store => store.comments.totalPages);
+  const hasMorePages = useSelector(store => store.comments.hasMorePages);
   const [currentPage, setCurrentPage] = useState(1);
   useEffect(() => {
     setCurrentPage(1);
@@ -54,7 +54,7 @@ function CommentsView({ intl }) {
                 <Reply reply={reply} />
               </div>
             ))}
-            {currentPage < totalPages && (
+            {hasMorePages && (
               <div className="list-group-item list-group-item-action">
                 <Button
                   onClick={() => setCurrentPage(currentPage + 1)}

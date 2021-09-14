@@ -23,6 +23,7 @@ const commentsSlice = createSlice({
     totalPages: null,
     totalThreads: null,
     postStatus: RequestStatus.SUCCESSFUL,
+    hasMorePages: false,
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -36,6 +37,7 @@ const commentsSlice = createSlice({
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
+      state.hasMorePages = Boolean(payload.pagination.next);
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
