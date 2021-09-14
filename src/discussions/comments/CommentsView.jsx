@@ -58,7 +58,8 @@ function CommentsView({ intl }) {
               <div className="list-group-item list-group-item-action">
                 <Button
                   onClick={() => setCurrentPage(currentPage + 1)}
-                  block
+                  variant="link"
+                  block="true"
                 >
                   {intl.formatMessage(messages.loadMoreComments)}
                 </Button>
