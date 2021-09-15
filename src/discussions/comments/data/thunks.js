@@ -109,11 +109,16 @@ export function fetchCommentResponses(commentId) {
   };
 }
 
-export function editComment(commentId, comment) {
+export function editComment(commentId, { voted }) {
   return async (dispatch) => {
     try {
-      dispatch(updateCommentRequest({ commentId }));
-      const data = await updateComment(commentId, comment);
+      dispatch(updateCommentRequest({
+        commentId,
+        voted,
+      }));
+      const data = await updateComment(commentId, {
+        voted,
+      });
       dispatch(updateCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {

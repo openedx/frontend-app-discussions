@@ -33,6 +33,18 @@ const messages = defineMessages({
     defaultMessage: 'Remove like',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
   },
+  pinned: {
+    id: 'discussions.post.pinned',
+    defaultMessage: 'Pinned by course TA',
+  },
+  closed: {
+    id: 'discussions.post.closed',
+    defaultMessage: 'Post closed for responses and comments',
+  },
+  endorsed: {
+    id: 'discussions.post.endorsed',
+    defaultMessage: 'Marked as answered by the couse TA',
+  },
 });
 
 export default messages;

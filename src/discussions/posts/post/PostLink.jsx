@@ -12,6 +12,7 @@ import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import messages from './messages';
 import Post, { postShape } from './Post';
+import PostBanner from './PostBanner';
 
 function PostLink({
   post,

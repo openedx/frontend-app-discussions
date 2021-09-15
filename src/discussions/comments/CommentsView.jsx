@@ -10,7 +10,11 @@ import { Button, Spinner } from '@edx/paragon';
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
+<<<<<<< HEAD
 import Comment from './comment/Comment';
+=======
+import PostBanner from '../posts/post/PostBanner';
+>>>>>>> feat: adds banners to posts
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import messages from './messages';
@@ -41,6 +45,7 @@ function CommentsView({ intl }) {
   return (
     <div className="discussion-comments d-flex flex-column w-100 ml-3">
       <div className="mb-2">
+        <PostBanner post={thread} intl={intl} />
         <div className="list-group list-group-flush">
           <Post post={thread} />
           <div className="list-group">
