@@ -1,20 +1,52 @@
 /* eslint-disable import/prefer-default-export */
 
-export const selectTopicThreads = topicId => state => (state.threads.topicThreadMap[topicId] || []).map(
-  threadId => state.threads.threads[threadId],
+import { createSelector } from '@reduxjs/toolkit';
+
+const selectThreads = state => state.threads.threadsById;
+
+const mapIdsToThreads = (ids, threads) => ids.map(id => threads?.[id]);
+
+export const selectTopicThreads = topicId => createSelector(
+  [
+    state => state.threads.threadsInTopic[topicId] || [],
+    selectThreads,
+  ],
+  mapIdsToThreads,
 );
 
-export const selectThread = threadId => state => (state.threads.threads?.[threadId]);
+export const selectThread = threadId => createSelector(
+  [selectThreads],
+  (threads) => threads?.[threadId],
+);
 
-export const selectAllThreads = () => state => Object.values(state.threads.threads);
+export const selectAllThreadsOnPage = (page) => createSelector(
+  [
+    state => state.threads.pages[page] || [],
+    selectThreads,
+  ],
+  mapIdsToThreads,
+);
+
+export const selectAllThreads = createSelector(
+  [
+    state => state.threads.pages,
+    selectThreads,
+  ],
+  (pages, threads) => pages.flatMap(ids => mapIdsToThreads(ids, threads)),
+);
 
 export const threadsLoadingStatus = () => state => state.threads.status;
 
-export const selectUserThreads = author => state => (
-  Object.values(state.threads.threads)
-    .filter(thread => thread.author === author)
+// TODO: eventually this should be server-side filtering
+export const selectUserThreads = author => createSelector(
+  [selectAllThreads],
+  threads => threads.filter(thread => thread.author === author),
 );
 
 export const selectThreadSorting = () => state => state.threads.sortedBy;
 
 export const selectThreadFilters = () => state => state.threads.filters;
+
+export const selectAuthorAvatars = author => state => (
+  state.threads.avatars?.[author].profile.image
+);

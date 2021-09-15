@@ -1,10 +1,23 @@
 /* eslint-disable import/prefer-default-export */
-export const selectThreadComments = threadId => state => (state.comments.threadCommentMap[threadId] || []).map(
-  commentId => state.comments.comments[commentId],
+import { createSelector } from '@reduxjs/toolkit';
+
+const selectCommentsById = state => state.comments.commentsById;
+const mapIdToComment = (ids, comments) => ids.map(id => comments[id]);
+
+export const selectThreadComments = threadId => createSelector(
+  [
+    state => state.comments.commentsInThreads[threadId] || [],
+    selectCommentsById,
+  ],
+  mapIdToComment,
 );
 
-export const selectCommentResponses = commentId => state => (state.comments.commentResponsesMap[commentId] || []).map(
-  cId => state.comments.comments[cId],
+export const selectCommentResponses = commentId => createSelector(
+  [
+    state => state.comments.commentsInComments[commentId] || [],
+    selectCommentsById,
+  ],
+  mapIdToComment,
 );
 
 export const commentsStatus = state => state.comments.status;

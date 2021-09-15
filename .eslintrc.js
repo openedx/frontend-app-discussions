@@ -4,6 +4,7 @@ module.exports = createConfig('eslint',
 {
   "plugins": ["simple-import-sort"],
     "rules": {
+      'import/no-extraneous-dependencies': 'off',
       'simple-import-sort/imports': [
         'error', {
           groups: [

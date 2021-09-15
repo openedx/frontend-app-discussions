@@ -3,6 +3,16 @@ import { getConfig } from '@edx/frontend-platform';
 export const API_BASE_URL = getConfig().LMS_BASE_URL;
 
 /**
+ * Enum for thread types.
+ * @readonly
+ * @enum {string}
+ */
+export const ThreadType = {
+  QUESTION: 'question',
+  DISCUSSION: 'discussion',
+};
+
+/**
  * Enum for request status.
  * @readonly
  * @enum {string}

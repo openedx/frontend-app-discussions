@@ -38,7 +38,7 @@ function PostsView({ showOwnPosts }) {
   } else if (showOwnPosts) {
     posts = useSelector(selectUserThreads(authenticatedUser.username));
   } else {
-    posts = useSelector(selectAllThreads());
+    posts = useSelector(selectAllThreads);
   }
   useEffect(() => {
     // The courseId from the URL is the course we WANT to load.

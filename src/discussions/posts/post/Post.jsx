@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -9,9 +9,16 @@ import {
   Avatar, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Pin, QuestionAnswer, StarFilled, StarOutline,
+  Help,
+  Pin,
+  Post as PostIcon,
+  QuestionAnswer,
+  StarFilled,
+  StarOutline,
 } from '@edx/paragon/icons';
 
+import { ThreadType } from '../../../data/constants';
+import { selectAuthorAvatars } from '../data/selectors';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
@@ -35,8 +42,8 @@ export const postShape = PropTypes.shape({
 function PostTypeIcon(props) {
   return (
     <div className="m-1">
-      {props.type === 'question' && <Icon src={QuestionAnswer} size="lg" />}
-      {props.type === 'discussion' && <Icon src={QuestionAnswer} size="lg" />}
+      {props.type === ThreadType.QUESTION && <Icon src={Help} size="lg" />}
+      {props.type === ThreadType.DISCUSSION && <Icon src={PostIcon} size="lg" />}
       {props.pinned && (
         <Icon
           src={Pin}
@@ -55,9 +62,10 @@ function PostHeader({
   intl,
   post,
 }) {
+  const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   return (
     <div className="d-flex flex-fill justify-content-between">
-      <Avatar className="m-2" alt={post.author} src={post?.authorAvatars?.imageUrlSmall} />
+      <Avatar className="m-2" alt={post.author} src={authorAvatars.imageUrlSmall} />
       <PostTypeIcon type={post.type} pinned={post.pinned} />
       <div className="align-items-center d-flex flex-row flex-fill">
         <div className="d-flex flex-column flex-fill">

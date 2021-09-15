@@ -38,21 +38,62 @@ import {
  */
 
 /**
+ * Normalises raw data returned by threads API by mapping threads to id and
+ * mapping topic ids to threads in them.
+ * @param data
+ * @returns {{pagination, threadsById: {}, threadsInTopic: {}, avatars: {}}}
+ */
+function normaliseThreads(data) {
+  const normalized = {};
+  let threads;
+  if ('results' in data) {
+    threads = data.results;
+    normalized.pagination = data.pagination;
+  } else {
+    threads = [data];
+  }
+  const threadsInTopic = {};
+  const threadsById = {};
+  let avatars = {};
+  const ids = [];
+  threads.forEach(
+    thread => {
+      const { topicId, id } = thread;
+      ids.push(id);
+      if (!threadsInTopic[topicId]) {
+        threadsInTopic[topicId] = [];
+      }
+      if (!threadsInTopic[topicId].includes(id)) {
+        threadsInTopic[topicId].push(id);
+      }
+      threadsById[id] = thread;
+      avatars = { ...avatars, ...thread.users };
+    },
+  );
+  return {
+    ids, threadsById, threadsInTopic, avatars, ...normalized,
+  };
+}
+
+/**
  * Fetches the threads for the course specified va the threadIds.
  * @param {string} courseId The course ID for the course to fetch data for.
  * @param {[string]} topicIds List of topics to limit threads to
  * @param {ThreadOrdering} orderBy The results will be sorted on this basis.
  * @param {ThreadFilter} filters The set of filters to apply to the thread.
+ * @param {number} page Page to fetch
  * @returns {(function(*): Promise<void>)|*}
  */
 export function fetchThreads(courseId, {
   topicIds,
   orderBy,
   filters = {},
+  page = 1,
 } = {}) {
   const options = {
     orderBy,
     topicIds,
+    page,
   };
   if (filters.status === PostsStatusFilter.FOLLOWING) {
     options.following = true;
@@ -67,7 +108,8 @@ export function fetchThreads(courseId, {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
-      dispatch(fetchThreadsSuccess(camelCaseObject(data)));
+      const normalisedData = normaliseThreads(camelCaseObject(data));
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());
@@ -84,7 +126,7 @@ export function fetchThread(threadId) {
     try {
       dispatch(fetchThreadRequest({ threadId }));
       const data = await getThread(threadId);
-      dispatch(fetchThreadSuccess(camelCaseObject(data)));
+      dispatch(fetchThreadSuccess(normaliseThreads(camelCaseObject(data))));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadDenied());

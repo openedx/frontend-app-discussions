@@ -29,12 +29,58 @@ import {
   updateCommentSuccess,
 } from './slices';
 
-export function fetchThreadComments(threadId) {
+/**
+ * Normalises comment data by mapping comments to ids, and grouping them by their
+ * parent thread and comment.
+ * @param data
+ * @returns {{commentsInComments: {}, pagination, commentsById: {}, commentsInThreads: {}}}
+ */
+function normaliseComments(data) {
+  const { pagination, results } = data;
+  const commentsInThreads = {};
+  const commentsInComments = {};
+  const commentsById = {};
+  const ids = [];
+  results.forEach(
+    comment => {
+      const { parentId, threadId, id } = comment;
+      ids.push(id);
+      if (parentId) {
+        if (!commentsInComments[parentId]) {
+          commentsInComments[parentId] = [];
+        }
+        if (!commentsInComments[parentId].includes(id)) {
+          commentsInComments[parentId].push(id);
+        }
+      } else {
+        if (!commentsInThreads[threadId]) {
+          commentsInThreads[threadId] = [];
+        }
+        if (!commentsInThreads[threadId].includes(id)) {
+          commentsInThreads[threadId].push(id);
+        }
+      }
+      commentsById[id] = comment;
+    },
+  );
+  return {
+    ids,
+    commentsInThreads,
+    commentsInComments,
+    commentsById,
+    pagination,
+  };
+}
+
+export function fetchThreadComments(threadId, { page = 1 } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentsRequest({ threadId }));
-      const data = await getThreadComments(threadId);
-      dispatch(fetchCommentsSuccess(camelCaseObject(data)));
+      const data = await getThreadComments(threadId, { page });
+      dispatch(fetchCommentsSuccess({
+        ...normaliseComments(camelCaseObject(data)),
+        page,
+      }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentsDenied());
@@ -51,7 +97,7 @@ export function fetchCommentResponses(commentId) {
     try {
       dispatch(fetchCommentResponsesRequest({ commentId }));
       const data = await getCommentResponses(commentId);
-      dispatch(fetchCommentResponsesSuccess(camelCaseObject(data)));
+      dispatch(fetchCommentResponsesSuccess(normaliseComments(camelCaseObject(data))));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentResponsesDenied());
