@@ -17,7 +17,7 @@ function ReplyHeader({ reply, intl }) {
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">
-        <Avatar className="m-2" alt={reply.author} src={reply.author.Avatar} />
+        <Avatar className="m-2" alt={reply.author} src={reply.users[reply.author].profile.image.image_url_small} />
         <div className="status small">
           <a href="#nowhere">
             <h1 className="font-weight-normal text-info-300 mr-1 small">

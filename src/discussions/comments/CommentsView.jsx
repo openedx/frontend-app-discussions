@@ -10,11 +10,8 @@ import { Button, Spinner } from '@edx/paragon';
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
-<<<<<<< HEAD
 import Comment from './comment/Comment';
-=======
 import PostBanner from '../posts/post/PostBanner';
->>>>>>> feat: adds banners to posts
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import messages from './messages';
