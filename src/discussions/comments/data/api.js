@@ -75,14 +75,28 @@ export async function postComment(comment, threadId, parentId) {
 /**
  * Updates existing comment.
  * @param {string} commentId ID of comment to update.
- * @param {string} comment Raw updated comment data to post.
+ * @param {string=} comment Raw updated comment data to post.
+ * @param {boolean=} voted
+ * @param {boolean=} flagged
+ * @param {boolean=} endorsed
  * @returns {Promise<{}>}
  */
-export async function updateComment(commentId, comment) {
+export async function updateComment(commentId, {
+  comment,
+  voted,
+  flagged,
+  endorsed,
+}) {
   const url = `${commentsApiUrl}${commentId}/`;
+  const postData = {
+    raw_body: comment,
+    voted,
+    abuse_flagged: flagged,
+    endorsed,
+  };
 
   const { data } = await getAuthenticatedHttpClient()
-    .patch(url, { raw_body: comment }, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+    .patch(url, postData, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;
 }
 

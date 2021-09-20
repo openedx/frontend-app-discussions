@@ -10,9 +10,9 @@ import { Button, Spinner } from '@edx/paragon';
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
+import Comment from './comment/Comment';
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
-import Reply from './reply/Reply';
 import messages from './messages';
 
 ensureConfig(['POST_MARK_AS_READ_DELAY'], 'Comment thread view');
@@ -44,9 +44,9 @@ function CommentsView({ intl }) {
         <div className="list-group list-group-flush">
           <Post post={thread} />
           <div className="list-group">
-            {comments.map(reply => (
-              <div key={reply.id} className="list-group-item list-group-item-action">
-                <Reply reply={reply} />
+            {comments.map(comment => (
+              <div key={comment.id} className="list-group-item list-group-item-action">
+                <Comment comment={comment} />
               </div>
             ))}
           </div>

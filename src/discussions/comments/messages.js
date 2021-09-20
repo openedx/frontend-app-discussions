@@ -22,10 +22,10 @@ const messages = defineMessages({
     } posted {relativeTime} by`,
     description: 'Timestamp for when a user posted the message followed by username. The relative time is already translated.',
   },
-  replyTime: {
-    id: 'discussions.comments.comment.repliedTime',
+  commentTime: {
+    id: 'discussions.comments.comment.commentTime',
     defaultMessage: 'Posted {relativeTime}',
-    description: 'Message about hwo long ago a reply was posted. Appears as "username posted 7 minutes ago"',
+    description: 'Message about how long ago a comment was posted. Appears as "username posted 7 minutes ago"',
   },
 });
 
