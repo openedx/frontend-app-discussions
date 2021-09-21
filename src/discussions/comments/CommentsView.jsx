@@ -5,16 +5,18 @@ import { useParams } from 'react-router';
 
 import { ensureConfig, getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
+import {
+  Button, Spinner,
+} from '@edx/paragon';
 
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
 import Post from '../posts/post/Post';
-import Comment from './comment/Comment';
-import PostBanner from '../posts/post/PostBanner';
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import messages from './messages';
+import bannerMessages from '../posts/post/messages';
+import BANNER_TYPE from '../posts/post/PostBanner';
 
 ensureConfig(['POST_MARK_AS_READ_DELAY'], 'Comment thread view');
 
@@ -42,13 +44,19 @@ function CommentsView({ intl }) {
   return (
     <div className="discussion-comments d-flex flex-column w-100 ml-3">
       <div className="mb-2">
-        <PostBanner post={thread} intl={intl} />
+        { thread.closed && BANNER_TYPE.closed(intl.formatMessage(bannerMessages.closed)) }
+        { thread.abuseFlagged && BANNER_TYPE.reported(intl.formatMessage(bannerMessages.contentReported)) }
+        { thread.pinned && BANNER_TYPE.pinned(intl.formatMessage(bannerMessages.pinned)) }
         <div className="list-group list-group-flush">
           <Post post={thread} />
           <div className="list-group">
-            {comments.map(comment => (
-              <div key={comment.id} className="list-group-item list-group-item-action">
-                <Comment comment={comment} />
+            {comments.map(reply => (
+              <div key={reply.id}>
+                { reply.endorsed && BANNER_TYPE.endorsed(intl.formatMessage(bannerMessages.endorsed)) }
+                { reply.abuseFlagged && BANNER_TYPE.reported(intl.formatMessage(bannerMessages.contentReported)) }
+                <div className="list-group-item list-group-item-action">
+                  <Reply reply={reply} />
+                </div>
               </div>
             ))}
           </div>
