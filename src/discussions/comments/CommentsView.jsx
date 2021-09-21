@@ -9,14 +9,15 @@ import {
   Button, Spinner,
 } from '@edx/paragon';
 
+import BANNER_TYPE from '../../components/Banner';
 import { selectThread } from '../posts/data/selectors';
 import { markThreadAsRead } from '../posts/data/thunks';
+import bannerMessages from '../posts/post/messages';
 import Post from '../posts/post/Post';
+import Comment from './comment/Comment';
 import { selectThreadComments } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import messages from './messages';
-import bannerMessages from '../posts/post/messages';
-import BANNER_TYPE from '../posts/post/PostBanner';
 
 ensureConfig(['POST_MARK_AS_READ_DELAY'], 'Comment thread view');
 
@@ -50,12 +51,12 @@ function CommentsView({ intl }) {
         <div className="list-group list-group-flush">
           <Post post={thread} />
           <div className="list-group">
-            {comments.map(reply => (
-              <div key={reply.id}>
-                { reply.endorsed && BANNER_TYPE.endorsed(intl.formatMessage(bannerMessages.endorsed)) }
-                { reply.abuseFlagged && BANNER_TYPE.reported(intl.formatMessage(bannerMessages.contentReported)) }
+            {comments.map(comment => (
+              <div key={comment.id}>
+                { comment.endorsed && BANNER_TYPE.endorsed(intl.formatMessage(bannerMessages.endorsed)) }
+                { comment.abuseFlagged && BANNER_TYPE.reported(intl.formatMessage(bannerMessages.contentReported)) }
                 <div className="list-group-item list-group-item-action">
-                  <Reply reply={reply} />
+                  <Comment comment={comment} />
                 </div>
               </div>
             ))}

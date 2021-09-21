@@ -10,11 +10,11 @@ import {
 } from '@edx/paragon';
 import { Unread } from '@edx/paragon/icons';
 
+import BANNER_TYPE from '../../../components/Banner';
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import messages from './messages';
 import Post, { postShape } from './Post';
-import BANNER_TYPE from './PostBanner';
 
 function PostLink({
   post,

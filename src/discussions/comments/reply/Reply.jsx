@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Avatar, IconButton, Icon } from '@edx/paragon';
+import { Avatar, Icon, IconButton } from '@edx/paragon';
 import { MoreVert } from '@edx/paragon/icons';
 
 import { commentShape } from '../comment/Comment';

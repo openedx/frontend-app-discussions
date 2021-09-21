@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Alert } from '@edx/paragon';
 import {
-  Pin,
   Flag,
-  VerifiedBadge,
   MoreVert,
+  Pin,
+  VerifiedBadge,
 } from '@edx/paragon/icons';
 
 const BANNER_TYPE = {
