@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  generatePath, Route, Switch, useHistory, useRouteMatch,
+  generatePath, Redirect, Route, Switch, useHistory, useRouteMatch,
 } from 'react-router';
 
 import { PostActionsBar } from '../../components';
@@ -19,7 +19,7 @@ export default function DiscussionsHome() {
   const history = useHistory();
   const { params } = useRouteMatch(Routes.DISCUSSIONS.PATH);
   const postEditorVisible = useSelector(state => state.threads.postEditorVisible);
-  const { params: { page } } = useRouteMatch(Routes.COMMENTS.PAGE);
+  const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const {
     params: {
       courseId,
@@ -48,44 +48,47 @@ export default function DiscussionsHome() {
       topicId,
     }}
     >
-      <main className="container my-4 d-flex flex-row">
-        <div className="d-flex flex-column w-50 mr-1">
+      <main className="container-fluid d-flex flex-column p-0">
+        <div className="d-flex flex-row justify-content-between shadow navbar">
           <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
-          <Route
-            path={[
-              Routes.POSTS.PATH,
-              Routes.TOPICS.CATEGORY,
-            ]}
-            component={BreadcrumbMenu}
-          />
-          <div className="card">
+          <PostActionsBar />
+        </div>
+        <Route
+          path={[
+            Routes.POSTS.PATH,
+            Routes.TOPICS.CATEGORY,
+          ]}
+          component={BreadcrumbMenu}
+        />
+        <div className="d-flex flex-row">
+          <div className="d-flex flex-column w-25">
             <Switch>
               <Route path={Routes.POSTS.MY_POSTS}>
                 <PostsView showOwnPosts />
               </Route>
               <Route path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS]} component={PostsView} />
               <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+              <Redirect from={Routes.DISCUSSIONS.PATH} to={Routes.TOPICS.ALL} />
             </Switch>
           </div>
-        </div>
-        <div className="d-flex w-50 flex-column">
-          <PostActionsBar />
-          {
-            postEditorVisible ? (
-              <Route path={Routes.POSTS.NEW_POST}>
-                <PostEditor />
-              </Route>
-            ) : (
-              <Switch>
-                <Route path={Routes.POSTS.EDIT_POST}>
-                  <PostEditor editExisting />
+          <div className="d-flex w-75 flex-column bg-light-300">
+            {
+              postEditorVisible ? (
+                <Route path={Routes.POSTS.NEW_POST}>
+                  <PostEditor />
                 </Route>
-                <Route path={Routes.COMMENTS.PATH}>
-                  <CommentsView />
-                </Route>
-              </Switch>
-            )
-          }
+              ) : (
+                <Switch>
+                  <Route path={Routes.POSTS.EDIT_POST}>
+                    <PostEditor editExisting />
+                  </Route>
+                  <Route path={Routes.COMMENTS.PATH}>
+                    <CommentsView />
+                  </Route>
+                </Switch>
+              )
+            }
+          </div>
         </div>
       </main>
     </DiscussionContext.Provider>

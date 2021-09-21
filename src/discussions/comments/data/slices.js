@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RequestStatus } from '../../../data/constants';
+import { EndorsementStatus, RequestStatus } from '../../../data/constants';
 
 const commentsSlice = createSlice({
   name: 'comments',
@@ -20,26 +20,29 @@ const commentsSlice = createSlice({
     // TODO: save in localstorage so user can continue editing?
     commentDraft: null,
     postStatus: RequestStatus.SUCCESSFUL,
-    pagination: {
-    },
+    pagination: {},
   },
   reducers: {
     fetchCommentsRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCommentsSuccess: (state, { payload }) => {
+      const { threadId, endorsed } = payload;
+      // force endorsed to be null, true or false
       state.status = RequestStatus.SUCCESSFUL;
-      state.commentsInThreads[payload.threadId] = [
-        ...(state.commentsInThreads[payload.threadId] || []),
-        ...(payload.commentsInThreads[payload.threadId] || []),
+      state.commentsInThreads[threadId] = state.commentsInThreads[threadId] ?? {};
+      state.pagination[threadId] = state.pagination[threadId] ?? {};
+      state.commentsInThreads[threadId][endorsed] = [
+        ...(state.commentsInThreads[threadId][endorsed] || []),
+        ...(payload.commentsInThreads[threadId] || []),
       ];
-      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
-      state.commentsById = { ...state.commentsById, ...payload.commentsById };
-      state.pagination[payload.threadId] = {
+      state.pagination[threadId][endorsed] = {
         currentPage: payload.page,
         totalPages: payload.pagination.numPages,
         hasMorePages: Boolean(payload.pagination.next),
       };
+      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
+      state.commentsById = { ...state.commentsById, ...payload.commentsById };
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -76,7 +79,12 @@ const commentsSlice = createSlice({
       if (payload.parentId) {
         state.commentsInComments[payload.parentId].push(payload.id);
       } else {
-        state.commentsInThreads[payload.threadId].push(payload.id);
+        // The comment should be added to either the discussion or unendorsed
+        // sections since a new comment won't be endorsed yet.
+        (
+          state.commentsInThreads[payload.threadId][EndorsementStatus.DISCUSSION]
+          ?? state.commentsInThreads[payload.threadId][EndorsementStatus.UNENDORSED]
+        ).push(payload.id);
       }
       state.commentsById[payload.id] = payload;
       state.commentDraft = null;
@@ -108,8 +116,13 @@ const commentsSlice = createSlice({
     deleteCommentSuccess: (state, { payload }) => {
       const { commentId } = payload;
       const { threadId, parentId } = state.commentsById[commentId];
+
       state.postStatus = RequestStatus.SUCCESSFUL;
-      state.commentsInThreads[threadId] = state.commentsInThreads[threadId].filter(item => item !== commentId);
+      [EndorsementStatus.DISCUSSION, EndorsementStatus.UNENDORSED, EndorsementStatus.ENDORSED].forEach((endorsed) => {
+        state.commentsInThreads[threadId][endorsed] = (
+          state.commentsInThreads[threadId]?.[endorsed]?.filter(item => item !== commentId)
+        );
+      });
       if (parentId) {
         state.commentsInComments[parentId] = state.commentsInComments[parentId].filter(item => item !== commentId);
       }

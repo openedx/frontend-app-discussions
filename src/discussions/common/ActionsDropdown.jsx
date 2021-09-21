@@ -9,7 +9,9 @@ import {
 import { MoreVert } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
+import { commentShape } from '../comments/comment/proptypes';
 import messages from '../messages';
+import { postShape } from '../posts/post/proptypes';
 import { useActions } from '../utils';
 
 function ActionsDropdown({
@@ -48,13 +50,12 @@ function ActionsDropdown({
       >
         <div className="bg-white p-1 shadow d-flex flex-column">
           {actions.map(action => (
-            <>
+            <React.Fragment key={action.id}>
               {action.action === ContentActions.DELETE
-              && <Dropdown.Divider key="divider" />}
+              && <Dropdown.Divider />}
 
               <Dropdown.Item
                 as={Button}
-                key={action.id}
                 variant="tertiary"
                 size="inline"
                 onClick={() => {
@@ -65,7 +66,7 @@ function ActionsDropdown({
               >
                 <Icon src={action.icon} className="mr-1" /> {intl.formatMessage(action.label)}
               </Dropdown.Item>
-            </>
+            </React.Fragment>
           ))}
         </div>
       </ModalPopup>
@@ -75,7 +76,7 @@ function ActionsDropdown({
 
 ActionsDropdown.propTypes = {
   intl: intlShape.isRequired,
-  commentOrPost: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
 };

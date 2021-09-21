@@ -4,6 +4,7 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
+import { EndorsementStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { commentsApiUrl } from './api';
@@ -36,17 +37,40 @@ describe('Comments/Responses data layer tests', () => {
     axiosMock.reset();
   });
 
-  test('successfully processes comments', async () => {
+  test.each([
+    {
+      threadType: 'discussion',
+      endorsed: EndorsementStatus.DISCUSSION,
+    },
+    {
+      threadType: 'question',
+      endorsed: EndorsementStatus.UNENDORSED,
+    },
+    {
+      threadType: 'question',
+      endorsed: EndorsementStatus.ENDORSED,
+    },
+  ])('successfully processes comments for \'$threadType\' thread with endorsed=$endorsed', async ({
+    endorsed,
+  }) => {
     const threadId = 'test-thread';
     axiosMock.onGet(commentsApiUrl)
       .reply(200, Factory.build('commentsResult'));
 
-    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+    await executeThunk(fetchThreadComments(threadId, { endorsed }), store.dispatch, store.getState);
 
     expect(store.getState().comments.commentsInThreads)
-      .toEqual({ 'test-thread': ['comment-1', 'comment-2', 'comment-3'] });
+      .toEqual({ 'test-thread': { [endorsed]: ['comment-1', 'comment-2', 'comment-3'] } });
     expect(store.getState().comments.pagination)
-      .toEqual({ 'test-thread': { currentPage: 1, totalPages: 1, hasMorePages: false } });
+      .toEqual({
+        'test-thread': {
+          [endorsed]: {
+            currentPage: 1,
+            totalPages: 1,
+            hasMorePages: false,
+          },
+        },
+      });
     expect(Object.keys(store.getState().comments.commentsById))
       .toEqual(['comment-1', 'comment-2', 'comment-3']);
     expect(store.getState().comments.commentsById['comment-1'])
@@ -76,7 +100,7 @@ describe('Comments/Responses data layer tests', () => {
       .toEqual({ 'comment-1': ['comment-4', 'comment-5', 'comment-6'] });
   });
 
-  test('successfully handles comment creation', async () => {
+  test('successfully handles comment creation for discussion type threads', async () => {
     const threadId = 'test-thread';
     const content = 'Test comment';
     axiosMock.onGet(commentsApiUrl)
@@ -94,10 +118,65 @@ describe('Comments/Responses data layer tests', () => {
     await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
 
     expect(store.getState().comments.commentsInThreads[threadId])
-      .toEqual(['comment-1', 'comment-2', 'comment-3', 'comment-4']);
+      .toEqual({
+        [EndorsementStatus.DISCUSSION]: [
+          'comment-1',
+          'comment-2',
+          'comment-3',
+          'comment-4',
+        ],
+      });
     expect(Object.keys(store.getState().comments.commentsById))
       .toEqual(['comment-1', 'comment-2', 'comment-3', 'comment-4']);
     expect(store.getState().comments.commentsById['comment-4'].threadId)
+      .toEqual(threadId);
+  });
+
+  test('successfully handles comment creation for question type threads', async () => {
+    const threadId = 'test-thread';
+    const content = 'Test comment';
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, Factory.build('commentsResult', null, { endorsed: false }));
+    await executeThunk(
+      fetchThreadComments(threadId, { endorsed: EndorsementStatus.UNENDORSED }),
+      store.dispatch,
+      store.getState,
+    );
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, Factory.build('commentsResult', null, { endorsed: true }));
+    await executeThunk(
+      fetchThreadComments(threadId, { endorsed: EndorsementStatus.ENDORSED }),
+      store.dispatch,
+      store.getState,
+    );
+
+    axiosMock.onPost(`${commentsApiUrl}`)
+      .reply(200, Factory.build('comment', {
+        thread_id: threadId,
+        raw_body: content,
+        rendered_body: content,
+      }));
+
+    await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInThreads[threadId])
+      .toEqual({
+        [EndorsementStatus.UNENDORSED]: [
+          'comment-1',
+          'comment-2',
+          'comment-3',
+          // Newly-added comment
+          'comment-7',
+        ],
+        [EndorsementStatus.ENDORSED]: [
+          'comment-4',
+          'comment-5',
+          'comment-6',
+        ],
+      });
+    expect(Object.keys(store.getState().comments.commentsById))
+      .toEqual(['comment-1', 'comment-2', 'comment-3', 'comment-4', 'comment-5', 'comment-6', 'comment-7']);
+    expect(store.getState().comments.commentsById['comment-7'].threadId)
       .toEqual(threadId);
   });
 

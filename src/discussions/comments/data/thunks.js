@@ -2,6 +2,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
+import { EndorsementStatus } from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteComment, getCommentResponses, getThreadComments, postComment, updateComment,
@@ -72,13 +73,14 @@ function normaliseComments(data) {
   };
 }
 
-export function fetchThreadComments(threadId, { page = 1 } = {}) {
+export function fetchThreadComments(threadId, { page = 1, endorsed = EndorsementStatus.DISCUSSION } = {}) {
   return async (dispatch) => {
     try {
-      dispatch(fetchCommentsRequest({ threadId }));
-      const data = await getThreadComments(threadId, { page });
+      dispatch(fetchCommentsRequest());
+      const data = await getThreadComments(threadId, { page, endorsed });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
+        endorsed,
         page,
         threadId,
       }));

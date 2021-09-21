@@ -2,8 +2,8 @@ import { Factory } from 'rosie';
 
 Factory.define('comment')
   .sequence('id', (idx) => `comment-${idx}`)
-  .sequence('raw_body', (idx) => `Some contents for **comment number ${idx}**.`)
-  .sequence('rendered_body', (idx) => `Some contents for <b>comment number ${idx}</b>.`)
+  .sequence('raw_body', ['endorsed'], (idx, endorsed) => `Some contents for **${endorsed ? 'endorsed ' : 'unendorsed '}comment number ${idx}**.`)
+  .sequence('rendered_body', ['endorsed'], (idx, endorsed) => `Some contents for <b>${endorsed ? 'endorsed ' : 'unendorsed '}comment number ${idx}</b>.`)
   .attr('thread_id', null, 'test-thread')
   .option('endorsedBy', null, null)
   .attr('endorsed', ['endorsedBy'], (endorsedBy) => !!endorsedBy)
@@ -36,6 +36,7 @@ Factory.define('commentsResult')
   .option('pageSize', null, 5)
   .option('threadId', null, 'test-thread')
   .option('parentId', null, null)
+  .option('endorsed', null, null)
   .attr('pagination', ['threadId', 'count', 'page', 'pageSize'], (threadId, count, page, pageSize) => {
     const numPages = Math.ceil(count / pageSize);
     const next = (page < numPages) ? `http://test.site/api/discussion/v1/comments/?thread_id=${threadId}&page=${page + 1}` : null;
@@ -47,7 +48,12 @@ Factory.define('commentsResult')
       num_pages: numPages,
     };
   })
-  .attr('results', ['count', 'pageSize', 'page', 'threadId', 'parentId'], (count, pageSize, page, threadId, parentId) => {
+  .attr('results', ['count', 'pageSize', 'page', 'threadId', 'parentId', 'endorsed'], (count, pageSize, page, threadId, parentId, endorsed) => {
     const len = (pageSize * page <= count) ? pageSize : count % pageSize;
-    return Factory.buildList('comment', len, { thread_id: threadId, parent_id: parentId });
+    return Factory.buildList('comment', len, {
+      thread_id: threadId,
+      parent_id: parentId,
+    }, {
+      endorsedBy: endorsed ? 'staff' : null,
+    });
   });

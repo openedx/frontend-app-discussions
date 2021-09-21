@@ -2,6 +2,8 @@
 import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
+import { EndorsementValue } from '../../../data/constants';
+
 ensureConfig([
   'LMS_BASE_URL',
 ], 'Comments API service');
@@ -13,18 +15,21 @@ export const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
 /**
  * Returns all the comments for the specified thread.
  * @param {string} threadId
+ * @param {EndorsementStatus} endorsed
  * @param {number=} page
  * @param {number=} pageSize
  * @returns {Promise<{}>}
  */
 export async function getThreadComments(
   threadId, {
+    endorsed,
     page,
     pageSize,
   } = {},
 ) {
   const params = snakeCaseObject({
     threadId,
+    endorsed: EndorsementValue[endorsed],
     page,
     pageSize,
     requestedFields: 'profile_image',

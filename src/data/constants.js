@@ -13,6 +13,28 @@ export const ThreadType = {
 };
 
 /**
+ * Enum to map between endorsement status and friendly name.
+ * @readonly
+ * @enum
+ */
+export const EndorsementStatus = {
+  ENDORSED: 'endorsed',
+  UNENDORSED: 'unendorsed',
+  DISCUSSION: 'discussion',
+};
+
+/**
+ * Maps endorsement status and the corresponding API parameter.
+ * @readonly
+ * @enum
+ */
+export const EndorsementValue = {
+  [EndorsementStatus.ENDORSED]: true,
+  [EndorsementStatus.UNENDORSED]: false,
+  [EndorsementStatus.DISCUSSION]: null,
+};
+
+/**
  * Edit actions for posts and comments
  * @readonly
  * @enum {string}
@@ -121,7 +143,7 @@ const BASE_PATH = '/discussions/:courseId';
 
 export const Routes = {
   DISCUSSIONS: {
-    PATH: `${BASE_PATH}?`,
+    PATH: BASE_PATH,
   },
   POSTS: {
     PATH: `${BASE_PATH}/topics/:topicId`,
@@ -162,7 +184,7 @@ export const Routes = {
   },
 };
 
-export const ALL_ROUTES = []
+export const ALL_ROUTES = [Routes.DISCUSSIONS.PATH]
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS]);

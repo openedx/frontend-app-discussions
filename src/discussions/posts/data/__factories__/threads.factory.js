@@ -5,6 +5,7 @@ Factory.define('thread')
   .sequence('title', (idx) => `This is Thread-${idx}`)
   .sequence('raw_body', (idx) => `Some contents for **thread number ${idx}**.`)
   .sequence('rendered_body', (idx) => `Some contents for <b>thread number ${idx}</b>.`)
+  .sequence('type', (idx) => (idx % 2 === 1 ? 'discussion' : 'question'))
   .attr('comment_list_url', ['id'], (threadId) => `http://test.site/api/discussion/v1/comments/?thread_id=${threadId}`)
   .attrs({
     created_at: () => (new Date()).toISOString(),
@@ -29,7 +30,6 @@ Factory.define('thread')
     topic_id: 'some-topic',
     group_id: null,
     group_name: null,
-    type: 'discussion',
     abuse_flagged_count: 0,
     pinned: false,
     closed: false,

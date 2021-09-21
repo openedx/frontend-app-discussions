@@ -19,7 +19,7 @@ function PostActionsBar({ intl }) {
       />
       <div className="border-right mr-3 ml-4" />
       <Button
-        variant="outline-primary"
+        variant="brand"
         className="ml-2"
         onClick={() => dispatch(showPostEditor())}
       >
