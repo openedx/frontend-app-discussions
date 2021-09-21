@@ -37,9 +37,10 @@ function PostLink({
       { post.closed && BANNER_TYPE.closed(intl.formatMessage(messages.closed))}
       { post.abuseFlagged && BANNER_TYPE.reported(intl.formatMessage(messages.contentReported)) }
       { post.pinned && BANNER_TYPE.pinned(intl.formatMessage(messages.pinned)) }
-      <div className={`d-flex flex-row p-2 ${post.read ? 'bg-light-200' : ''}`}>
-        {!post.read && <Icon className="text-brand-500" src={Unread} />}
-        <Post post={post} />
+      <div className={classNames('d-flex flex-row flex-fill mw-100', { 'bg-light-200': post.read })}>
+        <Icon className={classNames('p-0 mr-n3 text-brand-500', { invisible: post.read })} src={Unread} />
+        <Post post={post} preview />
+        <div className={classNames('d-flex pl-1.5 bg-info-500', { invisible: post.id !== postId })} />
       </div>
     </Link>
   );
