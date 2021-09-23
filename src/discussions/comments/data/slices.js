@@ -69,9 +69,10 @@ const commentsSlice = createSlice({
     },
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      state.commentsInThreads[payload.threadId].push(payload.id);
       if (payload.parentId) {
         state.commentsInComments[payload.parentId].push(payload.id);
+      } else {
+        state.commentsInThreads[payload.threadId].push(payload.id);
       }
       state.commentsById[payload.id] = payload;
       state.commentDraft = null;

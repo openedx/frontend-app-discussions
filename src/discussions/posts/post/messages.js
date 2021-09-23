@@ -13,6 +13,10 @@ const messages = defineMessages({
     id: 'discussions.post.contentReported',
     defaultMessage: 'Content reported for staff review',
   },
+  following: {
+    id: 'discussions.post.following',
+    defaultMessage: 'Following',
+  },
   follow: {
     id: 'discussions.post.follow',
     defaultMessage: 'Follow',

@@ -169,3 +169,10 @@ export function useActions(commentOrPost) {
     ),
   );
 }
+
+export const formikCompatibleHandler = (formikHandler, name) => (value) => formikHandler({
+  target: {
+    name,
+    value,
+  },
+});

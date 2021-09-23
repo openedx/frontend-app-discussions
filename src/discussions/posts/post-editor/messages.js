@@ -78,11 +78,11 @@ const messages = defineMessages({
     defaultMessage: 'Post anonymously',
   },
   submit: {
-    id: 'discussions.post.editor.submit',
+    id: 'discussions.editor.submit',
     defaultMessage: 'Submit',
   },
   cancel: {
-    id: 'discussions.post.editor.cancel',
+    id: 'discussions.editor.cancel',
     defaultMessage: 'Cancel',
   },
 });

@@ -14,7 +14,7 @@ import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import { selectCourseTopics } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
-import { isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
+import { formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
 import { hidePostEditor } from '../data';
 import { selectThread } from '../data/selectors';
 import { createNewThread, fetchThread, updateExistingThread } from '../data/thunks';
@@ -51,13 +51,6 @@ DiscussionPostType.propTypes = {
   description: PropTypes.string.isRequired,
   icon: PropTypes.element.isRequired,
 };
-
-const formikCompatibleHandler = (formikHandler, name) => (value) => formikHandler({
-  target: {
-    name,
-    value,
-  },
-});
 
 function PostEditor({
   intl,

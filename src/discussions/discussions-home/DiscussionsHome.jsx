@@ -68,7 +68,7 @@ export default function DiscussionsHome() {
             </Switch>
           </div>
         </div>
-        <div className="d-flex w-50 pl-1 flex-column">
+        <div className="d-flex w-50 flex-column">
           <PostActionsBar />
           {
             postEditorVisible ? (
