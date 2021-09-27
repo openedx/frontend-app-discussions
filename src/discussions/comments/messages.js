@@ -11,6 +11,11 @@ const messages = defineMessages({
     defaultMessage: 'Add a comment',
     description: 'Button to add a comment to a response',
   },
+  loadMoreComments: {
+    id: 'discussions.comments.comment.loadMoreComments',
+    defaultMessage: 'Load more comments',
+    description: 'Button to load more comments of forum posts',
+  },
   postVisibility: {
     id: 'discussions.comments.comment.visibility',
     defaultMessage: `This post is visible to {group, select,

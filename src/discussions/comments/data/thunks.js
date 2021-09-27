@@ -80,6 +80,7 @@ export function fetchThreadComments(threadId, { page = 1 } = {}) {
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
         page,
+        threadId,
       }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {

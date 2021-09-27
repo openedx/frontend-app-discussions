@@ -20,4 +20,12 @@ export const selectCommentResponses = commentId => createSelector(
   mapIdToComment,
 );
 
+export const selectThreadHasMorePages = threadId => (
+  store => store.comments.pagination[threadId]?.hasMorePages || false
+);
+
+export const selectThreadCurrentPage = threadId => (
+  store => store.comments.pagination[threadId]?.currentPage || null
+);
+
 export const commentsStatus = state => state.comments.status;
