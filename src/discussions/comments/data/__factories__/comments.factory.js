@@ -10,6 +10,8 @@ Factory.define('comment')
   .attr('endorsed_by', ['endorsedBy'], (endorsedBy) => endorsedBy)
   .attr('endorsed_by_label', ['endorsedBy'], (endorsedBy) => (endorsedBy ? 'Staff' : null))
   .attr('endorsed_at', ['endorsedBy'], (endorsedBy) => (endorsedBy ? (new Date()).toISOString() : null))
+  .option('childCount', null, 0)
+  .attr('child_count', ['childCount'], (childCount) => childCount)
   .attrs({
     author: 'edx',
     author_label: 'Staff',
@@ -25,7 +27,6 @@ Factory.define('comment')
       'voted',
     ],
     parent_id: null,
-    child_count: 0,
     children: [],
     abuse_flagged_any_user: false,
   });
@@ -37,6 +38,7 @@ Factory.define('commentsResult')
   .option('threadId', null, 'test-thread')
   .option('parentId', null, null)
   .option('endorsed', null, null)
+  .option('childCount', null, 0)
   .attr('pagination', ['threadId', 'count', 'page', 'pageSize'], (threadId, count, page, pageSize) => {
     const numPages = Math.ceil(count / pageSize);
     const next = (page < numPages) ? `http://test.site/api/discussion/v1/comments/?thread_id=${threadId}&page=${page + 1}` : null;
@@ -48,12 +50,17 @@ Factory.define('commentsResult')
       num_pages: numPages,
     };
   })
-  .attr('results', ['count', 'pageSize', 'page', 'threadId', 'parentId', 'endorsed'], (count, pageSize, page, threadId, parentId, endorsed) => {
-    const len = (pageSize * page <= count) ? pageSize : count % pageSize;
-    return Factory.buildList('comment', len, {
-      thread_id: threadId,
-      parent_id: parentId,
-    }, {
-      endorsedBy: endorsed ? 'staff' : null,
-    });
-  });
+  .attr(
+    'results',
+    ['count', 'pageSize', 'page', 'threadId', 'parentId', 'endorsed', 'childCount'],
+    (count, pageSize, page, threadId, parentId, endorsed, childCount) => {
+      const len = (pageSize * page <= count) ? pageSize : count % pageSize;
+      return Factory.buildList('comment', len, {
+        thread_id: threadId,
+        parent_id: parentId,
+      }, {
+        endorsedBy: endorsed ? 'staff' : null,
+        childCount,
+      });
+    },
+  );

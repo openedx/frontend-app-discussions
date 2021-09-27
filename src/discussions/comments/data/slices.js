@@ -21,6 +21,7 @@ const commentsSlice = createSlice({
     commentDraft: null,
     postStatus: RequestStatus.SUCCESSFUL,
     pagination: {},
+    responsesPagination: {},
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -41,7 +42,6 @@ const commentsSlice = createSlice({
         totalPages: payload.pagination.numPages,
         hasMorePages: Boolean(payload.pagination.next),
       };
-      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
     },
     fetchCommentsFailed: (state) => {
@@ -61,8 +61,16 @@ const commentsSlice = createSlice({
     },
     fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.commentsInComments = { ...state.commentsInComments, ...payload.commentsInComments };
+      state.commentsInComments[payload.commentId] = [
+        ...(state.commentsInComments[payload.commentId] || []),
+        ...(payload.commentsInComments[payload.commentId] || []),
+      ];
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
+      state.responsesPagination[payload.commentId] = {
+        currentPage: payload.page,
+        totalPages: payload.pagination.numPages,
+        hasMorePages: Boolean(payload.pagination.next),
+      };
     },
     postCommentRequest: (state, { payload }) => {
       state.postStatus = RequestStatus.IN_PROGRESS;

@@ -95,12 +95,16 @@ export function fetchThreadComments(threadId, { page = 1, endorsed = Endorsement
   };
 }
 
-export function fetchCommentResponses(commentId) {
+export function fetchCommentResponses(commentId, { page = 1 } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentResponsesRequest({ commentId }));
-      const data = await getCommentResponses(commentId);
-      dispatch(fetchCommentResponsesSuccess(normaliseComments(camelCaseObject(data))));
+      const data = await getCommentResponses(commentId, { page });
+      dispatch(fetchCommentResponsesSuccess({
+        ...normaliseComments(camelCaseObject(data)),
+        page,
+        commentId,
+      }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchCommentResponsesDenied());

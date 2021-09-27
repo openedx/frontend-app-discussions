@@ -83,6 +83,7 @@ function DiscussionCommentsView({
           variant="link"
           block="true"
           className="card p-4"
+          data-testid="load-more-comments"
         >
           {intl.formatMessage(messages.loadMoreResponses)}
         </Button>
