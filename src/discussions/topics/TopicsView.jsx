@@ -43,7 +43,10 @@ function TopicsView() {
   }
 
   return (
-    <div className="discussion-topics d-flex flex-column card">
+    <div
+      className="discussion-topics d-flex flex-column card"
+      data-testid="topics-view"
+    >
       <TopicSearchBar />
       <div className="list-group list-group-flush">
         {topicElements}
