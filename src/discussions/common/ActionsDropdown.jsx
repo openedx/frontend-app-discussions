@@ -48,7 +48,10 @@ function ActionsDropdown({
         isOpen={isOpen}
         placement="auto-start"
       >
-        <div className="bg-white p-1 shadow d-flex flex-column">
+        <div
+          className="bg-white p-1 shadow d-flex flex-column"
+          data-testid="actions-dropdown-modal-popup"
+        >
           {actions.map(action => (
             <React.Fragment key={action.id}>
               {action.action === ContentActions.DELETE
