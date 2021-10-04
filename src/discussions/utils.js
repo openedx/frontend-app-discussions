@@ -86,7 +86,7 @@ export function permissionCheck(commentOrPost, action, user) {
  *    or comment and the second is the value.
  *    e.g. for ['pinned', false] the action will show up if the comment/post has post.pinned=false
  */
-const ACTIONS_LIST = [
+export const ACTIONS_LIST = [
   {
     id: 'edit',
     action: ContentActions.EDIT_CONTENT,
