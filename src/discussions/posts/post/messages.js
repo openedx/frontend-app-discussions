@@ -22,6 +22,11 @@ const messages = defineMessages({
     defaultMessage: 'Follow',
     description: 'Tooltip/alttext for button to follow a discussion post',
   },
+  answered: {
+    id: 'discussions.post.answered',
+    defaultMessage: 'Answered',
+    description: 'Tooltip/alttext for button to unfollow a discussion post',
+  },
   unfollow: {
     id: 'discussions.post.unfollow',
     defaultMessage: 'Unfollow',

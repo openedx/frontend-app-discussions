@@ -4,9 +4,9 @@ import { createSelector } from '@reduxjs/toolkit';
 const selectCommentsById = state => state.comments.commentsById;
 const mapIdToComment = (ids, comments) => ids.map(id => comments[id]);
 
-export const selectThreadComments = threadId => createSelector(
+export const selectThreadComments = (threadId, endorsed = null) => createSelector(
   [
-    state => state.comments.commentsInThreads[threadId] || [],
+    state => state.comments.commentsInThreads[threadId]?.[endorsed] || [],
     selectCommentsById,
   ],
   mapIdToComment,
@@ -20,12 +20,12 @@ export const selectCommentResponses = commentId => createSelector(
   mapIdToComment,
 );
 
-export const selectThreadHasMorePages = threadId => (
-  store => store.comments.pagination[threadId]?.hasMorePages || false
+export const selectThreadHasMorePages = (threadId, endorsed = null) => (
+  store => store.comments.pagination[threadId]?.[endorsed]?.hasMorePages || false
 );
 
-export const selectThreadCurrentPage = threadId => (
-  store => store.comments.pagination[threadId]?.currentPage || null
+export const selectThreadCurrentPage = (threadId, endorsed = null) => (
+  store => store.comments.pagination[threadId]?.[endorsed]?.currentPage || null
 );
 
 export const commentsStatus = state => state.comments.status;

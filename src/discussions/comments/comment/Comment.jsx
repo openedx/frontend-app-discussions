@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
+import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button } from '@edx/paragon';
+import { Alert, Button, Hyperlink } from '@edx/paragon';
+import { CheckCircle, Verified } from '@edx/paragon/icons';
 
-import { ContentActions } from '../../../data/constants';
+import { ContentActions, ThreadType } from '../../../data/constants';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -14,7 +17,45 @@ import CommentEditor from './CommentEditor';
 import CommentHeader from './CommentHeader';
 import { commentShape } from './proptypes';
 
+function CommentBanner({
+  intl,
+  comment,
+  postType,
+}) {
+  const isQuestion = postType === ThreadType.QUESTION;
+  const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
+  const iconClass = isQuestion ? CheckCircle : Verified;
+  return comment.endorsed ? (
+    <Alert variant="plain" className={`p-3 m-0 rounded-0 shadow-none ${classes}`} icon={iconClass}>
+      <div className="d-flex justify-content-between">
+        <strong>{intl.formatMessage(
+          isQuestion
+            ? messages.answer
+            : messages.endorsed,
+        )}
+        </strong>
+        <span>
+          {intl.formatMessage(
+            isQuestion
+              ? messages.answeredLabel
+              : messages.endorsedLabel,
+          )}&nbsp;
+          <Hyperlink>{comment.endorsedBy}</Hyperlink>&nbsp;
+          {timeago.format(comment.endorsedAt, intl.locale)}
+        </span>
+      </div>
+    </Alert>
+  ) : null;
+}
+
+CommentBanner.propTypes = {
+  intl: intlShape.isRequired,
+  comment: commentShape.isRequired,
+  postType: PropTypes.string.isRequired,
+};
+
 function Comment({
+  postType,
   comment,
   intl,
 }) {
@@ -37,10 +78,10 @@ function Comment({
     [ContentActions.DELETE]: () => dispatch(removeComment(comment.id)),
     [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
   };
-
   return (
-    <div className="bt-1 discussion-comment d-flex flex-column">
-      <div className="p-3">
+    <div className="discussion-comment d-flex flex-column card my-3">
+      <CommentBanner postType={postType} comment={comment} intl={intl} />
+      <div className="p-4">
         <CommentHeader comment={comment} actionHandlers={actionHandlers} />
         {isEditing
           ? (
@@ -55,9 +96,16 @@ function Comment({
           voted={comment.voted}
         />
       </div>
-      <div className="bg-light-200 border-top">
+      <div className="ml-4">
         {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
-        {inlineReplies.map(inlineReply => <Comment comment={inlineReply} key={inlineReply.id} intl={intl} />)}
+        {inlineReplies.map(inlineReply => (
+          <Comment
+            postType={postType}
+            comment={inlineReply}
+            key={inlineReply.id}
+            intl={intl}
+          />
+        ))}
       </div>
       {!isNested
       && (
@@ -82,6 +130,7 @@ function Comment({
 }
 
 Comment.propTypes = {
+  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   comment: commentShape.isRequired,
   intl: intlShape.isRequired,
 };

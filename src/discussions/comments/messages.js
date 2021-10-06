@@ -11,10 +11,10 @@ const messages = defineMessages({
     defaultMessage: 'Add a comment',
     description: 'Button to add a comment to a response',
   },
-  loadMoreComments: {
-    id: 'discussions.comments.comment.loadMoreComments',
-    defaultMessage: 'Load more comments',
-    description: 'Button to load more comments of forum posts',
+  loadMoreResponses: {
+    id: 'discussions.comments.comment.loadMoreResponses',
+    defaultMessage: 'Load more responses',
+    description: 'Button to load more responses of forum posts',
   },
   postVisibility: {
     id: 'discussions.comments.comment.visibility',
@@ -36,6 +36,26 @@ const messages = defineMessages({
     id: 'discussions.comments.comment.commentTime',
     defaultMessage: 'Posted {relativeTime}',
     description: 'Message about how long ago a comment was posted. Appears as "username posted 7 minutes ago"',
+  },
+  answer: {
+    id: 'discussions.comments.comment.answer',
+    defaultMessage: 'Answer',
+    description: 'Message above a comment that has been marked as the answer.',
+  },
+  answeredLabel: {
+    id: 'discussions.comments.comment.answeredlabel',
+    defaultMessage: 'Marked as answered by',
+    description: 'Message above a comment that has been marked as answered. Appears as "Marked as answered by Username"',
+  },
+  endorsed: {
+    id: 'discussions.comments.comment.endorsed',
+    defaultMessage: 'Endorsed',
+    description: 'Message above a comment that has been endorsed.',
+  },
+  endorsedLabel: {
+    id: 'discussions.comments.comment.endorsedlabel',
+    defaultMessage: 'Endorsed by',
+    description: 'Message above a comment that has been endorsed. Appears as "Endorsed by Username"',
   },
   actionsAlt: {
     id: 'discussions.actions.label',
@@ -64,6 +84,10 @@ const messages = defineMessages({
   cancel: {
     id: 'discussions.editor.cancel',
     defaultMessage: 'Cancel',
+  },
+  commentError: {
+    id: 'discussions.editor.error.empty',
+    defaultMessage: 'Post content cannot be empty.',
   },
 });
 

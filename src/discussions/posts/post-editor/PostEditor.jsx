@@ -143,7 +143,7 @@ function PostEditor({
         handleBlur,
         handleChange,
       }) => (
-        <Form className="mx-4 my-2" onSubmit={handleSubmit}>
+        <Form className="m-4 card p-4" onSubmit={handleSubmit}>
           <h3>
             {editExisting
               ? intl.formatMessage(messages.editPostHeading)
@@ -172,7 +172,7 @@ function PostEditor({
               description={intl.formatMessage(messages.questionDescription)}
             />
           </Form.RadioSet>
-          <Form.Group className="py-2 w-50">
+          <Form.Group className="py-3 w-50">
             <Form.Control
               name="topic"
               as="select"
@@ -199,9 +199,9 @@ function PostEditor({
               ))}
             </Form.Control>
           </Form.Group>
-          <div className="border-bottom my-4" />
+          <div className="border-bottom my-1" />
           <Form.Group
-            className="py-2"
+            className="py-2 mt-4"
             isInvalid={isFormikFieldInvalid('title', {
               errors,
               touched,

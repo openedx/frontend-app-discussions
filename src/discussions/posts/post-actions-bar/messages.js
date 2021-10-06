@@ -8,7 +8,7 @@ const messages = defineMessages({
   },
   addAPost: {
     id: 'discussion.posts.actionBar.add',
-    defaultMessage: 'Add post',
+    defaultMessage: 'Add a post',
     description: 'Button to add a new discussion post',
   },
 });
