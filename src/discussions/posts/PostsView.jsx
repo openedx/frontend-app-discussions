@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Spinner } from '@edx/paragon';
+import { Button, Spinner } from '@edx/paragon';
 
 import { RequestStatus } from '../../data/constants';
 import {
   selectAllThreads,
   selectThreadFilters,
+  selectThreadNextPage,
   selectThreadSorting,
   selectTopicThreads,
   selectUserThreads,
@@ -18,9 +20,10 @@ import {
 } from './data/selectors';
 import { fetchThreads } from './data/thunks';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
+import messages from './messages';
 import { PostLink } from './post';
 
-function PostsView({ showOwnPosts }) {
+function PostsView({ showOwnPosts, intl }) {
   const {
     courseId,
     topicId,
@@ -30,6 +33,7 @@ function PostsView({ showOwnPosts }) {
   const { authenticatedUser } = useContext(AppContext);
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
+  const nextPage = useSelector(selectThreadNextPage());
   const loadingStatus = useSelector(threadsLoadingStatus());
 
   let posts = [];
@@ -48,6 +52,16 @@ function PostsView({ showOwnPosts }) {
     }));
   }, [courseId, orderBy, filters]);
 
+  const loadMorePosts = async () => {
+    if (nextPage) {
+      dispatch(fetchThreads(courseId, {
+        orderBy,
+        filters,
+        page: nextPage,
+      }));
+    }
+  };
+
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
@@ -56,10 +70,16 @@ function PostsView({ showOwnPosts }) {
           {posts.map(post => (<PostLink post={post} key={post.id} />))}
         </div>
       )}
-      {loadingStatus === RequestStatus.IN_PROGRESS && (
+      {loadingStatus === RequestStatus.IN_PROGRESS ? (
         <div className="d-flex justify-content-center p-4">
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
+      ) : (
+        nextPage && (
+          <Button onClick={loadMorePosts} variant="link" block="true" className="card p-4">
+            {intl.formatMessage(messages.loadMorePosts)}
+          </Button>
+        )
       )}
     </div>
   );
@@ -67,10 +87,11 @@ function PostsView({ showOwnPosts }) {
 
 PostsView.propTypes = {
   showOwnPosts: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 
 PostsView.defaultProps = {
   showOwnPosts: false,
 };
 
-export default PostsView;
+export default injectIntl(PostsView);

@@ -47,6 +47,8 @@ export const selectThreadSorting = () => state => state.threads.sortedBy;
 
 export const selectThreadFilters = () => state => state.threads.filters;
 
+export const selectThreadNextPage = () => state => state.threads.nextPage;
+
 export const selectAuthorAvatars = author => state => (
   state.threads.avatars?.[author]?.profile.image
 );

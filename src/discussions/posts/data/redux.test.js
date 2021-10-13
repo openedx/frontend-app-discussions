@@ -58,6 +58,35 @@ describe('Threads/Posts data layer tests', () => {
       .toEqual('test-topic');
   });
 
+  test('successfully processes threads pagination', async () => {
+    const mockPage = page => axiosMock
+      .onGet(threadsApiUrl)
+      .reply(200, Factory.build('threadsResult', null, {
+        page,
+        count: 5,
+        pageSize: 3,
+      }));
+
+    mockPage(1);
+    await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
+    expect(store.getState().threads.pages)
+      .toEqual([
+        ['thread-1', 'thread-2', 'thread-3'],
+      ]);
+    expect(store.getState().threads.nextPage)
+      .toEqual(2);
+
+    mockPage(2);
+    await executeThunk(fetchThreads(courseId, { page: 2 }), store.dispatch, store.getState);
+    expect(store.getState().threads.pages)
+      .toEqual([
+        ['thread-1', 'thread-2', 'thread-3'],
+        ['thread-4', 'thread-5'],
+      ]);
+    expect(store.getState().threads.nextPage)
+      .toBeNull();
+  });
+
   test('successfully processes single thread', async () => {
     const threadId = 'thread-1';
     axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
