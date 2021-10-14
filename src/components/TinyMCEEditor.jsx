@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { Editor } from '@tinymce/tinymce-react';
-/* eslint import/no-webpack-loader-syntax: off */
-import contentCss from 'tinymce/skins/content/default/content.min.css';
-import contentUiCss from 'tinymce/skins/ui/oxide/content.min.css';
+import { useParams } from 'react-router';
 // TinyMCE so the global var exists
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
+
+import { uploadFile } from '../discussions/posts/data/api';
 
 import 'tinymce/plugins/code';
 // Theme
@@ -14,25 +14,78 @@ import 'tinymce/themes/silver';
 // Toolbar icons
 import 'tinymce/icons/default';
 // Editor styles
-import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/ui/oxide/skin.css';
 // importing the plugin js.
 import 'tinymce/plugins/autolink';
+import 'tinymce/plugins/autosave';
 import 'tinymce/plugins/codesample';
+import 'tinymce/plugins/image';
+import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
+/* eslint import/no-webpack-loader-syntax: off */
+// eslint-disable-next-line import/no-unresolved
+import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
+// eslint-disable-next-line import/no-unresolved
+import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
+// eslint-disable-next-line import/no-unresolved
+import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
+
+const setup = (editor) => {
+  editor.ui.registry.addButton('openedx_code', {
+    icon: 'sourcecode',
+    onAction: () => {
+      editor.execCommand('CodeSample');
+    },
+  });
+  editor.ui.registry.addButton('openedx_html', {
+    text: 'HTML',
+    onAction: () => {
+      editor.execCommand('mceCodeEditor');
+    },
+  });
+};
 
 export default function TinyMCEEditor(props) {
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
+
+  const { courseId, postId } = useParams();
+
+  const uploadHandler = async (blobInfo, success, failure) => {
+    try {
+      const blob = blobInfo.blob();
+      const filename = blobInfo.filename();
+      const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
+      success(location);
+    } catch (e) {
+      failure(e.toString(), { remove: true });
+    }
+  };
+
   return (
     <Editor
       init={{
         skin: false,
         menubar: false,
-        plugins: 'codesample link lists code',
-        toolbar: 'formatselect | bold italic underline | link | bullist numlist outdent indent | code |',
+        branding: false,
+        contextmenu: false,
+        browser_spellcheck: true,
+        a11y_advanced_options: true,
+        autosave_interval: '1s',
+        autosave_restore_when_empty: true,
+        autosave_prefix: 'tinymce-autosave-{path}{query}',
+        plugins: 'autosave codesample link lists image imagetools code',
+        toolbar: 'formatselect | bold italic underline'
+          + ' | link blockquote openedx_code image'
+          + ' | bullist numlist outdent indent'
+          + ' | removeformat'
+          + ' | openedx_html'
+          + ' | undo redo',
         content_css: false,
-        content_style: [contentCss, contentUiCss].join('\n'),
+        content_style: [contentCss, contentUiCss, edxBrandCss].join('\n'),
+        images_upload_handler: uploadHandler,
+        setup,
       }}
       {...props}
     />

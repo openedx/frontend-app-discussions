@@ -11,6 +11,7 @@ ensureConfig([
 const apiBaseUrl = getConfig().LMS_BASE_URL;
 
 export const threadsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
+export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
 
 /**
  * Fetches all the threads in the given course and topic.
@@ -145,4 +146,24 @@ export async function updateThread(threadId, {
 export async function deleteThread(threadId) {
   const url = `${threadsApiUrl}${threadId}/`;
   await getAuthenticatedHttpClient().delete(url);
+}
+
+/**
+ * Upload a file.
+ * @param {Blob} blob The file body
+ * @param {string} filename
+ * @param {string} courseId
+ * @param {string} threadKey
+ * @returns {Promise<{ location: string }>}
+ */
+export async function uploadFile(blob, filename, courseId, threadKey) {
+  const uploadUrl = `${coursesApiUrl}${courseId}/upload`;
+  const formData = new FormData();
+  formData.append('thread_key', threadKey);
+  formData.append('uploaded_file', blob, filename);
+  const { data } = await getAuthenticatedHttpClient().post(uploadUrl, formData);
+  if (data.developer_message) {
+    throw new Error(data.developer_message);
+  }
+  return data;
 }
