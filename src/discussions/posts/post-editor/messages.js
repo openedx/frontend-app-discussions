@@ -45,6 +45,14 @@ const messages = defineMessages({
     id: 'discussions.post.editor.topicAreaDescription',
     defaultMessage: 'Add your post to a relevant topic to help others find it.',
   },
+  cohortVisibility: {
+    id: 'discussions.post.editor.cohortVisibility',
+    defaultMessage: 'Cohort visibility',
+  },
+  cohortVisibilityAllLearners: {
+    id: 'discussions.post.editor.cohortVisibilityAllLearners',
+    defaultMessage: 'All learners',
+  },
   postTitle: {
     id: 'discussions.post.editor.title',
     defaultMessage: 'Post title',

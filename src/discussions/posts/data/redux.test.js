@@ -132,6 +132,25 @@ describe('Threads/Posts data layer tests', () => {
       .toEqual(topicId);
   });
 
+  test('successfully handles thread creation for topic that has not been preloaded', async () => {
+    const topicId = 'test-topic';
+    const title = 'A Test Thread';
+    const content = 'Some test content';
+
+    axiosMock.onPost(`${threadsApiUrl}`)
+      .reply(200, Factory.build('thread', {
+        course_id: courseId, topic_id: topicId, title, raw_body: content, rendered_body: content,
+      }));
+
+    expect(store.getState().threads.threadsInTopic[topicId])
+      .toEqual(undefined);
+
+    await executeThunk(createNewThread(courseId, topicId, 'discussion', title, content), store.dispatch, store.getState);
+
+    expect(store.getState().threads.threadsInTopic[topicId])
+      .toEqual(['thread-1']);
+  });
+
   test('successfully handles thread updates', async () => {
     const threadId = 'thread-2';
     axiosMock.onGet(threadsApiUrl)

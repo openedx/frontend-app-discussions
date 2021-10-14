@@ -84,7 +84,10 @@ const threadsSlice = createSlice({
     postThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
       state.threadsById[payload.id] = payload;
-      state.threadsInTopic[payload.topicId].push(payload.id);
+      state.threadsInTopic[payload.topicId] = [
+        ...(state.threadsInTopic[payload.topicId] || []),
+        payload.id,
+      ];
       // Temporarily add it to the top of the list so it's visible
       state.pages[0] = [payload.id].concat(state.pages[0] || []);
       state.avatars = { ...state.avatars, ...payload.avatars };

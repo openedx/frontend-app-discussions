@@ -171,6 +171,7 @@ export function createNewThread({
   title,
   content,
   following = false,
+  cohort,
 }) {
   return async (dispatch) => {
     try {
@@ -181,8 +182,9 @@ export function createNewThread({
         title,
         content,
         following,
+        cohort,
       }));
-      const data = await postThread(courseId, topicId, type, title, content, following);
+      const data = await postThread(courseId, topicId, type, title, content, following, cohort);
       dispatch(postThreadSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
