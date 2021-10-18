@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Spinner } from '@edx/paragon';
+import { Spinner } from '@edx/paragon';
 
+import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus } from '../../data/constants';
 import {
   selectAllThreads,
@@ -20,10 +20,9 @@ import {
 } from './data/selectors';
 import { fetchThreads } from './data/thunks';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
-import messages from './messages';
 import { PostLink } from './post';
 
-function PostsView({ showOwnPosts, intl }) {
+function PostsView({ showOwnPosts }) {
   const {
     courseId,
     topicId,
@@ -76,9 +75,7 @@ function PostsView({ showOwnPosts, intl }) {
         </div>
       ) : (
         nextPage && (
-          <Button onClick={loadMorePosts} variant="link" block="true" className="card p-4">
-            {intl.formatMessage(messages.loadMorePosts)}
-          </Button>
+          <ScrollThreshold onScroll={loadMorePosts} />
         )
       )}
     </div>
@@ -87,11 +84,10 @@ function PostsView({ showOwnPosts, intl }) {
 
 PostsView.propTypes = {
   showOwnPosts: PropTypes.bool,
-  intl: intlShape.isRequired,
 };
 
 PostsView.defaultProps = {
   showOwnPosts: false,
 };
 
-export default injectIntl(PostsView);
+export default PostsView;
