@@ -64,20 +64,20 @@ function PostsView({ showOwnPosts }) {
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
-      {posts && posts.length > 0 && (
-        <div className="list-group list-group-flush">
-          {posts.map(post => (<PostLink post={post} key={post.id} />))}
-        </div>
-      )}
-      {loadingStatus === RequestStatus.IN_PROGRESS ? (
-        <div className="d-flex justify-content-center p-4">
-          <Spinner animation="border" variant="primary" size="lg" />
-        </div>
-      ) : (
-        nextPage && (
-          <ScrollThreshold onScroll={loadMorePosts} />
-        )
-      )}
+      <div className="list-group list-group-flush">
+        {posts && posts.map(post => (
+          <PostLink post={post} key={post.id} />
+        ))}
+        {loadingStatus === RequestStatus.IN_PROGRESS ? (
+          <div className="d-flex justify-content-center p-4">
+            <Spinner animation="border" variant="primary" size="lg" />
+          </div>
+        ) : (
+          nextPage && (
+            <ScrollThreshold onScroll={loadMorePosts} />
+          )
+        )}
+      </div>
     </div>
   );
 }
