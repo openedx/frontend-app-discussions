@@ -10,7 +10,11 @@ import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ContentActions, ThreadType } from '../../../data/constants';
 import CommentIcons from '../comment-icons/CommentIcons';
-import { selectCommentResponses } from '../data/selectors';
+import {
+  selectCommentCurrentPage,
+  selectCommentHasMorePages,
+  selectCommentResponses,
+} from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
 import messages from '../messages';
 import CommentEditor from './CommentEditor';
@@ -65,10 +69,12 @@ function Comment({
   const inlineReplies = useSelector(selectCommentResponses(comment.id));
   const [isEditing, setEditing] = useState(false);
   const [isReplying, setReplying] = useState(false);
+  const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
+  const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
-    if (hasChildren) {
-      dispatch(fetchCommentResponses(comment.id));
+    if (hasChildren && !currentPage) {
+      dispatch(fetchCommentResponses(comment.id, { page: 1 }));
     }
   }, [comment.id]);
   const actionHandlers = {
@@ -78,6 +84,10 @@ function Comment({
     [ContentActions.DELETE]: () => dispatch(removeComment(comment.id)),
     [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
   };
+  const handleLoadMoreResponses = () => (
+    dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
+  );
+
   return (
     <div className="discussion-comment d-flex flex-column card my-3">
       <CommentBanner postType={postType} comment={comment} intl={intl} />
@@ -107,6 +117,17 @@ function Comment({
           />
         ))}
       </div>
+      {hasMorePages && (
+        <Button
+          onClick={handleLoadMoreResponses}
+          variant="link"
+          block="true"
+          className="m-4 w-auto"
+          data-testid="load-more-comments-responses"
+        >
+          {intl.formatMessage(messages.loadMoreResponses)}
+        </Button>
+      )}
       {!isNested
       && (
         isReplying

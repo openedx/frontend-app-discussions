@@ -21,11 +21,19 @@ export const selectCommentResponses = commentId => createSelector(
 );
 
 export const selectThreadHasMorePages = (threadId, endorsed = null) => (
-  store => store.comments.pagination[threadId]?.[endorsed]?.hasMorePages || false
+  state => state.comments.pagination[threadId]?.[endorsed]?.hasMorePages || false
 );
 
 export const selectThreadCurrentPage = (threadId, endorsed = null) => (
-  store => store.comments.pagination[threadId]?.[endorsed]?.currentPage || null
+  state => state.comments.pagination[threadId]?.[endorsed]?.currentPage || null
+);
+
+export const selectCommentHasMorePages = commentId => (
+  state => state.comments.responsesPagination[commentId]?.hasMorePages || false
+);
+
+export const selectCommentCurrentPage = commentId => (
+  state => state.comments.responsesPagination[commentId]?.currentPage || null
 );
 
 export const commentsStatus = state => state.comments.status;

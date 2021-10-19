@@ -10,7 +10,7 @@ import { Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../components';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
-import { addComment, editComment, fetchCommentResponses } from '../data/thunks';
+import { addComment, editComment } from '../data/thunks';
 import messages from '../messages';
 
 function CommentEditor({
@@ -24,7 +24,6 @@ function CommentEditor({
       dispatch(editComment(comment.id, values));
     } else {
       await dispatch(addComment(values.comment, comment.threadId, comment.parentId));
-      dispatch(fetchCommentResponses(comment.parentId));
     }
     onCloseEditor();
   };
