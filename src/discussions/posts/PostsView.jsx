@@ -7,10 +7,12 @@ import { useParams } from 'react-router';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Spinner } from '@edx/paragon';
 
+import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus } from '../../data/constants';
 import {
   selectAllThreads,
   selectThreadFilters,
+  selectThreadNextPage,
   selectThreadSorting,
   selectTopicThreads,
   selectUserThreads,
@@ -30,6 +32,7 @@ function PostsView({ showOwnPosts }) {
   const { authenticatedUser } = useContext(AppContext);
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
+  const nextPage = useSelector(selectThreadNextPage());
   const loadingStatus = useSelector(threadsLoadingStatus());
 
   let posts = [];
@@ -48,19 +51,33 @@ function PostsView({ showOwnPosts }) {
     }));
   }, [courseId, orderBy, filters]);
 
+  const loadMorePosts = async () => {
+    if (nextPage) {
+      dispatch(fetchThreads(courseId, {
+        orderBy,
+        filters,
+        page: nextPage,
+      }));
+    }
+  };
+
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
-      {posts && posts.length > 0 && (
-        <div className="list-group list-group-flush">
-          {posts.map(post => (<PostLink post={post} key={post.id} />))}
-        </div>
-      )}
-      {loadingStatus === RequestStatus.IN_PROGRESS && (
-        <div className="d-flex justify-content-center p-4">
-          <Spinner animation="border" variant="primary" size="lg" />
-        </div>
-      )}
+      <div className="list-group list-group-flush">
+        {posts && posts.map(post => (
+          <PostLink post={post} key={post.id} />
+        ))}
+        {loadingStatus === RequestStatus.IN_PROGRESS ? (
+          <div className="d-flex justify-content-center p-4">
+            <Spinner animation="border" variant="primary" size="lg" />
+          </div>
+        ) : (
+          nextPage && (
+            <ScrollThreshold onScroll={loadMorePosts} />
+          )
+        )}
+      </div>
     </div>
   );
 }

@@ -24,6 +24,7 @@ const threadsSlice = createSlice({
     },
     pages: [],
     threadDraft: null,
+    nextPage: null,
     totalPages: null,
     totalThreads: null,
     postStatus: RequestStatus.SUCCESSFUL,
@@ -47,6 +48,7 @@ const threadsSlice = createSlice({
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
       state.threadsInTopic = { ...state.threadsInTopic, ...payload.threadsInTopic };
       state.avatars = { ...state.avatars, ...payload.avatars };
+      state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
     },
