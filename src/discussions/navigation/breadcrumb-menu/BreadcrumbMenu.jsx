@@ -7,7 +7,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Breadcrumb } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
-import { selectCourseTopic, selectTopicCategory } from '../../topics/data/selectors';
+import { selectTopic } from '../../topics/data/selectors';
 import messages from './messages';
 
 function BreadcrumbMenu({ intl }) {
@@ -18,8 +18,7 @@ function BreadcrumbMenu({ intl }) {
       topicId,
     },
   } = useRouteMatch([Routes.TOPICS.CATEGORY, Routes.TOPICS.TOPIC]);
-  const topic = useSelector(selectCourseTopic(topicId));
-  const topicCategory = useSelector(selectTopicCategory(topicId));
+  const topic = useSelector(selectTopic(topicId));
   const history = useHistory();
 
   const crumbs = [
@@ -30,9 +29,9 @@ function BreadcrumbMenu({ intl }) {
     {
       url: () => generatePath(Routes.TOPICS.CATEGORY, {
         courseId,
-        category: category || topicCategory?.name,
+        category: category || topic?.categoryId,
       }),
-      label: category || topicCategory?.name,
+      label: category || topic?.categoryId,
     },
     {
       url: () => generatePath(Routes.TOPICS.TOPIC, {

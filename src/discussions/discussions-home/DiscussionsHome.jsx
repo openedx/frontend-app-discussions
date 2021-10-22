@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
   generatePath, Redirect, Route, Switch, useHistory, useRouteMatch,
 } from 'react-router';
 
+import { AppContext } from '@edx/frontend-platform/react';
+
 import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, Routes } from '../../data/constants';
+import { fetchCourseBlocks } from '../../data/thunks';
 import { CommentsView } from '../comments';
 import { DiscussionContext } from '../common/context';
 import { fetchCourseConfig } from '../data/thunks';
@@ -14,11 +17,13 @@ import { BreadcrumbMenu, NavigationBar } from '../navigation';
 import { PostEditor, PostsView } from '../posts';
 import { clearRedirect } from '../posts/data';
 import { TopicsView } from '../topics';
+import { fetchCourseTopics } from '../topics/data/thunks';
 
 export default function DiscussionsHome() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { params } = useRouteMatch(Routes.DISCUSSIONS.PATH);
+  const { authenticatedUser } = useContext(AppContext);
   const postEditorVisible = useSelector(state => state.threads.postEditorVisible);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const {
@@ -31,6 +36,8 @@ export default function DiscussionsHome() {
   const redirectToThread = useSelector(state => state.threads.redirectToThread);
   useEffect(() => {
     dispatch(fetchCourseConfig(courseId));
+    dispatch(fetchCourseTopics(courseId));
+    dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
   }, [courseId]);
   useEffect(() => {
     // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily

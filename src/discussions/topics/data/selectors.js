@@ -1,32 +1,22 @@
 /* eslint-disable import/prefer-default-export */
-// eslint-disable-next-line no-unused-vars
-const filteredTopics = (topics, filter) => (filter
-  ? topics
-    .map(topic => ({
-      ...topic,
-      children: filteredTopics(topic.children, filter),
-    }))
-    .filter(topic => topic.children.length || topic.name.toLowerCase()
-      .includes(filter.toLowerCase()))
-  : topics);
 
-export const selectTopicFilter = () => state => state.topics.filter.trim().toLowerCase();
+export const selectTopicFilter = state => state.topics.filter.trim().toLowerCase();
 
-export const selectCourseTopics = () => state => (
-  {
-    coursewareTopics: state.topics.topics.coursewareTopics,
-    nonCoursewareTopics: state.topics.topics.nonCoursewareTopics,
-  }
+export const selectCategories = state => state.topics.categoryIds;
+
+export const selectTopicsInCategory = (categoryId) => state => (
+  state.topics.topicsInCategory[categoryId].map(id => state.topics.topics[id])
 );
 
-export const selectCourseTopic = topicId => state => state.topics.topics.coursewareTopics[topicId]
-  || state.topics.topics.nonCoursewareTopics[topicId];
+export const selectTopics = state => state.topics.topics;
+export const selectCoursewareTopics = state => state.topics.categoryIds.map(category => ({
+  id: category,
+  name: category,
+  children: state.topics.topicsInCategory[category].map(id => state.topics.topics[id]),
+}));
+export const selectNonCoursewareTopics = state => state.topics.nonCoursewareIds.map(id => state.topics.topics[id]);
 
-export const selectTopicCategory = topicId => state => (
-  state.topics.topics.coursewareTopics.find(category => (
-    category.children.find(topic => topic.id === topicId)
-  ))
-);
+export const selectTopic = topicId => state => state.topics.topics[topicId];
 
 export const topicsLoadingStatus = state => (
   state.topics.status

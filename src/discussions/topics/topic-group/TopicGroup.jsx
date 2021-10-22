@@ -1,42 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useSelector } from 'react-redux';
 import { generatePath, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
-import Topic, { topicShape } from './topic/Topic';
+import { selectTopicFilter, selectTopicsInCategory } from '../data/selectors';
+import Topic from './topic/Topic';
 
 function TopicGroup({
   id,
-  name,
-  subtopics,
-  filter,
+  category,
 }) {
   const { courseId } = useParams();
+  const topics = useSelector(selectTopicsInCategory(category));
+  const filter = useSelector(selectTopicFilter);
   const matchesFilter = filter
-    ? name?.toLowerCase().includes(filter)
+    ? category?.toLowerCase()
+      .includes(filter)
     : true;
-  const subtopicElements = subtopics.filter(
-    topic => (filter
-      ? topic.name.toLowerCase().includes(filter)
-      : true),
+  const topicElements = topics.filter(
+    topic => (
+      filter
+        ? topic.name.toLowerCase()
+          .includes(filter)
+        : true
+    ),
   )
-    .map(
-      topic => (
-        <Topic
-          id={topic.id}
-          name={topic.name}
-          subtopics={topic.subtopics}
-          questions={topic?.threadCounts?.question}
-          discussions={topic?.threadCounts?.discussion}
-          flags={topic.flags}
-          key={topic.id}
-          filter={filter}
-        />
-      ),
-    );
-  const hasFilteredSubtopics = (subtopicElements.length > 0);
+    .map(topic => (<Topic topic={topic} key={topic.id} />));
+  const hasFilteredSubtopics = (topicElements.length > 0);
   if (!matchesFilter && !hasFilteredSubtopics) {
     return null;
   }
@@ -47,29 +40,28 @@ function TopicGroup({
       data-topic-id={id}
       data-testid="topic-group"
     >
-      {name && (
-        <Link
-          className="topic-name list-group-item p-4 text-primary-500"
-          to={generatePath(Routes.TOPICS.CATEGORY, { courseId, category: name })}
-        >
-          {name}
-        </Link>
-      )}
-      {subtopicElements}
+      <Link
+        className="topic-name list-group-item p-4 text-primary-500"
+        to={generatePath(Routes.TOPICS.CATEGORY, {
+          courseId,
+          category,
+        })}
+      >
+        {category}
+      </Link>
+      {topicElements}
     </div>
   );
 }
 
 TopicGroup.propTypes = {
   id: PropTypes.string,
-  name: PropTypes.string,
-  subtopics: PropTypes.arrayOf(PropTypes.shape(topicShape)).isRequired,
-  filter: PropTypes.string.isRequired,
+  category: PropTypes.string,
 };
 
 TopicGroup.defaultProps = {
   id: null,
-  name: null,
+  category: null,
 };
 
 export default TopicGroup;
