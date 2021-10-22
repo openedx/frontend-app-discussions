@@ -108,7 +108,7 @@ DiscussionCommentsView.propTypes = {
   postType: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
   endorsed: PropTypes.oneOf([
-    EndorsementStatus.ENDORSED, EndorsementStatus.ENDORSED, EndorsementStatus.DISCUSSION,
+    EndorsementStatus.ENDORSED, EndorsementStatus.UNENDORSED, EndorsementStatus.DISCUSSION,
   ]).isRequired,
 };
 

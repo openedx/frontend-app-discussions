@@ -1,66 +1,91 @@
 import React from 'react';
 
-import { useSelector } from 'react-redux';
-import { generatePath, useHistory, useRouteMatch } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Breadcrumb } from '@edx/paragon';
+import { Dropdown, DropdownButton } from '@edx/paragon';
 
-import { Routes } from '../../../data/constants';
-import { selectTopic } from '../../topics/data/selectors';
+import { selectBlocks, selectChapters, selectCurrentSelection } from '../../../data/selectors';
+import { setCurrentChapter, setCurrentSequential, setCurrentVertical } from '../../../data/slices';
 import messages from './messages';
 
 function BreadcrumbMenu({ intl }) {
+  const dispatch = useDispatch();
+  const blocks = useSelector(selectBlocks);
+  const chapters = useSelector(selectChapters);
   const {
-    params: {
-      courseId,
-      category,
-      topicId,
-    },
-  } = useRouteMatch([Routes.TOPICS.CATEGORY, Routes.TOPICS.TOPIC]);
-  const topic = useSelector(selectTopic(topicId));
-  const history = useHistory();
+    currentChapter,
+    currentVertical,
+    currentSequential,
+  } = useSelector(selectCurrentSelection);
 
-  const crumbs = [
-    {
-      url: () => generatePath(Routes.TOPICS.ALL, { courseId }),
-      label: intl.formatMessage(messages.allTopics),
-    },
-    {
-      url: () => generatePath(Routes.TOPICS.CATEGORY, {
-        courseId,
-        category: category || topic?.categoryId,
-      }),
-      label: category || topic?.categoryId,
-    },
-    {
-      url: () => generatePath(Routes.TOPICS.TOPIC, {
-        courseId,
-        topicId,
-      }),
-      label: topic?.name,
-    },
-  ].filter(crumb => Boolean(crumb.label))
-    .map(({
-      url,
-      label,
-    }) => ({
-      url: url(),
-      label,
-    }));
-
-  const activeLabel = crumbs.pop().label;
+  const showAllMsg = intl.formatMessage(messages.showAll);
 
   return (
     <div className="breadcrumb-menu d-flex flex-row mt-2 mx-3">
-      <Breadcrumb
-        links={crumbs}
-        activeLabel={activeLabel}
-        clickHandler={(e) => {
-          e.preventDefault();
-          history.push(e.target.pathname);
-        }}
-      />
+      <DropdownButton
+        title={blocks[currentChapter]?.displayName || showAllMsg}
+        variant="outline"
+        onSelect={(cId) => dispatch(setCurrentChapter(cId))}
+      >
+        <Dropdown.Item eventKey={null} key="null" active={currentChapter === null}>
+          {showAllMsg}
+        </Dropdown.Item>
+        {chapters.map(chapter => (
+          chapter.topics.length > 0
+          && (
+            <Dropdown.Item eventKey={chapter.id} key={chapter.id} active={chapter.id === currentChapter}>
+              {chapter.displayName}
+            </Dropdown.Item>
+          )
+        ))}
+      </DropdownButton>
+      {currentChapter
+        && (
+          <>
+            <div className="d-flex py-2">/</div>
+            <DropdownButton
+              title={blocks[currentSequential]?.displayName || showAllMsg}
+              variant="outline"
+              onSelect={(sId) => dispatch(setCurrentSequential(sId))}
+            >
+              <Dropdown.Item eventKey={null} key="null" active={currentSequential === null}>
+                {showAllMsg}
+              </Dropdown.Item>
+              {blocks[currentChapter].children.map(seqId => (
+                blocks[seqId].topics.length > 0
+                && (
+                  <Dropdown.Item eventKey={seqId} key={seqId} active={seqId === currentSequential}>
+                    {blocks[seqId].displayName}
+                  </Dropdown.Item>
+                )
+              ))}
+            </DropdownButton>
+          </>
+        )}
+      {currentSequential
+        && (
+          <>
+            <div className="d-flex py-2">/</div>
+            <DropdownButton
+              title={blocks[currentVertical]?.displayName || showAllMsg}
+              variant="outline"
+              onSelect={(vId) => dispatch(setCurrentVertical(vId))}
+            >
+              <Dropdown.Item eventKey={null} key="null" active={currentVertical === null}>
+                {showAllMsg}
+              </Dropdown.Item>
+              {blocks[currentSequential]?.children?.map(vertId => (
+                blocks[vertId].topics.length > 0
+                && (
+                  <Dropdown.Item eventKey={vertId} key={vertId} active={vertId === currentVertical}>
+                    {blocks[vertId].displayName}
+                  </Dropdown.Item>
+                )
+              ))}
+            </DropdownButton>
+          </>
+        )}
     </div>
   );
 }
