@@ -15,12 +15,14 @@ export const threadsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
 /**
  * Fetches all the threads in the given course and topic.
  * @param {string} courseId
+ * @param {string} author
  * @param {[string]} topicIds List of topics to limit threads to
  * @param {number} page
  * @param {number} pageSize
  * @param {string} textSearch A search string to match.
  * @param {ThreadOrdering} orderBy The results wil be sorted on this basis.
  * @param {boolean} following If true, only threads followed by the current user will be returned.
+ * @param {boolean} flagged If true, only threads that have been reported will be returned.
  * @param {ThreadViewStatus} view Set to "unread" on "unanswered" to filter to only those statuses.
  * @returns {Promise<{}>}
  */
@@ -33,6 +35,8 @@ export async function getThreads(
     orderBy,
     following,
     view,
+    author,
+    flagged,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -45,6 +49,8 @@ export async function getThreads(
     following,
     view,
     requestedFields: 'profile_image',
+    author,
+    flagged,
   });
 
   const { data } = await getAuthenticatedHttpClient().get(threadsApiUrl, { params });

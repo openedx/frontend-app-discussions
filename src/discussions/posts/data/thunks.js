@@ -78,6 +78,7 @@ function normaliseThreads(data) {
 /**
  * Fetches the threads for the course specified va the threadIds.
  * @param {string} courseId The course ID for the course to fetch data for.
+ * @param {?string} author The author whose posts need to be viewed.
  * @param {[string]} topicIds List of topics to limit threads to
  * @param {ThreadOrdering} orderBy The results will be sorted on this basis.
  * @param {ThreadFilter} filters The set of filters to apply to the thread.
@@ -87,6 +88,7 @@ function normaliseThreads(data) {
 export function fetchThreads(courseId, {
   topicIds,
   orderBy,
+  author = null,
   filters = {},
   page = 1,
 } = {}) {
@@ -94,12 +96,19 @@ export function fetchThreads(courseId, {
     orderBy,
     topicIds,
     page,
+    author,
   };
   if (filters.status === PostsStatusFilter.FOLLOWING) {
     options.following = true;
   }
   if (filters.status === PostsStatusFilter.UNREAD) {
     options.view = 'unread';
+  }
+  if (filters.status === PostsStatusFilter.UNANSWERED) {
+    options.view = 'unanswered';
+  }
+  if (filters.status === PostsStatusFilter.REPORTED) {
+    options.flagged = true;
   }
   if (filters.search) {
     options.textSearch = filters.search;
@@ -109,7 +118,7 @@ export function fetchThreads(courseId, {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data));
-      dispatch(fetchThreadsSuccess({ ...normalisedData, page }));
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page, author }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());

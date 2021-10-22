@@ -15,7 +15,6 @@ import {
   selectThreadNextPage,
   selectThreadSorting,
   selectTopicThreads,
-  selectUserThreads,
   threadsLoadingStatus,
 } from './data/selectors';
 import { fetchThreads } from './data/thunks';
@@ -38,36 +37,51 @@ function PostsView({ showOwnPosts }) {
   let posts = [];
   if (topicId) {
     posts = useSelector(selectTopicThreads(topicId));
-  } else if (showOwnPosts) {
-    posts = useSelector(selectUserThreads(authenticatedUser.username));
   } else {
     posts = useSelector(selectAllThreads);
   }
   useEffect(() => {
     // The courseId from the URL is the course we WANT to load.
     dispatch(fetchThreads(courseId, {
+      topicIds: topicId ? [topicId] : null,
       orderBy,
       filters,
+      author: showOwnPosts ? authenticatedUser.username : null,
     }));
-  }, [courseId, orderBy, filters]);
+  }, [courseId, orderBy, filters, showOwnPosts, topicId]);
 
   const loadMorePosts = async () => {
     if (nextPage) {
       dispatch(fetchThreads(courseId, {
+        topicIds: topicId ? [topicId] : null,
         orderBy,
         filters,
         page: nextPage,
+        author: showOwnPosts ? authenticatedUser.username : null,
       }));
     }
   };
+  let lastPinnedIdx = null;
 
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
       <div className="list-group list-group-flush">
-        {posts && posts.map(post => (
-          <PostLink post={post} key={post.id} />
-        ))}
+        {posts && posts.map((post, idx) => {
+          if (post.pinned && lastPinnedIdx !== false) {
+            lastPinnedIdx = idx;
+          } else if (lastPinnedIdx != null && lastPinnedIdx !== false) {
+            lastPinnedIdx = false;
+            // Add a spacing after the group of pinned posts
+            return (
+              <>
+                <div className="p-1 bg-light-300" />
+                <PostLink post={post} key={post.id} />
+              </>
+            );
+          }
+          return (<PostLink post={post} key={post.id} />);
+        })}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />

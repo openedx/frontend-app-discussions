@@ -39,7 +39,7 @@ function TopicsView() {
   );
 
   if (nonCoursewareTopics && category === undefined) {
-    topicElements.unshift(<TopicGroup subtopics={nonCoursewareTopics} filter={filter} />);
+    topicElements.unshift(<TopicGroup subtopics={nonCoursewareTopics} filter={filter} key="non-courseware" />);
   }
 
   return (

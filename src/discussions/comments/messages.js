@@ -11,6 +11,32 @@ const messages = defineMessages({
     defaultMessage: 'Add a comment',
     description: 'Button to add a comment to a response',
   },
+  abuseFlaggedMessage: {
+    id: 'discussions.comments.comment.abuseFlaggedMessage',
+    defaultMessage: 'Content reported for staff to review',
+    description: 'Alert banner over comment that has been reported for abuse',
+  },
+  responseCount: {
+    id: 'discussions.comments.comment.responseCount',
+    defaultMessage: `{num, plural, 
+      =0 {No responses}
+      one {Showing # response}
+      other {Showing # responses}
+     }`,
+  },
+  endorsedResponseCount: {
+    id: 'discussions.comments.comment.endorsedResponseCount',
+    defaultMessage: `{num, plural, 
+      =0 {No endorsed responses}
+      one {Showing # endorsed response}
+      other {Showing # endorsed responses}
+     }`,
+  },
+  loadMoreComments: {
+    id: 'discussions.comments.comment.loadMoreComments',
+    defaultMessage: 'Load more comments',
+    description: 'Button to load more comments on responses',
+  },
   loadMoreResponses: {
     id: 'discussions.comments.comment.loadMoreResponses',
     defaultMessage: 'Load more responses',

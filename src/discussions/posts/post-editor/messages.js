@@ -58,7 +58,7 @@ const messages = defineMessages({
     defaultMessage: 'Post title cannot be empty.',
   },
   commentError: {
-    id: 'discussions.post.editor.comment.error',
+    id: 'discussions.post.editor.content.error',
     defaultMessage: 'Post content cannot be empty.',
   },
   questionText: {

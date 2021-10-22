@@ -28,8 +28,8 @@ function TopicGroup({
           id={topic.id}
           name={topic.name}
           subtopics={topic.subtopics}
-          questions={topic.questions}
-          discussions={topic.discussions}
+          questions={topic?.threadCounts?.question}
+          discussions={topic?.threadCounts?.discussion}
           flags={topic.flags}
           key={topic.id}
           filter={filter}
@@ -45,7 +45,7 @@ function TopicGroup({
     <div className="discussion-topic-group d-flex flex-column" data-topic-id={id}>
       {name && (
         <Link
-          className="topic-name list-group-item px-3 py-2 text-gray-300 text-decoration-none text-uppercase small"
+          className="topic-name list-group-item p-4 text-primary-500"
           to={generatePath(Routes.TOPICS.CATEGORY, { courseId, category: name })}
         >
           {name}

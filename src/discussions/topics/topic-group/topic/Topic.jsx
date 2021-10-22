@@ -6,7 +6,7 @@ import { generatePath, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { Icon } from '@edx/paragon';
-import { Flag, Help, QuestionAnswer } from '@edx/paragon/icons';
+import { Error as ErrorIcon, Help, Post as PostIcon } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
 
@@ -22,27 +22,46 @@ function Topic({
     courseId,
     topicId: id,
   });
+  const icons = [
+    {
+      key: 'discussions',
+      icon: PostIcon,
+      count: discussions,
+    },
+    {
+      key: 'questions',
+      icon: Help,
+      count: questions,
+    },
+  ];
   return (
     <Link
-      className="discussion-topic d-flex flex-column list-group-item px-3 py-2 text-gray-900 text-decoration-none"
+      className="discussion-topic d-flex flex-column list-group-item px-4 py-3 text-primary-500"
       data-topic-id={id}
       to={topicUrl}
     >
-      <div className="topic-name font-weight-bold small">
+      <div className="topic-name">
         {name}
       </div>
-      <div className="d-flex text-gray-300 h4 mt-1 mb-0">
-        <div className="badge mr-4">
-          <Icon className="mr-2" src={Help} />
-          {questions}
-        </div>
-        <div className="badge mr-4">
-          <Icon className="mr-2" src={QuestionAnswer} />
-          {discussions}
-        </div>
-        {flags !== null && (
-          <div className="badge">
-            <Icon className="mr-2" src={Flag} />
+      <div className="d-flex mt-3">
+        {
+          icons.map(({
+            key,
+            icon,
+            count,
+          }) => (
+            <div className="mr-4 d-flex align-items-center" key={key}>
+              <Icon className="mr-2" src={icon} />
+              {/* Reserve some space for larger counts */}
+              <span style={{ width: '2rem' }}>
+                {count}
+              </span>
+            </div>
+          ))
+        }
+        {flags && (
+          <div className="d-flex align-items-center">
+            <Icon className="mr-2" src={ErrorIcon} />
             {flags}
           </div>
         )}
