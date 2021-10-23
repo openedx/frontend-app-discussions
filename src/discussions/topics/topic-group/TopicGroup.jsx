@@ -42,7 +42,11 @@ function TopicGroup({
   }
 
   return (
-    <div className="discussion-topic-group d-flex flex-column" data-topic-id={id}>
+    <div
+      className="discussion-topic-group d-flex flex-column"
+      data-topic-id={id}
+      data-testid="topic-group"
+    >
       {name && (
         <Link
           className="topic-name list-group-item px-3 py-2 text-gray-300 text-decoration-none text-uppercase small"
