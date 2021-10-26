@@ -26,7 +26,7 @@ function LikeButton(
   };
 
   return (
-    <div className="d-flex align-items-center align-content-center mr-2.5">
+    <div className="d-flex align-items-center align-content-center mr-4.5">
       <OverlayTrigger
         overlay={(
           <Tooltip>
