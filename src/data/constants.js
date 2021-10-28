@@ -41,7 +41,7 @@ export const EndorsementValue = {
  */
 export const ContentActions = {
   EDIT_CONTENT: 'raw_body',
-  PIN: 'pin',
+  PIN: 'pinned',
   ENDORSE: 'endorsed',
   CLOSE: 'closed',
   REPORT: 'abuse_flagged',
@@ -105,10 +105,11 @@ export const MyPostsFilter = {
  * @enum {string}
  */
 export const PostsStatusFilter = {
-  ALL: 'filterAll',
-  UNREAD: 'filterUnread',
-  FOLLOWING: 'filterFollowing',
-  FLAGGED: 'filterFlagged',
+  ALL: 'statusAll',
+  UNREAD: 'statusUnread',
+  FOLLOWING: 'statusFollowing',
+  REPORTED: 'statusReported',
+  UNANSWERED: 'statusUnanswered',
 };
 
 /**
@@ -184,7 +185,8 @@ export const Routes = {
   },
 };
 
-export const ALL_ROUTES = [Routes.DISCUSSIONS.PATH]
+export const ALL_ROUTES = []
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
-  .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS]);
+  .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])
+  .concat([Routes.DISCUSSIONS.PATH]);

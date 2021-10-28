@@ -1,52 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Icon } from '@edx/paragon';
-import { StarFilled, StarOutline } from '@edx/paragon/icons';
+import { useDispatch } from 'react-redux';
+import * as timeago from 'timeago.js';
+
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import LikeButton from '../../posts/post/LikeButton';
+import { editComment } from '../data/thunks';
 
 function CommentIcons({
-  count,
-  following,
-  onLike,
-  voted,
+  comment,
+  intl,
 }) {
+  const dispatch = useDispatch();
+  const handleLike = () => dispatch(editComment(comment.id, { voted: !comment.voted }));
   return (
-    <div className="d-flex flex-column icons">
+    <div className="d-flex flex-row align-items-center">
       <LikeButton
-        count={count}
-        onClick={() => onLike && onLike()}
-        voted={voted}
+        count={comment.voteCount}
+        onClick={handleLike}
+        voted={comment.voted}
       />
-      {/* Only show the star if the comment has a following attribute, indicating it can be followed */}
-      {following !== undefined && (
-        following
-          ? (
-            <Button variant="link" className="p-0" size="xs">
-              <Icon src={StarFilled} />
-            </Button>
-          ) : (
-            <Button variant="link" className="p-0" size="xs">
-              <Icon src={StarOutline} />
-            </Button>
-          )
-      )}
+      <div className="d-flex flex-fill text-gray-500 justify-content-end mt-2" title={comment.createdAt}>
+        {timeago.format(comment.createdAt, intl.locale)}
+      </div>
     </div>
   );
 }
 
 CommentIcons.propTypes = {
-  count: PropTypes.number.isRequired,
-  following: PropTypes.bool,
-  onLike: PropTypes.func,
-  voted: PropTypes.bool,
+  comment: PropTypes.shape({
+    id: PropTypes.string,
+    voteCount: PropTypes.number,
+    following: PropTypes.bool,
+    voted: PropTypes.bool,
+    createdAt: PropTypes.string,
+  }).isRequired,
+  intl: intlShape.isRequired,
 };
 
-CommentIcons.defaultProps = {
-  following: undefined,
-  onLike: undefined,
-  voted: false,
-};
-
-export default CommentIcons;
+export default injectIntl(CommentIcons);

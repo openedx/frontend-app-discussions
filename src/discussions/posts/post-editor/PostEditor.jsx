@@ -71,7 +71,7 @@ function PostEditor({
   const post = useSelector(selectThread(postId));
   const initialValues = {
     postType: post?.type || 'discussion',
-    topic: post?.topicId || topicId,
+    topic: post?.topicId || topicId || nonCoursewareTopics?.[0]?.id,
     title: post?.title || '',
     comment: post?.rawBody || '',
     follow: post?.following ?? true,
@@ -229,7 +229,7 @@ function PostEditor({
 
           {!editExisting
           && (
-            <>
+            <div className="d-flex flex-row mt-3">
               <Form.Checkbox
                 name="follow"
                 value={values.follow}
@@ -247,7 +247,7 @@ function PostEditor({
               >
                 {intl.formatMessage(messages.anonymousPost)}
               </Form.Checkbox>
-            </>
+            </div>
           )}
 
           <div className="d-flex justify-content-end">

@@ -37,12 +37,6 @@ export const selectAllThreads = createSelector(
 
 export const threadsLoadingStatus = () => state => state.threads.status;
 
-// TODO: eventually this should be server-side filtering
-export const selectUserThreads = author => createSelector(
-  [selectAllThreads],
-  threads => threads.filter(thread => thread.author === author),
-);
-
 export const selectThreadSorting = () => state => state.threads.sortedBy;
 
 export const selectThreadFilters = () => state => state.threads.filters;

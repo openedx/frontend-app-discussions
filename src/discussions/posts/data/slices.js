@@ -22,6 +22,7 @@ const threadsSlice = createSlice({
     threadsById: {
       // Mapping of threads ids to threads in them
     },
+    author: null,
     pages: [],
     threadDraft: null,
     nextPage: null,
@@ -43,6 +44,10 @@ const threadsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchThreadsSuccess: (state, { payload }) => {
+      if (state.author !== payload.author) {
+        state.pages = [];
+        state.author = payload.author;
+      }
       state.status = RequestStatus.SUCCESSFUL;
       state.pages[payload.page - 1] = payload.ids;
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
@@ -143,6 +148,10 @@ const threadsSlice = createSlice({
     },
     setSearchQuery: (state, { payload }) => {
       state.filters.search = payload;
+      // Search doesn't work with following
+      state.filters.status = state.filters.status === PostsStatusFilter.FOLLOWING
+        ? PostsStatusFilter.ALL
+        : state.filters.status;
       state.pages = [];
     },
     showPostEditor: (state) => {

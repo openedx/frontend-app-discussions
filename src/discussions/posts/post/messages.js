@@ -42,6 +42,12 @@ const messages = defineMessages({
     defaultMessage: 'Remove like',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
   },
+  postClosed: {
+    id: 'discussions.post.closed',
+    defaultMessage: 'Post closed for responses and comments',
+    description: 'Tooltip/alttext for icon displayed when post is closed',
+  },
+
 });
 
 export default messages;

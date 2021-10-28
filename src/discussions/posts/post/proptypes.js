@@ -10,6 +10,8 @@ export const postShape = PropTypes.shape({
   id: PropTypes.string,
   pinned: PropTypes.bool,
   rawBody: PropTypes.string,
+  hasEndorsed: PropTypes.bool,
+  previewBody: PropTypes.string,
   read: PropTypes.bool,
   title: PropTypes.string,
   topicId: PropTypes.string,

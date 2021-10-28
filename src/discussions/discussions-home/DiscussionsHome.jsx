@@ -61,7 +61,7 @@ export default function DiscussionsHome() {
           component={BreadcrumbMenu}
         />
         <div className="d-flex flex-row">
-          <div className="d-flex flex-column w-25">
+          <div className="d-flex flex-column w-25" style={{ minWidth: '30rem' }}>
             <Switch>
               <Route path={Routes.POSTS.MY_POSTS}>
                 <PostsView showOwnPosts />
@@ -71,7 +71,7 @@ export default function DiscussionsHome() {
               <Redirect from={Routes.DISCUSSIONS.PATH} to={Routes.TOPICS.ALL} />
             </Switch>
           </div>
-          <div className="d-flex w-75 flex-column bg-light-300">
+          <div className="d-flex flex-column bg-light-300 w-75">
             {
               postEditorVisible ? (
                 <Route path={Routes.POSTS.NEW_POST}>

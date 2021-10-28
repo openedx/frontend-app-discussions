@@ -2,18 +2,18 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
   allPosts: {
-    id: 'discussions.posts.filter.allPosts',
-    defaultMessage: 'All posts',
+    id: 'discussions.posts.filter.showALl',
+    defaultMessage: 'Show all',
     description: 'Option in dropdown to filter to all posts',
   },
-  allDiscussions: {
-    id: 'discussions.posts.filter.allDscussions',
-    defaultMessage: 'All discussions',
+  filterDiscussions: {
+    id: 'discussions.posts.filter.discussions',
+    defaultMessage: 'Discussions',
     description: 'Option in dropdown to filter to all discussions',
   },
-  allQuestions: {
-    id: 'discussions.posts.filter.allQuestions',
-    defaultMessage: 'All questions',
+  filterQuestions: {
+    id: 'discussions.posts.filter.questions',
+    defaultMessage: 'Questions',
     description: 'Option in dropdown to filter to all questions',
   },
   filterBy: {
@@ -21,9 +21,9 @@ const messages = defineMessages({
     defaultMessage: 'Status: {filterBy}',
     description: 'Display text used to indicate what post status is being filtered',
   },
-  filterAll: {
-    id: 'discussions.posts.status.filter.all',
-    defaultMessage: 'All',
+  filterAnyStatus: {
+    id: 'discussions.posts.status.filter.anyStatus',
+    defaultMessage: 'Any status',
     description: 'Option in dropdown to filter to all post statuses',
   },
   filterUnread: {
@@ -36,10 +36,15 @@ const messages = defineMessages({
     defaultMessage: 'Following',
     description: 'Option in dropdown to filter to followed posts',
   },
-  filterFlagged: {
-    id: 'discussions.posts.status.filter.flagged',
-    defaultMessage: 'Flagged',
-    description: 'Option in dropdown to filter to flagged posts',
+  filterReported: {
+    id: 'discussions.posts.status.filter.reported',
+    defaultMessage: 'Reported',
+    description: 'Option in dropdown to filter to reported posts',
+  },
+  filterUnanswered: {
+    id: 'discussions.posts.status.filter.unanswered',
+    defaultMessage: 'Unanswered',
+    description: 'Option in dropdown to filter to unanswered posts',
   },
   myPosts: {
     id: 'discussions.posts.filter.myPosts',
@@ -75,6 +80,28 @@ const messages = defineMessages({
     id: 'discussions.posts.sort.voteCount',
     defaultMessage: 'Most votes',
     description: 'Option in dropdown to sort posts by most votes',
+  },
+  sortFilterStatus: {
+    id: 'discussions.posts.sort-filter.sortFilterStatus',
+    defaultMessage: `{own, select, 
+      false {All} 
+      true {Own}
+    } {status, select,
+      statusAll {}
+      statusUnread {unread}
+      statusFollowing {followed}
+      statusReported {reported}
+      statusUnanswered {unanswered}
+    } {type, select, 
+      allPosts {posts} 
+      allDiscussions {discussions} 
+      allQuestions {questions}
+     } by {sort, select,
+        lastActivityAt {recent activity}
+        commentCount {most activity}
+        voteCount {most votes}
+     }`,
+    description: 'Status message showing current sorting and filtering status',
   },
 });
 
