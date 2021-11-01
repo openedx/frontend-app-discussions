@@ -80,7 +80,7 @@ export function checkPermissions(content, action) {
  *    in the content/post.
  *    e.g. for {pinned:false} the action will show up if the content/post has post.pinned==false
  */
-const ACTIONS_LIST = [
+export const ACTIONS_LIST = [
   {
     id: 'edit',
     action: ContentActions.EDIT_CONTENT,
