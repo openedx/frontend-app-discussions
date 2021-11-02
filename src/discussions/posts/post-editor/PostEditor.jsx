@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -7,11 +7,14 @@ import { generatePath, useHistory, useParams } from 'react-router';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { AppContext } from '@edx/frontend-platform/react';
 import { Card, Form, StatefulButton } from '@edx/paragon';
 import { Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
+import { selectCourseCohorts } from '../../cohorts/data/selectors';
+import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { selectCourseTopics } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
@@ -56,6 +59,7 @@ function PostEditor({
   intl,
   editExisting,
 }) {
+  const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
   const history = useHistory();
   const commentsPagePath = useCommentsPagePath();
@@ -68,6 +72,7 @@ function PostEditor({
     coursewareTopics,
     nonCoursewareTopics,
   } = useSelector(selectCourseTopics());
+  const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
   const initialValues = {
     postType: post?.type || 'discussion',
@@ -76,6 +81,7 @@ function PostEditor({
     comment: post?.rawBody || '',
     follow: post?.following ?? true,
   };
+  const canSelectCohort = authenticatedUser.administrator && !editExisting;
   const hideEditor = () => {
     if (editExisting) {
       history.push(generatePath(commentsPagePath, {
@@ -96,6 +102,11 @@ function PostEditor({
         content: values.comment,
       }));
     } else {
+      const cohort = canSelectCohort
+        // null stands for no cohort restriction ("All learners" option)
+        ? (values.cohort ?? null)
+        // if not allowed to set cohort, always undefined, so no value is sent to backend
+        : undefined;
       dispatch(createNewThread({
         courseId,
         topicId: values.topic,
@@ -103,6 +114,7 @@ function PostEditor({
         title: values.title,
         content: values.comment,
         following: values.following,
+        cohort,
       }));
     }
     hideEditor();
@@ -110,6 +122,9 @@ function PostEditor({
 
   useEffect(() => {
     dispatch(fetchCourseTopics(courseId));
+    if (canSelectCohort) {
+      dispatch(fetchCourseCohorts(courseId));
+    }
     if (editExisting) {
       dispatch(fetchThread(postId));
     }
@@ -131,6 +146,7 @@ function PostEditor({
             .required(intl.formatMessage(messages.commentError)),
           follow: Yup.bool(),
           anonymous: Yup.bool(),
+          cohort: Yup.string(),
         })}
       initialErrors={{}}
       onSubmit={submitForm}
@@ -172,33 +188,54 @@ function PostEditor({
               description={intl.formatMessage(messages.questionDescription)}
             />
           </Form.RadioSet>
-          <Form.Group className="py-3 w-50">
-            <Form.Control
-              name="topic"
-              as="select"
-              value={values.topic}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              aria-describedby="topicAreaInput"
-              floatingLabel={intl.formatMessage(messages.topicArea)}
-            >
-              {nonCoursewareTopics.map(topic => (
-                <option key={topic.id} value={topic.id}>{topic.name}</option>
-              ))}
-              {coursewareTopics.map(topic => (
-                <optgroup label={topic.name} key={topic.name}>
-                  {topic.children.map(subtopic => (
-                    <option
-                      key={subtopic.id}
-                      value={subtopic.id}
-                    >
-                      {subtopic.name}
-                    </option>
+          <div className="py-3">
+            <Form.Group className="w-50 d-inline-block pr-2">
+              <Form.Control
+                name="topic"
+                as="select"
+                value={values.topic}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="topicAreaInput"
+                floatingLabel={intl.formatMessage(messages.topicArea)}
+              >
+                {nonCoursewareTopics.map(topic => (
+                  <option key={topic.id} value={topic.id}>{topic.name}</option>
+                ))}
+                {coursewareTopics.map(topic => (
+                  <optgroup label={topic.name} key={topic.name}>
+                    {topic.children.map(subtopic => (
+                      <option
+                        key={subtopic.id}
+                        value={subtopic.id}
+                      >
+                        {subtopic.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            {canSelectCohort
+              && (
+              <Form.Group className="w-50 d-inline-block pl-2">
+                <Form.Control
+                  name="cohort"
+                  as="select"
+                  value={values.cohort}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-describedby="cohortVisiblityInput"
+                  floatingLabel={intl.formatMessage(messages.cohortVisibility)}
+                >
+                  <option value="">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
+                  {cohorts.map(cohort => (
+                    <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
                   ))}
-                </optgroup>
-              ))}
-            </Form.Control>
-          </Form.Group>
+                </Form.Control>
+              </Form.Group>
+              )}
+          </div>
           <div className="border-bottom my-1" />
           <Form.Group
             className="py-2 mt-4"

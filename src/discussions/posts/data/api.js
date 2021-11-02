@@ -79,7 +79,7 @@ export async function getThread(threadId) {
  * @param {boolean} following Follow the thread after creating
  * @returns {Promise<{}>}
  */
-export async function postThread(courseId, topicId, type, title, content, following = false) {
+export async function postThread(courseId, topicId, type, title, content, following = false, cohort) {
   const postData = snakeCaseObject({
     courseId,
     topicId,
@@ -87,6 +87,7 @@ export async function postThread(courseId, topicId, type, title, content, follow
     title,
     raw_body: content,
     following,
+    groupId: cohort,
   });
 
   const { data } = await getAuthenticatedHttpClient().post(threadsApiUrl, postData);
