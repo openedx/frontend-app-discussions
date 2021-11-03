@@ -6,14 +6,10 @@
     "type": "git",
     "url": "git+https://github.com/edx/frontend-app-discussions.git"
   },
-  "browserslist": [
-    "last 2 versions",
-    "ie 11"
-  ],
+  "browserslist": ["extends @edx/browserslist-config"],
   "scripts": {
     "build": "fedx-scripts webpack",
     "i18n_extract": "BABEL_ENV=i18n fedx-scripts babel src --quiet > /dev/null",
-    "is-es5": "es-check es5 ./dist/*.js",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "lint:fix": "fedx-scripts eslint --ext .js --ext .jsx . --fix",
     "snapshot": "fedx-scripts jest --updateSnapshot",
