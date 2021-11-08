@@ -31,8 +31,8 @@ const commentsSlice = createSlice({
       const { threadId, endorsed } = payload;
       // force endorsed to be null, true or false
       state.status = RequestStatus.SUCCESSFUL;
-      state.commentsInThreads[threadId] = state.commentsInThreads[threadId] ?? {};
-      state.pagination[threadId] = state.pagination[threadId] ?? {};
+      state.commentsInThreads[threadId] = state.commentsInThreads[threadId] || {};
+      state.pagination[threadId] = state.pagination[threadId] || {};
       state.commentsInThreads[threadId][endorsed] = [
         ...(state.commentsInThreads[threadId][endorsed] || []),
         ...(payload.commentsInThreads[threadId] || []),
@@ -91,7 +91,7 @@ const commentsSlice = createSlice({
         // sections since a new comment won't be endorsed yet.
         (
           state.commentsInThreads[payload.threadId][EndorsementStatus.DISCUSSION]
-          ?? state.commentsInThreads[payload.threadId][EndorsementStatus.UNENDORSED]
+          || state.commentsInThreads[payload.threadId][EndorsementStatus.UNENDORSED]
         ).push(payload.id);
       }
       state.commentsById[payload.id] = payload;

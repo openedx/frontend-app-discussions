@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 
 import classNames from 'classnames';
-import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -11,6 +10,7 @@ import { Flag, Pin, Unread } from '@edx/paragon/icons';
 import { Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
+import { discussionsPath } from '../../utils';
 import messages from './messages';
 import PostFooter from './PostFooter';
 import { PostAvatar } from './PostHeader';
@@ -23,8 +23,10 @@ function PostLink({
   const {
     page,
     postId,
+    inContext,
   } = useContext(DiscussionContext);
-  const linkUrl = generatePath(Routes.COMMENTS.PAGES[page], {
+  const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
+    0: inContext ? 'in-context' : undefined,
     courseId: post.courseId,
     topicId: post.topicId,
     postId: post.id,
@@ -48,7 +50,10 @@ function PostLink({
       )}
       <div
         className={classNames('d-flex flex-row flex-fill mw-100 p-3.5 border-primary-500', { 'bg-light-200': post.read })}
-        style={post.id === postId ? { borderRightWidth: '4px', borderRightStyle: 'solid' } : null}
+        style={post.id === postId ? {
+          borderRightWidth: '4px',
+          borderRightStyle: 'solid',
+        } : null}
       >
         <Icon className={classNames('p-0 mr-n3 text-brand-500', { invisible: post.read })} src={Unread} />
         <PostAvatar post={post} />
@@ -67,7 +72,7 @@ function PostLink({
                   )}
               </div>
               <AuthorLabel
-                author={post.author ?? intl.formatMessage(messages.anonymous)}
+                author={post.author || intl.formatMessage(messages.anonymous)}
                 authorLabel={post.authorLabel}
               />
             </div>

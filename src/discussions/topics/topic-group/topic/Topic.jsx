@@ -9,10 +9,11 @@ import { Icon } from '@edx/paragon';
 import { Error as ErrorIcon, Help, Post as PostIcon } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
+import { discussionsPath } from '../../../utils';
 
 function Topic({ topic }) {
   const { courseId } = useParams();
-  const topicUrl = generatePath(Routes.TOPICS.TOPIC, {
+  const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, {
     courseId,
     topicId: topic.id,
   });

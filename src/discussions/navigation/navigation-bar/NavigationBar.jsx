@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { generatePath, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
+import { discussionsPath } from '../../utils';
 import messages from './messages';
 
 function NavigationBar({ intl }) {
@@ -30,7 +31,7 @@ function NavigationBar({ intl }) {
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
-          <Nav.Link as={NavLink} to={generatePath(link.route, { courseId })} className="border">
+          <Nav.Link as={NavLink} to={discussionsPath(link.route, { courseId })} className="border">
             {intl.formatMessage(link.labelMessage)}
           </Nav.Link>
         </Nav.Item>
