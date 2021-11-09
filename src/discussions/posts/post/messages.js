@@ -47,7 +47,11 @@ const messages = defineMessages({
     defaultMessage: 'Post closed for responses and comments',
     description: 'Tooltip/alttext for icon displayed when post is closed',
   },
-
+  visibleToAll: {
+    id: 'discussions.post.cohort.everyone',
+    defaultMessage: 'Everyone',
+    description: 'Cohort visibility indicator for all people',
+  },
 });
 
 export default messages;

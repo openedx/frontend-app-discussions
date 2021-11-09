@@ -9,7 +9,7 @@ import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Locked, QuestionAnswer, StarFilled, StarOutline,
+  Locked, Person, QuestionAnswer, StarFilled, StarOutline,
 } from '@edx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
@@ -38,7 +38,7 @@ function PostFooter({
         )}
       >
         {preview
-          ? <Icon src={post.following ? StarFilled : StarOutline} />
+          ? <Icon src={post.following ? StarFilled : StarOutline} className="my-0 mr-4.5" />
           : (
             <IconButton
               onClick={() => {
@@ -56,13 +56,27 @@ function PostFooter({
       {preview
         && (
           <>
-            <Icon src={QuestionAnswer} className="mx-2" />
+            <Icon src={QuestionAnswer} className="mx-2 my-0" />
             <span style={{ minWidth: '2rem' }}>
               {post.commentCount}
             </span>
           </>
         )}
       <div className="d-flex flex-fill justify-content-end align-items-center">
+        {!preview
+          && (
+            <span className="text-gray-500 mr-4 d-flex align-items-center">
+              <Icon
+                src={Person}
+                className="mr-1"
+                style={{
+                  width: '1em',
+                  height: '1em',
+                }}
+              />
+              {post.groupName || intl.formatMessage(messages.visibleToAll)}
+            </span>
+          )}
         <span title={post.createdAt} className="text-gray-500">
           {timeago.format(post.createdAt, intl.locale)}
         </span>
