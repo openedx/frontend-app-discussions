@@ -15,6 +15,7 @@ import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import { selectAnonymousPostingConfig } from '../../data/selectors';
 import { selectCourseTopics } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
@@ -72,6 +73,10 @@ function PostEditor({
     coursewareTopics,
     nonCoursewareTopics,
   } = useSelector(selectCourseTopics());
+  const {
+    allowAnonymous,
+    allowAnonymousToPeers,
+  } = useSelector(selectAnonymousPostingConfig);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
   const initialValues = {
@@ -80,6 +85,8 @@ function PostEditor({
     title: post?.title || '',
     comment: post?.rawBody || '',
     follow: post?.following ?? true,
+    anonymous: allowAnonymous ? false : undefined,
+    anonymousToPeers: allowAnonymousToPeers ? false : undefined,
   };
   const canSelectCohort = authenticatedUser.administrator && !editExisting;
   const hideEditor = () => {
@@ -114,6 +121,8 @@ function PostEditor({
         title: values.title,
         content: values.comment,
         following: values.following,
+        anonymous: values.anonymous,
+        anonymousToPeers: values.anonymousToPeers,
         cohort,
       }));
     }
@@ -144,8 +153,12 @@ function PostEditor({
             .required(intl.formatMessage(messages.titleError)),
           comment: Yup.string()
             .required(intl.formatMessage(messages.commentError)),
-          follow: Yup.bool(),
-          anonymous: Yup.bool(),
+          follow: Yup.bool()
+            .default(true),
+          anonymous: Yup.bool().default(false)
+            .nullable(),
+          anonymousToPeers: Yup.bool().default(false)
+            .nullable(),
           cohort: Yup.string(),
         })}
       initialErrors={{}}
@@ -265,27 +278,47 @@ function PostEditor({
           </div>
 
           {!editExisting
-          && (
-            <div className="d-flex flex-row mt-3">
-              <Form.Checkbox
-                name="follow"
-                value={values.follow}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="mr-4"
-              >
-                {intl.formatMessage(messages.followPost)}
-              </Form.Checkbox>
-              <Form.Checkbox
-                name="anonymous"
-                value={values.anonymous}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              >
-                {intl.formatMessage(messages.anonymousPost)}
-              </Form.Checkbox>
-            </div>
-          )}
+            && (
+              <div className="d-flex flex-row mt-3">
+                <Form.Group>
+                  <Form.Checkbox
+                    name="follow"
+                    checked={values.follow}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="mr-4"
+                  >
+                    {intl.formatMessage(messages.followPost)}
+                  </Form.Checkbox>
+                </Form.Group>
+                {allowAnonymous && (
+                  <Form.Group>
+                    <Form.Checkbox
+                      name="anonymous"
+                      checked={values.anonymous}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="mr-4"
+                    >
+                      {intl.formatMessage(messages.anonymousPost)}
+                    </Form.Checkbox>
+                  </Form.Group>
+                )}
+                {allowAnonymousToPeers
+                  && (
+                    <Form.Group>
+                      <Form.Checkbox
+                        name="anonymousToPeers"
+                        checked={values.anonymousToPeers}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      >
+                        {intl.formatMessage(messages.anonymousToPeersPost)}
+                      </Form.Checkbox>
+                    </Form.Group>
+                  )}
+              </div>
+            )}
 
           <div className="d-flex justify-content-end">
             <StatefulButton

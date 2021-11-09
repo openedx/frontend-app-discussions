@@ -9,6 +9,7 @@ import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, Routes } from '../../data/constants';
 import { CommentsView } from '../comments';
 import { DiscussionContext } from '../common/context';
+import { fetchCourseConfig } from '../data/thunks';
 import { BreadcrumbMenu, NavigationBar } from '../navigation';
 import { PostEditor, PostsView } from '../posts';
 import { clearRedirect } from '../posts/data';
@@ -28,6 +29,9 @@ export default function DiscussionsHome() {
     },
   } = useRouteMatch(ALL_ROUTES);
   const redirectToThread = useSelector(state => state.threads.redirectToThread);
+  useEffect(() => {
+    dispatch(fetchCourseConfig(courseId));
+  }, [courseId]);
   useEffect(() => {
     // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
     // stored in redirectToThread

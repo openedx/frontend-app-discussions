@@ -8,7 +8,7 @@ const messages = defineMessages({
   },
   allTopics: {
     id: 'discussions.navigation.navigationBar.allTopics',
-    defaultMessage: 'All Topics',
+    defaultMessage: 'Topics',
     description: 'Option in navbar to show all topics',
   },
   myPosts: {
