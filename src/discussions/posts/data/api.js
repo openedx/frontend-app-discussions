@@ -78,9 +78,23 @@ export async function getThread(threadId) {
  * @param {string} title
  * @param {string} content
  * @param {boolean} following Follow the thread after creating
+ * @param {boolean} anonymous Should the thread be anonymous to all users
+ * @param {boolean} anonymousToPeers Should the thread be anonymous to peers
  * @returns {Promise<{}>}
  */
-export async function postThread(courseId, topicId, type, title, content, following = false, cohort) {
+export async function postThread(
+  courseId,
+  topicId,
+  type,
+  title,
+  content,
+  {
+    following,
+    cohort,
+    anonymous,
+    anonymousToPeers,
+  } = {},
+) {
   const postData = snakeCaseObject({
     courseId,
     topicId,
@@ -88,10 +102,13 @@ export async function postThread(courseId, topicId, type, title, content, follow
     title,
     raw_body: content,
     following,
+    anonymous,
+    anonymousToPeers,
     groupId: cohort,
   });
 
-  const { data } = await getAuthenticatedHttpClient().post(threadsApiUrl, postData);
+  const { data } = await getAuthenticatedHttpClient()
+    .post(threadsApiUrl, postData);
   return data;
 }
 
@@ -146,7 +163,8 @@ export async function updateThread(threadId, {
  */
 export async function deleteThread(threadId) {
   const url = `${threadsApiUrl}${threadId}/`;
-  await getAuthenticatedHttpClient().delete(url);
+  await getAuthenticatedHttpClient()
+    .delete(url);
 }
 
 /**

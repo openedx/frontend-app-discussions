@@ -85,6 +85,10 @@ const messages = defineMessages({
     id: 'discussions.post.editor.anonymousPost',
     defaultMessage: 'Post anonymously',
   },
+  anonymousToPeersPost: {
+    id: 'discussions.post.editor.anonymousToPeersPost',
+    defaultMessage: 'Post anonymously to peers',
+  },
   submit: {
     id: 'discussions.editor.submit',
     defaultMessage: 'Submit',

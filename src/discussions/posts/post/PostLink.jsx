@@ -61,11 +61,15 @@ function PostLink({
                 </div>
                 {showAnsweredBadge
                   && (
-                  <div className="ml-auto"><Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
-                  </div>
+                    <div className="ml-auto">
+                      <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
+                    </div>
                   )}
               </div>
-              <AuthorLabel author={post.author} authorLabel={post.authorLabel} />
+              <AuthorLabel
+                author={post.author ?? intl.formatMessage(messages.anonymous)}
+                authorLabel={post.authorLabel}
+              />
             </div>
           </div>
           <div>{post.previewBody}</div>

@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  anonymous: {
+    id: 'discussions.post.author.anonymous',
+    defaultMessage: 'anonymous',
+    description: 'Author name displayed when a post is anonymous',
+  },
   lastResponse: {
     id: 'discussions.post.lastResponse',
     defaultMessage: 'Last response {time}',

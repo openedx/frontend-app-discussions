@@ -65,7 +65,7 @@ function PostHeader({
               </div>
             )
             : <h3 className="mb-0">{post.title}</h3>}
-          <AuthorLabel author={post.author} authorLabel={post.authorLabel} />
+          <AuthorLabel author={post.author ?? intl.formatMessage(messages.anonymous)} authorLabel={post.authorLabel} />
         </div>
       </div>
       {!preview

@@ -30,7 +30,7 @@ function NavigationBar({ intl }) {
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
-          <Nav.Link as={NavLink} to={generatePath(link.route, { courseId })}>
+          <Nav.Link as={NavLink} to={generatePath(link.route, { courseId })} className="border">
             {intl.formatMessage(link.labelMessage)}
           </Nav.Link>
         </Nav.Item>
