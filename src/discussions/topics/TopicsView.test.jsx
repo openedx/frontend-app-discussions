@@ -1,5 +1,5 @@
 import {
-  fireEvent, queryByText, render, screen, waitFor,
+  fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -12,6 +12,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { API_BASE_URL } from '../../data/constants';
 import { initializeStore } from '../../store';
+import { executeThunk } from '../../test-utils';
+import { fetchCourseTopics } from './data/thunks';
 import TopicsView from './TopicsView';
 
 import './data/__factories__';
@@ -56,20 +58,29 @@ describe('TopicsView', () => {
       },
     });
 
-    store = initializeStore();
+    store = initializeStore({
+      blocks: {
+        topics: {},
+      },
+    });
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
 
     lastLocation = undefined;
   });
 
-  it('displays non-courseware topics', async () => {
+  async function setupMockResponse(response) {
     axiosMock
       .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: [],
-        non_courseware_topics: Factory.buildList('topic', 3),
-      });
+      .reply(200, response);
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+  }
+
+  it('displays non-courseware topics', async () => {
+    setupMockResponse({
+      courseware_topics: [],
+      non_courseware_topics: Factory.buildList('topic', 3),
+    });
     renderComponent();
 
     await screen.findByText('topic 1');
@@ -77,27 +88,23 @@ describe('TopicsView', () => {
     expect(screen.queryByText('topic 3')).toBeInTheDocument();
   });
 
-  it('displays non-courseware in one topic group', async () => {
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: [],
-        non_courseware_topics: Factory.buildList('topic', 3),
-      });
+  it('displays non-courseware in outside of a topic group', async () => {
+    setupMockResponse({
+      courseware_topics: [],
+      non_courseware_topics: Factory.buildList('topic', 3),
+    });
     renderComponent();
 
     await screen.findByText('topic 1');
     const topicGroups = screen.queryAllByTestId('topic-group');
-    expect(topicGroups).toHaveLength(1);
+    expect(topicGroups).toHaveLength(0);
   });
 
   it('displays courseware topics', async () => {
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: Factory.buildList('topic', 3),
-        non_courseware_topics: [],
-      });
+    setupMockResponse({
+      courseware_topics: Factory.buildList('topic', 3),
+      non_courseware_topics: [],
+    });
     renderComponent();
 
     await screen.findByText('topic 1');
@@ -106,12 +113,10 @@ describe('TopicsView', () => {
   });
 
   it('displays courseware topics in individual topic groups', async () => {
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: Factory.buildList('topic', 3),
-        non_courseware_topics: [],
-      });
+    setupMockResponse({
+      courseware_topics: Factory.buildList('topic', 3),
+      non_courseware_topics: [],
+    });
     renderComponent();
 
     await screen.findByText('topic 1');
@@ -119,32 +124,11 @@ describe('TopicsView', () => {
     expect(topicGroups).toHaveLength(3);
   });
 
-  it('displays non-courseware topics before courseware topics', async () => {
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: Factory.buildList('topic', 3),
-        non_courseware_topics: Factory.buildList('topic', 3),
-      });
-    renderComponent();
-
-    await screen.findByText('topic 1');
-    const topicGroups = screen.queryAllByTestId('topic-group');
-    expect(queryByText(topicGroups[0], 'topic 4')).toBeInTheDocument();
-    expect(queryByText(topicGroups[0], 'topic 5')).toBeInTheDocument();
-    expect(queryByText(topicGroups[0], 'topic 6')).toBeInTheDocument();
-    expect(queryByText(topicGroups[1], 'topic 1')).toBeInTheDocument();
-    expect(queryByText(topicGroups[2], 'topic 2')).toBeInTheDocument();
-    expect(queryByText(topicGroups[3], 'topic 3')).toBeInTheDocument();
-  });
-
   it('clicking on courseware topic (category) takes to category page', async () => {
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: Factory.buildList('topic', 3),
-        non_courseware_topics: Factory.buildList('topic', 3),
-      });
+    setupMockResponse({
+      courseware_topics: Factory.buildList('topic', 3),
+      non_courseware_topics: Factory.buildList('topic', 3),
+    });
     renderComponent();
 
     const topic = await screen.findByText('topic 1');
@@ -157,15 +141,13 @@ describe('TopicsView', () => {
   it('on category page only selected category and it\'s children are displayed', async () => {
     const category = Factory.build('topic');
     category.children = Factory.buildList('topic', 3);
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: [
-          category,
-          Factory.build('topic'),
-        ],
-        non_courseware_topics: Factory.buildList('topic', 3),
-      });
+    setupMockResponse({
+      courseware_topics: [
+        category,
+        Factory.build('topic'),
+      ],
+      non_courseware_topics: Factory.buildList('topic', 3),
+    });
     renderComponent();
 
     const topic = await screen.findByText('topic 1');

@@ -10,38 +10,32 @@ import { Error as ErrorIcon, Help, Post as PostIcon } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
 
-function Topic({
-  id,
-  name,
-  questions,
-  discussions,
-  flags,
-}) {
+function Topic({ topic }) {
   const { courseId } = useParams();
   const topicUrl = generatePath(Routes.TOPICS.TOPIC, {
     courseId,
-    topicId: id,
+    topicId: topic.id,
   });
   const icons = [
     {
       key: 'discussions',
       icon: PostIcon,
-      count: discussions,
+      count: topic?.threadCounts?.discussions || 0,
     },
     {
       key: 'questions',
       icon: Help,
-      count: questions,
+      count: topic?.threadCounts?.questions || 0,
     },
   ];
   return (
     <Link
       className="discussion-topic d-flex flex-column list-group-item px-4 py-3 text-primary-500"
-      data-topic-id={id}
+      data-topic-id={topic.id}
       to={topicUrl}
     >
       <div className="topic-name">
-        {name}
+        {topic.name}
       </div>
       <div className="d-flex mt-3">
         {
@@ -59,10 +53,10 @@ function Topic({
             </div>
           ))
         }
-        {flags && (
+        {topic?.flags && (
           <div className="d-flex align-items-center">
             <Icon className="mr-2" src={ErrorIcon} />
-            {flags}
+            {topic.flags}
           </div>
         )}
       </div>
@@ -70,20 +64,15 @@ function Topic({
   );
 }
 
-export const topicShape = {
+export const topicShape = PropTypes.shape({
   name: PropTypes.string,
   id: PropTypes.string,
   questions: PropTypes.number,
   discussions: PropTypes.number,
   flags: PropTypes.number,
-};
-Topic.propTypes = topicShape;
-Topic.defaultProps = {
-  id: null,
-  name: null,
-  questions: 0,
-  discussions: 0,
-  flags: null,
+});
+Topic.propTypes = {
+  topic: topicShape.isRequired,
 };
 
 export default Topic;

@@ -52,6 +52,11 @@ const messages = defineMessages({
     defaultMessage: 'Post closed for responses and comments',
     description: 'Tooltip/alttext for icon displayed when post is closed',
   },
+  relatedTo: {
+    id: 'discussions.post.relatedTo',
+    defaultMessage: 'Related to',
+    description: 'Message followed the category and topic of post linking to in-course context',
+  },
   visibleToAll: {
     id: 'discussions.post.cohort.everyone',
     defaultMessage: 'Everyone',

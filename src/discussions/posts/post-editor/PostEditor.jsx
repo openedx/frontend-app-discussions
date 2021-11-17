@@ -16,7 +16,7 @@ import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { selectAnonymousPostingConfig } from '../../data/selectors';
-import { selectCourseTopics } from '../../topics/data/selectors';
+import { selectCoursewareTopics, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
 import { hidePostEditor } from '../data';
@@ -69,10 +69,8 @@ function PostEditor({
     topicId,
     postId,
   } = useParams();
-  const {
-    coursewareTopics,
-    nonCoursewareTopics,
-  } = useSelector(selectCourseTopics());
+  const coursewareTopics = useSelector(selectCoursewareTopics);
+  const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const {
     allowAnonymous,
     allowAnonymousToPeers,

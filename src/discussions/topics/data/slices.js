@@ -7,10 +7,14 @@ const topicsSlice = createSlice({
   name: 'courseTopics',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    topics: {
-      coursewareTopics: [],
-      nonCoursewareTopics: [],
-    },
+    // List of all category ids
+    categoryIds: [],
+    // List of all non-courseware topics
+    nonCoursewareIds: [],
+    // Mapping of all topics in each category
+    topicsInCategory: {},
+    // Map of topics ids to topic data
+    topics: {},
     filter: '',
     sortBy: TopicOrdering.BY_COURSE_STRUCTURE,
   },
@@ -20,7 +24,10 @@ const topicsSlice = createSlice({
     },
     fetchCourseTopicsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.topics = payload;
+      state.topics = payload.topics;
+      state.nonCoursewareIds = payload.nonCoursewareIds;
+      state.categoryIds = payload.categoryIds;
+      state.topicsInCategory = payload.topicsInCategory;
     },
     fetchCourseTopicsFailed: (state) => {
       state.status = RequestStatus.FAILED;

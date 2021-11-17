@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { blocksReducer } from './data/slices';
 import { cohortsReducer } from './discussions/cohorts/data';
 import { commentsReducer } from './discussions/comments/data';
 import { configReducer } from './discussions/data/slices';
@@ -14,6 +15,7 @@ export function initializeStore(preloadedState = undefined) {
       comments: commentsReducer,
       cohorts: cohortsReducer,
       config: configReducer,
+      blocks: blocksReducer,
     },
     preloadedState,
   });
