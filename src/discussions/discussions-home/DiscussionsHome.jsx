@@ -13,7 +13,7 @@ import { fetchCourseBlocks } from '../../data/thunks';
 import { CommentsView } from '../comments';
 import { DiscussionContext } from '../common/context';
 import { fetchCourseConfig } from '../data/thunks';
-import { BreadcrumbMenu, NavigationBar } from '../navigation';
+import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { PostEditor, PostsView } from '../posts';
 import { clearRedirect } from '../posts/data';
 import { TopicsView } from '../topics';
@@ -69,7 +69,7 @@ export default function DiscussionsHome() {
             Routes.POSTS.PATH,
             Routes.TOPICS.CATEGORY,
           ]}
-          component={BreadcrumbMenu}
+          component={LegacyBreadcrumbMenu}
         />
         <div className="d-flex flex-row">
           <div className="d-flex flex-column w-25" style={{ minWidth: '30rem' }}>

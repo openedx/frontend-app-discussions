@@ -5,7 +5,7 @@ export const selectTopicFilter = state => state.topics.filter.trim().toLowerCase
 export const selectCategories = state => state.topics.categoryIds;
 
 export const selectTopicsInCategory = (categoryId) => state => (
-  state.topics.topicsInCategory[categoryId].map(id => state.topics.topics[id])
+  state.topics.topicsInCategory[categoryId]?.map(id => state.topics.topics[id]) || []
 );
 
 export const selectTopics = state => state.topics.topics;

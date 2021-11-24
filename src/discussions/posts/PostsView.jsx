@@ -74,10 +74,10 @@ function PostsView({ showOwnPosts }) {
             lastPinnedIdx = false;
             // Add a spacing after the group of pinned posts
             return (
-              <>
+              <React.Fragment key={post.id}>
                 <div className="p-1 bg-light-300" />
                 <PostLink post={post} key={post.id} />
-              </>
+              </React.Fragment>
             );
           }
           return (<PostLink post={post} key={post.id} />);
