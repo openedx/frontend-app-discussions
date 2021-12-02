@@ -1,11 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  generatePath, Redirect, Route, Switch, useHistory, useRouteMatch,
+  Redirect, Route, Switch, useHistory, useLocation, useRouteMatch,
 } from 'react-router';
 
+import Footer from '@edx/frontend-component-footer';
+import Header from '@edx/frontend-component-header';
 import { AppContext } from '@edx/frontend-platform/react';
+import { breakpoints, useWindowSize } from '@edx/paragon';
 
 import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, Routes } from '../../data/constants';
@@ -18,21 +22,28 @@ import { PostEditor, PostsView } from '../posts';
 import { clearRedirect } from '../posts/data';
 import { TopicsView } from '../topics';
 import { fetchCourseTopics } from '../topics/data/thunks';
+import { discussionsPath } from '../utils';
 
 export default function DiscussionsHome() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { params } = useRouteMatch(Routes.DISCUSSIONS.PATH);
   const { authenticatedUser } = useContext(AppContext);
+  const location = useLocation();
   const postEditorVisible = useSelector(state => state.threads.postEditorVisible);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
+  const { params } = useRouteMatch(ALL_ROUTES);
   const {
-    params: {
-      courseId,
-      postId,
-      topicId,
-    },
-  } = useRouteMatch(ALL_ROUTES);
+    courseId,
+    postId,
+    topicId,
+  } = params;
+  const inContext = new URLSearchParams(location.search).get('inContext') !== null;
+
+  // Display the content area if we are currently viewing/editing a post or creating one.
+  const displayContentArea = postId || postEditorVisible;
+  // If the window is larger than a particular size, always show the sidebar for navigating between posts/topics.
+  // However, for smaller screens or embeds, only show the sidebar if the content area isn't displayed.
+  const displaySidebar = useWindowSize().width >= breakpoints.large.minWidth || !displayContentArea;
   const redirectToThread = useSelector(state => state.threads.redirectToThread);
   useEffect(() => {
     dispatch(fetchCourseConfig(courseId));
@@ -44,8 +55,8 @@ export default function DiscussionsHome() {
     // stored in redirectToThread
     if (redirectToThread) {
       dispatch(clearRedirect());
-      history.push(generatePath(Routes.COMMENTS.PAGES['my-posts'], {
-        courseId: params.courseId,
+      history.push(discussionsPath(Routes.COMMENTS.PAGES['my-posts'], {
+        courseId,
         postId: redirectToThread.threadId,
       }));
     }
@@ -57,12 +68,14 @@ export default function DiscussionsHome() {
       courseId,
       postId,
       topicId,
+      inContext,
     }}
     >
+      {!inContext && <Header />}
       <main className="container-fluid d-flex flex-column p-0">
         <div className="d-flex flex-row justify-content-between shadow navbar">
-          <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
-          <PostActionsBar />
+          {!inContext && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
+          <PostActionsBar inContext={inContext} />
         </div>
         <Route
           path={[
@@ -72,7 +85,13 @@ export default function DiscussionsHome() {
           component={LegacyBreadcrumbMenu}
         />
         <div className="d-flex flex-row">
-          <div className="d-flex flex-column w-25" style={{ minWidth: '30rem' }}>
+          <div
+            className={classNames('flex-column w-25 w-xs-100 w-lg-25', {
+              'd-none': !displaySidebar,
+              'd-flex': displaySidebar,
+            })}
+            style={{ minWidth: '30rem' }}
+          >
             <Switch>
               <Route path={Routes.POSTS.MY_POSTS}>
                 <PostsView showOwnPosts />
@@ -82,7 +101,11 @@ export default function DiscussionsHome() {
               <Redirect from={Routes.DISCUSSIONS.PATH} to={Routes.TOPICS.ALL} />
             </Switch>
           </div>
-          <div className="d-flex flex-column bg-light-300 w-75">
+          <div className={classNames('bg-light-300 flex-column w-75 w-xs-100 w-xl-75', {
+            'd-flex': displayContentArea,
+            'd-none': !displayContentArea,
+          })}
+          >
             {
               postEditorVisible ? (
                 <Route path={Routes.POSTS.NEW_POST}>
@@ -102,6 +125,7 @@ export default function DiscussionsHome() {
           </div>
         </div>
       </main>
+      {!inContext && <Footer />}
     </DiscussionContext.Provider>
   );
 }

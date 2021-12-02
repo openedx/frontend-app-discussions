@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
-import { generatePath, useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Dropdown, DropdownButton } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
 import {
@@ -13,10 +12,10 @@ import {
   selectTopic,
   selectTopicsInCategory,
 } from '../../topics/data/selectors';
-import messages from './messages';
+import { discussionsPath } from '../../utils';
+import BreadcrumbDropdown from './BreadcrumbDropdown';
 
 function LegacyBreadcrumbMenu({ intl }) {
-  const history = useHistory();
   const {
     params: {
       courseId,
@@ -30,83 +29,59 @@ function LegacyBreadcrumbMenu({ intl }) {
   const topicsInCategory = useSelector(selectTopicsInCategory(currentCategory));
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const categories = useSelector(selectCategories);
-  const showAllMsg = intl.formatMessage(messages.showAll);
   const isNonCoursewareTopic = currentTopic && !currentCategory;
-
-  const navigateToCategory = (categoryId) => {
-    if (!categoryId) {
-      history.push(generatePath(Routes.TOPICS.ALL, {
-        courseId,
-        category: categoryId,
-      }));
-    } else {
-      history.push(generatePath(Routes.TOPICS.CATEGORY, {
-        courseId,
-        category: categoryId,
-      }));
-    }
-  };
-  const navigateToTopic = (topicId) => {
-    if (!topicId) {
-      navigateToCategory(currentCategory);
-    } else {
-      history.push(generatePath(Routes.TOPICS.TOPIC, {
-        courseId,
-        topicId,
-      }));
-    }
-  };
 
   return (
     <div className="breadcrumb-menu d-flex flex-row mt-2 mx-3">
       {isNonCoursewareTopic ? (
-        <DropdownButton
-          title={currentTopic.name}
-          variant="outline"
-          onSelect={navigateToTopic}
-        >
-          <Dropdown.Item eventKey={null} key="null" active={!currentTopic}>
-            {showAllMsg}
-          </Dropdown.Item>
-          {nonCoursewareTopics.map(topic => (
-            <Dropdown.Item eventKey={topic.id} key={topic.id} active={topic.id === currentTopicId}>
-              {topic.name}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
+        <BreadcrumbDropdown
+          currentItem={currentTopic}
+          intl={intl}
+          itemLabelFunc={(item) => item?.name}
+          itemActiveFunc={(topic) => topic?.id === currentTopicId}
+          items={nonCoursewareTopics}
+          showAllPath={discussionsPath(Routes.TOPICS.ALL, {
+            courseId,
+          })}
+          itemPathFunc={(topic) => discussionsPath(Routes.TOPICS.TOPIC, {
+            courseId,
+            topicId: topic.id,
+          })}
+        />
       ) : (
-        <DropdownButton
-          title={currentCategory || showAllMsg}
-          variant="outline"
-          onSelect={navigateToCategory}
-        >
-          <Dropdown.Item eventKey={null} key="null" active={!currentCategory}>
-            {showAllMsg}
-          </Dropdown.Item>
-          {categories.map(categoryId => (
-            <Dropdown.Item eventKey={categoryId} key={categoryId} active={categoryId === currentCategory}>
-              {categoryId}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
+        <BreadcrumbDropdown
+          currentItem={currentCategory}
+          intl={intl}
+          itemLabelFunc={(catId) => catId}
+          itemActiveFunc={(catId) => catId === currentCategory}
+          items={categories}
+          showAllPath={discussionsPath(Routes.TOPICS.ALL, {
+            courseId,
+          })}
+          itemPathFunc={(catId) => discussionsPath(Routes.TOPICS.CATEGORY, {
+            courseId,
+            category: catId,
+          })}
+        />
       )}
       {currentCategory && (
         <>
           <div className="d-flex py-2">/</div>
-          <DropdownButton
-            title={currentTopic?.name || showAllMsg}
-            variant="outline"
-            onSelect={navigateToTopic}
-          >
-            <Dropdown.Item eventKey={null} key="null" active={!currentTopic}>
-              {showAllMsg}
-            </Dropdown.Item>
-            {topicsInCategory?.map(topic => (
-              <Dropdown.Item eventKey={topic.id} key={topic.id} active={topic.id === currentTopicId}>
-                {topic.name}
-              </Dropdown.Item>
-            ))}
-          </DropdownButton>
+          <BreadcrumbDropdown
+            currentItem={currentTopic}
+            intl={intl}
+            itemLabelFunc={(item) => item?.name}
+            itemActiveFunc={(topic) => topic?.id === currentTopicId}
+            items={topicsInCategory}
+            showAllPath={discussionsPath(Routes.TOPICS.CATEGORY, {
+              courseId,
+              category: currentCategory,
+            })}
+            itemPathFunc={(topic) => discussionsPath(Routes.TOPICS.TOPIC, {
+              courseId,
+              topicId: topic.id,
+            })}
+          />
         </>
       )}
     </div>

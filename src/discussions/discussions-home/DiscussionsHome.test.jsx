@@ -1,27 +1,28 @@
-import {
-  fireEvent, render, screen,
-} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
+import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { Routes } from '../../data/constants';
 import { initializeStore } from '../../store';
 import navigationBarMessages from '../navigation/navigation-bar/messages';
 import DiscussionsHome from './DiscussionsHome';
 
 let store;
+const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
-function renderComponent() {
+function renderComponent(location = `/discussions/${courseId}/`) {
   render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <MemoryRouter initialEntries={[Routes.DISCUSSIONS.PATH]}>
-          <DiscussionsHome />
-        </MemoryRouter>
-      </AppProvider>
+      <ResponsiveContext.Provider value={{ width: 1280 }}>
+        <AppProvider store={store}>
+          <MemoryRouter initialEntries={[location]}>
+            <DiscussionsHome />
+          </MemoryRouter>
+        </AppProvider>
+      </ResponsiveContext.Provider>
     </IntlProvider>,
   );
 }
@@ -40,12 +41,49 @@ describe('DiscussionsHome', () => {
     store = initializeStore();
   });
 
-  it('clicking "All Topics" button renders topics view', async () => {
+  test('clicking "All Topics" button renders topics view', async () => {
     renderComponent();
 
     const allTopicsButton = await screen.findByText(navigationBarMessages.allTopics.defaultMessage);
     fireEvent.click(allTopicsButton);
 
     await screen.findByTestId('topics-view');
+  });
+
+  test('full view should show header and footer and hide close button', async () => {
+    renderComponent(`/discussions/${courseId}/topics`);
+    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
+      .toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Close' }))
+      .not
+      .toBeInTheDocument();
+    // Header should be visible
+    expect(screen.queryByRole('button', {
+      name: /account menu for abc123/i,
+    }))
+      .toBeInTheDocument();
+    // Footer should be visible
+    expect(screen.queryByRole('contentinfo'))
+      .toBeInTheDocument();
+  });
+
+  test('in-context view should hide header and footer and show close button', async () => {
+    renderComponent(`/discussions/${courseId}/topics?inContext`);
+
+    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
+      .not
+      .toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Close' }))
+      .toBeInTheDocument();
+    // Header should be hidden
+    expect(screen.queryByRole('button', {
+      name: /account menu for abc123/i,
+    }))
+      .not
+      .toBeInTheDocument();
+    // Footer should be hidden
+    expect(screen.queryByRole('contentinfo'))
+      .not
+      .toBeInTheDocument();
   });
 });

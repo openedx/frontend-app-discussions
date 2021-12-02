@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -18,7 +18,9 @@ import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { selectAnonymousPostingConfig } from '../../data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import { fetchCourseTopics } from '../../topics/data/thunks';
-import { formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath } from '../../utils';
+import {
+  discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
+} from '../../utils';
 import { hidePostEditor } from '../data';
 import { selectThread } from '../data/selectors';
 import { createNewThread, fetchThread, updateExistingThread } from '../data/thunks';
@@ -77,19 +79,30 @@ function PostEditor({
   } = useSelector(selectAnonymousPostingConfig);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
-  const initialValues = {
-    postType: post?.type || 'discussion',
-    topic: post?.topicId || topicId || nonCoursewareTopics?.[0]?.id,
-    title: post?.title || '',
-    comment: post?.rawBody || '',
-    follow: post?.following ?? true,
-    anonymous: allowAnonymous ? false : undefined,
-    anonymousToPeers: allowAnonymousToPeers ? false : undefined,
+  let initialValues = {
+    postType: 'discussion',
+    topic: topicId || nonCoursewareTopics?.[0]?.id,
+    title: '',
+    comment: '',
+    follow: true,
+    anonymous: false,
+    anonymousToPeers: false,
   };
+  if (editExisting) {
+    initialValues = {
+      postType: post.type || 'discussion',
+      topic: post.topicId || topicId || nonCoursewareTopics?.[0]?.id,
+      title: post.title || '',
+      comment: post.rawBody || '',
+      follow: (post.following === null || post.following === undefined) ? true : post.following,
+      anonymous: allowAnonymous ? false : undefined,
+      anonymousToPeers: allowAnonymousToPeers ? false : undefined,
+    };
+  }
   const canSelectCohort = authenticatedUser.administrator && !editExisting;
   const hideEditor = () => {
     if (editExisting) {
-      history.push(generatePath(commentsPagePath, {
+      history.push(discussionsPath(commentsPagePath, {
         courseId,
         topicId,
         postId,
@@ -109,7 +122,7 @@ function PostEditor({
     } else {
       const cohort = canSelectCohort
         // null stands for no cohort restriction ("All learners" option)
-        ? (values.cohort ?? null)
+        ? (values.cohort || null)
         // if not allowed to set cohort, always undefined, so no value is sent to backend
         : undefined;
       dispatch(createNewThread({
@@ -153,9 +166,11 @@ function PostEditor({
             .required(intl.formatMessage(messages.commentError)),
           follow: Yup.bool()
             .default(true),
-          anonymous: Yup.bool().default(false)
+          anonymous: Yup.bool()
+            .default(false)
             .nullable(),
-          anonymousToPeers: Yup.bool().default(false)
+          anonymousToPeers: Yup.bool()
+            .default(false)
             .nullable(),
           cohort: Yup.string(),
         })}
@@ -229,22 +244,22 @@ function PostEditor({
             </Form.Group>
             {canSelectCohort
               && (
-              <Form.Group className="w-50 d-inline-block pl-2">
-                <Form.Control
-                  name="cohort"
-                  as="select"
-                  value={values.cohort}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  aria-describedby="cohortVisiblityInput"
-                  floatingLabel={intl.formatMessage(messages.cohortVisibility)}
-                >
-                  <option value="">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
-                  {cohorts.map(cohort => (
-                    <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
-                  ))}
-                </Form.Control>
-              </Form.Group>
+                <Form.Group className="w-50 d-inline-block pl-2">
+                  <Form.Control
+                    name="cohort"
+                    as="select"
+                    value={values.cohort}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    aria-describedby="cohortVisiblityInput"
+                    floatingLabel={intl.formatMessage(messages.cohortVisibility)}
+                  >
+                    <option value="">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
+                    {cohorts.map(cohort => (
+                      <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
               )}
           </div>
           <div className="border-bottom my-1" />

@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-import { generatePath, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
+import { discussionsPath } from '../../utils';
 import { selectTopicFilter, selectTopicsInCategory } from '../data/selectors';
 import Topic from './topic/Topic';
 
@@ -42,7 +43,7 @@ function TopicGroup({
     >
       <Link
         className="topic-name list-group-item p-4 text-primary-500"
-        to={generatePath(Routes.TOPICS.CATEGORY, {
+        to={discussionsPath(Routes.TOPICS.CATEGORY, {
           courseId,
           category,
         })}

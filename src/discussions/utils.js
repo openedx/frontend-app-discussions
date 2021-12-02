@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { getIn } from 'formik';
-import { useRouteMatch } from 'react-router';
+import { generatePath, useRouteMatch } from 'react-router';
 
 import {
   Delete, Edit, Flag, Pin, QuestionAnswer, VerifiedBadge,
@@ -200,3 +200,15 @@ export const formikCompatibleHandler = (formikHandler, name) => (value) => formi
     value,
   },
 });
+
+/**
+ * A wrapper for the generatePath function that generates a new path that keeps the existing
+ * query parameters intact
+ * @param path
+ * @param params
+ * @return {function(*): *&{pathname: *}}
+ */
+export const discussionsPath = (path, params) => {
+  const pathname = generatePath(path, params);
+  return (location) => ({ ...location, pathname });
+};
