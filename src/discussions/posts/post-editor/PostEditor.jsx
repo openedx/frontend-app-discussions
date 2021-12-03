@@ -171,6 +171,8 @@ function PostEditor({
     };
   }
 
+  const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
+
   return (
     <Formik
       enableReinitialize
@@ -302,6 +304,7 @@ function PostEditor({
           </Form.Group>
           <div className="py-2">
             <TinyMCEEditor
+              id={postEditorId}
               value={values.comment}
               onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
               onBlur={formikCompatibleHandler(handleBlur, 'comment')}
