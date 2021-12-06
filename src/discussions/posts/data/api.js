@@ -77,6 +77,7 @@ export async function getThread(threadId) {
  * @param {ThreadType} type The thread's type (either "question" or "discussion")
  * @param {string} title
  * @param {string} content
+ * @param {number} cohort
  * @param {boolean} following Follow the thread after creating
  * @param {boolean} anonymous Should the thread be anonymous to all users
  * @param {boolean} anonymousToPeers Should the thread be anonymous to peers

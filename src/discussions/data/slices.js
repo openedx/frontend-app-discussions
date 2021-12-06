@@ -10,6 +10,14 @@ const configSlice = createSlice({
     blackouts: [],
     allowAnonymous: false,
     allowAnonymousToPeers: false,
+    userRoles: [],
+    userIsPrivileged: false,
+    settings: {
+      divisionScheme: 'none',
+      alwaysDivideInlineDiscussions: false,
+      dividedInlineDiscussions: [],
+      dividedCourseWideDiscussions: [],
+    },
   },
   reducers: {
     fetchConfigRequest: (state) => {

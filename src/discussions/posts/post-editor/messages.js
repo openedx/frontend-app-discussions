@@ -93,6 +93,10 @@ const messages = defineMessages({
     id: 'discussions.editor.submit',
     defaultMessage: 'Submit',
   },
+  submitting: {
+    id: 'discussions.editor.submitting',
+    defaultMessage: 'Submitting',
+  },
   cancel: {
     id: 'discussions.editor.cancel',
     defaultMessage: 'Cancel',

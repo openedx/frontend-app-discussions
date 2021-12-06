@@ -14,6 +14,9 @@ export const selectCoursewareTopics = state => state.topics.categoryIds.map(cate
   name: category,
   children: state.topics.topicsInCategory[category].map(id => state.topics.topics[id]),
 }));
+
+export const selectNonCoursewareIds = state => state.topics.nonCoursewareIds;
+
 export const selectNonCoursewareTopics = state => state.topics.nonCoursewareIds.map(id => state.topics.topics[id]);
 
 export const selectTopic = topicId => state => state.topics.topics[topicId];

@@ -3,7 +3,7 @@ import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
 import { getHttpErrorStatus } from '../utils';
-import { getDiscussionsConfig } from './api';
+import { getDiscussionsConfig, getDiscussionsSettings } from './api';
 import {
   fetchConfigDenied, fetchConfigFailed, fetchConfigRequest, fetchConfigSuccess,
 } from './slices';
@@ -17,8 +17,12 @@ export function fetchCourseConfig(courseId) {
   return async (dispatch) => {
     try {
       dispatch(fetchConfigRequest());
-      const data = await getDiscussionsConfig(courseId);
-      dispatch(fetchConfigSuccess(camelCaseObject(data)));
+      const config = await getDiscussionsConfig(courseId);
+      if (config.user_is_privileged) {
+        const settings = await getDiscussionsSettings(courseId);
+        Object.assign(config, { settings });
+      }
+      dispatch(fetchConfigSuccess(camelCaseObject(config)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchConfigDenied());
