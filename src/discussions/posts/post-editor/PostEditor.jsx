@@ -19,7 +19,6 @@ import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { selectAnonymousPostingConfig, selectDivisionSettings, selectUserIsPrivileged } from '../../data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
-import { fetchCourseTopics } from '../../topics/data/thunks';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
 } from '../../utils';
@@ -136,7 +135,6 @@ function PostEditor({
   };
 
   useEffect(() => {
-    dispatch(fetchCourseTopics(courseId));
     if (userIsPrivileged) {
       dispatch(fetchCourseCohorts(courseId));
     }

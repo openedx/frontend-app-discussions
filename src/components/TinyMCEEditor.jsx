@@ -63,6 +63,14 @@ export default function TinyMCEEditor(props) {
     }
   };
 
+  let contentStyle;
+  // In the test environment this causes an error so set styles to empty since they aren't needed for testing.
+  try {
+    contentStyle = [contentCss, contentUiCss, edxBrandCss].join('\n');
+  } catch (err) {
+    contentStyle = '';
+  }
+
   return (
     <Editor
       init={{
@@ -83,7 +91,7 @@ export default function TinyMCEEditor(props) {
           + ' | openedx_html'
           + ' | undo redo',
         content_css: false,
-        content_style: [contentCss, contentUiCss, edxBrandCss].join('\n'),
+        content_style: contentStyle,
         images_upload_handler: uploadHandler,
         setup,
       }}
