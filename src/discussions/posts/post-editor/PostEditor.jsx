@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -7,17 +7,18 @@ import { useHistory, useParams } from 'react-router';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
-import { Card, Form, StatefulButton } from '@edx/paragon';
+import {
+  Button, Card, Form, Spinner, StatefulButton,
+} from '@edx/paragon';
 import { Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
+import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { selectAnonymousPostingConfig } from '../../data/selectors';
-import { selectCoursewareTopics, selectNonCoursewareTopics } from '../../topics/data/selectors';
-import { fetchCourseTopics } from '../../topics/data/thunks';
+import { selectAnonymousPostingConfig, selectDivisionSettings, selectUserIsPrivileged } from '../../data/selectors';
+import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
 } from '../../utils';
@@ -62,8 +63,8 @@ function PostEditor({
   intl,
   editExisting,
 }) {
-  const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
+  const [submitting, dispatchSubmit] = useDispatchWithState();
   const history = useHistory();
   const commentsPagePath = useCommentsPagePath();
   const {
@@ -73,33 +74,26 @@ function PostEditor({
   } = useParams();
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
+  const nonCoursewareIds = useSelector(selectNonCoursewareIds);
   const {
     allowAnonymous,
     allowAnonymousToPeers,
   } = useSelector(selectAnonymousPostingConfig);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
-  let initialValues = {
-    postType: 'discussion',
-    topic: topicId || nonCoursewareTopics?.[0]?.id,
-    title: '',
-    comment: '',
-    follow: true,
-    anonymous: false,
-    anonymousToPeers: false,
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const settings = useSelector(selectDivisionSettings);
+  const canSelectCohort = (tId) => {
+    // If the user isn't privileged, they can't edit the cohort.
+    // If the topic is being edited the cohort can't be changed.
+    if (!userIsPrivileged || editExisting) {
+      return false;
+    }
+    if (nonCoursewareIds.includes(tId)) {
+      return settings.dividedCourseWideDiscussions.includes(tId);
+    }
+    return settings.alwaysDivideInlineDiscussions || settings.dividedInlineDiscussions.includes(tId);
   };
-  if (editExisting) {
-    initialValues = {
-      postType: post.type || 'discussion',
-      topic: post.topicId || topicId || nonCoursewareTopics?.[0]?.id,
-      title: post.title || '',
-      comment: post.rawBody || '',
-      follow: (post.following === null || post.following === undefined) ? true : post.following,
-      anonymous: allowAnonymous ? false : undefined,
-      anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    };
-  }
-  const canSelectCohort = authenticatedUser.administrator && !editExisting;
   const hideEditor = () => {
     if (editExisting) {
       history.push(discussionsPath(commentsPagePath, {
@@ -113,27 +107,27 @@ function PostEditor({
 
   const submitForm = async (values) => {
     if (editExisting) {
-      dispatch(updateExistingThread(postId, {
+      await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
         type: values.postType,
         title: values.title,
         content: values.comment,
       }));
     } else {
-      const cohort = canSelectCohort
+      const cohort = canSelectCohort(values.topic)
         // null stands for no cohort restriction ("All learners" option)
         ? (values.cohort || null)
         // if not allowed to set cohort, always undefined, so no value is sent to backend
         : undefined;
-      dispatch(createNewThread({
+      await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
         type: values.postType,
         title: values.title,
         content: values.comment,
         following: values.following,
-        anonymous: values.anonymous,
-        anonymousToPeers: values.anonymousToPeers,
+        anonymous: allowAnonymous ? values.anonymous : undefined,
+        anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
       }));
     }
@@ -141,14 +135,41 @@ function PostEditor({
   };
 
   useEffect(() => {
-    dispatch(fetchCourseTopics(courseId));
-    if (canSelectCohort) {
+    if (userIsPrivileged) {
       dispatch(fetchCourseCohorts(courseId));
     }
     if (editExisting) {
       dispatch(fetchThread(postId));
     }
   }, [courseId, editExisting]);
+
+  if (editExisting && !post) {
+    return (
+      <div className="m-4 card p-4 align-items-center">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+  let initialValues = {
+    postType: 'discussion',
+    topic: topicId || nonCoursewareTopics?.[0]?.id,
+    title: '',
+    comment: '',
+    follow: true,
+    anonymous: false,
+    anonymousToPeers: false,
+  };
+  if (editExisting) {
+    initialValues = {
+      postType: post.type,
+      topic: post.topicId,
+      title: post.title,
+      comment: post.rawBody,
+      follow: (post.following === null || post.following === undefined) ? true : post.following,
+      anonymous: allowAnonymous ? false : undefined,
+      anonymousToPeers: allowAnonymousToPeers ? false : undefined,
+    };
+  }
 
   return (
     <Formik
@@ -172,9 +193,8 @@ function PostEditor({
           anonymousToPeers: Yup.bool()
             .default(false)
             .nullable(),
-          cohort: Yup.string(),
+          cohort: Yup.string().nullable().default(null),
         })}
-      initialErrors={{}}
       onSubmit={submitForm}
     >{
       ({
@@ -242,7 +262,7 @@ function PostEditor({
                 ))}
               </Form.Control>
             </Form.Group>
-            {canSelectCohort
+            {canSelectCohort(values.topic)
               && (
                 <Form.Group className="w-50 d-inline-block pl-2">
                   <Form.Control
@@ -251,7 +271,6 @@ function PostEditor({
                     value={values.cohort}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    aria-describedby="cohortVisiblityInput"
                     floatingLabel={intl.formatMessage(messages.cohortVisibility)}
                   >
                     <option value="">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
@@ -334,17 +353,17 @@ function PostEditor({
             )}
 
           <div className="d-flex justify-content-end">
-            <StatefulButton
-              labels={{
-                default: intl.formatMessage(messages.cancel),
-              }}
+            <Button
               variant="outline-primary"
               onClick={hideEditor}
-            />
+            >{intl.formatMessage(messages.cancel)}
+            </Button>
             <StatefulButton
               labels={{
                 default: intl.formatMessage(messages.submit),
+                pending: intl.formatMessage(messages.submitting),
               }}
+              state={submitting ? 'pending' : 'default'}
               className="ml-2"
               variant="primary"
               onClick={handleSubmit}

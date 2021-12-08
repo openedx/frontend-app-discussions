@@ -20,3 +20,13 @@ export async function getDiscussionsConfig(courseId) {
   const { data } = await getAuthenticatedHttpClient().get(url);
   return data;
 }
+
+/**
+ * Get discussions course config
+ * @param {string} courseId
+ */
+export async function getDiscussionsSettings(courseId) {
+  const url = `${courseConfigApiUrl}${courseId}/settings`;
+  const { data } = await getAuthenticatedHttpClient().get(url);
+  return data;
+}
