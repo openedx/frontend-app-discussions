@@ -21,12 +21,12 @@ function Topic({ topic }) {
     {
       key: 'discussions',
       icon: PostIcon,
-      count: topic?.threadCounts?.discussions || 0,
+      count: topic.threadCounts?.discussion || 0,
     },
     {
       key: 'questions',
       icon: Help,
-      count: topic?.threadCounts?.questions || 0,
+      count: topic.threadCounts?.question || 0,
     },
   ];
   return (

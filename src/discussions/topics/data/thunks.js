@@ -11,13 +11,13 @@ function normaliseTopics(data) {
   const categoryIds = [];
   data.coursewareTopics.forEach(category => {
     topicsInCategory[category.name] = category.children.map(topic => {
-      topics[topic.id] = { id: topic.id, name: topic.name, categoryId: category.name };
+      topics[topic.id] = { ...topic, categoryId: category.name };
       return topic.id;
     });
     categoryIds.push(category.name);
   });
   const nonCoursewareIds = data.nonCoursewareTopics.map(topic => {
-    topics[topic.id] = { id: topic.id, name: topic.name };
+    topics[topic.id] = topic;
     return topic.id;
   });
   return {
