@@ -28,7 +28,7 @@ function Post({
   const topic = useSelector(selectTopic(post.topicId));
   const topicContext = useSelector(selectTopicContext(post.topicId));
   const actionHandlers = {
-    [ContentActions.EDIT_CONTENT]: () => history.push(`${location.pathname}/edit`),
+    [ContentActions.EDIT_CONTENT]: () => history.push({ ...location, pathname: `${location.pathname}/edit` }),
     // TODO: Add flow to confirm before deleting
     [ContentActions.DELETE]: () => dispatch(removeThread(post.id)),
     [ContentActions.CLOSE]: () => dispatch(updateExistingThread(post.id, { closed: !post.closed })),
