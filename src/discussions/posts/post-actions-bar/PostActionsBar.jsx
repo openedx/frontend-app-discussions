@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
@@ -9,6 +11,9 @@ import {
 } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
+import { Routes } from '../../../data/constants';
+import { DiscussionContext } from '../../common/context';
+import { discussionsPath } from '../../utils';
 import { setSearchQuery, showPostEditor } from '../data';
 import messages from './messages';
 
@@ -17,6 +22,9 @@ function PostActionsBar({
   inContext,
 }) {
   const dispatch = useDispatch();
+  const { courseId } = useContext(DiscussionContext);
+  const location = useLocation();
+  const history = useHistory();
   // TODO: Use a postMessage based API to close the in-context discussion here.
   const handleCloseInContext = () => null;
   return (
@@ -25,7 +33,10 @@ function PostActionsBar({
         <>
           <SearchField
             onClear={() => dispatch(setSearchQuery(''))}
-            onSubmit={(value) => dispatch(setSearchQuery(value))}
+            onSubmit={(value) => {
+              dispatch(setSearchQuery(value));
+              history.push(discussionsPath(Routes.POSTS.ALL_POSTS, { courseId })(location));
+            }}
             placeholder={intl.formatMessage(messages.searchAllPosts)}
           />
           <div className="border-right mr-3 ml-4" />
