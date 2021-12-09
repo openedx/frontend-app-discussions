@@ -82,7 +82,6 @@ export default function TinyMCEEditor(props) {
         a11y_advanced_options: true,
         autosave_interval: '1s',
         autosave_restore_when_empty: true,
-        autosave_prefix: 'tinymce-autosave-{path}{query}',
         plugins: 'autosave codesample link lists image imagetools code',
         toolbar: 'formatselect | bold italic underline'
           + ' | link blockquote openedx_code image'

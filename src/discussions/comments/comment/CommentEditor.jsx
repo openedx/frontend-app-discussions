@@ -27,6 +27,9 @@ function CommentEditor({
     }
     onCloseEditor();
   };
+  // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
+  // the current comment id, or the current comment parent or the curren thread.
+  const editorId = `comment-editor-${comment.id || comment.parentId || comment.threadId}`;
   return (
     <Formik
       initialValues={{ comment: comment.rawBody }}
@@ -48,6 +51,7 @@ function CommentEditor({
         <>
           <Form onSubmit={handleSubmit}>
             <TinyMCEEditor
+              id={editorId}
               value={values.comment}
               onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
               onBlur={formikCompatibleHandler(handleBlur, 'comment')}
