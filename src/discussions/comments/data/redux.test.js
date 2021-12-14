@@ -303,4 +303,68 @@ describe('Comments/Responses data layer tests', () => {
         'comment-9',
       ]);
   });
+
+  test('correctly handles thread comments pagination after posting a new comment', async () => {
+    const threadId = 'test-thread';
+    // New comments are always unendorsed, so we only care about those here
+    const endorsed = EndorsementStatus.UNENDORSED;
+
+    // Build all comments first, so we can paginate over them and they
+    // keep a previous creation timestamp
+    const allComments = Factory.buildList('comment', 4, { thread_id: threadId });
+
+    // Load the first page of comments
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, {
+        results: allComments.slice(0, 3),
+        pagination: { count: 4, numPages: 2 },
+      });
+    await executeThunk(fetchThreadComments(threadId, { endorsed }), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInThreads[threadId][endorsed])
+      .toEqual([
+        'comment-1',
+        'comment-2',
+        'comment-3',
+      ]);
+
+    // Post new comment
+    const comment = Factory.build('comment', { thread_id: threadId });
+    allComments.push(comment);
+    axiosMock.onPost(commentsApiUrl)
+      .reply(200, comment);
+    await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInThreads[threadId][endorsed])
+      .toEqual([
+        'comment-1',
+        'comment-2',
+        'comment-3',
+        // our comment was appended to the end
+        'comment-5',
+      ]);
+
+    // Somebody else posted a new response now
+    allComments.push(Factory.build('comment', { thread_id: threadId }));
+
+    // Load next comment page
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, {
+        results: allComments.slice(3, 6),
+        pagination: { count: 6, numPages: 2 },
+      });
+    await executeThunk(fetchThreadComments(threadId, { endorsed }), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInThreads[threadId][endorsed])
+      .toEqual([
+        'comment-1',
+        'comment-2',
+        'comment-3',
+        'comment-4',
+        // our comment was pushed down
+        'comment-5',
+        // the newer comment is placed correctly
+        'comment-6',
+      ]);
+  });
 });
