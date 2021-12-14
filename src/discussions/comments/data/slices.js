@@ -34,8 +34,13 @@ const commentsSlice = createSlice({
       state.commentsInThreads[threadId] = state.commentsInThreads[threadId] || {};
       state.pagination[threadId] = state.pagination[threadId] || {};
       state.commentsInThreads[threadId][endorsed] = [
-        ...(state.commentsInThreads[threadId][endorsed] || []),
-        ...(payload.commentsInThreads[threadId] || []),
+        // Newly posted comments will appear twice when fetching more pages.
+        // We use a Set here to remove duplicate entries, then spread it
+        // back into an array.
+        ...new Set([
+          ...(state.commentsInThreads[threadId][endorsed] || []),
+          ...(payload.commentsInThreads[threadId] || []),
+        ]),
       ];
       state.pagination[threadId][endorsed] = {
         currentPage: payload.page,
@@ -43,6 +48,15 @@ const commentsSlice = createSlice({
         hasMorePages: Boolean(payload.pagination.next),
       };
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
+      // We sort the comments by creation time.
+      // This way our new comments are pushed down to the correct
+      // position when more pages of older comments are loaded.
+      state.commentsInThreads[threadId][endorsed].sort(
+        (a, b) => (
+          Date.parse(state.commentsById[a].createdAt)
+          - Date.parse(state.commentsById[b].createdAt)
+        ),
+      );
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -62,10 +76,18 @@ const commentsSlice = createSlice({
     fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.commentsInComments[payload.commentId] = [
-        ...(state.commentsInComments[payload.commentId] || []),
-        ...(payload.commentsInComments[payload.commentId] || []),
+        ...new Set([
+          ...(state.commentsInComments[payload.commentId] || []),
+          ...(payload.commentsInComments[payload.commentId] || []),
+        ]),
       ];
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
+      state.commentsInComments[payload.commentId].sort(
+        (a, b) => (
+          Date.parse(state.commentsById[a].createdAt)
+          - Date.parse(state.commentsById[b].createdAt)
+        ),
+      );
       state.responsesPagination[payload.commentId] = {
         currentPage: payload.page,
         totalPages: payload.pagination.numPages,
