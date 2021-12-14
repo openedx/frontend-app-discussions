@@ -328,7 +328,7 @@ describe('Comments/Responses data layer tests', () => {
         results: allComments.slice(3, 6),
         pagination: { count: 6, numPages: 2 },
       });
-    await executeThunk(fetchThreadComments(threadId, { endorsed }), store.dispatch, store.getState);
+    await executeThunk(fetchThreadComments(threadId, { page: 2, endorsed }), store.dispatch, store.getState);
 
     expect(store.getState().comments.commentsInThreads[threadId][endorsed])
       .toEqual([

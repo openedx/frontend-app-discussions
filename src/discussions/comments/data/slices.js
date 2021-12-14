@@ -28,20 +28,28 @@ const commentsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchCommentsSuccess: (state, { payload }) => {
-      const { threadId, endorsed } = payload;
+      const { threadId, page, endorsed } = payload;
       // force endorsed to be null, true or false
       state.status = RequestStatus.SUCCESSFUL;
       state.commentsInThreads[threadId] = state.commentsInThreads[threadId] || {};
       state.pagination[threadId] = state.pagination[threadId] || {};
-      state.commentsInThreads[threadId][endorsed] = [
-        // Newly posted comments will appear twice when fetching more pages.
-        // We use a Set here to remove duplicate entries, then spread it
-        // back into an array.
-        ...new Set([
-          ...(state.commentsInThreads[threadId][endorsed] || []),
-          ...(payload.commentsInThreads[threadId] || []),
-        ]),
-      ];
+
+      // Append to existing list of comments list
+      // only if the new fetch is due to pagination
+      if (page === 1) {
+        state.commentsInThreads[threadId][endorsed] = (payload.commentsInThreads[threadId] || []);
+      } else {
+        state.commentsInThreads[threadId][endorsed] = [
+          // Newly posted comments will appear twice when fetching more pages.
+          // We use a Set here to remove duplicate entries, then spread it
+          // back into an array.
+          ...new Set([
+            ...(state.commentsInThreads[threadId][endorsed] || []),
+            ...(payload.commentsInThreads[threadId] || []),
+          ]),
+        ];
+      }
+
       state.pagination[threadId][endorsed] = {
         currentPage: payload.page,
         totalPages: payload.pagination.numPages,
