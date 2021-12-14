@@ -229,4 +229,78 @@ describe('Comments/Responses data layer tests', () => {
       .not
       .toContain(commentId);
   });
+
+  test('correctly handles comment responses pagination after posting a new response', async () => {
+    const threadId = 'test-thread';
+    const commentId = 'comment-1';
+
+    // This will generate 3 comments, so the responses will start at id = 'comment-4'
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    // Build all comments first, so we can paginate over them and they
+    // keep a previous creation timestamp
+    const allResponses = Factory.buildList('comment', 4, {
+      thread_id: threadId,
+      parent_id: commentId,
+    });
+
+    // load the first page of responses
+    axiosMock.onGet(`${commentsApiUrl}${commentId}/`)
+      .reply(200, {
+        results: allResponses.slice(0, 3),
+        pagination: { count: 5, numPages: 2 },
+      });
+    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInComments[commentId])
+      .toEqual([
+        'comment-4',
+        'comment-5',
+        'comment-6',
+      ]);
+
+    // Post new response
+    const comment = Factory.build('comment', {
+      thread_id: threadId,
+      parent_id: commentId,
+    });
+    allResponses.push(comment);
+    axiosMock.onPost(commentsApiUrl)
+      .reply(200, comment);
+    await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInComments[commentId])
+      .toEqual([
+        'comment-4',
+        'comment-5',
+        'comment-6',
+        // our comment
+        'comment-8',
+      ]);
+
+    // Someone else posted a new response now
+    allResponses.push(Factory.build('comment', { parent_id: commentId, thread_id: threadId }));
+
+    // Load next comment page
+    axiosMock.onGet(`${commentsApiUrl}${commentId}/`)
+      .reply(200, {
+        results: allResponses.slice(3, 6),
+        pagination: { count: 6, numPages: 2 },
+      });
+    await executeThunk(fetchCommentResponses(commentId, { page: 2 }), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInComments[commentId])
+      .toEqual([
+        'comment-4',
+        'comment-5',
+        'comment-6',
+        'comment-7',
+        // our comment was pushed down
+        'comment-8',
+        // the newer comment is placed correctly
+        'comment-9',
+      ]);
+  });
 });
