@@ -254,13 +254,6 @@ describe('Comments/Responses data layer tests', () => {
       });
     await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
 
-    expect(store.getState().comments.commentsInComments[commentId])
-      .toEqual([
-        'comment-4',
-        'comment-5',
-        'comment-6',
-      ]);
-
     // Post new response
     const comment = Factory.build('comment', {
       thread_id: threadId,
@@ -270,15 +263,6 @@ describe('Comments/Responses data layer tests', () => {
     axiosMock.onPost(commentsApiUrl)
       .reply(200, comment);
     await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
-
-    expect(store.getState().comments.commentsInComments[commentId])
-      .toEqual([
-        'comment-4',
-        'comment-5',
-        'comment-6',
-        // our comment
-        'comment-8',
-      ]);
 
     // Someone else posted a new response now
     allResponses.push(Factory.build('comment', { parent_id: commentId, thread_id: threadId }));
@@ -304,10 +288,17 @@ describe('Comments/Responses data layer tests', () => {
       ]);
   });
 
-  test('correctly handles thread comments pagination after posting a new comment', async () => {
+  test.each([
+    {
+      threadType: 'discussion',
+      endorsed: EndorsementStatus.DISCUSSION,
+    },
+    {
+      threadType: 'unendorsed',
+      endorsed: EndorsementStatus.UNENDORSED,
+    },
+  ])('correctly handles `$threadType` thread comments pagination after posting a new comment', async ({ endorsed }) => {
     const threadId = 'test-thread';
-    // New comments are always unendorsed, so we only care about those here
-    const endorsed = EndorsementStatus.UNENDORSED;
 
     // Build all comments first, so we can paginate over them and they
     // keep a previous creation timestamp
@@ -321,28 +312,12 @@ describe('Comments/Responses data layer tests', () => {
       });
     await executeThunk(fetchThreadComments(threadId, { endorsed }), store.dispatch, store.getState);
 
-    expect(store.getState().comments.commentsInThreads[threadId][endorsed])
-      .toEqual([
-        'comment-1',
-        'comment-2',
-        'comment-3',
-      ]);
-
     // Post new comment
     const comment = Factory.build('comment', { thread_id: threadId });
     allComments.push(comment);
     axiosMock.onPost(commentsApiUrl)
       .reply(200, comment);
     await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
-
-    expect(store.getState().comments.commentsInThreads[threadId][endorsed])
-      .toEqual([
-        'comment-1',
-        'comment-2',
-        'comment-3',
-        // our comment was appended to the end
-        'comment-5',
-      ]);
 
     // Somebody else posted a new response now
     allComments.push(Factory.build('comment', { thread_id: threadId }));
