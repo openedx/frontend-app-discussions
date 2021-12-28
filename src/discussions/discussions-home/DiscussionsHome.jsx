@@ -55,10 +55,11 @@ export default function DiscussionsHome() {
     // stored in redirectToThread
     if (redirectToThread) {
       dispatch(clearRedirect());
-      history.push(discussionsPath(Routes.COMMENTS.PAGES['my-posts'], {
+      const newLocation = discussionsPath(Routes.COMMENTS.PAGES['my-posts'], {
         courseId,
         postId: redirectToThread.threadId,
-      }));
+      })(location);
+      history.push(newLocation);
     }
   }, [redirectToThread]);
 
@@ -98,7 +99,13 @@ export default function DiscussionsHome() {
               </Route>
               <Route path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS]} component={PostsView} />
               <Route path={Routes.TOPICS.PATH} component={TopicsView} />
-              <Redirect from={Routes.DISCUSSIONS.PATH} to={Routes.TOPICS.ALL} />
+              <Redirect
+                from={Routes.DISCUSSIONS.PATH}
+                to={{
+                  ...location,
+                  pathname: Routes.TOPICS.ALL,
+                }}
+              />
             </Switch>
           </div>
           <div className={classNames('bg-light-300 flex-column w-75 w-xs-100 w-xl-75', {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -66,6 +66,7 @@ function PostEditor({
   const dispatch = useDispatch();
   const [submitting, dispatchSubmit] = useDispatchWithState();
   const history = useHistory();
+  const location = useLocation();
   const commentsPagePath = useCommentsPagePath();
   const {
     courseId,
@@ -96,11 +97,12 @@ function PostEditor({
   };
   const hideEditor = () => {
     if (editExisting) {
-      history.push(discussionsPath(commentsPagePath, {
+      const newLocation = discussionsPath(commentsPagePath, {
         courseId,
         topicId,
         postId,
-      }));
+      })(location);
+      history.push(newLocation);
     }
     dispatch(hidePostEditor());
   };
