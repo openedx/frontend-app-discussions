@@ -140,7 +140,7 @@ export const TopicOrdering = {
   BY_COMMENT_COUNT: 'sortByCommentCount',
 };
 
-const BASE_PATH = '/discussions/:courseId';
+const BASE_PATH = '/:courseId';
 
 export const Routes = {
   DISCUSSIONS: {
