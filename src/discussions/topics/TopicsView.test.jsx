@@ -28,11 +28,11 @@ function renderComponent() {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[`/discussions/${courseId}/topics/`]}>
-          <Route path="/discussions/:courseId/topics/">
+        <MemoryRouter initialEntries={[`/${courseId}/topics/`]}>
+          <Route path="/:courseId/topics/">
             <TopicsView />
           </Route>
-          <Route path="/discussions/:courseId/category/:category">
+          <Route path="/:courseId/category/:category">
             <TopicsView />
           </Route>
           <Route
