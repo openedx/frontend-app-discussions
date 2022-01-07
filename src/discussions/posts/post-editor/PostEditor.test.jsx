@@ -29,7 +29,7 @@ const topicsApiUrl = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId
 let store;
 let axiosMock;
 
-async function renderComponent(editExisting = false, location = `/discussions/${courseId}/posts/`) {
+async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
   const path = editExisting ? Routes.POSTS.EDIT_POST : Routes.POSTS.NEW_POSTS;
   await render(
     <IntlProvider locale="en">
@@ -258,7 +258,7 @@ describe('PostEditor', () => {
       axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
         .reply(200, Factory.build('thread'));
       await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
-      await renderComponent(true, `/discussions/${courseId}/posts/${threadId}/edit`);
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
 
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
         userEvent.selectOptions(

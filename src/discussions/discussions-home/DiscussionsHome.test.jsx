@@ -13,7 +13,7 @@ import DiscussionsHome from './DiscussionsHome';
 let store;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
-function renderComponent(location = `/discussions/${courseId}/`) {
+function renderComponent(location = `/${courseId}/`) {
   render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
@@ -51,7 +51,7 @@ describe('DiscussionsHome', () => {
   });
 
   test('full view should show header and footer and hide close button', async () => {
-    renderComponent(`/discussions/${courseId}/topics`);
+    renderComponent(`/${courseId}/topics`);
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Close' }))
@@ -68,7 +68,7 @@ describe('DiscussionsHome', () => {
   });
 
   test('in-context view should hide header and footer and show close button', async () => {
-    renderComponent(`/discussions/${courseId}/topics?inContext`);
+    renderComponent(`/${courseId}/topics?inContext`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .not

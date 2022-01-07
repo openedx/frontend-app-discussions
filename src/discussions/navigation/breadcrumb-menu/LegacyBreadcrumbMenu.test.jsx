@@ -72,7 +72,7 @@ describe('LegacyBreadcrumbMenu', () => {
   });
 
   it('shows the category dropdown with a category selected', async () => {
-    renderComponent(`/discussions/${courseId}/category/category-1`);
+    renderComponent(`/${courseId}/category/category-1`);
 
     // The current category should be visible on the page
     const categoryDropdown = await screen.findByText('category-1');
@@ -101,7 +101,7 @@ describe('LegacyBreadcrumbMenu', () => {
   });
 
   it('shows the category correct dropdown labels with a topic selected', async () => {
-    renderComponent(`/discussions/${courseId}/topics/category-2-topic-1`);
+    renderComponent(`/${courseId}/topics/category-2-topic-1`);
 
     // Since a topic is selected, we have both a category and topic, so "show all shouldn't be visible"
     expect(screen.queryByText('Show all')).not.toBeInTheDocument();
