@@ -5,14 +5,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Avatar } from '@edx/paragon';
+import { Avatar, useToggle } from '@edx/paragon';
 
 import { ContentActions } from '../../../data/constants';
+import { DeleteConfirmation } from '../../common';
 import ActionsDropdown from '../../common/ActionsDropdown';
 import AlertBanner from '../../common/AlertBanner';
 import AuthorLabel from '../../common/AuthorLabel';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
 import { editComment, removeComment } from '../data/thunks';
+import messages from '../messages';
 import CommentEditor from './CommentEditor';
 import { commentShape } from './proptypes';
 
@@ -23,16 +25,26 @@ function Reply({
 }) {
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
+  const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(reply.id, { endorsed: !reply.endorsed })),
-    // TODO: Add flow to confirm before deleting
-    [ContentActions.DELETE]: () => dispatch(removeComment(reply.id)),
+    [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   return (
-    <div className="d-flex my-2 flex-column">
+    <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`}>
+      <DeleteConfirmation
+        isOpen={isDeleting}
+        title={intl.formatMessage(messages.deleteCommentTitle)}
+        description={intl.formatMessage(messages.deleteCommentDescription)}
+        onClose={hideDeleteConfirmation}
+        onDelete={() => {
+          dispatch(removeComment(reply.id));
+          hideDeleteConfirmation();
+        }}
+      />
       <div className="d-flex flex-fill ml-6">
         <AlertBanner postType={null} content={reply} intl={intl} />
       </div>

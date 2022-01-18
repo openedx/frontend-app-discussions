@@ -9,18 +9,6 @@ import {
 import { ContentActions, Routes, ThreadType } from '../data/constants';
 import messages from './messages';
 
-export function buildIntlSelectionList(options, intl, messagesData) {
-  return Object.values(options)
-    .map(
-      option => (
-        {
-          label: intl.formatMessage(messagesData[option]),
-          value: option,
-        }
-      ),
-    );
-}
-
 /**
  * Get HTTP Error status from generic error.
  * @param error Generic caught error.

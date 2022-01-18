@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button } from '@edx/paragon';
+import { Button, useToggle } from '@edx/paragon';
 
 import { ContentActions } from '../../../data/constants';
-import { AlertBanner } from '../../common';
+import { AlertBanner, DeleteConfirmation } from '../../common';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -27,6 +27,7 @@ function Comment({
   const isNested = Boolean(comment.parentId);
   const inlineReplies = useSelector(selectCommentResponses(comment.id));
   const [isEditing, setEditing] = useState(false);
+  const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
@@ -39,8 +40,7 @@ function Comment({
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(comment.id, { endorsed: !comment.endorsed })),
-    // TODO: Add flow to confirm before deleting
-    [ContentActions.DELETE]: () => dispatch(removeComment(comment.id)),
+    [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
   };
   const handleLoadMoreComments = () => (
@@ -48,7 +48,17 @@ function Comment({
   );
 
   return (
-    <div className="discussion-comment d-flex flex-column card my-3">
+    <div className="discussion-comment d-flex flex-column card my-3" data-testid={`comment-${comment.id}`}>
+      <DeleteConfirmation
+        isOpen={isDeleting}
+        title={intl.formatMessage(messages.deleteResponseTitle)}
+        description={intl.formatMessage(messages.deleteResponseDescription)}
+        onClose={hideDeleteConfirmation}
+        onDelete={() => {
+          dispatch(removeComment(comment.id));
+          hideDeleteConfirmation();
+        }}
+      />
       <AlertBanner postType={postType} content={comment} intl={intl} />
       <div className="d-flex flex-column p-4">
         <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
