@@ -8,10 +8,9 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
 import { ContentActions } from '../../../data/constants';
-import { DeleteConfirmation } from '../../common';
-import ActionsDropdown from '../../common/ActionsDropdown';
-import AlertBanner from '../../common/AlertBanner';
-import AuthorLabel from '../../common/AuthorLabel';
+import {
+  ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
+} from '../../common';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
 import { editComment, removeComment } from '../data/thunks';
 import messages from '../messages';

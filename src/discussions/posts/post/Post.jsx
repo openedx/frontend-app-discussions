@@ -47,7 +47,7 @@ function Post({
         onClose={hideDeleteConfirmation}
         onDelete={() => {
           dispatch(removeThread(post.id));
-          history.goBack();
+          history.push('.');
           hideDeleteConfirmation();
         }}
       />
