@@ -62,6 +62,14 @@ const messages = defineMessages({
     defaultMessage: 'Everyone',
     description: 'Cohort visibility indicator for all people',
   },
+  deletePostTitle: {
+    id: 'discussions.editor.delete.post.title',
+    defaultMessage: 'Delete post',
+  },
+  deletePostDescription: {
+    id: 'discussions.editor.delete.post.description',
+    defaultMessage: 'Are you sure you want to permanently delete this post?',
+  },
 });
 
 export default messages;

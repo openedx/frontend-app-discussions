@@ -1,5 +1,5 @@
 import {
-  act, fireEvent, render, screen, waitFor,
+  act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -40,7 +40,7 @@ function mockAxiosReturnPagedComments() {
             endorsed,
           },
         })
-        .reply(200, Factory.build('commentsResult', null, {
+        .reply(200, Factory.build('commentsResult', { can_delete: true }, {
           threadId: postId,
           page,
           pageSize: 1,
@@ -111,6 +111,13 @@ describe('CommentsView', () => {
 
   describe('for discussion thread', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
+
+    it("shown spinner when post isn't loaded", async () => {
+      renderComponent('unloaded-id');
+      expect(await screen.findByTestId('loading-indicator'))
+        .toBeInTheDocument();
+    });
+
     it('initially loads only the first page', async () => {
       renderComponent(discussionPostId);
       expect(await screen.findByText('comment number 1', { exact: false }))
@@ -254,7 +261,46 @@ describe('CommentsView', () => {
       }
 
       await screen.findByText('comment number 8', { exact: false });
-      await expect(findLoadMoreCommentsResponsesButton()).rejects.toThrow();
+      await expect(findLoadMoreCommentsResponsesButton())
+        .rejects
+        .toThrow();
+    });
+  });
+
+  describe.each([
+    { component: 'post', testId: 'post-thread-1' },
+    { component: 'comment', testId: 'comment-comment-1' },
+    { component: 'reply', testId: 'reply-comment-7' },
+  ])('delete confirmation modal', ({
+    component,
+    testId,
+  }) => {
+    test(`for ${component}`, async () => {
+      await renderComponent(discussionPostId);
+      // Wait for the content to load
+      await screen.findByText('comment number 7', { exact: false });
+      const content = screen.getByTestId(testId);
+      const actionsButton = within(content)
+        .getAllByRole('button', { name: /actions menu/i })[0];
+      act(() => {
+        fireEvent.click(actionsButton);
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
+        .not
+        .toBeInTheDocument();
+      const deleteButton = within(content)
+        .queryByRole('button', { name: /delete/i });
+      act(() => {
+        fireEvent.click(deleteButton);
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
+        .toBeInTheDocument();
+      act(() => {
+        fireEvent.click(screen.queryByRole('button', { name: /delete/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
+        .not
+        .toBeInTheDocument();
     });
   });
 });

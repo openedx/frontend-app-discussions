@@ -115,6 +115,22 @@ const messages = defineMessages({
     id: 'discussions.editor.error.empty',
     defaultMessage: 'Post content cannot be empty.',
   },
+  deleteResponseTitle: {
+    id: 'discussions.editor.delete.response.title',
+    defaultMessage: 'Delete response',
+  },
+  deleteResponseDescription: {
+    id: 'discussions.editor.delete.response.description',
+    defaultMessage: 'Are you sure you want to permanently delete this response?',
+  },
+  deleteCommentTitle: {
+    id: 'discussions.editor.delete.comment.title',
+    defaultMessage: 'Delete comment',
+  },
+  deleteCommentDescription: {
+    id: 'discussions.editor.delete.comment.description',
+    defaultMessage: 'Are you sure you want to permanently delete this comment?',
+  },
 });
 
 export default messages;

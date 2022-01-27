@@ -24,6 +24,7 @@ Factory.define('thread')
     author: 'test_user',
     author_label: 'Staff',
     abuse_flagged: false,
+    can_delete: true,
     voted: false,
     vote_count: 1,
     course_id: 'course-v1:Test+TestX+Test_Course',

@@ -66,6 +66,16 @@ const messages = defineMessages({
     defaultMessage: 'Unmark as answered',
     description: 'Action to unmark a comment as answering a post',
   },
+  deleteConfirmationCancel: {
+    id: 'discussions.delete.confirmation.button.cancel',
+    defaultMessage: 'Cancel',
+    description: 'Cancel button shown on delete confirmation dialog',
+  },
+  deleteConfirmationDelete: {
+    id: 'discussions.delete.confirmation.button.delete',
+    defaultMessage: 'Delete',
+    description: 'Delete button shown on delete confirmation dialog',
+  },
 });
 
 export default messages;

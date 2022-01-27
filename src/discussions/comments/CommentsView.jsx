@@ -117,7 +117,7 @@ function CommentsView({ intl }) {
   const thread = usePost(postId);
   if (!thread) {
     return (
-      <Spinner animation="border" variant="primary" />
+      <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );
   }
   return (

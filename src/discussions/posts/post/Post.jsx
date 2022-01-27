@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Hyperlink } from '@edx/paragon';
+import { Hyperlink, useToggle } from '@edx/paragon';
 
 import { ContentActions } from '../../../data/constants';
 import { selectTopicContext } from '../../../data/selectors';
-import { AlertBanner } from '../../common';
+import { AlertBanner, DeleteConfirmation } from '../../common';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import messages from './messages';
@@ -27,16 +27,30 @@ function Post({
   const dispatch = useDispatch();
   const topic = useSelector(selectTopic(post.topicId));
   const topicContext = useSelector(selectTopicContext(post.topicId));
+  const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const actionHandlers = {
-    [ContentActions.EDIT_CONTENT]: () => history.push({ ...location, pathname: `${location.pathname}/edit` }),
-    // TODO: Add flow to confirm before deleting
-    [ContentActions.DELETE]: () => dispatch(removeThread(post.id)),
+    [ContentActions.EDIT_CONTENT]: () => history.push({
+      ...location,
+      pathname: `${location.pathname}/edit`,
+    }),
+    [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.CLOSE]: () => dispatch(updateExistingThread(post.id, { closed: !post.closed })),
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged })),
   };
   return (
-    <div className="d-flex flex-column p-2.5 w-100 mw-100">
+    <div className="d-flex flex-column p-2.5 w-100 mw-100" data-testid={`post-${post.id}`}>
+      <DeleteConfirmation
+        isOpen={isDeleting}
+        title={intl.formatMessage(messages.deletePostTitle)}
+        description={intl.formatMessage(messages.deletePostDescription)}
+        onClose={hideDeleteConfirmation}
+        onDelete={() => {
+          dispatch(removeThread(post.id));
+          history.push('.');
+          hideDeleteConfirmation();
+        }}
+      />
       <div className="mb-4">
         <AlertBanner postType={post.type} content={post} />
       </div>
