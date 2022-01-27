@@ -61,7 +61,7 @@
     "yup": "0.31.1"
   },
   "devDependencies": {
-    "@edx/frontend-build": "8.1.6",
+    "@edx/frontend-build": "9.0.6",
     "@testing-library/jest-dom": "5.15.0",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
