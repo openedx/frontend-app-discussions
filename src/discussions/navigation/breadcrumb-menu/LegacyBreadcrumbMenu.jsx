@@ -3,8 +3,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-
 import { Routes } from '../../../data/constants';
 import {
   selectCategories,
@@ -15,7 +13,7 @@ import {
 import { discussionsPath } from '../../utils';
 import BreadcrumbDropdown from './BreadcrumbDropdown';
 
-function LegacyBreadcrumbMenu({ intl }) {
+function LegacyBreadcrumbMenu() {
   const {
     params: {
       courseId,
@@ -36,13 +34,10 @@ function LegacyBreadcrumbMenu({ intl }) {
       {isNonCoursewareTopic ? (
         <BreadcrumbDropdown
           currentItem={currentTopic}
-          intl={intl}
           itemLabelFunc={(item) => item?.name}
           itemActiveFunc={(topic) => topic?.id === currentTopicId}
           items={nonCoursewareTopics}
-          showAllPath={discussionsPath(Routes.TOPICS.ALL, {
-            courseId,
-          })}
+          showAllPath={discussionsPath(Routes.TOPICS.ALL, { courseId })}
           itemPathFunc={(topic) => discussionsPath(Routes.TOPICS.TOPIC, {
             courseId,
             topicId: topic.id,
@@ -51,13 +46,10 @@ function LegacyBreadcrumbMenu({ intl }) {
       ) : (
         <BreadcrumbDropdown
           currentItem={currentCategory}
-          intl={intl}
           itemLabelFunc={(catId) => catId}
           itemActiveFunc={(catId) => catId === currentCategory}
           items={categories}
-          showAllPath={discussionsPath(Routes.TOPICS.ALL, {
-            courseId,
-          })}
+          showAllPath={discussionsPath(Routes.TOPICS.ALL, { courseId })}
           itemPathFunc={(catId) => discussionsPath(Routes.TOPICS.CATEGORY, {
             courseId,
             category: catId,
@@ -69,7 +61,6 @@ function LegacyBreadcrumbMenu({ intl }) {
           <div className="d-flex py-2">/</div>
           <BreadcrumbDropdown
             currentItem={currentTopic}
-            intl={intl}
             itemLabelFunc={(item) => item?.name}
             itemActiveFunc={(topic) => topic?.id === currentTopicId}
             items={topicsInCategory}
@@ -88,8 +79,6 @@ function LegacyBreadcrumbMenu({ intl }) {
   );
 }
 
-LegacyBreadcrumbMenu.propTypes = {
-  intl: intlShape.isRequired,
-};
+LegacyBreadcrumbMenu.propTypes = {};
 
-export default injectIntl(LegacyBreadcrumbMenu);
+export default LegacyBreadcrumbMenu;

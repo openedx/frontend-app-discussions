@@ -7,19 +7,18 @@ import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
 import { discussionsPath } from '../../utils';
-import { selectTopicFilter, selectTopicsById } from '../data/selectors';
+import { selectTopicFilter, selectTopicsInCategory } from '../data/selectors';
 import Topic from './topic/Topic';
 
-function TopicGroup({
-  sequence,
+function LegacyTopicGroup({
+  id,
+  category,
 }) {
   const { courseId } = useParams();
-  const topicsIds = sequence.topics;
-  const topics = useSelector(selectTopicsById(topicsIds));
+  const topics = useSelector(selectTopicsInCategory(category));
   const filter = useSelector(selectTopicFilter);
-  const hasTopics = topics.length > 0;
   const matchesFilter = filter
-    ? sequence.displayName?.toLowerCase()
+    ? category?.toLowerCase()
       .includes(filter)
     : true;
   const topicElements = topics.filter(
@@ -32,36 +31,38 @@ function TopicGroup({
   )
     .map(topic => (<Topic topic={topic} key={topic.id} />));
   const hasFilteredSubtopics = (topicElements.length > 0);
-  if (!hasTopics || (!matchesFilter && !hasFilteredSubtopics)) {
+  if (!matchesFilter && !hasFilteredSubtopics) {
     return null;
   }
 
   return (
     <div
       className="discussion-topic-group d-flex flex-column"
-      data-topic-id={sequence.id}
+      data-topic-id={id}
       data-testid="topic-group"
     >
       <Link
         className="topic-name list-group-item p-4 text-primary-500"
         to={discussionsPath(Routes.TOPICS.CATEGORY, {
           courseId,
-          category: sequence.id,
+          category,
         })}
       >
-        {sequence.displayName}
+        {category}
       </Link>
       {topicElements}
     </div>
   );
 }
 
-TopicGroup.propTypes = {
-  sequence: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    displayName: PropTypes.string.isRequired,
-    topics: PropTypes.arrayOf(PropTypes.string).isRequired,
-  }).isRequired,
+LegacyTopicGroup.propTypes = {
+  id: PropTypes.string,
+  category: PropTypes.string,
 };
 
-export default TopicGroup;
+LegacyTopicGroup.defaultProps = {
+  id: null,
+  category: null,
+};
+
+export default LegacyTopicGroup;

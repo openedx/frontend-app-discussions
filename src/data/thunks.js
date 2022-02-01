@@ -15,7 +15,7 @@ function normaliseCourseBlocks({
   root,
   blocks,
 }) {
-  // This normalisation code is goes throught the block structure and converts it
+  // This normalisation code is goes through the block structure and converts it
   // to a format that's easier for the app to use.
   // It does a couple of things:
   // 1. It creates record of all topic ids, and their position in the course
@@ -30,37 +30,60 @@ function normaliseCourseBlocks({
   const blockData = {};
   blocks[root].children?.forEach(chapterId => {
     const chapterData = camelCaseObject(blocks[chapterId]);
-    chapters.push(chapterData);
+    chapterData.parent = root;
     blockData[chapterId] = chapterData;
     chapterData.topics = [];
 
     blocks[chapterId].children?.forEach(sequentialId => {
       blockData[sequentialId] = camelCaseObject(blocks[sequentialId]);
+      blockData[sequentialId].parent = chapterId;
       blockData[sequentialId].topics = [];
 
       blocks[sequentialId].children?.forEach(verticalId => {
         blockData[verticalId] = camelCaseObject(blocks[verticalId]);
+        blockData[verticalId].parent = sequentialId;
         blockData[verticalId].topics = [];
+        const { discussionsId } = blockData[verticalId];
 
-        blocks[verticalId].children?.forEach(discussionId => {
-          const discussion = camelCaseObject(blocks[discussionId]);
-          blockData[discussionId] = discussion;
-          // Add this topic id to the list of topics for the current chapter, sequential, and vertical
-          chapterData.topics.push(discussion.studentViewData.topicId);
-          blockData[sequentialId].topics.push(discussion.studentViewData.topicId);
-          blockData[verticalId].topics.push(discussion.studentViewData.topicId);
-          // Store the topic's context in the course in a map
-          topics[discussion.studentViewData.topicId] = {
+        if (discussionsId) {
+          chapterData.topics.push(blockData[verticalId].discussionsId);
+          blockData[sequentialId].topics.push(blockData[verticalId].discussionsId);
+          blockData[verticalId].topics.push(blockData[verticalId].discussionsId);
+          topics[discussionsId] = {
             chapterName: blockData[chapterId].displayName,
             verticalName: blockData[sequentialId].displayName,
             unitName: blockData[verticalId].displayName,
             unitLink: blockData[verticalId].lmsWebUrl,
           };
-        });
+        } else {
+          blocks[verticalId].children?.forEach(discussionId => {
+            const discussion = camelCaseObject(blocks[discussionId]);
+            const { topicId } = discussion.studentViewData;
+            blockData[discussionId] = discussion;
+            // Add this topic id to the list of topics for the current chapter, sequential, and vertical
+            chapterData.topics.push(topicId);
+            blockData[sequentialId].topics.push(topicId);
+            blockData[verticalId].topics.push(topicId);
+            // Store the topic's context in the course in a map
+            topics[topicId] = {
+              chapterName: blockData[chapterId].displayName,
+              verticalName: blockData[sequentialId].displayName,
+              unitName: blockData[verticalId].displayName,
+              unitLink: blockData[verticalId].lmsWebUrl,
+            };
+          });
+        }
       });
     });
+    if (chapterData.topics.length > 0) {
+      chapters.push(chapterData.id);
+    }
   });
-  return { chapters, blocks: blockData, topics };
+  return {
+    chapters,
+    blocks: blockData,
+    topics,
+  };
 }
 
 export function fetchCourseBlocks(courseId, username) {

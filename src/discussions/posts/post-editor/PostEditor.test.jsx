@@ -90,6 +90,7 @@ describe('PostEditor', () => {
     beforeEach(async () => {
       store = initializeStore({
         config: {
+          provider: 'legacy',
           allowAnonymous,
           allowAnonymousToPeers,
         },
@@ -142,6 +143,7 @@ describe('PostEditor', () => {
     async function setupData(config = {}, settings = {}) {
       store = initializeStore({
         config: {
+          provider: 'legacy',
           userRoles: ['Student', 'Moderator'],
           userIsPrivileged: true,
           settings: {

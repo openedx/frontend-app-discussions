@@ -14,9 +14,6 @@ const blocksSlice = createSlice({
     chapters: [],
     // Mapping of block keys to block data
     blocks: {},
-    currentChapter: null,
-    currentSequential: null,
-    currentVertical: null,
   },
   reducers: {
     fetchCourseBlocksRequest: (state) => {
@@ -32,18 +29,6 @@ const blocksSlice = createSlice({
     fetchCourseBlocksDenied: (state) => {
       state.status = RequestStatus.DENIED;
     },
-    setCurrentChapter: (state, { payload }) => {
-      state.currentChapter = payload;
-      state.currentSequential = null;
-      state.currentVertical = null;
-    },
-    setCurrentSequential: (state, { payload }) => {
-      state.currentSequential = payload;
-      state.currentVertical = null;
-    },
-    setCurrentVertical: (state, { payload }) => {
-      state.currentVertical = payload;
-    },
   },
 });
 
@@ -52,9 +37,6 @@ export const {
   fetchCourseBlocksSuccess,
   fetchCourseBlocksFailed,
   fetchCourseBlocksDenied,
-  setCurrentVertical,
-  setCurrentChapter,
-  setCurrentSequential,
 } = blocksSlice.actions;
 
 export const blocksReducer = blocksSlice.reducer;

@@ -6,9 +6,9 @@ const selectThreads = state => state.threads.threadsById;
 
 const mapIdsToThreads = (ids, threads) => ids.map(id => threads?.[id]);
 
-export const selectTopicThreads = topicId => createSelector(
+export const selectTopicThreads = topicIds => createSelector(
   [
-    state => state.threads.threadsInTopic[topicId] || [],
+    state => (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || []),
     selectThreads,
   ],
   mapIdsToThreads,

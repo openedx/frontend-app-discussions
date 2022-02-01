@@ -3,24 +3,20 @@ import React, { useContext, useEffect } from 'react';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useRouteMatch,
+  Redirect, Route, Switch, useHistory, useLocation, useRouteMatch,
 } from 'react-router';
 
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
 import { PostActionsBar } from '../../components';
-import { ALL_ROUTES, Routes } from '../../data/constants';
+import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { CommentsView } from '../comments';
 import { DiscussionContext } from '../common/context';
+import { selectDiscussionProvider } from '../data/selectors';
 import { fetchCourseConfig } from '../data/thunks';
-import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
+import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { PostEditor, PostsView } from '../posts';
 import { clearRedirect } from '../posts/data';
 import { TopicsView } from '../topics';
@@ -39,7 +35,12 @@ export default function DiscussionsHome() {
     params: { page },
   } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const { params } = useRouteMatch(ALL_ROUTES);
-  const { courseId, postId, topicId } = params;
+  const {
+    courseId,
+    postId,
+    topicId,
+    category,
+  } = params;
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
 
   // Display the content area if we are currently viewing/editing a post or creating one.
@@ -50,10 +51,15 @@ export default function DiscussionsHome() {
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
   );
+  const provider = useSelector(selectDiscussionProvider);
   useEffect(() => {
-    dispatch(fetchCourseConfig(courseId));
-    dispatch(fetchCourseTopics(courseId));
-    dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+    async function fetchBaseData() {
+      await dispatch(fetchCourseConfig(courseId));
+      await dispatch(fetchCourseTopics(courseId));
+      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+    }
+
+    fetchBaseData();
   }, [courseId]);
   useEffect(() => {
     // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
@@ -69,14 +75,14 @@ export default function DiscussionsHome() {
   }, [redirectToThread]);
 
   return (
-    <DiscussionContext.Provider
-      value={{
-        page,
-        courseId,
-        postId,
-        topicId,
-        inContext,
-      }}
+    <DiscussionContext.Provider value={{
+      page,
+      courseId,
+      postId,
+      topicId,
+      inContext,
+      category,
+    }}
     >
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
         <div className="d-flex flex-row justify-content-between shadow navbar fixed-top">
@@ -87,7 +93,7 @@ export default function DiscussionsHome() {
         </div>
         <Route
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-          component={LegacyBreadcrumbMenu}
+          component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
         />
         <div className="d-flex flex-row overflow-hidden">
           <div
@@ -102,7 +108,7 @@ export default function DiscussionsHome() {
                 <PostsView showOwnPosts />
               </Route>
               <Route
-                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS]}
+                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}
                 component={PostsView}
               />
               <Route path={Routes.TOPICS.PATH} component={TopicsView} />
@@ -117,27 +123,29 @@ export default function DiscussionsHome() {
           </div>
           <div
             className={classNames(
-              'bg-light-300 flex-column w-75 w-xs-100 w-xl-75 h-100 pb-2 overflow-auto',
+              'bg-light-300 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 pb-2 overflow-auto',
               {
                 'd-flex': displayContentArea,
                 'd-none': !displayContentArea,
               },
             )}
           >
-            {postEditorVisible ? (
-              <Route path={Routes.POSTS.NEW_POST}>
-                <PostEditor />
-              </Route>
-            ) : (
-              <Switch>
-                <Route path={Routes.POSTS.EDIT_POST}>
-                  <PostEditor editExisting />
+            <div className="d-flex flex-column w-100 mw-xl">
+              {postEditorVisible ? (
+                <Route path={Routes.POSTS.NEW_POST}>
+                  <PostEditor />
                 </Route>
-                <Route path={Routes.COMMENTS.PATH}>
-                  <CommentsView />
-                </Route>
-              </Switch>
-            )}
+              ) : (
+                <Switch>
+                  <Route path={Routes.POSTS.EDIT_POST}>
+                    <PostEditor editExisting />
+                  </Route>
+                  <Route path={Routes.COMMENTS.PATH}>
+                    <CommentsView />
+                  </Route>
+                </Switch>
+              )}
+            </div>
           </div>
         </div>
       </main>
