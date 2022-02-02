@@ -9,14 +9,12 @@ import { ThumbUpFilled, ThumbUpOutline } from '@edx/paragon/icons';
 
 import messages from './messages';
 
-function LikeButton(
-  {
-    count,
-    intl,
-    onClick,
-    voted,
-  },
-) {
+function LikeButton({
+  count,
+  intl,
+  onClick,
+  voted,
+}) {
   const handleClick = (e) => {
     e.preventDefault();
     if (onClick) {
@@ -29,7 +27,7 @@ function LikeButton(
     <div className="d-flex align-items-center align-content-center mr-4.5">
       <OverlayTrigger
         overlay={(
-          <Tooltip>
+          <Tooltip id={`like-${count}-tooltip`}>
             {intl.formatMessage(voted ? messages.removeLike : messages.like)}
           </Tooltip>
         )}

@@ -121,7 +121,7 @@ function PostEditor({
         type: values.postType,
         title: values.title,
         content: values.comment,
-        editReasonCode: values.editReasonCode || null,
+        editReasonCode: values.editReasonCode || undefined,
       }));
     } else {
       const cohort = canSelectCohort(values.topic)

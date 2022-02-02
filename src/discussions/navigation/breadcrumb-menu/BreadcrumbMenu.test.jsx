@@ -99,7 +99,7 @@ describe('BreadcrumbMenu', () => {
 
     renderComponent(`/${courseId}/category/${chapterKey}`, null, chapterKey);
 
-    waitFor(() => screen.findByText(blocksAPIResponse.blocks[chapterKey].display_name));
+    await waitFor(() => screen.findByText(blocksAPIResponse.blocks[chapterKey].display_name));
 
     const chapterDropdown = screen.queryByText(blocksAPIResponse.blocks[chapterKey].display_name);
     // Since a category is selected a subcategory dropdown should also be visible with "show all" selected by default

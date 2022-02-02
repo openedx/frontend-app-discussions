@@ -157,6 +157,10 @@ const messages = defineMessages({
     defaultMessage: 'Reason',
     description: 'Text shown to users to indicate why a post was edited, followed by a reason.',
   },
+  closedBy: {
+    id: 'discussions.post.closedBy',
+    defaultMessage: 'Post closed by',
+  },
 });
 
 export default messages;

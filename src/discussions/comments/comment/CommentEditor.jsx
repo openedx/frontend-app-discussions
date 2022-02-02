@@ -50,7 +50,7 @@ function CommentEditor({
             .required(),
           editReasonCode: Yup.string()
             .nullable()
-            .default(null),
+            .default(undefined),
         })}
       onSubmit={saveUpdatedComment}
     >

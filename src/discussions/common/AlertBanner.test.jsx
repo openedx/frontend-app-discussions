@@ -79,6 +79,13 @@ describe.each([
     props: { last_edit: { reason: 'test-reason', editorUsername: 'editor-user' } },
     expectText: [messages.editedBy.defaultMessage, messages.reason.defaultMessage, 'editor-user', 'test-reason'],
   },
+  {
+    label: 'closed post',
+    type: 'thread',
+    postType: null,
+    props: { closed: true, closeReason: 'test-close-reason', closedBy: 'closing-user' },
+    expectText: [messages.closedBy.defaultMessage, 'closing-user', 'test-close-reason'],
+  },
 ])('AlertBanner', ({
   label, type, postType, props, expectText,
 }) => {

@@ -77,7 +77,7 @@ describe('LegacyBreadcrumbMenu', () => {
   it('shows the category dropdown with a category selected', async () => {
     renderComponent(`/${courseId}/category/category-1`);
 
-    waitFor(() => screen.findByText('category-1'));
+    await waitFor(() => screen.findByText('category-1'));
     // The current category should be visible on the pagz
     const categoryDropdown = screen.queryByText('category-1');
     // Since a category is selected a subcategory dropdown should also be visible with "show all" selected by default

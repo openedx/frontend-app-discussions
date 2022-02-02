@@ -130,6 +130,7 @@ export async function postThread(
  * @param {boolean} closed
  * @param {boolean} pinned
  * @param {string} editReasonCode
+ * @param {string} closeReasonCode
  * @returns {Promise<{}>}
  */
 export async function updateThread(threadId, {
@@ -143,6 +144,8 @@ export async function updateThread(threadId, {
   following,
   closed,
   pinned,
+  editReasonCode,
+  closeReasonCode,
 } = {}) {
   const url = `${threadsApiUrl}${threadId}/`;
   const patchData = snakeCaseObject({
@@ -156,6 +159,8 @@ export async function updateThread(threadId, {
     following,
     closed,
     pinned,
+    editReasonCode,
+    closeReasonCode,
   });
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, patchData, { headers: { 'Content-Type': 'application/merge-patch+json' } });

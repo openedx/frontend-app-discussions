@@ -32,7 +32,7 @@ function PostFooter({
       />
       <OverlayTrigger
         overlay={(
-          <Tooltip>
+          <Tooltip id={`follow-${post.id}-tooltip`}>
             {intl.formatMessage(post.following ? messages.unfollow : messages.follow)}
           </Tooltip>
         )}
@@ -68,7 +68,7 @@ function PostFooter({
               <>
                 <OverlayTrigger
                   overlay={(
-                    <Tooltip>
+                    <Tooltip id={`visibility-${post.id}-tooltip`}>
                       {post.groupName || intl.formatMessage(messages.visibleToAll)}
                     </Tooltip>
                   )}
@@ -94,7 +94,7 @@ function PostFooter({
           && (
             <OverlayTrigger
               overlay={(
-                <Tooltip>
+                <Tooltip id={`closed-${post.id}-tooltip`}>
                   {intl.formatMessage(messages.postClosed)}
                 </Tooltip>
               )}
