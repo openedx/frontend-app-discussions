@@ -30,3 +30,12 @@ export async function getDiscussionsSettings(courseId) {
   const { data } = await getAuthenticatedHttpClient().get(url);
   return data;
 }
+
+/**
+ * Get the moderation settings
+ */
+export async function getModerationSettings() {
+  const url = `${apiBaseUrl}/api/discussion/v1/moderation_settings`;
+  const { data } = await getAuthenticatedHttpClient().get(url);
+  return data;
+}
