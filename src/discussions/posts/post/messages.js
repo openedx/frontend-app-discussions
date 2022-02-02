@@ -71,6 +71,31 @@ const messages = defineMessages({
     id: 'discussions.editor.delete.post.description',
     defaultMessage: 'Are you sure you want to permanently delete this post?',
   },
+  closePostModalTitle: {
+    id: 'discussions.post.closePostModal.title',
+    defaultMessage: 'Close post',
+    description: 'Title for the close post reason modal',
+  },
+  closePostModalText: {
+    id: 'discussions.post.closePostModal.text',
+    defaultMessage: 'Enter a reason for closing this post. This will only be displayed to other moderators.',
+    description: 'Description for the close post reason modal',
+  },
+  closePostModalReasonCodeInput: {
+    id: 'discussions.post.closePostModal.reasonCodeInput',
+    defaultMessage: 'Reason',
+    description: 'Label for the close reason code selector input',
+  },
+  closePostModalButtonCancel: {
+    id: 'discussions.post.closePostModal.cancel',
+    defaultMessage: 'Cancel',
+    description: 'Cancel button label for the close post reason modal',
+  },
+  closePostModalButtonConfirm: {
+    id: 'discussions.post.closePostModal.confirm',
+    defaultMessage: 'Close post',
+    description: 'Confirm button label for the close post reason modal',
+  },
   newLabel: {
     id: 'discussions.post.label.new',
     defaultMessage: '{count} new',

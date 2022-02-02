@@ -10,8 +10,10 @@ import { Hyperlink, useToggle } from '@edx/paragon';
 import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, DeleteConfirmation } from '../../common';
+import { selectModerationSettings } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
+import ClosePostReasonModal from './ClosePostReasonModal';
 import messages from './messages';
 import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
@@ -28,15 +30,24 @@ function Post({
   const topic = useSelector(selectTopic(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
-
+  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
       pathname: `${location.pathname}/edit`,
     }),
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.CLOSE]: () => dispatch(updateExistingThread(post.id, { closed: !post.closed })),
+    [ContentActions.CLOSE]: () => {
+      if (post.closed) {
+        dispatch(updateExistingThread(post.id, { closed: false }));
+      } else if (reasonCodesEnabled) {
+        showClosePostModal();
+      } else {
+        dispatch(updateExistingThread(post.id, { closed: true }));
+      }
+    },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged })),
   };
@@ -44,6 +55,7 @@ function Post({
   const getTopicCategoryName = topicData => (
     topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
   );
+
   return (
     <div className="d-flex flex-column p-2.5 w-100 mw-100" data-testid={`post-${post.id}`}>
       <DeleteConfirmation
@@ -77,6 +89,14 @@ function Post({
         </div>
       )}
       <PostFooter post={post} preview={preview} />
+      <ClosePostReasonModal
+        isOpen={isClosing}
+        onCancel={hideClosePostModal}
+        onConfirm={closeReasonCode => {
+          dispatch(updateExistingThread(post.id, { closed: true, closeReasonCode }));
+          hideClosePostModal();
+        }}
+      />
     </div>
   );
 }

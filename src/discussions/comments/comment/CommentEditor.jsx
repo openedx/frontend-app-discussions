@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
