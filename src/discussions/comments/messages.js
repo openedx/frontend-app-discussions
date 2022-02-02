@@ -98,6 +98,7 @@ const messages = defineMessages({
   submit: {
     id: 'discussions.editor.submit',
     defaultMessage: 'Submit',
+    description: 'Button to submit a response or comment',
   },
   submitting: {
     id: 'discussions.editor.submitting',
@@ -106,26 +107,47 @@ const messages = defineMessages({
   cancel: {
     id: 'discussions.editor.cancel',
     defaultMessage: 'Cancel',
+    description: 'Button to cancel posting a response or comment',
   },
   commentError: {
     id: 'discussions.editor.error.empty',
     defaultMessage: 'Post content cannot be empty.',
+    description: 'Error message displayed when post content is left empty',
   },
   deleteResponseTitle: {
     id: 'discussions.editor.delete.response.title',
     defaultMessage: 'Delete response',
+    description: 'Title of confirmation dialog shown when deleting a response',
   },
   deleteResponseDescription: {
     id: 'discussions.editor.delete.response.description',
     defaultMessage: 'Are you sure you want to permanently delete this response?',
+    description: 'Text displayed in confirmation dialog when deleting a response',
   },
   deleteCommentTitle: {
     id: 'discussions.editor.delete.comment.title',
     defaultMessage: 'Delete comment',
+    description: 'Title of confirmation dialog shown when deleting a comment',
   },
   deleteCommentDescription: {
     id: 'discussions.editor.delete.comment.description',
     defaultMessage: 'Are you sure you want to permanently delete this comment?',
+    description: 'Text displayed in confirmation dialog when deleting a comment',
+  },
+  editReasonCode: {
+    id: 'discussions.editor.comments.editReasonCode',
+    defaultMessage: 'Reason for editing',
+    description: 'Label for field visible to moderators that allows them to select a reason for editing another user\'s response',
+  },
+  editedBy: {
+    id: 'discussions.comment.comments.editedBy',
+    defaultMessage: 'Edited by',
+    description: 'Text shown to users to indicate who edited a post. Followed by the username of editor.',
+  },
+  reason: {
+    id: 'discussions.comment.comments.reason',
+    defaultMessage: 'Reason',
+    description: 'Text shown to users to indicate why a post was edited, followed by a reason.',
   },
 });
 

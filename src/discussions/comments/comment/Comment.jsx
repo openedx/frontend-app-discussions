@@ -59,7 +59,7 @@ function Comment({
           hideDeleteConfirmation();
         }}
       />
-      <AlertBanner postType={postType} content={comment} intl={intl} />
+      <AlertBanner postType={postType} content={comment} />
       <div className="d-flex flex-column p-4">
         <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
         {isEditing

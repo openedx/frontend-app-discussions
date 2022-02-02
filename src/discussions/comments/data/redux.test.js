@@ -108,7 +108,7 @@ describe('Comments/Responses data layer tests', () => {
 
     await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
 
-    axiosMock.onPost(`${commentsApiUrl}`)
+    axiosMock.onPost(commentsApiUrl)
       .reply(200, Factory.build('comment', {
         thread_id: threadId,
         raw_body: content,
@@ -144,7 +144,7 @@ describe('Comments/Responses data layer tests', () => {
 
     await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
 
-    axiosMock.onPost(`${commentsApiUrl}`)
+    axiosMock.onPost(commentsApiUrl)
       .reply(200, Factory.build('comment', {
         thread_id: threadId,
         parent_id: parentId,
@@ -190,7 +190,7 @@ describe('Comments/Responses data layer tests', () => {
       store.getState,
     );
 
-    axiosMock.onPost(`${commentsApiUrl}`)
+    axiosMock.onPost(commentsApiUrl)
       .reply(200, Factory.build('comment', {
         thread_id: threadId,
         raw_body: content,

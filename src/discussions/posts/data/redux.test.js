@@ -113,7 +113,7 @@ describe('Threads/Posts data layer tests', () => {
       .reply(200, Factory.build('threadsResult'));
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
 
-    axiosMock.onPost(`${threadsApiUrl}`)
+    axiosMock.onPost(threadsApiUrl)
       .reply(200, Factory.build('thread', {
         course_id: courseId, topic_id: topicId, title, raw_body: content, rendered_body: content,
       }));
@@ -137,7 +137,7 @@ describe('Threads/Posts data layer tests', () => {
     const title = 'A Test Thread';
     const content = 'Some test content';
 
-    axiosMock.onPost(`${threadsApiUrl}`)
+    axiosMock.onPost(threadsApiUrl)
       .reply(200, Factory.build('thread', {
         course_id: courseId, topic_id: topicId, title, raw_body: content, rendered_body: content,
       }));

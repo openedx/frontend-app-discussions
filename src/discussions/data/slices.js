@@ -18,6 +18,9 @@ const configSlice = createSlice({
       dividedInlineDiscussions: [],
       dividedCourseWideDiscussions: [],
     },
+    reasonCodesEnabled: false,
+    editReasons: [],
+    postCloseReasons: [],
   },
   reducers: {
     fetchConfigRequest: (state) => {

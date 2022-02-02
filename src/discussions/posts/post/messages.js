@@ -76,6 +76,16 @@ const messages = defineMessages({
     defaultMessage: '{count} new',
     description: 'Label shown on the badge indicating new comments/posts like "3 new"',
   },
+  editedBy: {
+    id: 'discussions.post.editedBy',
+    defaultMessage: 'Edited by',
+    description: 'Message shown to user to inform them who edited a post',
+  },
+  reason: {
+    id: 'discussions.post.editReason',
+    defaultMessage: 'Reason',
+    description: 'Message shown to user to inform them why a post was edited',
+  },
 });
 
 export default messages;

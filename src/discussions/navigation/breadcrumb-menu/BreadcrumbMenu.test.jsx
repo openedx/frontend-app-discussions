@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  act, fireEvent, render, screen,
+  act, fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -99,7 +99,9 @@ describe('BreadcrumbMenu', () => {
 
     renderComponent(`/${courseId}/category/${chapterKey}`, null, chapterKey);
 
-    const chapterDropdown = await screen.findByText(blocksAPIResponse.blocks[chapterKey].display_name);
+    waitFor(() => screen.findByText(blocksAPIResponse.blocks[chapterKey].display_name));
+
+    const chapterDropdown = screen.queryByText(blocksAPIResponse.blocks[chapterKey].display_name);
     // Since a category is selected a subcategory dropdown should also be visible with "show all" selected by default
     const sectionDropdown = screen.queryByRole('button', { name: 'Show all' });
     // A show all button should show up that lists topics in the current category

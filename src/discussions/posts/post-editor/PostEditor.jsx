@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -7,6 +7,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { AppContext } from '@edx/frontend-platform/react';
 import {
   Button, Card, Form, Spinner, StatefulButton,
 } from '@edx/paragon';
@@ -17,7 +18,12 @@ import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { selectAnonymousPostingConfig, selectDivisionSettings, selectUserIsPrivileged } from '../../data/selectors';
+import {
+  selectAnonymousPostingConfig,
+  selectDivisionSettings,
+  selectModerationSettings,
+  selectUserIsPrivileged,
+} from '../../data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
@@ -61,6 +67,7 @@ function PostEditor({
   intl,
   editExisting,
 }) {
+  const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
   const editorRef = useRef(null);
   const [submitting, dispatchSubmit] = useDispatchWithState();
@@ -114,6 +121,7 @@ function PostEditor({
         type: values.postType,
         title: values.title,
         content: values.comment,
+        editReasonCode: values.editReasonCode || null,
       }));
     } else {
       const cohort = canSelectCohort(values.topic)
@@ -179,6 +187,8 @@ function PostEditor({
 
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
 
+  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+
   return (
     <Formik
       enableReinitialize
@@ -202,6 +212,9 @@ function PostEditor({
             .default(false)
             .nullable(),
           cohort: Yup.string()
+            .nullable()
+            .default(null),
+          editReasonCode: Yup.string()
             .nullable()
             .default(null),
         })}
@@ -289,24 +302,48 @@ function PostEditor({
               )}
           </div>
           <div className="border-bottom my-1" />
-          <Form.Group
-            className="py-2 mt-4"
-            isInvalid={isFormikFieldInvalid('title', {
-              errors,
-              touched,
-            })}
-          >
-            <Form.Control
-              name="title"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              aria-describedby="titleInput"
-              floatingLabel={intl.formatMessage(messages.postTitle)}
-              value={values.title}
-            />
-            <FormikErrorFeedback name="title" />
-          </Form.Group>
+          <div className="d-flex flex-row py-2 mt-4 justify-content-between">
+            <Form.Group
+              className="d-flex flex-fill"
+              isInvalid={isFormikFieldInvalid('title', {
+                errors,
+                touched,
+              })}
+            >
+              <Form.Control
+                name="title"
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="titleInput"
+                floatingLabel={intl.formatMessage(messages.postTitle)}
+                value={values.title}
+              />
+              <FormikErrorFeedback name="title" />
+            </Form.Group>
+            {(reasonCodesEnabled
+              && editExisting
+              && userIsPrivileged
+              && post.author !== authenticatedUser.username) && (
+                <Form.Group className="d-flex flex-fill">
+                  <Form.Control
+                    name="editReasonCode"
+                    className="ml-4"
+                    as="select"
+                    value={values.editReasonCode}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    aria-describedby="editReasonCodeInput"
+                    floatingLabel={intl.formatMessage(messages.editReasonCode)}
+                  >
+                    <option key="empty" value="">---</option>
+                    {editReasons.map(({ code, label }) => (
+                      <option key={code} value={code}>{label}</option>
+                    ))}
+                  </Form.Control>
+                </Form.Group>
+            )}
+          </div>
           <div className="py-2">
             <TinyMCEEditor
               onInit={

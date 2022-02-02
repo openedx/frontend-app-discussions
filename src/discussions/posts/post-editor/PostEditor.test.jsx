@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
+import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
 import { Factory } from 'rosie';
@@ -14,6 +15,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { API_BASE_URL, Routes } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
+import { getCohortsApiUrl } from '../../cohorts/data/api';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { threadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
@@ -83,7 +85,7 @@ describe('PostEditor', () => {
       allowAnonymous: true,
       allowAnonymousToPeers: true,
     },
-  ])('Non-Cohorted', ({
+  ])('anonymous posting', ({
     allowAnonymous,
     allowAnonymousToPeers,
   }) => {
@@ -93,6 +95,7 @@ describe('PostEditor', () => {
           provider: 'legacy',
           allowAnonymous,
           allowAnonymousToPeers,
+          moderationSettings: {},
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
@@ -136,9 +139,14 @@ describe('PostEditor', () => {
     );
   });
 
-  describe('Cohorted', () => {
+  describe('chorting', () => {
     const dividedncw = ['ncw-topic-2'];
     const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
+
+    beforeEach(async () => {
+      axiosMock.onGet(getCohortsApiUrl(courseId))
+        .reply(200, Factory.buildList('cohort', 3));
+    });
 
     async function setupData(config = {}, settings = {}) {
       store = initializeStore({
@@ -146,6 +154,7 @@ describe('PostEditor', () => {
           provider: 'legacy',
           userRoles: ['Student', 'Moderator'],
           userIsPrivileged: true,
+          moderationSettings: {},
           settings: {
             dividedInlineDiscussions: dividedcw,
             dividedCourseWideDiscussions: dividedncw,
@@ -159,7 +168,7 @@ describe('PostEditor', () => {
 
     test('test privileged user', async () => {
       await setupData();
-      renderComponent();
+      await renderComponent();
       // Initially the user can't select a cohort
       expect(screen.queryByRole('combobox', {
         name: /cohort visibility/i,
@@ -168,12 +177,14 @@ describe('PostEditor', () => {
         .toBeInTheDocument();
       // If a cohorted topic is selected, the cohort visibility selector is displayed
       ['ncw-topic 2', 'category-1-topic 2', 'category-2-topic 1', 'category-2-topic 2'].forEach((topicName) => {
-        userEvent.selectOptions(
-          screen.getByRole('combobox', {
-            name: /topic area/i,
-          }),
-          screen.getByRole('option', { name: topicName }),
-        );
+        act(() => {
+          userEvent.selectOptions(
+            screen.getByRole('combobox', {
+              name: /topic area/i,
+            }),
+            screen.getByRole('option', { name: topicName }),
+          );
+        });
 
         expect(screen.queryByRole('combobox', {
           name: /cohort visibility/i,
@@ -182,12 +193,14 @@ describe('PostEditor', () => {
       });
       // Now if a non-cohorted topic is selected, the cohort visibility selector is hidden
       ['ncw-topic 1', 'category-1-topic 1', 'category-2-topic 4'].forEach((topicName) => {
-        userEvent.selectOptions(
-          screen.getByRole('combobox', {
-            name: /topic area/i,
-          }),
-          screen.getByRole('option', { name: topicName }),
-        );
+        act(() => {
+          userEvent.selectOptions(
+            screen.getByRole('combobox', {
+              name: /topic area/i,
+            }),
+            screen.getByRole('option', { name: topicName }),
+          );
+        });
         expect(screen.queryByRole('combobox', {
           name: /cohort visibility/i,
         }))
@@ -197,7 +210,7 @@ describe('PostEditor', () => {
     });
     test('test always divided inline', async () => {
       await setupData({}, { alwaysDivideInlineDiscussions: true });
-      renderComponent();
+      await renderComponent();
       // Initially the user can't select a cohort
       expect(screen.queryByRole('combobox', {
         name: /cohort visibility/i,
@@ -207,12 +220,14 @@ describe('PostEditor', () => {
       // All coursweare topics are divided
       [1, 2].forEach(catId => {
         [1, 2, 3, 4].forEach((topicId) => {
-          userEvent.selectOptions(
-            screen.getByRole('combobox', {
-              name: /topic area/i,
-            }),
-            screen.getByRole('option', { name: `category-${catId}-topic ${topicId}` }),
-          );
+          act(() => {
+            userEvent.selectOptions(
+              screen.getByRole('combobox', {
+                name: /topic area/i,
+              }),
+              screen.getByRole('option', { name: `category-${catId}-topic ${topicId}` }),
+            );
+          });
 
           expect(screen.queryByRole('combobox', {
             name: /cohort visibility/i,
@@ -223,12 +238,14 @@ describe('PostEditor', () => {
 
       // Non-courseware topics can still have cohort visibility hidden
       ['ncw-topic 1', 'ncw-topic 3'].forEach((topicName) => {
-        userEvent.selectOptions(
-          screen.getByRole('combobox', {
-            name: /topic area/i,
-          }),
-          screen.getByRole('option', { name: topicName }),
-        );
+        act(() => {
+          userEvent.selectOptions(
+            screen.getByRole('combobox', {
+              name: /topic area/i,
+            }),
+            screen.getByRole('option', { name: topicName }),
+          );
+        });
         expect(screen.queryByRole('combobox', {
           name: /cohort visibility/i,
         }))
@@ -238,14 +255,16 @@ describe('PostEditor', () => {
     });
     test('test unprivileged user', async () => {
       await setupData({ userIsPrivileged: false });
-      renderComponent();
+      await renderComponent();
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
-        userEvent.selectOptions(
-          screen.getByRole('combobox', {
-            name: /topic area/i,
-          }),
-          screen.getByRole('option', { name: topicName }),
-        );
+        act(() => {
+          userEvent.selectOptions(
+            screen.getByRole('combobox', {
+              name: /topic area/i,
+            }),
+            screen.getByRole('option', { name: topicName }),
+          );
+        });
         // If a cohorted topic is selected, the cohort visibility selector is displayed
         expect(screen.queryByRole('combobox', {
           name: /cohort visibility/i,
@@ -263,12 +282,14 @@ describe('PostEditor', () => {
       await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
 
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
-        userEvent.selectOptions(
-          screen.getByRole('combobox', {
-            name: /topic area/i,
-          }),
-          screen.getByRole('option', { name: topicName }),
-        );
+        act(() => {
+          userEvent.selectOptions(
+            screen.getByRole('combobox', {
+              name: /topic area/i,
+            }),
+            screen.getByRole('option', { name: topicName }),
+          );
+        });
         // If a cohorted topic is selected, the cohort visibility selector is displayed
         expect(screen.queryByRole('combobox', {
           name: /cohort visibility/i,
@@ -276,6 +297,58 @@ describe('PostEditor', () => {
           .not
           .toBeInTheDocument();
       });
+    });
+    test('cancel posting of existing post', async () => {
+      const threadId = 'thread-1';
+      await setupData();
+      axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
+        .reply(200, Factory.build('thread'));
+      await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      const cancelButton = screen.getByRole('button', { name: /cancel/i });
+      await act(async () => {
+        fireEvent.click(cancelButton);
+      });
+      expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Edit codes', () => {
+    const threadId = 'thread-1';
+    beforeEach(async () => {
+      store = initializeStore({
+        config: {
+          provider: 'legacy',
+          userIsPrivileged: true,
+          reasonCodesEnabled: true,
+          editReasons: [
+            {
+              code: 'reason-1',
+              label: 'Reason 1',
+            },
+            {
+              code: 'reason-2',
+              label: 'Reason 2',
+            },
+          ],
+        },
+      });
+      await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+      axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
+        .reply(200, Factory.build('thread'));
+      await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+    });
+    test('Edit post and see reasons', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      expect(screen.queryByRole('combobox', {
+        name: /reason for editing/i,
+      }))
+        .toBeInTheDocument();
+      expect(screen.getAllByRole('option', {
+        name: /reason \d/i,
+      })).toHaveLength(2);
     });
   });
 });

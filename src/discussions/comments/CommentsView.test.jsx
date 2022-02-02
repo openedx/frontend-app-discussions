@@ -14,6 +14,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { courseConfigApiUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 import { threadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { commentsApiUrl } from './data/api';
@@ -254,6 +256,38 @@ describe('CommentsView', () => {
         expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument();
       });
     });
+
+    it('should show reason codes when editing an existing comment', async () => {
+      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+        user_is_privileged: true,
+        reason_codes_enabled: true,
+        editReasons: [
+          { code: 'reason-1', label: 'reason 1' },
+          { code: 'reason-2', label: 'reason 2' },
+        ],
+      });
+      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
+      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+      renderComponent(discussionPostId);
+      await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      await act(async () => {
+        fireEvent.click(
+          // The first edit menu is for the post, the second will be for the first comment.
+          screen.getAllByRole('button', {
+            name: /actions menu/i,
+          })[1],
+        );
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+      });
+      expect(screen.queryByRole('combobox', {
+        name: /reason for editing/i,
+      })).toBeInTheDocument();
+      expect(screen.getAllByRole('option', {
+        name: /reason \d/i,
+      })).toHaveLength(2);
+    });
   });
 
   describe('for discussion thread', () => {
@@ -346,7 +380,7 @@ describe('CommentsView', () => {
         .not
         .toBeInTheDocument();
 
-      act(() => {
+      await act(async () => {
         fireEvent.click(loadMoreButtonEndorsed);
       });
       // Endorsed comment from next page should be loaded now.
@@ -358,7 +392,7 @@ describe('CommentsView', () => {
         .toBeInTheDocument();
       // Now only one load more buttons should show, for unendorsed comments
       expect(await findLoadMoreCommentsButtons()).toHaveLength(1);
-      act(() => {
+      await act(async () => {
         fireEvent.click(loadMoreButtonUnendorsed);
       });
       // Unendorsed comment from next page should be loaded now.
