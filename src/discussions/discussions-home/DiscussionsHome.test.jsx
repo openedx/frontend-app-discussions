@@ -3,7 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
-import { initializeMockApp } from '@edx/frontend-platform';
+import { getConfig, initializeMockApp, setConfig } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
@@ -29,10 +29,16 @@ function renderComponent(location = `/${courseId}/`) {
 
 describe('DiscussionsHome', () => {
   beforeEach(async () => {
+    setConfig({
+      ...getConfig(),
+      FEEDER_PROJECT_ID: 'abc123',
+    });
+
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
         username: 'abc123',
+        email: 'abc123@example.com',
         administrator: true,
         roles: [],
       },
