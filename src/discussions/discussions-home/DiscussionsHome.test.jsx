@@ -3,7 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
-import { initializeMockApp } from '@edx/frontend-platform';
+import { getConfig, initializeMockApp, setConfig } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
@@ -29,10 +29,16 @@ function renderComponent(location = `/${courseId}/`) {
 
 describe('DiscussionsHome', () => {
   beforeEach(async () => {
+    setConfig({
+      ...getConfig(),
+      FEEDER_PROJECT_ID: 'test-id',
+    });
+
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
         username: 'abc123',
+        email: 'abc123@example.com',
         administrator: true,
         roles: [],
       },
@@ -50,7 +56,7 @@ describe('DiscussionsHome', () => {
     await screen.findByTestId('topics-view');
   });
 
-  test('full view should show header and footer and hide close button', async () => {
+  test('full view should show header, footer and feedback button and hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .toBeInTheDocument();
@@ -65,9 +71,11 @@ describe('DiscussionsHome', () => {
     // Footer should be visible
     expect(screen.queryByRole('contentinfo'))
       .toBeInTheDocument();
+
+    expect(screen.queryByTestId('feedback').childElementCount).toEqual(1);
   });
 
-  test('in-context view should hide header and footer and show close button', async () => {
+  test('in-context view should hide header and footer and show close and feedback button', async () => {
     renderComponent(`/${courseId}/topics?inContext`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
@@ -85,5 +93,6 @@ describe('DiscussionsHome', () => {
     expect(screen.queryByRole('contentinfo'))
       .not
       .toBeInTheDocument();
+    expect(screen.queryByTestId('feedback').childElementCount).toEqual(1);
   });
 });

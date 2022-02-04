@@ -1,0 +1,103 @@
+@import "feeder-react-feedback/dist/feeder-react-feedback.css";
+
+.frf-feedback-container {
+  position: unset;
+  bottom: unset;
+  z-index: unset;
+  width: unset;
+  right: unset;
+}
+
+#feedbackEmail {
+  display: none;
+}
+
+div[for="feedbackEmail"] {
+  display: none;
+}
+
+.frf-trigger-button {
+  position: unset;
+  box-shadow: unset;
+}
+
+.frf-feedback-icon::after {
+  content: "Give Feedback" !important;
+  margin-left: 8px !important;
+  font-size: unset !important;
+}
+
+.frf-feedback-icon-open:after {
+  content: "Close" !important;
+  font-size: inherit !important;
+}
+
+.frf-modal-container {
+  right: unset;
+  bottom: unset;
+}
+
+.frf-dialog-enter-active {
+  animation-name: unset;
+  animation-duration: unset;
+  opacity: unset;
+  transition: unset;
+}
+
+.frf-dialog-enter {
+  opacity: unset;
+}
+
+.frf-dialog-exit-active {
+  animation-name: unset;
+  animation-duration: unset;
+  opacity: unset;
+  transition: unset;
+}
+
+.frf-dialog-exit {
+  opacity: 0;
+}
+
+.frf-water {
+  display: none;
+}
+
+@media (hover: hover) {
+  .frf-trigger-button {
+    transition: unset;
+
+    &:hover {
+      .frf-feedback-icon:after {
+        content: unset;
+        margin-left: unset;
+        font-size: unset;
+        opacity: unset;
+        transition: unset;
+      }
+
+      .frf-feedback-icon-open:after {
+        content: unset;
+        font-size: unset;
+        opacity: unset;
+        transition: unset;
+      }
+    }
+
+    .frf-feedback-icon:after {
+      content: unset;
+      padding-left: unset;
+      font-size: unset;
+      opacity: unset;
+      transition: unset;
+    }
+
+    .frf-feedback-icon-open:after {
+      content: unset;
+      padding-left: unset;
+      font-size: unset;
+      opacity: unset;
+      transition: unset;
+    }
+  }
+}
