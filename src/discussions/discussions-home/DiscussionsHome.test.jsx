@@ -56,7 +56,7 @@ describe('DiscussionsHome', () => {
     await screen.findByTestId('topics-view');
   });
 
-  test('full view should show header and footer and hide close button', async () => {
+  test('full view should show header, footer and feedback button and hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .toBeInTheDocument();
@@ -71,9 +71,11 @@ describe('DiscussionsHome', () => {
     // Footer should be visible
     expect(screen.queryByRole('contentinfo'))
       .toBeInTheDocument();
+
+    expect(screen.queryByTestId('feedback').childElementCount).toEqual(1);
   });
 
-  test('in-context view should hide header and footer and show close button', async () => {
+  test('in-context view should hide header and footer and show close and feedback button', async () => {
     renderComponent(`/${courseId}/topics?inContext`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
@@ -91,5 +93,6 @@ describe('DiscussionsHome', () => {
     expect(screen.queryByRole('contentinfo'))
       .not
       .toBeInTheDocument();
+    expect(screen.queryByTestId('feedback').childElementCount).toEqual(1);
   });
 });

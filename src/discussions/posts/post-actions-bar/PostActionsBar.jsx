@@ -30,7 +30,7 @@ function PostActionsBar({
   const handleCloseInContext = () => null;
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">
-      <div className="mr-3">
+      <div className="mr-3" data-testid="feedback">
         <Feedback />
       </div>
       {!inContext && (
