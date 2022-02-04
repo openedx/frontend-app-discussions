@@ -31,7 +31,7 @@ describe('DiscussionsHome', () => {
   beforeEach(async () => {
     setConfig({
       ...getConfig(),
-      FEEDER_PROJECT_ID: 'abc123',
+      FEEDER_PROJECT_ID: 'test-id',
     });
 
     initializeMockApp({
