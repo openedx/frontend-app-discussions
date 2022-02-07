@@ -42,7 +42,6 @@ initialize({
     config() {
       mergeConfig({
         POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 2000,
-        FEEDER_PROJECT_ID: process.env.FEEDER_PROJECT_ID || '',
       });
     },
   },
