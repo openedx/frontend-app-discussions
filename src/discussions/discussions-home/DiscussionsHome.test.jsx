@@ -50,40 +50,22 @@ describe('DiscussionsHome', () => {
     await screen.findByTestId('topics-view');
   });
 
-  test('full view should show header and footer and hide close button', async () => {
+  test('full view should hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Close' }))
       .not
       .toBeInTheDocument();
-    // Header should be visible
-    expect(screen.queryByRole('button', {
-      name: /account menu for abc123/i,
-    }))
-      .toBeInTheDocument();
-    // Footer should be visible
-    expect(screen.queryByRole('contentinfo'))
-      .toBeInTheDocument();
   });
 
-  test('in-context view should hide header and footer and show close button', async () => {
+  test('in-context view should show close button', async () => {
     renderComponent(`/${courseId}/topics?inContext`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .not
       .toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Close' }))
-      .toBeInTheDocument();
-    // Header should be hidden
-    expect(screen.queryByRole('button', {
-      name: /account menu for abc123/i,
-    }))
-      .not
-      .toBeInTheDocument();
-    // Footer should be hidden
-    expect(screen.queryByRole('contentinfo'))
-      .not
       .toBeInTheDocument();
   });
 });
