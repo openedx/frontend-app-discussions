@@ -11,6 +11,7 @@ import {
 } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
+import Feedback from '../../../components/Feedback';
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath } from '../../utils';
@@ -29,6 +30,7 @@ function PostActionsBar({
   const handleCloseInContext = () => null;
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">
+      <Feedback />
       {!inContext && (
         <>
           <SearchField
