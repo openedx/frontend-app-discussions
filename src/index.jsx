@@ -37,6 +37,7 @@ initialize({
   handlers: {
     config() {
       mergeConfig({
+        FEEDBACK_FORM_URL: process.env.FEEDBACK_FORM_URL || '',
         POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 2000,
       });
     },
