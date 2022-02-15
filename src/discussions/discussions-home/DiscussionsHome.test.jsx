@@ -3,7 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
-import { getConfig, initializeMockApp, setConfig } from '@edx/frontend-platform';
+import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
@@ -38,11 +38,6 @@ describe('DiscussionsHome', () => {
       },
     });
 
-    setConfig({
-      ...getConfig(),
-      FEEDBACK_FORM_URL: 'test-url',
-    });
-
     store = initializeStore();
   });
 
@@ -55,19 +50,22 @@ describe('DiscussionsHome', () => {
     await screen.findByTestId('topics-view');
   });
 
-  test('full view should hide close button and display feedback button', async () => {
+  test('full view should hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
-
-    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
-    expect(screen.queryByText('Give Feedback')).toBeInTheDocument();
+    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
+      .toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Close' }))
+      .not
+      .toBeInTheDocument();
   });
 
-  test('in-context view should show close button and display feedback button', async () => {
+  test('in-context view should show close button', async () => {
     renderComponent(`/${courseId}/topics?inContext`);
 
-    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage)).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Close' })).toBeInTheDocument();
-    expect(screen.queryByText('Give Feedback')).toBeInTheDocument();
+    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
+      .not
+      .toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Close' }))
+      .toBeInTheDocument();
   });
 });
