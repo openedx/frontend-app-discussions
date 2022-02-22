@@ -43,7 +43,7 @@ function LikeButton(
           src={voted ? ThumbUpFilled : ThumbUpOutline}
         />
       </OverlayTrigger>
-      {count}
+      {(count && count > 0) ? count : null}
     </div>
   );
 }
