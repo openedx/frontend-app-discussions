@@ -115,6 +115,9 @@ const commentsSlice = createSlice({
     postCommentSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
       if (payload.parentId) {
+        if (!(payload.parentId in state.commentsInComments)) {
+          state.commentsInComments[payload.parentId] = [];
+        }
         state.commentsInComments[payload.parentId].push(payload.id);
       } else {
         // The comment should be added to either the discussion or unendorsed

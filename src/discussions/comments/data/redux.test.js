@@ -100,7 +100,7 @@ describe('Comments/Responses data layer tests', () => {
       .toEqual({ 'comment-1': ['comment-4', 'comment-5', 'comment-6'] });
   });
 
-  test('successfully handles comment creation for discussion type threads', async () => {
+  test('successfully handles response creation for discussion type threads', async () => {
     const threadId = 'test-thread';
     const content = 'Test comment';
     axiosMock.onGet(commentsApiUrl)
@@ -130,6 +130,46 @@ describe('Comments/Responses data layer tests', () => {
       .toEqual(['comment-1', 'comment-2', 'comment-3', 'comment-4']);
     expect(store.getState().comments.commentsById['comment-4'].threadId)
       .toEqual(threadId);
+  });
+
+  test('successfully handles reply creation for discussion type threads', async () => {
+    const threadId = 'test-thread';
+    const parentId = 'comment-1';
+    const content = 'Test comment';
+    axiosMock.onGet(commentsApiUrl)
+      .reply(200, Factory.build('commentsResult'));
+
+    expect(store.getState().comments.commentsInComments)
+      .not.toHaveProperty(parentId);
+
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(`${commentsApiUrl}`)
+      .reply(200, Factory.build('comment', {
+        thread_id: threadId,
+        parent_id: parentId,
+        raw_body: content,
+        rendered_body: content,
+      }));
+
+    await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
+
+    expect(store.getState().comments.commentsInThreads[threadId])
+      .toEqual({
+        [EndorsementStatus.DISCUSSION]: [
+          'comment-1',
+          'comment-2',
+          'comment-3',
+        ],
+      });
+    expect(Object.keys(store.getState().comments.commentsById))
+      .toEqual(['comment-1', 'comment-2', 'comment-3', 'comment-4']);
+    expect(store.getState().comments.commentsInComments[parentId])
+      .toEqual(['comment-4']);
+    expect(store.getState().comments.commentsById['comment-4'].threadId)
+      .toEqual(threadId);
+    expect(store.getState().comments.commentsById['comment-4'].parentId)
+      .toEqual(parentId);
   });
 
   test('successfully handles comment creation for question type threads', async () => {
