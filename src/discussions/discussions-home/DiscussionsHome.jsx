@@ -78,8 +78,8 @@ export default function DiscussionsHome() {
         inContext,
       }}
     >
-      <main className="container-fluid d-flex flex-column p-0">
-        <div className="d-flex flex-row justify-content-between shadow navbar">
+      <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
+        <div className="d-flex flex-row justify-content-between shadow navbar fixed-top">
           {!inContext && (
             <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
           )}
@@ -89,9 +89,9 @@ export default function DiscussionsHome() {
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
           component={LegacyBreadcrumbMenu}
         />
-        <div className="d-flex flex-row">
+        <div className="d-flex flex-row overflow-hidden">
           <div
-            className={classNames('flex-column w-25 w-xs-100 w-lg-25', {
+            className={classNames('flex-column w-25 w-xs-100 w-lg-25 overflow-auto h-100 pb-2', {
               'd-none': !displaySidebar,
               'd-flex': displaySidebar,
             })}
@@ -117,7 +117,7 @@ export default function DiscussionsHome() {
           </div>
           <div
             className={classNames(
-              'bg-light-300 flex-column w-75 w-xs-100 w-xl-75',
+              'bg-light-300 flex-column w-75 w-xs-100 w-xl-75 h-100 pb-2 overflow-auto',
               {
                 'd-flex': displayContentArea,
                 'd-none': !displayContentArea,
