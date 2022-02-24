@@ -77,7 +77,8 @@ function PostLink({
               />
             </div>
           </div>
-          <div>{post.previewBody}</div>
+          {/* eslint-disable-next-line react/no-danger */}
+          <div dangerouslySetInnerHTML={{ __html: post.previewBody }} />
           <PostFooter post={post} preview intl={intl} />
         </div>
       </div>
