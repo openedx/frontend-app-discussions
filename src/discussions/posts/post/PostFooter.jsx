@@ -53,7 +53,7 @@ function PostFooter({
             />
           )}
       </OverlayTrigger>
-      {preview
+      {preview && post.commentCount > 1
         && (
           <>
             <Icon src={QuestionAnswer} className="mx-2 my-0" />
