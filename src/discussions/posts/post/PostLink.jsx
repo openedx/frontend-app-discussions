@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
-import { Flag, Pin, Unread } from '@edx/paragon/icons';
+import { Flag, Pin } from '@edx/paragon/icons';
 
 import { Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
@@ -55,7 +55,6 @@ function PostLink({
           borderRightStyle: 'solid',
         } : null}
       >
-        <Icon className={classNames('p-0 mr-n3 text-brand-500', { invisible: post.read })} src={Unread} />
         <PostAvatar post={post} />
         <div className="d-flex flex-column" style={{ width: 'calc(100% - 4rem)' }}>
           <div className="align-items-center d-flex flex-row flex-fill">
