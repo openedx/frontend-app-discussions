@@ -91,6 +91,7 @@ export default function TinyMCEEditor(props) {
           + ' | undo redo',
         content_css: false,
         content_style: contentStyle,
+        body_class: 'm-2',
         images_upload_handler: uploadHandler,
         setup,
       }}
