@@ -53,7 +53,7 @@ export default function DiscussionsHome() {
   }
 
   const provider = useSelector(selectDiscussionProvider);
-  useCourseDiscussionData(courseId);
+  useCourseDiscussionData(courseId, postId, topicId);
   useRedirectToThread(courseId);
 
   return (

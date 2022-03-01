@@ -1,9 +1,12 @@
 /* eslint-disable import/prefer-default-export */
-import { useContext, useEffect } from 'react';
+import {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
+import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
@@ -58,6 +61,29 @@ export function useCourseDiscussionData(courseId) {
 
     fetchBaseData();
   }, [courseId]);
+}
+
+export function useUrlUpdate(initialPostId, initialTopicId, test = false) {
+  const [postId, setpostId] = useState(initialPostId);
+  const [topicId, settopicId] = useState(initialTopicId);
+  const [message, setMessage] = useState('');
+
+  const updatePost = useCallback((newPost) => setpostId(newPost));
+  useEffect(() => {
+    if (window !== window.parent || test) {
+      setMessage({
+        type: 'discussions.path.change',
+        payload: {
+          postId,
+          topicId,
+        },
+      });
+      window.parent.postMessage({ message }, getConfig().LMS_BASE_URL);
+    }
+  }, [postId, topicId]);
+  return {
+    message, updatePost, setpostId, settopicId,
+  };
 }
 
 export function useRedirectToThread(courseId) {

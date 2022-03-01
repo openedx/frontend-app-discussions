@@ -62,6 +62,7 @@
     "@edx/frontend-build": "9.1.1",
     "@testing-library/jest-dom": "5.15.0",
     "@testing-library/react": "12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "13.5.0",
     "axios-mock-adapter": "1.20.0",
     "codecov": "3.8.3",
