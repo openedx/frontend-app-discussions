@@ -6,7 +6,7 @@ import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Icon, IconButton, OverlayTrigger, Tooltip,
+  Badge, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
   Locked, Person, QuestionAnswer, StarFilled, StarOutline,
@@ -62,6 +62,9 @@ function PostFooter({
             </span>
           </>
         )}
+      {post.unreadCommentCount && post.unreadCommentCount > 0 && post.commentCount > 1 ? (
+        <Badge variant="light">{intl.formatMessage(messages.newLabel, { count: post.unreadCommentCount })}</Badge>
+      ) : null}
       <div className="d-flex flex-fill justify-content-end align-items-center">
         {!preview
           && (

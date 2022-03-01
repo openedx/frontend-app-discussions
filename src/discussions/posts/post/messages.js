@@ -70,6 +70,11 @@ const messages = defineMessages({
     id: 'discussions.editor.delete.post.description',
     defaultMessage: 'Are you sure you want to permanently delete this post?',
   },
+  newLabel: {
+    id: 'discussions.post.label.new',
+    defaultMessage: '{count} new',
+    description: 'Label shown on the badge indicating new comments/posts like "3 new"',
+  },
 });
 
 export default messages;
