@@ -48,7 +48,7 @@ function Topic({ topic }) {
             <div className="mr-4 d-flex align-items-center" key={key}>
               <Icon className="mr-2" src={icon} />
               {/* Reserve some space for larger counts */}
-              <span style={{ width: '2rem' }}>
+              <span>
                 {count}
               </span>
             </div>
