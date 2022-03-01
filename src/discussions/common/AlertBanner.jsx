@@ -26,7 +26,12 @@ function AlertBanner({
   return (
     <>
       {content.endorsed && (
-        <Alert variant="plain" className={`p-3 m-0 rounded-0 shadow-none ${classes}`} icon={iconClass}>
+        <Alert
+          variant="plain"
+          className={`p-3 m-0 shadow-none ${classes}`}
+          style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
+          icon={iconClass}
+        >
           <div className="d-flex justify-content-between">
             <strong className="lead">{intl.formatMessage(
               isQuestion
