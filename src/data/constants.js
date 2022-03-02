@@ -140,6 +140,15 @@ export const TopicOrdering = {
   BY_COMMENT_COUNT: 'sortByCommentCount',
 };
 
+/**
+ * Enum for discussion provider types supported by the MFE.
+ * @type {{OPEN_EDX: string, LEGACY: string}}
+ */
+export const DiscussionProvider = {
+  LEGACY: 'legacy',
+  OPEN_EDX: 'openedx',
+};
+
 const BASE_PATH = '/:courseId';
 
 export const Routes = {
@@ -177,7 +186,6 @@ export const Routes = {
   TOPICS: {
     PATH: [
       `${BASE_PATH}/topics/:topicId?`,
-      `${BASE_PATH}/category/:category`,
     ],
     ALL: `${BASE_PATH}/topics`,
     CATEGORY: `${BASE_PATH}/category/:category`,
@@ -186,6 +194,7 @@ export const Routes = {
 };
 
 export const ALL_ROUTES = []
+  .concat([Routes.TOPICS.CATEGORY])
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])

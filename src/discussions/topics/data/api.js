@@ -13,3 +13,14 @@ export async function getCourseTopics(courseId, topicIds) {
     .get(url);
   return data;
 }
+
+export async function getCourseTopicsV2(courseId, topicIds) {
+  const url = `${API_BASE_URL}/api/discussion/v2/course_topics/${courseId}`;
+  const params = {};
+  if (topicIds) {
+    params.topic_id = topicIds.join(',');
+  }
+  const { data } = await getAuthenticatedHttpClient()
+    .get(url);
+  return data;
+}

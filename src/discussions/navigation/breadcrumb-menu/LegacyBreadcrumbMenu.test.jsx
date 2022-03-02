@@ -55,6 +55,9 @@ describe('LegacyBreadcrumbMenu', () => {
     });
 
     store = initializeStore({
+      config: {
+        provider: 'legacy',
+      },
       blocks: {
         topics: {},
       },

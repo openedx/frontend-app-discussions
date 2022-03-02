@@ -9,7 +9,7 @@ export async function getCourseBlocks(courseId, username) {
     course_id: courseId,
     username,
     depth: 'all',
-    requested_fields: 'children',
+    requested_fields: 'children,discussions_id',
     block_types_filter: 'course,chapter,sequential,vertical,discussion',
     student_view_data: 'discussion',
   };

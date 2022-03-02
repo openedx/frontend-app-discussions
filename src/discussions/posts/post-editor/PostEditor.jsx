@@ -73,9 +73,10 @@ function PostEditor({
     topicId,
     postId,
   } = useParams();
-  const coursewareTopics = useSelector(selectCoursewareTopics);
+
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(selectNonCoursewareIds);
+  const coursewareTopics = useSelector(selectCoursewareTopics);
   const {
     allowAnonymous,
     allowAnonymousToPeers,
@@ -197,7 +198,9 @@ function PostEditor({
           anonymousToPeers: Yup.bool()
             .default(false)
             .nullable(),
-          cohort: Yup.string().nullable().default(null),
+          cohort: Yup.string()
+            .nullable()
+            .default(null),
         })}
       onSubmit={submitForm}
     >{
@@ -252,13 +255,10 @@ function PostEditor({
                 {nonCoursewareTopics.map(topic => (
                   <option key={topic.id} value={topic.id}>{topic.name}</option>
                 ))}
-                {coursewareTopics.map(topic => (
-                  <optgroup label={topic.name} key={topic.name}>
-                    {topic.children.map(subtopic => (
-                      <option
-                        key={subtopic.id}
-                        value={subtopic.id}
-                      >
+                {coursewareTopics.map(category => (
+                  <optgroup label={category.name} key={category.id}>
+                    {category.topics.map(subtopic => (
+                      <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name}
                       </option>
                     ))}

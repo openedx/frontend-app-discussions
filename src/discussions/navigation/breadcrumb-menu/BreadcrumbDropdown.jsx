@@ -16,6 +16,7 @@ function BreadcrumbDropdown({
   itemPathFunc,
   itemLabelFunc,
   itemActiveFunc,
+  itemFilterFunc,
 }) {
   const showAllMsg = intl.formatMessage(messages.showAll);
   return (
@@ -31,7 +32,8 @@ function BreadcrumbDropdown({
       >
         {showAllMsg}
       </Dropdown.Item>
-      {items?.map(item => (
+      {items && items?.map(item => (
+        (itemFilterFunc === null || itemFilterFunc(item)) && (
         <Dropdown.Item
           key={itemLabelFunc(item)}
           active={itemActiveFunc(item)}
@@ -40,6 +42,7 @@ function BreadcrumbDropdown({
         >
           {itemLabelFunc(item)}
         </Dropdown.Item>
+        )
       ))}
     </DropdownButton>
   );
@@ -47,7 +50,7 @@ function BreadcrumbDropdown({
 
 BreadcrumbDropdown.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  currentItem: PropTypes.object.isRequired,
+  currentItem: PropTypes.any,
   intl: intlShape.isRequired,
   showAllPath: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
@@ -55,6 +58,11 @@ BreadcrumbDropdown.propTypes = {
   itemPathFunc: PropTypes.func.isRequired,
   itemLabelFunc: PropTypes.func.isRequired,
   itemActiveFunc: PropTypes.func.isRequired,
+  itemFilterFunc: PropTypes.func,
+};
+BreadcrumbDropdown.defaultProps = {
+  currentItem: null,
+  itemFilterFunc: null,
 };
 
 export default injectIntl(BreadcrumbDropdown);
