@@ -17,6 +17,8 @@ import { discussionsPath } from '../../utils';
 import { setSearchQuery, showPostEditor } from '../data';
 import messages from './messages';
 
+import './actionBar.scss';
+
 function PostActionsBar({
   intl,
   inContext,
@@ -38,7 +40,7 @@ function PostActionsBar({
               history.push(discussionsPath(Routes.POSTS.ALL_POSTS, { courseId })(location));
             }}
             placeholder={intl.formatMessage(messages.searchAllPosts)}
-            className="small"
+            inputProps={{ className: 'small-font' }}
           />
           <div className="border-right mr-3 ml-4" />
         </>
