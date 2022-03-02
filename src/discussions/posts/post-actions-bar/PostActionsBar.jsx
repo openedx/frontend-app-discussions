@@ -38,6 +38,7 @@ function PostActionsBar({
               history.push(discussionsPath(Routes.POSTS.ALL_POSTS, { courseId })(location));
             }}
             placeholder={intl.formatMessage(messages.searchAllPosts)}
+            className="small"
           />
           <div className="border-right mr-3 ml-4" />
         </>
@@ -52,6 +53,7 @@ function PostActionsBar({
         variant={inContext ? 'plain' : 'brand'}
         className="ml-2 my-0"
         onClick={() => dispatch(showPostEditor())}
+        size="sm"
       >
         {intl.formatMessage(messages.addAPost)}
       </Button>
