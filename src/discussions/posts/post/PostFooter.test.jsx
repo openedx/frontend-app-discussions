@@ -73,4 +73,12 @@ describe('PostFooter', () => {
     renderComponent({ ...mockPost, unreadCommentCount: 1, commentCount: 1 });
     expect(screen.queryByText('1 new')).toBeFalsy();
   });
+
+  it('has the cohort icon only when group information is present', () => {
+    renderComponent(mockPost);
+    expect(screen.queryByTestId('cohort-icon')).toBeFalsy();
+
+    renderComponent({ ...mockPost, groupId: 5, groupName: 'Test Cohort' });
+    expect(screen.getByTestId('cohort-icon')).toBeTruthy();
+  });
 });

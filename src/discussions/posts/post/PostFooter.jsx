@@ -66,20 +66,31 @@ function PostFooter({
         <Badge variant="light">{intl.formatMessage(messages.newLabel, { count: post.unreadCommentCount })}</Badge>
       ) : null}
       <div className="d-flex flex-fill justify-content-end align-items-center">
-        {!preview
-          && (
-            <span className="text-gray-500 mr-4 d-flex align-items-center">
-              <Icon
-                src={Person}
-                className="mr-1"
-                style={{
-                  width: '1em',
-                  height: '1em',
-                }}
-              />
-              {post.groupName || intl.formatMessage(messages.visibleToAll)}
-            </span>
-          )}
+        {
+          post.groupId
+            ? (
+              <>
+                <OverlayTrigger
+                  overlay={(
+                    <Tooltip>
+                      {post.groupName || intl.formatMessage(messages.visibleToAll)}
+                    </Tooltip>
+                  )}
+                >
+                  <Icon
+                    data-testid="cohort-icon"
+                    src={Person}
+                    className="text-gray-500"
+                    style={{
+                      width: '1em',
+                      height: '1em',
+                    }}
+                  />
+                </OverlayTrigger>
+                <span className="text-gray-500 mx-1">·</span>
+              </>
+            ) : null
+        }
         <span title={post.createdAt} className="text-gray-500">
           {timeago.format(post.createdAt, intl.locale)}
         </span>
