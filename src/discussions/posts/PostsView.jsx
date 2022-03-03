@@ -111,7 +111,7 @@ function PostsView({ showOwnPosts }) {
         filters,
         page: nextPage,
         author: showOwnPosts ? authenticatedUser.username : null,
-      }));
+      }, postsListComponent));
     }
   };
 
