@@ -1,4 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render, screen, waitFor, within,
+} from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { Factory } from 'rosie';
 
@@ -51,7 +53,9 @@ describe('AlertBanner', () => {
     async (content) => {
       renderComponent(content);
 
-      await waitFor(() => expect(screen.getByText('Staff')).toBeInTheDocument());
+      await waitFor(() => expect(
+        within(screen.getByTestId('endorsed-by-label')).getByText('Staff'),
+      ).toBeInTheDocument());
     },
   );
 
@@ -60,7 +64,9 @@ describe('AlertBanner', () => {
     async (content) => {
       renderComponent(content);
 
-      await waitFor(() => expect(screen.getByText('TA')).toBeInTheDocument());
+      await waitFor(() => expect(
+        within(screen.getByTestId('endorsed-by-label')).getByText('TA'),
+      ).toBeInTheDocument());
     },
   );
 });

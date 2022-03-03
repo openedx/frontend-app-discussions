@@ -65,7 +65,7 @@ function AlertBanner({
                 />
               )}
 
-              <span className="mr-3">
+              <span className="mr-3" data-testid="endorsed-by-label">
                 {endorsedByLabels[content.endorsedByLabel]}
               </span>
               {timeago.format(content.endorsedAt, intl.locale)}
