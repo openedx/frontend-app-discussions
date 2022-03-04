@@ -2,11 +2,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import {
-  AllPostsFilter,
-  MyPostsFilter,
   PostsStatusFilter,
   RequestStatus,
   ThreadOrdering,
+  ThreadType,
 } from '../../../data/constants';
 
 const threadsSlice = createSlice({
@@ -31,8 +30,7 @@ const threadsSlice = createSlice({
     postStatus: RequestStatus.SUCCESSFUL,
     filters: {
       status: PostsStatusFilter.ALL,
-      allPosts: AllPostsFilter.ALL_POSTS,
-      myPosts: MyPostsFilter.MY_POSTS,
+      postType: ThreadType.ALL,
       search: '',
     },
     postEditorVisible: false,
@@ -141,12 +139,8 @@ const threadsSlice = createSlice({
       state.filters.status = payload;
       state.pages = [];
     },
-    setAllPostsTypeFilter: (state, { payload }) => {
-      state.filters.allPosts = payload;
-      state.pages = [];
-    },
-    setMyPostsTypeFilter: (state, { payload }) => {
-      state.filters.myPosts = payload;
+    setPostsTypeFilter: (state, { payload }) => {
+      state.filters.postType = payload;
       state.pages = [];
     },
     setSearchQuery: (state, { payload }) => {
@@ -191,8 +185,7 @@ export const {
   updateThreadFailed,
   updateThreadRequest,
   updateThreadSuccess,
-  setAllPostsTypeFilter,
-  setMyPostsTypeFilter,
+  setPostsTypeFilter,
   setSortedBy,
   setStatusFilter,
   setSearchQuery,

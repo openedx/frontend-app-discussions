@@ -9,8 +9,10 @@ import { AppContext } from '@edx/frontend-platform/react';
 import { Collapsible, Form, Icon } from '@edx/paragon';
 import { Check, Sort } from '@edx/paragon/icons';
 
-import { AllPostsFilter, PostsStatusFilter, ThreadOrdering } from '../../../data/constants';
-import { setAllPostsTypeFilter, setSortedBy, setStatusFilter } from '../data';
+import {
+  PostsStatusFilter, ThreadOrdering, ThreadType,
+} from '../../../data/constants';
+import { setPostsTypeFilter, setSortedBy, setStatusFilter } from '../data';
 import { selectThreadFilters, selectThreadSorting } from '../data/selectors';
 import messages from './messages';
 
@@ -47,17 +49,17 @@ function PostFilterBar({
   const [isOpen, setOpen] = useState(false);
 
   const handleSortFilterChange = (event) => {
-    const currentType = currentFilters.allPosts;
+    const currentType = currentFilters.postType;
     const currentStatus = currentFilters.status;
     const {
       name,
       value,
     } = event.currentTarget;
     if (name === 'type') {
-      dispatch(setAllPostsTypeFilter(value));
+      dispatch(setPostsTypeFilter(value));
       if (
-        (value === AllPostsFilter.ALL_DISCUSSIONS && currentStatus === PostsStatusFilter.UNANSWERED)
-        || (value === AllPostsFilter.ALL_QUESTIONS && currentStatus === PostsStatusFilter.UNREAD)
+        (value === ThreadType.DISCUSSION && currentStatus === PostsStatusFilter.UNANSWERED)
+        || (value === ThreadType.QUESTION && currentStatus === PostsStatusFilter.UNREAD)
       ) {
         // You can't filter discussions by unanswered or questions by unread
         dispatch(setStatusFilter(PostsStatusFilter.ALL));
@@ -65,13 +67,13 @@ function PostFilterBar({
     }
     if (name === 'status') {
       dispatch(setStatusFilter(value));
-      if (value === PostsStatusFilter.UNANSWERED && currentType !== AllPostsFilter.ALL_QUESTIONS) {
+      if (value === PostsStatusFilter.UNANSWERED && currentType !== ThreadType.QUESTION) {
         // You can't filter discussions by unanswered so switch type to questions
-        dispatch(setAllPostsTypeFilter(AllPostsFilter.ALL_QUESTIONS));
+        dispatch(setPostsTypeFilter(ThreadType.QUESTION));
       }
-      if (value === PostsStatusFilter.UNREAD && currentType !== AllPostsFilter.ALL_DISCUSSIONS) {
+      if (value === PostsStatusFilter.UNREAD && currentType !== ThreadType.DISCUSSION) {
         // You can't filter questions by unread so switch type to discussion
-        dispatch(setAllPostsTypeFilter(AllPostsFilter.ALL_DISCUSSIONS));
+        dispatch(setPostsTypeFilter(ThreadType.DISCUSSION));
       }
     }
     if (name === 'sort') {
@@ -86,7 +88,7 @@ function PostFilterBar({
       iconWhenClosed={<Icon src={Sort} />}
       title={intl.formatMessage(messages.sortFilterStatus, {
         own: filterSelfPosts,
-        type: currentFilters.allPosts,
+        type: currentFilters.postType,
         sort: currentSorting,
         status: currentFilters.status,
       })}
@@ -97,26 +99,26 @@ function PostFilterBar({
         <Form.RadioSet
           name="type"
           className="d-flex flex-column list-group list-group-flush"
-          value={currentFilters.allPosts}
+          value={currentFilters.postType}
           onChange={handleSortFilterChange}
         >
           <ActionItem
             id="type-all"
             label={intl.formatMessage(messages.allPosts)}
-            value={AllPostsFilter.ALL_POSTS}
-            selected={currentFilters.allPosts}
+            value={ThreadType.ALL}
+            selected={currentFilters.postType}
           />
           <ActionItem
             id="type-discussions"
             label={intl.formatMessage(messages.filterDiscussions)}
-            value={AllPostsFilter.ALL_DISCUSSIONS}
-            selected={currentFilters.allPosts}
+            value={ThreadType.DISCUSSION}
+            selected={currentFilters.postType}
           />
           <ActionItem
             id="type-questions"
             label={intl.formatMessage(messages.filterQuestions)}
-            value={AllPostsFilter.ALL_QUESTIONS}
-            selected={currentFilters.allPosts}
+            value={ThreadType.QUESTION}
+            selected={currentFilters.postType}
           />
         </Form.RadioSet>
         <Form.RadioSet

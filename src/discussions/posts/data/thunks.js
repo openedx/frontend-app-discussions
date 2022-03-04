@@ -2,7 +2,9 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { PostsStatusFilter } from '../../../data/constants';
+import {
+  PostsStatusFilter, ThreadType,
+} from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteThread, getThread, getThreads, postThread, updateThread,
@@ -34,7 +36,7 @@ import {
  * Filters to apply to a thread/posts query.
  * @typedef {Object} ThreadFilter
  * @property {PostsStatusFilter} status
- * @property {AllPostsFilter} allPosts
+ * @property {ThreadType} postType
  */
 
 /**
@@ -109,6 +111,9 @@ export function fetchThreads(courseId, {
   }
   if (filters.status === PostsStatusFilter.REPORTED) {
     options.flagged = true;
+  }
+  if (filters.postType !== ThreadType.ALL) {
+    options.threadType = filters.postType;
   }
   if (filters.search) {
     options.textSearch = filters.search;
