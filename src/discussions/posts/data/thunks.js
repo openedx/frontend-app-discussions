@@ -91,7 +91,7 @@ export function fetchThreads(courseId, {
   author = null,
   filters = {},
   page = 1,
-} = {}) {
+} = {}, posts = []) {
   const options = {
     orderBy,
     topicIds,
@@ -117,6 +117,7 @@ export function fetchThreads(courseId, {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
+      data.results = [...posts, ...data.results];
       const normalisedData = normaliseThreads(camelCaseObject(data));
       dispatch(fetchThreadsSuccess({ ...normalisedData, page, author }));
     } catch (error) {
