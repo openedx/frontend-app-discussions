@@ -76,6 +76,63 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
     description: 'Delete button shown on delete confirmation dialog',
   },
+  emptyAllTopics: {
+    id: 'discussions.empty.allTopics',
+    defaultMessage:
+      'All discussion activity for these topics will show up here.',
+    description: 'Message shown on page when no posts found related to topic.',
+  },
+  emptyAllPosts: {
+    id: 'discussions.empty.allPosts',
+    defaultMessage:
+      'All discussion activity for your course will show up here.',
+    description: 'Message shown on page when no posts found for the course.',
+  },
+  emptyMyPosts: {
+    id: 'discussions.empty.myPosts',
+    defaultMessage: "Posts you've interacted with will show up here.",
+    description: 'Message shown on page when no messages found for the user.',
+  },
+  emptyTopic: {
+    id: 'discussions.empty.topic',
+    defaultMessage: 'All discussion activity for this topic will show up here.',
+    description: 'Message shown when visiting a topic with no comments.',
+  },
+  emptyTitle: {
+    id: 'discussions.empty.title',
+    defaultMessage: 'Nothing here yet',
+    description: 'Title shown on empty pages below image.',
+  },
+  noPostSelected: {
+    id: 'discussions.empty.noPostSelected',
+    defaultMessage: 'No post selected',
+    description: 'Title on posts pages when user has yet to select a post to display.',
+  },
+  noTopicSelected: {
+    id: 'discussions.empty.noTopicSelected',
+    defaultMessage: 'No topic selected',
+    description: 'Title on topic pages when user has yet to select a topic.',
+  },
+  noResultsFound: {
+    id: 'discussions.sidebar.noResultsFound',
+    defaultMessage: 'No results found',
+    description: 'Title on the discussion sidebar when there are now results after filtering',
+  },
+  removeKeywords: {
+    id: 'discussions.sidebar.removeKeywords',
+    defaultMessage: 'Try searching different keywords or removing some filters',
+    description: 'Message shown on discussion sidebar if user searched with keywords.',
+  },
+  removeFilters: {
+    id: 'discussions.sidebar.removeFilters',
+    defaultMessage: 'Try removing some filters',
+    description: 'Message shown on discussion sidebar if user filtered results.',
+  },
+  emptyIconAlt: {
+    id: 'discussions.empty.iconAlt',
+    defaultMessage: 'Empty',
+    description: 'Alt-text for image showing empty state',
+  },
 });
 
 export default messages;
