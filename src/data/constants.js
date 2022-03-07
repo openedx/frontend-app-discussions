@@ -135,6 +135,17 @@ export const LearnersOrdering = {
 };
 
 /**
+ * Enum for Learner content tabs
+ * @readonly
+ * @enum {string}
+ */
+export const LearnerTabs = {
+  POSTS: 'posts',
+  COMMENTS: 'comments',
+  RESPONSES: 'responses',
+};
+
+/**
  * Enum for discussion provider types supported by the MFE.
  * @type {{OPEN_EDX: string, LEGACY: string}}
  */
@@ -152,6 +163,11 @@ export const Routes = {
   LEARNERS: {
     PATH: `${BASE_PATH}/learners`,
     LEARNER: `${BASE_PATH}/learners/:learnerUsername`,
+    TABS: {
+      posts: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.POSTS}`,
+      responses: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.RESPONSES}`,
+      comments: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.COMMENTS}`,
+    },
   },
   POSTS: {
     PATH: `${BASE_PATH}/topics/:topicId`,

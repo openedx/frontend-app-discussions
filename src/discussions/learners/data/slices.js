@@ -18,6 +18,18 @@ const learnersSlice = createSlice({
     totalPages: null,
     totalLearners: null,
     sortedBy: LearnersOrdering.BY_LAST_ACTIVITY,
+    commentsByUser: {
+      // Map username to comments
+    },
+    postsByUser: {
+      // Map username to posts
+    },
+    commentCountByUser: {
+      // Map of username and comment count
+    },
+    postCountByUser: {
+      // Map of username and post count
+    },
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => {
@@ -44,6 +56,29 @@ const learnersSlice = createSlice({
       state.sortedBy = payload;
       state.pages = [];
     },
+    fetchUserCommentsRequest: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
+    fetchUserCommentsSuccess: (state, { payload }) => {
+      state.commentsByUser[payload.username] = payload.comments;
+      state.commentCountByUser[payload.username] = payload.pagination.count;
+      state.status = RequestStatus.SUCCESS;
+    },
+    fetchUserCommentsDenied: (state) => {
+      state.status = RequestStatus.DENIED;
+    },
+    fetchUserPostsRequest: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
+    fetchUserPostsSuccess: (state, { payload }) => {
+      state.postsByUser[payload.username] = payload.posts;
+      state.postCountByUser[payload.username] = payload.pagination.count;
+      state.status = RequestStatus.SUCCESS;
+    },
+    fetchUserPostsDenied: (state) => {
+      state.status = RequestStatus.DENIED;
+    },
+
   },
 });
 
@@ -53,6 +88,13 @@ export const {
   fetchLearnersSuccess,
   fetchLearnersDenied,
   setSortedBy,
+  fetchUserCommentsRequest,
+  fetchUserCommentsDenied,
+  fetchUserCommentsSuccess,
+  fetchUserPostsRequest,
+  fetchUserPostsDenied,
+  fetchUserPostsSuccess,
+
 } = learnersSlice.actions;
 
 export const learnersReducer = learnersSlice.reducer;

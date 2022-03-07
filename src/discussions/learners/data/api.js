@@ -10,6 +10,8 @@ const apiBaseUrl = getConfig().LMS_BASE_URL;
 
 export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
 export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
+export const postsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
+export const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
 
 /**
  * Fetches all the learners in the given course.
