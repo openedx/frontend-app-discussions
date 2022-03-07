@@ -35,11 +35,12 @@ export default function DiscussionsHome() {
     postId,
     topicId,
     category,
+    learnerUsername,
   } = params;
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
 
   // Display the content area if we are currently viewing/editing a post or creating one.
-  const displayContentArea = postId || postEditorVisible;
+  const displayContentArea = postId || postEditorVisible || learnerUsername;
 
   const isSidebarVisible = useSidebarVisible();
   let displaySidebar = isSidebarVisible;
@@ -64,6 +65,7 @@ export default function DiscussionsHome() {
       topicId,
       inContext,
       category,
+      learnerUsername,
     }}
     >
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">

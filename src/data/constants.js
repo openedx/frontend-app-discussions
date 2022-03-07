@@ -119,6 +119,11 @@ export const TopicOrdering = {
   BY_COMMENT_COUNT: 'sortByCommentCount',
 };
 
+export const LearnersOrdering = {
+  BY_FLAG: 'flagged',
+  BY_LAST_ACTIVITY: 'activity',
+};
+
 /**
  * Enum for discussion provider types supported by the MFE.
  * @type {{OPEN_EDX: string, LEGACY: string}}
@@ -133,6 +138,10 @@ const BASE_PATH = '/:courseId';
 export const Routes = {
   DISCUSSIONS: {
     PATH: BASE_PATH,
+  },
+  LEARNERS: {
+    PATH: `${BASE_PATH}/learners`,
+    LEARNER: `${BASE_PATH}/learners/:learnerUsername`,
   },
   POSTS: {
     PATH: `${BASE_PATH}/topics/:topicId`,
@@ -177,4 +186,5 @@ export const ALL_ROUTES = []
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])
+  .concat([Routes.LEARNERS.LEARNER, Routes.LEARNERS.PATH])
   .concat([Routes.DISCUSSIONS.PATH]);
