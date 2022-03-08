@@ -18,18 +18,10 @@ const messages = defineMessages({
   },
   responseCount: {
     id: 'discussions.comments.comment.responseCount',
-    defaultMessage: `{num, plural, 
+    defaultMessage: `{num, plural,
       =0 {No responses}
       one {Showing # response}
       other {Showing # responses}
-     }`,
-  },
-  endorsedResponseCount: {
-    id: 'discussions.comments.comment.endorsedResponseCount',
-    defaultMessage: `{num, plural, 
-      =0 {No endorsed responses}
-      one {Showing # endorsed response}
-      other {Showing # endorsed responses}
      }`,
   },
   loadMoreComments: {
@@ -46,14 +38,14 @@ const messages = defineMessages({
     id: 'discussions.comments.comment.visibility',
     defaultMessage: `This post is visible to {group, select,
          null {Everyone}
-         other {{group}}         
+         other {{group}}
     }.`,
     description: 'Message on comment mentioning the group a particular post is visible to',
   },
   postTime: {
     id: 'discussions.comments.comment.postedTime',
-    defaultMessage: `{postType, select, 
-      discussion {Discussion} 
+    defaultMessage: `{postType, select,
+      discussion {Discussion}
       question {Question}
     } posted {relativeTime} by`,
     description: 'Timestamp for when a user posted the message followed by username. The relative time is already translated.',
