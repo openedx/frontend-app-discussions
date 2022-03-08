@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -62,6 +62,7 @@ function PostEditor({
   editExisting,
 }) {
   const dispatch = useDispatch();
+  const editorRef = useRef(null);
   const [submitting, dispatchSubmit] = useDispatchWithState();
   const history = useHistory();
   const location = useLocation();
@@ -131,6 +132,10 @@ function PostEditor({
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
       }));
+    }
+    /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
+    if (editorRef.current) {
+      editorRef.current.plugins.autosave.removeDraft();
     }
     hideEditor();
   };
@@ -304,6 +309,12 @@ function PostEditor({
           </Form.Group>
           <div className="py-2">
             <TinyMCEEditor
+              onInit={
+                /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
+                (_, editor) => {
+                  editorRef.current = editor;
+                }
+              }
               id={postEditorId}
               value={values.comment}
               onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
