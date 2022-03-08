@@ -38,7 +38,7 @@ function DiscussionPostType({
   return (
     <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
-      <Card className={selected ? 'border border-primary border-2' : ''}>
+      <Card className={selected ? 'border border-primary border-2' : ''} isClickable>
         <Card.Body className="p-3">
           <Card.Text className="d-flex flex-column align-items-center">
             <span className="text-gray-900">{icon}</span>
