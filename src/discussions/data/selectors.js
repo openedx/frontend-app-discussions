@@ -34,3 +34,7 @@ export function selectTopicThreadCount(topicId) {
     return topic.threadCounts.question + topic.threadCounts.discussion;
   };
 }
+
+export function selectPostThreadCount(state) {
+  return state.threads.totalThreads;
+}

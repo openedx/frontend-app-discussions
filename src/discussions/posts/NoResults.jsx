@@ -17,7 +17,7 @@ function NoResults({ intl }) {
   }
 
   return (
-    <div className="h-100 align-self-center w-50 d-flex flex-column justify-content-center text-center">
+    <div className="h-100 mt-5 align-self-center w-50 d-flex flex-column justify-content-center text-center">
       <h4>{intl.formatMessage(messages.noResultsFound)}</h4>
       <small>{intl.formatMessage(helpMessage)}</small>
     </div>

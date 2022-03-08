@@ -9,7 +9,7 @@ import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
-  useCourseTopicsAndBlocks,
+  useCourseDiscussionData,
   useIsOnDesktop,
   useRedirectToThread,
   useSidebarVisible,
@@ -53,7 +53,7 @@ export default function DiscussionsHome() {
   }
 
   const provider = useSelector(selectDiscussionProvider);
-  useCourseTopicsAndBlocks(courseId);
+  useCourseDiscussionData(courseId);
   useRedirectToThread(courseId);
 
   return (

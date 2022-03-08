@@ -10,17 +10,14 @@ import { breakpoints, useWindowSize } from '@edx/paragon';
 import { Routes } from '../../data/constants';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { clearRedirect } from '../posts/data';
+import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath } from '../utils';
-import { selectAreThreadsFiltered } from './selectors';
+import { selectAreThreadsFiltered, selectPostThreadCount } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
-export function usePostThreadCount() {
-  return useSelector((state) => state.threads.totalThreads);
-}
-
 export function useTotalTopicThreadCount() {
-  const topics = useSelector((state) => state.topics.topics);
+  const topics = useSelector(selectTopics);
 
   if (!topics) {
     return 0;
@@ -34,7 +31,7 @@ export function useTotalTopicThreadCount() {
 
 export const useSidebarVisible = () => {
   const isFiltered = useSelector(selectAreThreadsFiltered);
-  const totalThreads = usePostThreadCount();
+  const totalThreads = useSelector(selectPostThreadCount);
   const isViewingTopics = useRouteMatch(Routes.TOPICS.PATH);
 
   if (isFiltered) {
@@ -48,7 +45,7 @@ export const useSidebarVisible = () => {
   return totalThreads > 0;
 };
 
-export function useCourseTopicsAndBlocks(courseId) {
+export function useCourseDiscussionData(courseId) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
 

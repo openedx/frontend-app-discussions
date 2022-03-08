@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { useIsOnDesktop, usePostThreadCount } from '../data/hooks';
-import { selectAreThreadsFiltered } from '../data/selectors';
+import { useIsOnDesktop } from '../data/hooks';
+import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';
 import messages from '../messages';
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
@@ -15,7 +15,7 @@ function EmptyPosts({ intl, subTitleMessage }) {
   const dispatch = useDispatch();
 
   const isFiltered = useSelector(selectAreThreadsFiltered);
-  const totalThreads = usePostThreadCount();
+  const totalThreads = useSelector(selectPostThreadCount);
   const isOnDesktop = useIsOnDesktop();
 
   function addPost() {
