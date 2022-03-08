@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
-import { Flag, Pin } from '@edx/paragon/icons';
+import { Pin } from '@edx/paragon/icons';
 
 import { Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
@@ -42,12 +42,6 @@ function PostLink({
           <Icon src={Pin} className="position-absolute" />
         </div>
       )}
-      {post.abuseFlagged && (
-        <div className="align-items-center bg-danger-100 d-flex flex-fill p-1">
-          <Icon className="text-danger-700" src={Flag} />
-          <span className="text-gray-700 x-small">{intl.formatMessage(messages.contentReported)}</span>
-        </div>
-      )}
       <div
         className={classNames('d-flex flex-row flex-fill mw-100 p-3.5 border-primary-500', { 'bg-light-200': post.read })}
         style={post.id === postId ? {
@@ -67,6 +61,12 @@ function PostLink({
                   && (
                     <div className="ml-auto">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
+                    </div>
+                  )}
+                {post.abuseFlagged
+                  && (
+                    <div className="ml-auto">
+                      <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
                     </div>
                   )}
               </div>
