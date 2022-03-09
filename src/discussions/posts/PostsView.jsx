@@ -20,11 +20,12 @@ import {
 } from './data/selectors';
 import { fetchThreads } from './data/thunks';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
+import NoResults from './NoResults';
 import { PostLink } from './post';
 
 function PostsList({ posts }) {
   let lastPinnedIdx = null;
-  return posts && posts.map((post, idx) => {
+  const postInstances = posts && posts.map((post, idx) => {
     if (post.pinned && lastPinnedIdx !== false) {
       lastPinnedIdx = idx;
     } else if (lastPinnedIdx != null && lastPinnedIdx !== false) {
@@ -39,6 +40,12 @@ function PostsList({ posts }) {
     }
     return (<PostLink post={post} key={post.id} />);
   });
+  return (
+    <>
+      {postInstances}
+      {posts && posts.length === 0 && <NoResults />}
+    </>
+  );
 }
 
 PostsList.propTypes = {
@@ -46,6 +53,10 @@ PostsList.propTypes = {
     pinned: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
   })),
+};
+
+PostsList.defaultProps = {
+  posts: null,
 };
 
 function AllPostsList() {
