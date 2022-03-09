@@ -10,6 +10,7 @@ import { breakpoints, useWindowSize } from '@edx/paragon';
 import { Routes } from '../../data/constants';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { clearRedirect } from '../posts/data';
+import { fetchThreads } from '../posts/data/thunks';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath } from '../utils';
@@ -54,6 +55,7 @@ export function useCourseDiscussionData(courseId) {
       await dispatch(fetchCourseConfig(courseId));
       await dispatch(fetchCourseTopics(courseId));
       await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      await dispatch(fetchThreads(courseId, { author: authenticatedUser.username }));
     }
 
     fetchBaseData();
