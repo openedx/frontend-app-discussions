@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { injectIntl } from '@edx/frontend-platform/i18n';
-import { Avatar } from '@edx/paragon';
+import { Avatar, Icon } from '@edx/paragon';
+import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
@@ -24,13 +25,18 @@ function CommentHeader({
         <Avatar className="m-2" alt={comment.author} src={authorAvatars?.imageUrlSmall} />
         <AuthorLabel author={comment.author} authorLabel={comment.authorLabel} />
       </div>
-      <ActionsDropdown
-        commentOrPost={{
-          ...comment,
-          postType,
-        }}
-        actionHandlers={actionHandlers}
-      />
+      <div className="d-flex align-items-center">
+        {comment.endorsed && (postType === 'question'
+          ? <Icon src={CheckCircle} className="text-success" data-testid="check-icon" />
+          : <Icon src={Verified} data-testid="verified-icon" />)}
+        <ActionsDropdown
+          commentOrPost={{
+            ...comment,
+            postType,
+          }}
+          actionHandlers={actionHandlers}
+        />
+      </div>
     </div>
   );
 }
