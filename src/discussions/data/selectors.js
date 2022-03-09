@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { AllPostsFilter, PostsStatusFilter } from '../../data/constants';
+import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({
   allowAnonymous: state.config.allowAnonymous,
@@ -21,7 +21,7 @@ export function selectAreThreadsFiltered(state) {
 
   return !(
     filters.status === PostsStatusFilter.ALL
-    && filters.allPosts === AllPostsFilter.ALL_POSTS
+    && filters.postType === ThreadType.ALL
   );
 }
 
