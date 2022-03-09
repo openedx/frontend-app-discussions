@@ -1,11 +1,14 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import {
+  act, fireEvent, render, screen,
+} from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { RequestStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import PostFooter from './PostFooter';
 
@@ -80,5 +83,19 @@ describe('PostFooter', () => {
 
     renderComponent({ ...mockPost, groupId: 5, groupName: 'Test Cohort' });
     expect(screen.getByTestId('cohort-icon')).toBeTruthy();
+  });
+  it.each([[true, /unfollow/i], [false, /follow/i]])('test follow button when following=%s', async (following, message) => {
+    renderComponent({ ...mockPost, following });
+    const followButton = screen.getByRole('button', { name: /follow/i });
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    await act(async () => {
+      fireEvent.mouseEnter(followButton);
+    });
+    expect(screen.getByRole('tooltip')).toHaveTextContent(message);
+    await act(async () => {
+      fireEvent.click(followButton);
+    });
+    // clicking on the button triggers thread update.
+    expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
   });
 });
