@@ -56,30 +56,7 @@ PostsList.propTypes = {
 };
 
 PostsList.defaultProps = {
-  posts: null,
-};
-
-function AllPostsList() {
-  const posts = useSelector(selectAllThreads);
-  return <PostsList posts={posts} />;
-}
-
-function TopicPostsList({ topicId }) {
-  const posts = useSelector(selectTopicThreads([topicId]));
-  return <PostsList posts={posts} />;
-}
-
-TopicPostsList.propTypes = {
-  topicId: PropTypes.string.isRequired,
-};
-
-function CategoryPostsList({ category }) {
-  const topicIds = useSelector(selectTopicsUnderCategory)(category);
-  const posts = useSelector(selectTopicThreads(topicIds));
-  return <PostsList posts={posts} />;
-}
-CategoryPostsList.propTypes = {
-  category: PropTypes.string.isRequired,
+  posts: [],
 };
 
 function PostsView({ showOwnPosts }) {
@@ -90,20 +67,23 @@ function PostsView({ showOwnPosts }) {
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
-  const topicIds = null;
+  let topicIds = null;
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
   const loadingStatus = useSelector(threadsLoadingStatus());
 
   let postsListComponent = null;
+  let posts = [];
   if (topicId) {
-    postsListComponent = <TopicPostsList topicId={topicId} />;
+    posts = useSelector(selectTopicThreads([topicId]));
   } else if (category) {
-    postsListComponent = <CategoryPostsList category={category} />;
+    topicIds = useSelector(selectTopicsUnderCategory)(category);
+    posts = useSelector(selectTopicThreads(topicIds));
   } else {
-    postsListComponent = <AllPostsList />;
+    posts = useSelector(selectAllThreads);
   }
+  postsListComponent = <PostsList posts={posts} />;
   useEffect(() => {
     // The courseId from the URL is the course we WANT to load.
     dispatch(fetchThreads(courseId, {
@@ -122,7 +102,7 @@ function PostsView({ showOwnPosts }) {
         filters,
         page: nextPage,
         author: showOwnPosts ? authenticatedUser.username : null,
-      }, postsListComponent));
+      }, posts));
     }
   };
 
