@@ -67,7 +67,12 @@ function Post({
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">
           {intl.formatMessage(messages.relatedTo)}{' '}
-          <Hyperlink destination={topicContext.unitLink}>{`${getTopicCategoryName(topic)} / ${topic.name}`}</Hyperlink>
+          <Hyperlink
+            destination={topicContext.unitLink}
+            target="_top"
+          >
+            {`${getTopicCategoryName(topic)} / ${topic.name}`}
+          </Hyperlink>
         </div>
       )}
       <PostFooter post={post} preview={preview} />
