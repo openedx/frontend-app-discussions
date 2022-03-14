@@ -92,10 +92,10 @@ const messages = defineMessages({
       statusFollowing {followed}
       statusReported {reported}
       statusUnanswered {unanswered}
-    } {type, select, 
-      allPosts {posts} 
-      allDiscussions {discussions} 
-      allQuestions {questions}
+    } {type, select,  
+      discussion {discussions} 
+      question {questions}
+      all {posts}
      } by {sort, select,
         lastActivityAt {recent activity}
         commentCount {most activity}

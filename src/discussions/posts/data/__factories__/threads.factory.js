@@ -2,10 +2,12 @@ import { Factory } from 'rosie';
 
 Factory.define('thread')
   .sequence('id', (idx) => `thread-${idx}`)
-  .sequence('title', (idx) => `This is Thread-${idx}`)
+  .sequence('title', ['topic_id'], (idx, topicId) => `This is Thread-${idx} in topic ${topicId}`)
   .sequence('raw_body', (idx) => `Some contents for **thread number ${idx}**.`)
   .sequence('rendered_body', (idx) => `Some contents for <b>thread number ${idx}</b>.`)
   .sequence('type', (idx) => (idx % 2 === 1 ? 'discussion' : 'question'))
+  .sequence('pinned', idx => (idx < 3))
+  .sequence('topic_id', idx => `some-topic-${(idx % 3)}`)
   .attr('comment_list_url', ['id'], (threadId) => `http://test.site/api/discussion/v1/comments/?thread_id=${threadId}`)
   .attrs({
     created_at: () => (new Date()).toISOString(),
@@ -28,11 +30,9 @@ Factory.define('thread')
     voted: false,
     vote_count: 1,
     course_id: 'course-v1:Test+TestX+Test_Course',
-    topic_id: 'some-topic',
     group_id: null,
     group_name: null,
     abuse_flagged_count: 0,
-    pinned: false,
     closed: false,
     following: false,
     comment_count: 8,
@@ -49,6 +49,8 @@ Factory.define('threadsResult')
   .option('pageSize', null, 5)
   .option('courseId', null, 'course-v1:Test+TestX+Test_Course')
   .option('topicId', null, 'test-topic')
+  .option('threadAttrs', null, {})
+  .option('threadOptions', null, {})
   .attr('pagination', ['courseId', 'count', 'page', 'pageSize'], (courseId, count, page, pageSize) => {
     const numPages = Math.ceil(count / pageSize);
     const next = (page < numPages) ? `http://test.site/api/discussion/v1/threads/?course_id=${courseId}&page=${page + 1}` : null;
@@ -60,7 +62,9 @@ Factory.define('threadsResult')
       num_pages: numPages,
     };
   })
-  .attr('results', ['count', 'pageSize', 'page', 'courseId', 'topicId'], (count, pageSize, page, courseId, topicId) => {
+  .attr('results', ['count', 'pageSize', 'page', 'courseId', 'topicId', 'threadAttrs', 'threadOptions'], (count, pageSize, page, courseId, topicId, threadAttrs, threadOptions) => {
+    const attrs = { course_id: courseId, topic_id: topicId, ...threadAttrs };
+    Object.keys(attrs).forEach(key => (attrs[key] === undefined ? delete attrs[key] : {}));
     const len = (pageSize * page <= count) ? pageSize : count % pageSize;
-    return Factory.buildList('thread', len, { course_id: courseId, topic_id: topicId });
+    return Factory.buildList('thread', len, attrs, threadOptions);
   });

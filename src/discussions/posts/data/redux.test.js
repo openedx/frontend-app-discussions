@@ -101,7 +101,7 @@ describe('Threads/Posts data layer tests', () => {
     expect(store.getState().threads.threadsById['thread-1'])
       .toHaveProperty('topicId');
     expect(store.getState().threads.threadsById['thread-1'].topicId)
-      .toEqual('some-topic');
+      .toEqual('some-topic-1');
   });
 
   test('successfully handles thread creation', async () => {

@@ -24,6 +24,7 @@ export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
  * @param {ThreadOrdering} orderBy The results wil be sorted on this basis.
  * @param {boolean} following If true, only threads followed by the current user will be returned.
  * @param {boolean} flagged If true, only threads that have been reported will be returned.
+ * @param {string} threadType Can be 'discussion' or 'question'.
  * @param {ThreadViewStatus} view Set to "unread" on "unanswered" to filter to only those statuses.
  * @returns {Promise<{}>}
  */
@@ -38,6 +39,7 @@ export async function getThreads(
     view,
     author,
     flagged,
+    threadType,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -46,6 +48,7 @@ export async function getThreads(
     pageSize,
     topicId: topicIds && topicIds.join(','),
     textSearch,
+    threadType,
     orderBy: snakeCase(orderBy),
     following,
     view,

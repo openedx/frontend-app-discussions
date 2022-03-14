@@ -8,6 +8,7 @@ export const API_BASE_URL = getConfig().LMS_BASE_URL;
  * @enum {string}
  */
 export const ThreadType = {
+  ALL: 'all',
   QUESTION: 'question',
   DISCUSSION: 'discussion',
 };
@@ -89,17 +90,6 @@ export const ThreadViewStatus = {
 };
 
 /**
- * Enum for filtering user posts.
- * @readonly
- * @enum {string}
- */
-export const MyPostsFilter = {
-  MY_POSTS: 'myPosts',
-  MY_DISCUSSIONS: 'myDiscussions',
-  MY_QUESTIONS: 'myQuestions',
-};
-
-/**
  * Enum for filtering posts by status.
  * @readonly
  * @enum {string}
@@ -110,17 +100,6 @@ export const PostsStatusFilter = {
   FOLLOWING: 'statusFollowing',
   REPORTED: 'statusReported',
   UNANSWERED: 'statusUnanswered',
-};
-
-/**
- * Enum for filtering all posts.
- * @readonly
- * @enum {string}
- */
-export const AllPostsFilter = {
-  ALL_POSTS: 'allPosts',
-  ALL_DISCUSSIONS: 'allDiscussions',
-  ALL_QUESTIONS: 'allQuestions',
 };
 
 /**
