@@ -6,7 +6,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import {
   Button, Dropdown, Icon, IconButton, ModalPopup,
 } from '@edx/paragon';
-import { MoreVert } from '@edx/paragon/icons';
+import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
@@ -37,7 +37,7 @@ function ActionsDropdown({
         <IconButton
           onClick={() => setOpen(!isOpen)}
           alt={intl.formatMessage(messages.actionsAlt)}
-          src={MoreVert}
+          src={MoreHoriz}
           iconAs={Icon}
           disabled={disabled}
         />

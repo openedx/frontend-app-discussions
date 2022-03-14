@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
-import { Pin } from '@edx/paragon/icons';
+import { Bookmark } from '@edx/paragon/icons';
 
 import { Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
@@ -38,8 +38,8 @@ function PostLink({
       to={linkUrl}
     >
       {post.pinned && (
-        <div className="d-flex flex-fill justify-content-end mr-4 text-light-500">
-          <Icon src={Pin} className="position-absolute" />
+        <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
+          <Icon src={Bookmark} className="position-absolute mt-n1" />
         </div>
       )}
       <div

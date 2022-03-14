@@ -3,44 +3,55 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
+import messages from '../messages';
+
 function AuthorLabel({
+  intl,
   author,
   authorLabel,
   linkToProfile,
 }) {
+  let icon = null;
+  let authorLabelMessage = null;
+  if (authorLabel === 'Staff') {
+    icon = Institution;
+    authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
+  }
+  if (authorLabel === 'Community TA') {
+    icon = School;
+    authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
+  }
   const labelContents = (
     <>
-      {author}
-      {authorLabel === 'Staff' && (
-      <Icon
-        style={{
-          width: '1rem',
-          height: '1rem',
-        }}
-        src={Institution}
-      />
+      <span className="mr-1">{author}</span>
+      {icon && (
+        <Icon
+          style={{
+            width: '1rem',
+            height: '1rem',
+          }}
+          src={icon}
+        />
       )}
-      {authorLabel === 'Community TA' && (
-      <Icon
-        style={{
-          width: '1rem',
-          height: '1rem',
-        }}
-        src={School}
-      />
+      {authorLabelMessage && (
+        <span className="mr-3 ml-1">
+          {authorLabelMessage}
+        </span>
       )}
     </>
   );
-  const className = classNames('d-flex align-items-center', { 'text-success-700': Boolean(authorLabel) });
+  const className = classNames('d-flex align-items-center');
   return linkToProfile
     ? React.createElement('a', { href: '#nowhere', className }, labelContents)
     : React.createElement('div', { className }, labelContents);
 }
 
 AuthorLabel.propTypes = {
+  intl: intlShape,
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
@@ -51,4 +62,4 @@ AuthorLabel.defaultProps = {
   authorLabel: null,
 };
 
-export default AuthorLabel;
+export default injectIntl(AuthorLabel);

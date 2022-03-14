@@ -5,10 +5,8 @@ import { useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import {
-  CheckCircle, Error, Institution, School, Verified,
-} from '@edx/paragon/icons';
+import { Alert } from '@edx/paragon';
+import { CheckCircle, Error, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
@@ -25,7 +23,6 @@ function AlertBanner({
   const isQuestion = postType === ThreadType.QUESTION;
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
   const iconClass = isQuestion ? CheckCircle : Verified;
-  const endorsedByLabels = { Staff: 'Staff', 'Community TA': 'TA' };
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   return (
@@ -44,35 +41,15 @@ function AlertBanner({
                 : messages.endorsed,
             )}
             </strong>
-            <span className="d-flex align-items-center">
-              {intl.formatMessage(
-                isQuestion
-                  ? messages.answeredLabel
-                  : messages.endorsedLabel,
-              )}
-              <span className="mx-2">{content.endorsedBy}</span>
-
-              {content.endorsedByLabel === 'Staff' ? (
-                <Icon
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                  src={Institution}
-                />
-              ) : (
-                <Icon
-                  style={{
-                    width: '1rem',
-                    height: '1rem',
-                  }}
-                  src={School}
-                />
-              )}
-
-              <span className="mr-3" data-testid="endorsed-by-label">
-                {endorsedByLabels[content.endorsedByLabel]}
+            <span className="d-flex align-items-center mr-1">
+              <span className="mr-2">
+                {intl.formatMessage(
+                  isQuestion
+                    ? messages.answeredLabel
+                    : messages.endorsedLabel,
+                )}
               </span>
+              <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} />
               {timeago.format(content.endorsedAt, intl.locale)}
             </span>
           </div>
