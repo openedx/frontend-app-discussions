@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router';
@@ -10,18 +10,25 @@ import {
 import { AppContext } from '@edx/frontend-platform/react';
 
 import { RequestStatus, Routes } from '../../data/constants';
+import { DiscussionContext } from '../common/context';
 import { PostsView } from '../posts';
 import {
   selectAllThreads, threadsLoadingStatus,
 } from '../posts/data/selectors';
+import { fetchThreads } from '../posts/data/thunks';
 import { TopicsView } from '../topics';
 
 export default function DiscussionSidebar({ displaySidebar }) {
   const location = useLocation();
-  const AllThreads = useSelector(selectAllThreads);
+  const dispatch = useDispatch();
+  const userThreads = useSelector(selectAllThreads);
+  const { courseId } = useContext(DiscussionContext);
   const { authenticatedUser } = useContext(AppContext);
-  const userThreads = AllThreads.filter(thread => thread.author === authenticatedUser.username);
   const loadingStatus = useSelector(threadsLoadingStatus());
+
+  useEffect(() => {
+    dispatch(fetchThreads(courseId, { author: authenticatedUser.username }));
+  }, [authenticatedUser, courseId]);
 
   return (
     <div

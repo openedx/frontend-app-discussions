@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
@@ -10,11 +11,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
 import { threadsApiUrl } from '../posts/data/api';
-import {
-  fetchThreads,
-} from '../posts/data/thunks';
 import DiscussionSidebar from './DiscussionSidebar';
 
 import '../posts/data/__factories__';
@@ -71,20 +68,22 @@ describe('DiscussionSidebar', () => {
   });
 
   test('User with some topics should be redirected to "My Topics"', async () => {
-    const myOwnthreads = Factory.build('threadsResult', {}, {});
     axiosMock.onGet(threadsApiUrl)
-      .reply(200, myOwnthreads);
-    await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
-    renderComponent(true);
-    expect(await screen.queryByText('All posts by recent activity', { exact: false })).not.toBeInTheDocument();
-    expect(await screen.queryByText('Own posts by recent activity', { exact: false })).toBeInTheDocument();
+      .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
+        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
+      })]);
+    renderComponent();
+    await act(async () => expect(await screen.findAllByText('Thread by abc123')).toBeTruthy());
+    expect(screen.queryByText('Thread by other users')).not.toBeInTheDocument();
   });
   test('User with no posts should be redirected to "All Topics"', async () => {
     axiosMock.onGet(threadsApiUrl)
-      .reply(200, Factory.build('threadsResult', {}, { filterAuthor: 'test_user' }));
-    await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
+      .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
+        count: params.author ? 0 : 3,
+        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
+      })]);
     renderComponent();
-    expect(await screen.queryByText('All posts by recent activity', { exact: false })).toBeInTheDocument();
-    expect(await screen.queryByText('Own posts by recent activity', { exact: false })).not.toBeInTheDocument();
+    await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
   });
 });
