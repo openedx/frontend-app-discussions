@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -12,7 +13,9 @@ import {
 import { ThreadType } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../comments/messages';
+import { selectModerationSettings, selectUserIsPrivileged } from '../data/selectors';
 import { postShape } from '../posts/post/proptypes';
+import AuthorLabel from './AuthorLabel';
 
 function AlertBanner({
   intl,
@@ -23,6 +26,8 @@ function AlertBanner({
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
   const iconClass = isQuestion ? CheckCircle : Verified;
   const endorsedByLabels = { Staff: 'Staff', 'Community TA': 'TA' };
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   return (
     <>
       {content.endorsed && (
@@ -78,13 +83,29 @@ function AlertBanner({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
+      {reasonCodesEnabled && userIsPrivileged && content.lastEdit?.reason && (
+        <Alert variant="info" className="p-3 m-0 shadow-none mb-1 bg-light-200">
+          <div className="d-flex align-items-center">
+            {intl.formatMessage(messages.editedBy)}
+            <span className="ml-1 mr-3">
+              <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile />
+            </span>
+            {intl.formatMessage(messages.reason)}:&nbsp;{content.lastEdit.reason}
+          </div>
+        </Alert>
+      )}
     </>
   );
 }
+
 AlertBanner.propTypes = {
   intl: intlShape.isRequired,
   content: PropTypes.oneOfType([commentShape.isRequired, postShape.isRequired]).isRequired,
-  postType: PropTypes.string.isRequired,
+  postType: PropTypes.string,
+};
+
+AlertBanner.defaultProps = {
+  postType: null,
 };
 
 export default injectIntl(AlertBanner);

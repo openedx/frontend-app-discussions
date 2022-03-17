@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  act, fireEvent, render, screen,
+  act, fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -77,8 +77,9 @@ describe('LegacyBreadcrumbMenu', () => {
   it('shows the category dropdown with a category selected', async () => {
     renderComponent(`/${courseId}/category/category-1`);
 
-    // The current category should be visible on the page
-    const categoryDropdown = await screen.findByText('category-1');
+    waitFor(() => screen.findByText('category-1'));
+    // The current category should be visible on the pagz
+    const categoryDropdown = screen.queryByText('category-1');
     // Since a category is selected a subcategory dropdown should also be visible with "show all" selected by default
     const topicsDropdown = screen.queryByText('Show all');
     // A show all button should show up that lists topics in the current category

@@ -1,14 +1,17 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../components';
 import { useDispatchWithState } from '../../../data/hooks';
+import { selectModerationSettings, selectUserIsPrivileged } from '../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
 import { addComment, editComment } from '../data/thunks';
 import messages from '../messages';
@@ -18,6 +21,9 @@ function CommentEditor({
   comment,
   onCloseEditor,
 }) {
+  const { authenticatedUser } = useContext(AppContext);
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
   const editorRef = useRef(null);
   const saveUpdatedComment = async (values) => {
@@ -42,6 +48,9 @@ function CommentEditor({
         .shape({
           comment: Yup.string()
             .required(),
+          editReasonCode: Yup.string()
+            .nullable()
+            .default(null),
         })}
       onSubmit={saveUpdatedComment}
     >
@@ -54,6 +63,30 @@ function CommentEditor({
         handleChange,
       }) => (
         <Form onSubmit={handleSubmit}>
+          {(reasonCodesEnabled
+            && userIsPrivileged
+            && comment.author !== authenticatedUser.username) && (
+            <Form.Group>
+              <Form.Control
+                name="editReasonCode"
+                className="mt-2"
+                as="select"
+                value={values.editReasonCode}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="editReasonCodeInput"
+                floatingLabel={intl.formatMessage(messages.editReasonCode)}
+              >
+                <option key="empty" value="">---</option>
+                {editReasons.map(({
+                  code,
+                  label,
+                }) => (
+                  <option key={code} value={code}>{label}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          )}
           <TinyMCEEditor
             onInit={
               /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
@@ -105,6 +138,7 @@ CommentEditor.propTypes = {
     threadId: PropTypes.string.isRequired,
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
+    author: PropTypes.string,
   }).isRequired,
   onCloseEditor: PropTypes.func.isRequired,
   intl: intlShape.isRequired,

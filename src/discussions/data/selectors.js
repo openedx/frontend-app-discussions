@@ -10,6 +10,12 @@ export const selectUserIsPrivileged = state => state.config.userIsPrivileged;
 
 export const selectDivisionSettings = state => state.config.settings;
 
+export const selectModerationSettings = state => ({
+  postCloseReasons: state.config.postCloseReasons,
+  editReasons: state.config.editReasons,
+  reasonCodesEnabled: state.config.reasonCodesEnabled,
+});
+
 export const selectDiscussionProvider = state => state.config.provider;
 
 export function selectAreThreadsFiltered(state) {

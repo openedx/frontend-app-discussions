@@ -213,7 +213,7 @@ export function createNewThread({
 }
 
 export function updateExistingThread(threadId, {
-  flagged, voted, read, topicId, type, title, content, following, closed, pinned,
+  flagged, voted, read, topicId, type, title, content, following, closed, pinned, editReasonCode,
 }) {
   return async (dispatch) => {
     try {
@@ -229,6 +229,7 @@ export function updateExistingThread(threadId, {
         following,
         closed,
         pinned,
+        editReasonCode,
       }));
       const data = await updateThread(threadId, {
         flagged,
@@ -241,6 +242,7 @@ export function updateExistingThread(threadId, {
         following,
         closed,
         pinned,
+        editReasonCode,
       });
       dispatch(updateThreadSuccess(camelCaseObject(data)));
     } catch (error) {

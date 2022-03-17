@@ -84,6 +84,7 @@ export async function postComment(comment, threadId, parentId = null) {
  * @param {boolean=} voted
  * @param {boolean=} flagged
  * @param {boolean=} endorsed
+ * @param {string=} editReasonCode The moderation reason code for editing.
  * @returns {Promise<{}>}
  */
 export async function updateComment(commentId, {
@@ -91,14 +92,16 @@ export async function updateComment(commentId, {
   voted,
   flagged,
   endorsed,
+  editReasonCode,
 }) {
   const url = `${commentsApiUrl}${commentId}/`;
-  const postData = {
+  const postData = snakeCaseObject({
     raw_body: comment,
     voted,
     abuse_flagged: flagged,
     endorsed,
-  };
+    editReasonCode,
+  });
 
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, postData, { headers: { 'Content-Type': 'application/merge-patch+json' } });

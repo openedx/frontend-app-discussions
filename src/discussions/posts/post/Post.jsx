@@ -28,6 +28,7 @@ function Post({
   const topic = useSelector(selectTopic(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
+
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({

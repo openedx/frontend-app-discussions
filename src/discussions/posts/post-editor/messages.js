@@ -101,6 +101,11 @@ const messages = defineMessages({
     id: 'discussions.editor.cancel',
     defaultMessage: 'Cancel',
   },
+  editReasonCode: {
+    id: 'discussions.editor.posts.editReasonCode',
+    defaultMessage: 'Reason for editing',
+    description: 'Label for field visible to moderators that allows them to select a reason for editing another user\'s post',
+  },
 });
 
 export default messages;
