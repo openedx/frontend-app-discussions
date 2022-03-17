@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
-import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@edx/paragon';
+import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../components';
+import { useDispatchWithState } from '../../../data/hooks';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
 import { addComment, editComment } from '../data/thunks';
 import messages from '../messages';
@@ -18,12 +18,17 @@ function CommentEditor({
   comment,
   onCloseEditor,
 }) {
-  const dispatch = useDispatch();
+  const [submitting, dispatch] = useDispatchWithState();
+  const editorRef = useRef(null);
   const saveUpdatedComment = async (values) => {
     if (comment.id) {
-      dispatch(editComment(comment.id, values));
+      await dispatch(editComment(comment.id, values));
     } else {
       await dispatch(addComment(values.comment, comment.threadId, comment.parentId));
+    }
+    /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
+    if (editorRef.current) {
+      editorRef.current.plugins.autosave.removeDraft();
     }
     onCloseEditor();
   };
@@ -48,42 +53,47 @@ function CommentEditor({
         handleBlur,
         handleChange,
       }) => (
-        <>
-          <Form onSubmit={handleSubmit}>
-            <TinyMCEEditor
-              id={editorId}
-              value={values.comment}
-              onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
-              onBlur={formikCompatibleHandler(handleBlur, 'comment')}
-            />
-            {isFormikFieldInvalid('comment', {
-              errors,
-              touched,
-            })
+        <Form onSubmit={handleSubmit}>
+          <TinyMCEEditor
+            onInit={
+              /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
+              (_, editor) => {
+                editorRef.current = editor;
+              }
+            }
+            id={editorId}
+            value={values.comment}
+            onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
+            onBlur={formikCompatibleHandler(handleBlur, 'comment')}
+          />
+          {isFormikFieldInvalid('comment', {
+            errors,
+            touched,
+          })
             && (
               <Form.Control.Feedback type="invalid" hasIcon={false}>
                 {intl.formatMessage(messages.commentError)}
               </Form.Control.Feedback>
             )}
-            <div className="d-flex py-2 justify-content-end">
-              <StatefulButton
-                labels={{
-                  default: intl.formatMessage(messages.cancel),
-                }}
-                variant="outline-primary"
-                onClick={onCloseEditor}
-              />
-              <StatefulButton
-                labels={{
-                  default: intl.formatMessage(messages.submit),
-                }}
-                className="ml-2"
-                variant="primary"
-                onClick={handleSubmit}
-              />
-            </div>
-          </Form>
-        </>
+          <div className="d-flex py-2 justify-content-end">
+            <Button
+              variant="outline-primary"
+              onClick={onCloseEditor}
+            >
+              {intl.formatMessage(messages.cancel)}
+            </Button>
+            <StatefulButton
+              state={submitting ? 'pending' : null}
+              labels={{
+                default: intl.formatMessage(messages.submit),
+                pending: intl.formatMessage(messages.submitting),
+              }}
+              className="ml-2"
+              variant="primary"
+              onClick={handleSubmit}
+            />
+          </div>
+        </Form>
       )}
     </Formik>
   );

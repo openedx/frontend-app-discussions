@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
@@ -6,7 +8,7 @@ import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
 import { Factory } from 'rosie';
 
-import { initializeMockApp } from '@edx/frontend-platform';
+import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
@@ -25,6 +27,37 @@ const questionPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
 let axiosMock;
+
+// Provides a mock editor component that functions like tinyMCE without the overhead
+function MockEditor({
+  onBlur,
+  onEditorChange,
+}) {
+  return (
+    <textarea
+      data-testid="tinymce-editor"
+      onChange={(event) => {
+        onEditorChange(event.currentTarget.value);
+      }}
+      onBlur={event => {
+        onBlur(event.currentTarget.value);
+      }}
+    />
+  );
+}
+
+MockEditor.propTypes = {
+  onBlur: PropTypes.func.isRequired,
+  onEditorChange: PropTypes.func.isRequired,
+};
+jest.mock('@tinymce/tinymce-react', () => {
+  const originalModule = jest.requireActual('@tinymce/tinymce-react');
+  return {
+    __esModule: true,
+    ...originalModule,
+    Editor: MockEditor,
+  };
+});
 
 function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
@@ -103,16 +136,130 @@ describe('CommentsView', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(threadsApiUrl)
       .reply(200, Factory.build('threadsResult'));
+    axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({
+      url,
+      data,
+    }) => {
+      const commentId = url.match(/comments\/(?<id>[a-z1-9-]+)\//).groups.id;
+      const {
+        rawBody,
+      } = camelCaseObject(JSON.parse(data));
+      return [200, Factory.build('comment', {
+        id: commentId,
+        rendered_body: rawBody,
+        raw_body: rawBody,
+      })];
+    });
+    axiosMock.onPost(commentsApiUrl)
+      .reply(({ data }) => {
+        const {
+          rawBody,
+          threadId,
+        } = camelCaseObject(JSON.parse(data));
+        return [200, Factory.build(
+          'comment',
+          {
+            rendered_body: rawBody,
+            raw_body: rawBody,
+            thread_id: threadId,
+          },
+        )];
+      });
 
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     mockAxiosReturnPagedComments();
     mockAxiosReturnPagedCommentsResponses();
   });
 
+  describe('for all post types', () => {
+    it('should show and hide the editor', async () => {
+      renderComponent(discussionPostId);
+      await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      act(() => {
+        fireEvent.click(
+          screen.getByRole('button', { name: /add a response/i }),
+        );
+      });
+      expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
+      act(() => {
+        fireEvent.click(
+          screen.getByRole('button', {
+            name: /cancel/i,
+          }),
+        );
+      });
+      expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
+    });
+    it('should allow posting a response', async () => {
+      renderComponent(discussionPostId);
+      await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      act(() => {
+        fireEvent.click(
+          screen.getByRole('button', { name: /add a response/i }),
+        );
+      });
+      act(() => {
+        fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });
+      });
+
+      await act(async () => {
+        fireEvent.click(
+          screen.getByText(/submit/i),
+        );
+      });
+      expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
+      await waitFor(async () => expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument());
+    });
+    it('should allow posting a comment', async () => {
+      renderComponent(discussionPostId);
+      await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      act(() => {
+        fireEvent.click(
+          screen.getAllByRole('button', { name: /add a comment/i })[0],
+        );
+      });
+      act(() => {
+        fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });
+      });
+
+      await act(async () => {
+        fireEvent.click(
+          screen.getByText(/submit/i),
+        );
+      });
+      expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
+      await waitFor(async () => expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument());
+    });
+    it('should allow editing an existing comment', async () => {
+      renderComponent(discussionPostId);
+      await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      act(() => {
+        fireEvent.click(
+          // The first edit menu is for the post, the second will be for the first comment.
+          screen.getAllByRole('button', {
+            name: /actions menu/i,
+          })[1],
+        );
+      });
+      act(() => {
+        fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+      });
+      act(() => {
+        fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });
+      });
+      act(() => {
+        fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+      });
+      await waitFor(async () => {
+        expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument();
+      });
+    });
+  });
+
   describe('for discussion thread', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
-    it("shown spinner when post isn't loaded", async () => {
+    it('shown spinner when post isn\'t loaded', async () => {
       renderComponent('unloaded-id');
       expect(await screen.findByTestId('loading-indicator'))
         .toBeInTheDocument();
@@ -199,7 +346,7 @@ describe('CommentsView', () => {
         .not
         .toBeInTheDocument();
 
-      await act(() => {
+      act(() => {
         fireEvent.click(loadMoreButtonEndorsed);
       });
       // Endorsed comment from next page should be loaded now.
@@ -211,7 +358,7 @@ describe('CommentsView', () => {
         .toBeInTheDocument();
       // Now only one load more buttons should show, for unendorsed comments
       expect(await findLoadMoreCommentsButtons()).toHaveLength(1);
-      await act(() => {
+      act(() => {
         fireEvent.click(loadMoreButtonUnendorsed);
       });
       // Unendorsed comment from next page should be loaded now.
@@ -227,7 +374,7 @@ describe('CommentsView', () => {
     it('initially loads only the first page', async () => {
       renderComponent(discussionPostId);
 
-      await screen.findByText('comment number 7', { exact: false });
+      await waitFor(() => screen.findByText('comment number 7', { exact: false }));
       expect(screen.queryByText('comment number 8', { exact: false })).not.toBeInTheDocument();
     });
 
@@ -235,7 +382,9 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-      fireEvent.click(loadMoreButton);
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
       await screen.findByText('comment number 8', { exact: false });
     });
@@ -244,7 +393,9 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-      fireEvent.click(loadMoreButton);
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
       await screen.findByText('comment number 8', { exact: false });
       // check that comments from the first page are also displayed
@@ -252,12 +403,14 @@ describe('CommentsView', () => {
     });
 
     it('load more button is hidden when no more responses pages to load', async () => {
-      const totalePages = 2;
+      const totalPages = 2;
       renderComponent(discussionPostId);
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-      for (let page = 1; page < totalePages; page++) {
-        fireEvent.click(loadMoreButton);
+      for (let page = 1; page < totalPages; page++) {
+        act(() => {
+          fireEvent.click(loadMoreButton);
+        });
       }
 
       await screen.findByText('comment number 8', { exact: false });
