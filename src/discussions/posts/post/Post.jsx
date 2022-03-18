@@ -61,7 +61,7 @@ function Post({
         <AlertBanner postType={post.type} content={post} />
       </div>
       <PostHeader post={post} actionHandlers={actionHandlers} />
-      <div className="d-flex my-2">
+      <div className="d-flex my-2 text-break">
         {/* eslint-disable-next-line react/no-danger */}
         <div dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
       </div>
