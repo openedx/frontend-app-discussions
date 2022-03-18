@@ -37,21 +37,17 @@ function PostFooter({
           </Tooltip>
         )}
       >
-        {preview
-          ? <Icon src={post.following ? StarFilled : StarOutline} className="my-0 mr-4.5" />
-          : (
-            <IconButton
-              onClick={() => {
-                dispatch(updateExistingThread(post.id, { following: !post.following }));
-                return true;
-              }}
-              alt="Follow"
-              iconAs={Icon}
-              size="inline"
-              className="mx-2.5 my-0"
-              src={post.following ? StarFilled : StarOutline}
-            />
-          )}
+        <IconButton
+          onClick={() => {
+            dispatch(updateExistingThread(post.id, { following: !post.following }));
+            return true;
+          }}
+          alt="Follow"
+          iconAs={Icon}
+          size="inline"
+          className="mx-2.5 my-0"
+          src={post.following ? StarFilled : StarOutline}
+        />
       </OverlayTrigger>
       {preview && post.commentCount > 1
         && (
