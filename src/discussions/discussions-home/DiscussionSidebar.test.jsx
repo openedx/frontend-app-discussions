@@ -67,7 +67,7 @@ describe('DiscussionSidebar', () => {
     expect(element).toHaveClass('d-none');
   });
 
-  test('User with some topics should be redirected to "My Topics"', async () => {
+  test('User with some topics should be redirected to "My Posts"', async () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
         threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
@@ -76,7 +76,7 @@ describe('DiscussionSidebar', () => {
     await act(async () => expect(await screen.findAllByText('Thread by abc123')).toBeTruthy());
     expect(screen.queryByText('Thread by other users')).not.toBeInTheDocument();
   });
-  test('User with no posts should be redirected to "All Topics"', async () => {
+  test('User with no posts should be redirected to "All Posts"', async () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
         count: params.author ? 0 : 3,
