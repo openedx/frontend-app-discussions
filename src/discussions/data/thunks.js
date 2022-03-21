@@ -18,7 +18,7 @@ export function fetchCourseConfig(courseId) {
     try {
       dispatch(fetchConfigRequest());
       const config = await getDiscussionsConfig(courseId);
-      if (config.user_is_privileged) {
+      if (config.is_user_admin) {
         const settings = await getDiscussionsSettings(courseId);
         Object.assign(config, { settings });
       }
