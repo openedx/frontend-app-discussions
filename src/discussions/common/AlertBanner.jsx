@@ -33,7 +33,7 @@ function AlertBanner({
       {content.endorsed && (
         <Alert
           variant="plain"
-          className={`p-3 m-0 shadow-none ${classes}`}
+          className={`p-3 m-0 align-items-center shadow-none ${classes}`}
           style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
           icon={iconClass}
         >
