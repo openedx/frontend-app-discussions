@@ -59,7 +59,7 @@ function PostLink({
                 </div>
                 {showAnsweredBadge
                   && (
-                    <div className="ml-auto">
+                    <div className="ml-auto mr-2">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
                     </div>
                   )}
