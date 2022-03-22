@@ -22,7 +22,15 @@ const messages = defineMessages({
       =0 {No responses}
       one {Showing # response}
       other {Showing # responses}
-     }`,
+    }`,
+  },
+  endorsedResponseCount: {
+    id: 'discussions.comments.comment.endorsedResponseCount',
+    defaultMessage: `{num, plural, 
+      =0 {No endorsed responses}
+      one {Showing # endorsed response}
+      other {Showing # endorsed responses}
+    }`,
   },
   loadMoreComments: {
     id: 'discussions.comments.comment.loadMoreComments',

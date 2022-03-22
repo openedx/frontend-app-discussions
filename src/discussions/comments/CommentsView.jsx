@@ -74,7 +74,9 @@ function DiscussionCommentsView({
   return (
     <div className="m-3">
       <div className="my-3">
-        {intl.formatMessage(messages.responseCount, { num: comments.length })}
+        {endorsed === EndorsementStatus.ENDORSED
+          ? intl.formatMessage(messages.endorsedResponseCount, { num: comments.length })
+          : intl.formatMessage(messages.responseCount, { num: comments.length })}
       </div>
       {comments.map(comment => (
         <Comment comment={comment} key={comment.id} postType={postType} />
