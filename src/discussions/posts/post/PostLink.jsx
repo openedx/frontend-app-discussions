@@ -59,13 +59,13 @@ function PostLink({
                 </div>
                 {showAnsweredBadge
                   && (
-                    <div className="ml-auto mr-2">
+                    <div className="ml-auto">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
                     </div>
                   )}
                 {post.abuseFlagged
                   && (
-                    <div className="ml-auto">
+                    <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
                       <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
                     </div>
                   )}
