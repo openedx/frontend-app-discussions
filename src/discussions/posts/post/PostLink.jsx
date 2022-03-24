@@ -65,7 +65,7 @@ function PostLink({
                   )}
                 {post.abuseFlagged
                   && (
-                    <div className="ml-auto">
+                    <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
                       <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
                     </div>
                   )}
