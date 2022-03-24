@@ -3,7 +3,7 @@ import {
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, Route } from 'react-router';
 import { Factory } from 'rosie';
 
 import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
@@ -24,6 +24,7 @@ import './data/__factories__';
 
 const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
+const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
 let axiosMock;
@@ -154,25 +155,21 @@ describe('CommentsView', () => {
     it('should show and hide the editor', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
-      act(() => {
+      await act(async () => {
         fireEvent.click(
           screen.getByRole('button', { name: /add a response/i }),
         );
       });
       expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
-      act(() => {
-        fireEvent.click(
-          screen.getByRole('button', {
-            name: /cancel/i,
-          }),
-        );
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
       });
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
     });
     it('should allow posting a response', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
-      act(() => {
+      await act(async () => {
         fireEvent.click(
           screen.getByRole('button', { name: /add a response/i }),
         );
@@ -192,7 +189,7 @@ describe('CommentsView', () => {
     it('should allow posting a comment', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
-      act(() => {
+      await act(async () => {
         fireEvent.click(
           screen.getAllByRole('button', { name: /add a comment/i })[0],
         );
@@ -212,19 +209,19 @@ describe('CommentsView', () => {
     it('should allow editing an existing comment', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
-      act(() => {
+      await act(async () => {
         fireEvent.click(
           // The first edit menu is for the post, the second will be for the first comment.
           screen.getAllByRole('button', { name: /actions menu/i })[1],
         );
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /edit/i }));
       });
       act(() => {
         fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /submit/i }));
       });
       await waitFor(async () => {
@@ -265,6 +262,9 @@ describe('CommentsView', () => {
       expect(screen.queryByRole('combobox', { name: /reason for editing/i })).toBeInTheDocument();
       expect(screen.getAllByRole('option', { name: /reason \d/i })).toHaveLength(2);
       await act(async () => {
+        fireEvent.change(screen.queryByRole('combobox', { name: /reason for editing/i }), { target: { value: null } });
+      });
+      await act(async () => {
         fireEvent.change(screen.queryByRole('combobox', { name: /reason for editing/i }), { target: { value: 'reason-1' } });
       });
       await act(async () => {
@@ -303,6 +303,7 @@ describe('CommentsView', () => {
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
       assertLastUpdateData({ closed: true, close_reason_code: 'reason-1' });
     });
+
     it('should close the post directly if reason codes are not enabled', async () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
@@ -319,6 +320,27 @@ describe('CommentsView', () => {
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
       assertLastUpdateData({ closed: true });
     });
+
+    it.each([true, false])(
+      'should reopen the post directly when reason codes enabled=%s',
+      async (reasonCodesEnabled) => {
+        setupCourseConfig(reasonCodesEnabled);
+        renderComponent(closedPostId);
+        await act(async () => {
+          fireEvent.click(
+            // The first edit menu is for the post
+            screen.getAllByRole('button', { name: /actions menu/i })[0],
+          );
+        });
+        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
+        await act(async () => {
+          fireEvent.click(screen.getByRole('button', { name: /reopen/i }));
+        });
+        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
+        assertLastUpdateData({ closed: false });
+      },
+    );
+
     it('should show the editor if the post is edited', async () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
@@ -331,7 +353,7 @@ describe('CommentsView', () => {
       await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /edit/i }));
       });
-      expect(testLocation.pathname).toBe(`comments/comments/${discussionPostId}/edit`);
+      expect(testLocation.pathname).toBe(`/${courseId}/posts/${discussionPostId}/edit`);
     });
     it('should allow pinning the post', async () => {
       renderComponent(discussionPostId);

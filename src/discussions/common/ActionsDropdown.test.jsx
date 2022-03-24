@@ -1,6 +1,7 @@
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Factory } from 'rosie';
 
@@ -125,7 +126,9 @@ describe('ActionsDropdown', () => {
       renderComponent(commentOrPost, { disabled: false });
 
       const openButton = await findOpenActionsDropdownButton();
-      fireEvent.click(openButton);
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
 
       await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup'))
         .toBeInTheDocument());
@@ -138,7 +141,9 @@ describe('ActionsDropdown', () => {
       renderComponent(commentOrPost, { disabled: true });
 
       const openButton = await findOpenActionsDropdownButton();
-      fireEvent.click(openButton);
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
 
       await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup'))
         .not
@@ -157,12 +162,16 @@ describe('ActionsDropdown', () => {
       );
 
       const openButton = await findOpenActionsDropdownButton();
-      fireEvent.click(openButton);
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
 
       await waitFor(() => expect(screen.queryByText(defaultMessage))
         .toBeInTheDocument());
 
-      fireEvent.click(screen.queryByText(defaultMessage));
+      await act(async () => {
+        fireEvent.click(screen.queryByText(defaultMessage));
+      });
 
       expect(mockHandler).toHaveBeenCalled();
     },
@@ -175,7 +184,9 @@ describe('ActionsDropdown', () => {
       renderComponent(commentOrPost);
 
       const openButton = await findOpenActionsDropdownButton();
-      fireEvent.click(openButton);
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
 
       await waitFor(() => expect(screen.queryByText(defaultMessage))
         .not
