@@ -17,21 +17,24 @@ import DiscussionSidebar from './DiscussionSidebar';
 import '../posts/data/__factories__';
 
 let store;
+let container;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 let axiosMock;
 
 function renderComponent(displaySidebar = true, location = `/${courseId}/`) {
-  return render(
+  const wrapper = render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
         <AppProvider store={store}>
           <MemoryRouter initialEntries={[location]}>
-            <DiscussionSidebar data-test- displaySidebar={displaySidebar} />
+            <DiscussionSidebar displaySidebar={displaySidebar} />
           </MemoryRouter>
         </AppProvider>
       </ResponsiveContext.Provider>
     </IntlProvider>,
   );
+  container = wrapper.container;
+  return container;
 }
 
 describe('DiscussionSidebar', () => {
@@ -67,23 +70,26 @@ describe('DiscussionSidebar', () => {
     expect(element).toHaveClass('d-none');
   });
 
-  test('User with some topics should be redirected to "My Posts"', async () => {
+  test('User with some topics should be redirected to "All Posts"', async () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
-        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
-      })]);
-    renderComponent();
-    await act(async () => expect(await screen.findAllByText('Thread by abc123')).toBeTruthy());
-    expect(screen.queryByText('Thread by other users')).not.toBeInTheDocument();
-  });
-  test('User with no posts should be redirected to "All Posts"', async () => {
-    axiosMock.onGet(threadsApiUrl)
-      .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
-        count: params.author ? 0 : 3,
         threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
       })]);
     renderComponent();
     await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
     expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
+  });
+
+  test('Display discussion posts should equal to post count in "All Posts"', async () => {
+    const postCount = 5;
+    axiosMock.onGet(threadsApiUrl)
+      .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
+        count: postCount,
+        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
+      })]);
+    renderComponent();
+    await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(postCount);
   });
 });
