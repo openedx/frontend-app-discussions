@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { DiscussionProvider } from '../../data/constants';
 import { selectSequences } from '../../data/selectors';
+import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
+import { fetchCourseTopics } from './data/thunks';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import Topic from './topic-group/topic/Topic';
 import TopicGroup from './topic-group/TopicGroup';
@@ -57,6 +59,14 @@ function LegacyCoursewareTopics() {
 
 function TopicsView() {
   const provider = useSelector(selectDiscussionProvider);
+  const { courseId } = useContext(DiscussionContext);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Don't load till the provider information is available
+    if (provider) {
+      dispatch(fetchCourseTopics(courseId));
+    }
+  }, [provider]);
 
   return (
     <div
