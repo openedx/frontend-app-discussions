@@ -36,7 +36,7 @@ function LikeButton(
       >
         <IconButton
           onClick={handleClick}
-          className="p-0"
+          className="p-0 mr-2"
           alt="Like"
           iconAs={Icon}
           size="inline"
