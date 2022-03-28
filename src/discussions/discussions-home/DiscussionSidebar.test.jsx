@@ -70,7 +70,7 @@ describe('DiscussionSidebar', () => {
     expect(element).toHaveClass('d-none');
   });
 
-  test('User with some topics should be redirected to "All Posts"', async () => {
+  test('User will be redirected to "All Posts" by default', async () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
         threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
