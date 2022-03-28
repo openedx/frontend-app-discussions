@@ -288,6 +288,43 @@ describe('CommentsView', () => {
         name: /reason \d/i,
       })).toHaveLength(2);
     });
+
+    it('handles liking a comment', async () => {
+      renderComponent(discussionPostId);
+
+      // Wait for the content to load
+      await screen.findByText('comment number 7', { exact: false });
+      const view = screen.getByTestId('comment-comment-1');
+
+      const likeButton = within(view).getByRole('button', { name: /like/i });
+      await act(async () => {
+        fireEvent.click(likeButton);
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
+    });
+
+    it.each([
+      ['endorsing comments', 'Endorse', { endorsed: true }],
+      ['reporting comments', 'Report', { abuse_flagged: true }],
+    ])('handles %s', async (label, buttonLabel, patchData) => {
+      renderComponent(discussionPostId);
+
+      // Wait for the content to load
+      await screen.findByText('comment number 7', { exact: false });
+
+      // There should be three buttons, one for the post, the second for the
+      // comment and the third for a response to that comment
+      const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
+      await act(async () => {
+        fireEvent.click(actionButtons[1]);
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: buttonLabel }));
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject(patchData);
+    });
   });
 
   describe('for discussion thread', () => {

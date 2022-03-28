@@ -8,6 +8,7 @@ import { Button, useToggle } from '@edx/paragon';
 
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation } from '../../common';
+import { fetchThread } from '../../posts/data/thunks';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -39,7 +40,10 @@ function Comment({
   }, [comment.id]);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
-    [ContentActions.ENDORSE]: () => dispatch(editComment(comment.id, { endorsed: !comment.endorsed })),
+    [ContentActions.ENDORSE]: async () => {
+      await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }));
+      await dispatch(fetchThread(comment.threadId));
+    },
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
   };
