@@ -8,6 +8,10 @@ export const selectAnonymousPostingConfig = state => ({
 
 export const selectUserIsPrivileged = state => state.config.userIsPrivileged;
 
+export const selectconfigLoadingStatus = state => state.config.status;
+
+export const selectLearnersTabEnabled = state => state.config.learnersTabEnabled;
+
 export const selectDivisionSettings = state => state.config.settings;
 
 export const selectModerationSettings = state => ({

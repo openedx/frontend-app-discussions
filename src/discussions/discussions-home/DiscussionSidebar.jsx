@@ -11,6 +11,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
+import { LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import {
   selectAllThreads, threadsLoadingStatus,
@@ -48,6 +49,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
           component={PostsView}
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+        <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         {RequestStatus.SUCCESSFUL === loadingStatus && (
         <Redirect
           from={Routes.DISCUSSIONS.PATH}

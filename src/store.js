@@ -4,6 +4,7 @@ import { blocksReducer } from './data/slices';
 import { cohortsReducer } from './discussions/cohorts/data';
 import { commentsReducer } from './discussions/comments/data';
 import { configReducer } from './discussions/data/slices';
+import { learnersReducer } from './discussions/learners/data';
 import { threadsReducer } from './discussions/posts/data';
 import { topicsReducer } from './discussions/topics/data';
 
@@ -16,6 +17,7 @@ export function initializeStore(preloadedState = undefined) {
       cohorts: cohortsReducer,
       config: configReducer,
       blocks: blocksReducer,
+      learners: learnersReducer,
     },
     preloadedState,
   });

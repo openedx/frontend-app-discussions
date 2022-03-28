@@ -6,5 +6,6 @@ export const DiscussionContext = React.createContext({
   postId: null,
   category: null,
   commentId: null,
+  learnerUsername: null,
   inContext: false,
 });

@@ -33,12 +33,13 @@ export const useSidebarVisible = () => {
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
   const isViewingTopics = useRouteMatch(Routes.TOPICS.PATH);
+  const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
 
   if (isFiltered) {
     return true;
   }
 
-  if (isViewingTopics) {
+  if (isViewingTopics || isViewingLearners) {
     return true;
   }
 
