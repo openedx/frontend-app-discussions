@@ -79,7 +79,7 @@ export default function DiscussionsHome() {
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
           component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
         />
-        <div className="d-flex flex-row overflow-hidden">
+        <div className="d-flex flex-row overflow-hidden flex-grow-1">
           <DiscussionSidebar displaySidebar={displaySidebar} />
           {displayContentArea && <DiscussionContent />}
           {!displayContentArea && (
