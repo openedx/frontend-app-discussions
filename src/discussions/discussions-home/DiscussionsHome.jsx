@@ -21,6 +21,8 @@ import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigati
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 
+import './DiscussionsHome.scss';
+
 export default function DiscussionsHome() {
   const location = useLocation();
   const postEditorVisible = useSelector(
@@ -69,7 +71,7 @@ export default function DiscussionsHome() {
     }}
     >
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
-        <div className="d-flex flex-row justify-content-between shadow navbar fixed-top">
+        <div className="d-flex flex-row justify-content-between nav-shadow navbar fixed-top">
           {!inContext && (
           <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
           )}
