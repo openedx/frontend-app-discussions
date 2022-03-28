@@ -2,11 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { generatePath, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { Icon } from '@edx/paragon';
-import { Error as ErrorIcon, Help, Post as PostIcon } from '@edx/paragon/icons';
+import { Error as ErrorIcon, Help, PostOutline } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
 import { discussionsPath } from '../../../utils';
@@ -20,7 +20,7 @@ function Topic({ topic }) {
   const icons = [
     {
       key: 'discussions',
-      icon: PostIcon,
+      icon: PostOutline,
       count: topic.threadCounts?.discussion || 0,
     },
     {

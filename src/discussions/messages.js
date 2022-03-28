@@ -133,6 +133,16 @@ const messages = defineMessages({
     defaultMessage: 'Empty',
     description: 'Alt-text for image showing empty state',
   },
+  authorLabelStaff: {
+    id: 'discussions.authors.label.staff',
+    defaultMessage: 'Staff',
+    description: 'A label for staff users displayed next to their username.',
+  },
+  authorLabelTA: {
+    id: 'discussions.authors.label.ta',
+    defaultMessage: 'TA',
+    description: 'A label for community TAs displayed next to their username.',
+  },
 });
 
 export default messages;
