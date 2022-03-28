@@ -9,7 +9,7 @@ import {
   Badge, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Locked, People, QuestionAnswerOutline, StarFilled, StarOutline,
+  Locked, People, QuestionAnswer, QuestionAnswerOutline, StarFilled, StarOutline,
 } from '@edx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
@@ -52,7 +52,7 @@ function PostFooter({
       {preview && post.commentCount > 1
         && (
           <>
-            <Icon src={QuestionAnswerOutline} className="mx-2 my-0" />
+            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="mx-2 my-0" />
             <span style={{ minWidth: '2rem' }}>
               {post.commentCount}
             </span>
