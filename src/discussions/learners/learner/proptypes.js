@@ -2,8 +2,8 @@
 import PropTypes from 'prop-types';
 
 export const learnerShape = PropTypes.shape({
-  active_flags: PropTypes.number,
-  inactive_flags: PropTypes.number,
+  activeFlags: PropTypes.number,
+  inactiveFlags: PropTypes.number,
   username: PropTypes.string,
   replies: PropTypes.number,
   responses: PropTypes.number,

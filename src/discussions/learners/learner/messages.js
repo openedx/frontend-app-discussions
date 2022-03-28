@@ -11,7 +11,7 @@ const messages = defineMessages({
   },
   lastActive: {
     id: 'discussions.learner.lastLogin',
-    defaultMessage: 'Last active {last_active_time}',
+    defaultMessage: 'Last active {lastActiveTime}',
   },
 });
 

@@ -13,7 +13,6 @@ import { selectconfigLoadingStatus, selectLearnersTabEnabled } from '../data/sel
 import {
   learnersLoadingStatus,
   selectAllLearners,
-  selectLearnerFilters,
   selectLearnerNextPage,
   selectLearnerSorting,
 } from './data/selectors';
@@ -27,7 +26,6 @@ function LearnersView() {
   const location = useLocation();
   const dispatch = useDispatch();
   const orderBy = useSelector(selectLearnerSorting());
-  const filters = useSelector(selectLearnerFilters());
   const nextPage = useSelector(selectLearnerNextPage());
   const loadingStatus = useSelector(learnersLoadingStatus());
   const courseConfigLoadingStatus = useSelector(selectconfigLoadingStatus);
@@ -35,18 +33,14 @@ function LearnersView() {
   const learners = useSelector(selectAllLearners);
   useEffect(() => {
     if (learnersTabEnabled) {
-      dispatch(fetchLearners(courseId, {
-        orderBy,
-        filters,
-      }));
+      dispatch(fetchLearners(courseId, { orderBy }));
     }
-  }, [courseId, orderBy, filters, learnersTabEnabled]);
+  }, [courseId, orderBy, learnersTabEnabled]);
 
   const loadPage = async () => {
     if (nextPage) {
       dispatch(fetchLearners(courseId, {
         orderBy,
-        filters,
         page: nextPage,
       }));
     }
@@ -54,7 +48,7 @@ function LearnersView() {
   return (
     <div className="d-flex flex-column">
       <div className="list-group list-group-flush">
-        {RequestStatus.SUCCESSFUL === courseConfigLoadingStatus && !learnersTabEnabled && (
+        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
           to={{
             ...location,
@@ -62,7 +56,7 @@ function LearnersView() {
           }}
         />
         )}
-        {RequestStatus.SUCCESSFUL === courseConfigLoadingStatus && learnersTabEnabled && learners.map((learner) => (
+        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learnersTabEnabled && learners.map((learner) => (
           <LearnerCard learner={learner} key={learner.username} courseId={courseId} />
         ))}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (

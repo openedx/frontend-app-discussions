@@ -58,7 +58,7 @@ function LearnerCard({
                 </div>
               </div>
               {learnerLastLogin
-                && <span> {intl.formatMessage(messages.lastActive, { last_active_time: lastActiveTime })}</span>}
+                && <span> {intl.formatMessage(messages.lastActive, { lastActiveTime })}</span>}
             </div>
           </div>
           <LearnerFooter learner={learner} />

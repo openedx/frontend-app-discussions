@@ -12,7 +12,7 @@ const learnersSlice = createSlice({
     status: RequestStatus.IN_PROGRESS,
     avatars: {},
     learners: [],
-    learnerProfiles: [],
+    learnerProfiles: {},
     pages: [],
     nextPage: null,
     totalPages: null,
@@ -23,9 +23,12 @@ const learnersSlice = createSlice({
     fetchLearnersSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.learners = payload.results;
-      state.learnerProfiles = payload.learnerProfiles || [];
+      state.learnerProfiles = {
+        ...state.learnerProfiles,
+        ...(payload.learnerProfiles || {}),
+      };
       state.nextPage = payload.pagination.next;
-      state.totalPages = payload.pagination.num_pages;
+      state.totalPages = payload.pagination.numPages;
       state.totalLearners = payload.pagination.count;
     },
     fetchLearnersFailed: (state) => {
