@@ -2,6 +2,7 @@
 import { getIn } from 'formik';
 import { generatePath, useRouteMatch } from 'react-router';
 
+import { getConfig } from '@edx/frontend-platform';
 import {
   Delete, Edit, Flag, Pin, QuestionAnswer, VerifiedBadge,
 } from '@edx/paragon/icons';
@@ -200,3 +201,26 @@ export const discussionsPath = (path, params) => {
   const pathname = generatePath(path, params);
   return (location) => ({ ...location, pathname });
 };
+
+/**
+ * Helper function to make a postMessage call
+ * @param {string} type message type
+ * @param {object} payload data to send in message
+ */
+export function postMessageToParent(type, payload = {}) {
+  if (window.parent !== window) {
+    const messageTargets = [
+      getConfig().LEARNING_BASE_URL,
+      getConfig().LMS_BASE_URL,
+    ];
+    messageTargets.forEach(target => {
+      window.parent.postMessage(
+        {
+          type,
+          payload,
+        },
+        target,
+      );
+    });
+  }
+}

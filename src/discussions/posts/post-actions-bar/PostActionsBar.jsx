@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { useLocation } from 'react-router-dom';
 
-import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, SearchField,
@@ -14,7 +13,7 @@ import { Close } from '@edx/paragon/icons';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
-import { discussionsPath } from '../../utils';
+import { discussionsPath, postMessageToParent } from '../../utils';
 import { setSearchQuery, showPostEditor } from '../data';
 import messages from './messages';
 
@@ -29,9 +28,7 @@ function PostActionsBar({
   const location = useLocation();
   const history = useHistory();
   const handleCloseInContext = () => {
-    if (window.parent !== window) {
-      window.parent.postMessage({ type: 'learning.events.sidebar.close' }, getConfig().LEARNING_BASE_URL);
-    }
+    postMessageToParent('learning.events.sidebar.close');
   };
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">

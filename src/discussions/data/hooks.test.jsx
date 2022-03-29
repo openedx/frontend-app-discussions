@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
-import { initializeMockApp } from '@edx/frontend-platform';
+import { getConfig, initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
@@ -50,13 +50,14 @@ describe('Hooks', () => {
     delete window.parent;
     window.parent = { ...window, postMessage: jest.fn() };
     const { unmount } = renderComponent();
-    await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalledTimes(1));
+    // Once for LMS and one for learning MFE
+    await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalledTimes(2));
     // Test that size is reset on unmount
     unmount();
-    await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalledTimes(4));
     expect(window.parent.postMessage).toHaveBeenLastCalledWith(
       { type: 'plugin.resize', payload: { height: null } },
-      'http://localhost:2000',
+      getConfig().LMS_BASE_URL,
     );
   });
   test('useContainerSizeForParent disabled', async () => {
