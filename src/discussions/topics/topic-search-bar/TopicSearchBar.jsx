@@ -6,7 +6,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { SearchField } from '@edx/paragon';
 
 import { setFilter } from '../data';
-import messages from './messages';
+import messages from '../messages';
 
 function TopicSearchBar({ intl }) {
   const dispatch = useDispatch();

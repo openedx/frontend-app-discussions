@@ -1,4 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, within,
+} from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
@@ -10,11 +12,12 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getBlocksAPIResponse } from '../../data/__factories__';
 import { blocksAPIURL } from '../../data/api';
-import { API_BASE_URL } from '../../data/constants';
+import { API_BASE_URL, DiscussionProvider } from '../../data/constants';
 import { selectSequences } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { DiscussionContext } from '../common/context';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
 import { fetchCourseTopics } from './data/thunks';
 import TopicsView from './TopicsView';
@@ -33,20 +36,22 @@ function renderComponent() {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[`/${courseId}/topics/`]}>
-          <Route path="/:courseId/topics/">
-            <TopicsView />
-          </Route>
-          <Route path="/:courseId/category/:category">
-            <TopicsView />
-          </Route>
-          <Route
-            render={({ location }) => {
-              lastLocation = location;
-              return null;
-            }}
-          />
-        </MemoryRouter>
+        <DiscussionContext.Provider value={{ courseId }}>
+          <MemoryRouter initialEntries={[`/${courseId}/topics/`]}>
+            <Route path="/:courseId/topics/">
+              <TopicsView />
+            </Route>
+            <Route path="/:courseId/category/:category">
+              <TopicsView />
+            </Route>
+            <Route
+              render={({ location }) => {
+                lastLocation = location;
+                return null;
+              }}
+            />
+          </MemoryRouter>
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
@@ -95,9 +100,14 @@ describe('TopicsView', () => {
         const blocksAPIResponse = getBlocksAPIResponse(true);
         const ids = Object.values(blocksAPIResponse.blocks).filter(block => block.type === 'vertical')
           .map(block => block.block_id);
+        const deletedIds = [
+          'block-v1:edX+DemoX+Demo_Course+type@vertical+block@deleted-vertical-1',
+          'block-v1:edX+DemoX+Demo_Course+type@vertical+block@deleted-vertical-2',
+        ];
         const data = [
           ...Factory.buildList('topic.v2', 2, { usage_key: null }, { topicPrefix: 'ncw' }),
           ...ids.map(id => Factory.build('topic.v2', { id })),
+          ...deletedIds.map(id => Factory.build('topic.v2', { id, enabled_in_context: false }, { topicPrefix: 'archived ' })),
         ];
 
         axiosMock
@@ -124,7 +134,7 @@ describe('TopicsView', () => {
       });
     });
 
-    it('displays non-courseware in outside of a topic group', async () => {
+    it('displays non-courseware outside of a topic group', async () => {
       await setupMockResponse();
       renderComponent();
 
@@ -135,8 +145,24 @@ describe('TopicsView', () => {
       });
 
       const topicGroups = screen.queryAllByTestId('topic-group');
-      expect(topicGroups).toHaveLength(categories.length);
+      // For the new provider there should be a section for archived topics
+      expect(topicGroups).toHaveLength(
+        provider === DiscussionProvider.LEGACY
+          ? categories.length
+          : categories.length + 1,
+      );
     });
+
+    if (provider === DiscussionProvider.OPEN_EDX) {
+      it('displays archived topics', async () => {
+        await setupMockResponse();
+        renderComponent();
+        const archivedTopicGroup = screen.queryAllByTestId('topic-group').pop();
+        expect(archivedTopicGroup).toHaveTextContent(/archived/i);
+        const archivedTopicLinks = within(archivedTopicGroup).queryAllByRole('link');
+        expect(archivedTopicLinks).toHaveLength(2);
+      });
+    }
 
     it('displays courseware topics', async () => {
       await setupMockResponse();

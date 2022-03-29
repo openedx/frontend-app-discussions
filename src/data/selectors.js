@@ -32,4 +32,10 @@ export const selectSequences = createSelector(
   (chapterIds, blocks) => chapterIds?.flatMap(cId => blocks[cId].children.map(seqId => blocks[seqId])) || [],
 );
 
+export const selectArchivedTopics = createSelector(
+  state => state.topics.topics,
+  state => state.topics.archivedIds || [],
+  (topics, ids) => ids.map(id => topics[id]),
+);
+
 export const selectTopicIds = () => (state) => state.blocks.chapters;
