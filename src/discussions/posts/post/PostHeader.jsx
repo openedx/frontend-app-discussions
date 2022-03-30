@@ -13,10 +13,12 @@ import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-export function PostAvatar({ post }) {
+export function PostAvatar({ post, authorLabel }) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
+  const borderClasses = { Staff: 'border-warning-700', 'Community TA': 'border-success-700' };
+  const borderClass = borderClasses[authorLabel] || '';
   return (
-    <div className="mr-2">
+    <div className="mr-3">
       {post.type === ThreadType.QUESTION && (
       <Icon
         src={Help}
@@ -29,7 +31,8 @@ export function PostAvatar({ post }) {
       )}
       <Avatar
         size={post.type === ThreadType.QUESTION ? 'sm' : 'md'}
-        className={post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}
+        className={`${borderClass} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
+        style={{ borderWidth: '2px' }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
       />
@@ -39,6 +42,11 @@ export function PostAvatar({ post }) {
 
 PostAvatar.propTypes = {
   post: postShape.isRequired,
+  authorLabel: PropTypes.string,
+};
+
+PostAvatar.defaultProps = {
+  authorLabel: null,
 };
 
 function PostHeader({
@@ -51,7 +59,7 @@ function PostHeader({
 
   return (
     <div className="d-flex flex-fill mw-100">
-      <PostAvatar post={post} />
+      <PostAvatar post={post} authorLabel={post.authorLabel} />
       <div className="align-items-center d-flex flex-row" style={{ width: 'calc(100% - 8rem)' }}>
         <div className="d-flex flex-column justify-content-start mw-100">
           {preview

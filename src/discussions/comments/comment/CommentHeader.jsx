@@ -19,10 +19,17 @@ function CommentHeader({
   actionHandlers,
 }) {
   const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
+  const borderClasses = { Staff: 'border-warning-700', 'Community TA': 'border-success-700' };
+  const borderClass = borderClasses[comment.authorLabel] || '';
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">
-        <Avatar className="m-2" alt={comment.author} src={authorAvatars?.imageUrlSmall} />
+        <Avatar
+          className={`m-2 ${borderClass}`}
+          style={{ borderWidth: '2px' }}
+          alt={comment.author}
+          src={authorAvatars?.imageUrlSmall}
+        />
         <AuthorLabel author={comment.author} authorLabel={comment.authorLabel} />
       </div>
       <div className="d-flex align-items-center">

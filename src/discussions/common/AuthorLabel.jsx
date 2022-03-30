@@ -17,13 +17,16 @@ function AuthorLabel({
 }) {
   let icon = null;
   let authorLabelMessage = null;
+  let authorLabelClass = '';
   if (authorLabel === 'Staff') {
     icon = Institution;
     authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
+    authorLabelClass = 'text-warning-700';
   }
   if (authorLabel === 'Community TA') {
     icon = School;
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
+    authorLabelClass = 'text-success-700';
   }
   const labelContents = (
     <>
@@ -44,7 +47,7 @@ function AuthorLabel({
       )}
     </>
   );
-  const className = classNames('d-flex align-items-center');
+  const className = classNames('d-flex align-items-center', authorLabelClass);
   return linkToProfile
     ? React.createElement('a', { href: '#nowhere', className }, labelContents)
     : React.createElement('div', { className }, labelContents);

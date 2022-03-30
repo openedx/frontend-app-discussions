@@ -49,11 +49,11 @@ function PostLink({
           borderRightStyle: 'solid',
         } : null}
       >
-        <PostAvatar post={post} />
+        <PostAvatar post={post} authorLabel={post.authorLabel} />
         <div className="d-flex flex-column" style={{ width: 'calc(100% - 4rem)' }}>
           <div className="align-items-center d-flex flex-row flex-fill">
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
-              <div className="h4 d-flex align-items-center pb-0 mb-0 flex-fill">
+              <div className="d-flex align-items-center pb-0 mb-0 flex-fill" style={{ fontWeight: 500 }}>
                 <div className="flex-fill text-truncate">
                   {post.title}
                 </div>
