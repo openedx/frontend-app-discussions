@@ -15,7 +15,7 @@ import { postShape } from './proptypes';
 
 export function PostAvatar({ post, authorLabel, fromPostLink }) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
-  const borderClass = ColorClasses[authorLabel] || '';
+  const borderColor = ColorClasses[authorLabel];
   return (
     <div className="mr-3">
       {post.type === ThreadType.QUESTION && (
@@ -30,7 +30,7 @@ export function PostAvatar({ post, authorLabel, fromPostLink }) {
       )}
       <Avatar
         size={fromPostLink ? 'sm' : 'md'}
-        className={`${borderClass && `border-${borderClass}`} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
+        className={`${borderColor && `border-${borderColor}`} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
         style={{ borderWidth: '2px' }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
@@ -57,7 +57,7 @@ function PostHeader({
   actionHandlers,
 }) {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
-  const authorLabelColor = ColorClasses[post.authorLabel] || '';
+  const authorLabelColor = ColorClasses[post.authorLabel];
   return (
     <div className="d-flex flex-fill mw-100">
       <PostAvatar post={post} authorLabel={post.authorLabel} />

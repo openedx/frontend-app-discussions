@@ -32,7 +32,7 @@ function PostLink({
     postId: post.id,
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
-  const authorLabelColor = ColorClasses[post.authorLabel] || '';
+  const authorLabelColor = ColorClasses[post.authorLabel];
   return (
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"

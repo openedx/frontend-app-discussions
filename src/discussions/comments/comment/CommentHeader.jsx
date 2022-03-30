@@ -19,7 +19,7 @@ function CommentHeader({
   actionHandlers,
 }) {
   const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
-  const colorClass = ColorClasses[comment.authorLabel] || '';
+  const colorClass = ColorClasses[comment.authorLabel];
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">

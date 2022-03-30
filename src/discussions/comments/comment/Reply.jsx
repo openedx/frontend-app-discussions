@@ -32,7 +32,7 @@ function Reply({
     [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
-  const colorClass = ColorClasses[reply.authorLabel] || '';
+  const colorClass = ColorClasses[reply.authorLabel];
   return (
     <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`}>
       <DeleteConfirmation
