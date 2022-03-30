@@ -7,16 +7,15 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 import { Help } from '@edx/paragon/icons';
 
-import { ThreadType } from '../../../data/constants';
+import { ColorClasses, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-export function PostAvatar({ post, authorLabel }) {
+export function PostAvatar({ post, authorLabel, fromPostLink }) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
-  const borderClasses = { Staff: 'border-warning-700', 'Community TA': 'border-success-700' };
-  const borderClass = borderClasses[authorLabel] || '';
+  const borderClass = ColorClasses[authorLabel] || '';
   return (
     <div className="mr-3">
       {post.type === ThreadType.QUESTION && (
@@ -30,8 +29,8 @@ export function PostAvatar({ post, authorLabel }) {
       />
       )}
       <Avatar
-        size={post.type === ThreadType.QUESTION ? 'sm' : 'md'}
-        className={`${borderClass} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
+        size={fromPostLink ? 'sm' : 'md'}
+        className={`${borderClass && `border-${borderClass}`} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
         style={{ borderWidth: '2px' }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
@@ -43,10 +42,12 @@ export function PostAvatar({ post, authorLabel }) {
 PostAvatar.propTypes = {
   post: postShape.isRequired,
   authorLabel: PropTypes.string,
+  fromPostLink: PropTypes.bool,
 };
 
 PostAvatar.defaultProps = {
   authorLabel: null,
+  fromPostLink: false,
 };
 
 function PostHeader({
@@ -56,7 +57,7 @@ function PostHeader({
   actionHandlers,
 }) {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
-
+  const authorLabelColor = ColorClasses[post.authorLabel] || '';
   return (
     <div className="d-flex flex-fill mw-100">
       <PostAvatar post={post} authorLabel={post.authorLabel} />
@@ -73,7 +74,11 @@ function PostHeader({
               </div>
             )
             : <h3 className="mb-0">{post.title}</h3>}
-          <AuthorLabel author={post.author || intl.formatMessage(messages.anonymous)} authorLabel={post.authorLabel} />
+          <AuthorLabel
+            author={post.author || intl.formatMessage(messages.anonymous)}
+            authorLabel={post.authorLabel}
+            labelColor={authorLabelColor && `text-${authorLabelColor}`}
+          />
         </div>
       </div>
       {!preview
