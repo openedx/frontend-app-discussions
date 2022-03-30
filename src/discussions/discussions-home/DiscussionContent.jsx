@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router';
 
 import { Routes } from '../../data/constants';
 import { CommentsView } from '../comments';
+import { useContainerSizeForParent } from '../data/hooks';
 import { PostEditor } from '../posts';
 
 export default function DiscussionContent() {
-  const postEditorVisible = useSelector(
-    (state) => state.threads.postEditorVisible,
-  );
+  const refContainer = useRef(null);
+  const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
+  useContainerSizeForParent(refContainer);
+
   return (
-    <div className="d-flex bg-light-300 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 pb-2 overflow-auto">
-      <div className="d-flex flex-column w-100 mw-xl">
+    <div className="d-flex bg-light-300 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 overflow-auto">
+      <div className="d-flex flex-column w-100 mw-xl" ref={refContainer}>
         {postEditorVisible ? (
           <Route path={Routes.POSTS.NEW_POST}>
             <PostEditor />

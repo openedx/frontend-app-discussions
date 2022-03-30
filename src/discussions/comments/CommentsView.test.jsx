@@ -1,11 +1,9 @@
-import PropTypes from 'prop-types';
-
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import { Factory } from 'rosie';
 
 import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
@@ -16,10 +14,10 @@ import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { courseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
+import DiscussionContent from '../discussions-home/DiscussionContent';
 import { threadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { commentsApiUrl } from './data/api';
-import CommentsView from './CommentsView';
 
 import '../posts/data/__factories__';
 import './data/__factories__';
@@ -29,37 +27,6 @@ const questionPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
 let axiosMock;
-
-// Provides a mock editor component that functions like tinyMCE without the overhead
-function MockEditor({
-  onBlur,
-  onEditorChange,
-}) {
-  return (
-    <textarea
-      data-testid="tinymce-editor"
-      onChange={(event) => {
-        onEditorChange(event.currentTarget.value);
-      }}
-      onBlur={event => {
-        onBlur(event.currentTarget.value);
-      }}
-    />
-  );
-}
-
-MockEditor.propTypes = {
-  onBlur: PropTypes.func.isRequired,
-  onEditorChange: PropTypes.func.isRequired,
-};
-jest.mock('@tinymce/tinymce-react', () => {
-  const originalModule = jest.requireActual('@tinymce/tinymce-react');
-  return {
-    __esModule: true,
-    ...originalModule,
-    Editor: MockEditor,
-  };
-});
 
 function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
@@ -112,10 +79,8 @@ function renderComponent(postId) {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[`comments/${postId}`]}>
-          <Route path="comments/:postId">
-            <CommentsView />
-          </Route>
+        <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
+          <DiscussionContent />
         </MemoryRouter>
       </AppProvider>
     </IntlProvider>,
@@ -489,6 +454,43 @@ describe('CommentsView', () => {
         .rejects
         .toThrow();
     });
+
+    it('handles liking a comment', async () => {
+      renderComponent(discussionPostId);
+
+      // Wait for the content to load
+      await screen.findByText('comment number 7', { exact: false });
+      const view = screen.getByTestId('comment-comment-1');
+
+      const likeButton = within(view).getByRole('button', { name: /like/i });
+      await act(async () => {
+        fireEvent.click(likeButton);
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
+    });
+
+    it.each([
+      ['endorsing comments', 'Endorse', { endorsed: true }],
+      ['reporting comments', 'Report', { abuse_flagged: true }],
+    ])('handles %s', async (label, buttonLabel, patchData) => {
+      renderComponent(discussionPostId);
+
+      // Wait for the content to load
+      await screen.findByText('comment number 7', { exact: false });
+
+      // There should be three buttons, one for the post, the second for the
+      // comment and the third for a response to that comment
+      const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
+      await act(async () => {
+        fireEvent.click(actionButtons[1]);
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: buttonLabel }));
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject(patchData);
+    });
   });
 
   describe.each([
@@ -500,13 +502,13 @@ describe('CommentsView', () => {
     testId,
   }) => {
     test(`for ${component}`, async () => {
-      await renderComponent(discussionPostId);
+      renderComponent(discussionPostId);
       // Wait for the content to load
       await screen.findByText('comment number 7', { exact: false });
       const content = screen.getByTestId(testId);
       const actionsButton = within(content)
         .getAllByRole('button', { name: /actions menu/i })[0];
-      act(() => {
+      await act(async () => {
         fireEvent.click(actionsButton);
       });
       expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
@@ -514,12 +516,12 @@ describe('CommentsView', () => {
         .toBeInTheDocument();
       const deleteButton = within(content)
         .queryByRole('button', { name: /delete/i });
-      act(() => {
+      await act(async () => {
         fireEvent.click(deleteButton);
       });
       expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
         .toBeInTheDocument();
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.queryByRole('button', { name: /delete/i }));
       });
       expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false }))
