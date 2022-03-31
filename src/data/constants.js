@@ -73,7 +73,7 @@ export const RequestStatus = {
  * @readonly
  * @enum {string}
  */
-export const AvatarBorderAndLabelTextColors = {
+export const AvatarBorderAndLabelColors = {
   Staff: 'warning-700',
   'Community TA': 'success-700',
 };

@@ -7,7 +7,7 @@ import * as timeago from 'timeago.js';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
-import { AvatarBorderAndLabelTextColors, ContentActions } from '../../../data/constants';
+import { AvatarBorderAndLabelColors, ContentActions } from '../../../data/constants';
 import {
   ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
 } from '../../common';
@@ -32,7 +32,7 @@ function Reply({
     [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
-  const colorClass = AvatarBorderAndLabelTextColors[reply.authorLabel];
+  const colorClass = AvatarBorderAndLabelColors[reply.authorLabel];
   return (
     <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`}>
       <DeleteConfirmation

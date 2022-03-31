@@ -7,7 +7,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 import { Help } from '@edx/paragon/icons';
 
-import { AvatarBorderAndLabelTextColors, ThreadType } from '../../../data/constants';
+import { AvatarBorderAndLabelColors, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
@@ -15,7 +15,7 @@ import { postShape } from './proptypes';
 
 export function PostAvatar({ post, authorLabel, fromPostLink }) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
-  const borderColor = AvatarBorderAndLabelTextColors[authorLabel];
+  const borderColor = AvatarBorderAndLabelColors[authorLabel];
   return (
     <div className="mr-3">
       {post.type === ThreadType.QUESTION && (
@@ -57,7 +57,7 @@ function PostHeader({
   actionHandlers,
 }) {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
-  const authorLabelColor = AvatarBorderAndLabelTextColors[post.authorLabel];
+  const authorLabelColor = AvatarBorderAndLabelColors[post.authorLabel];
   return (
     <div className="d-flex flex-fill mw-100">
       <PostAvatar post={post} authorLabel={post.authorLabel} />
