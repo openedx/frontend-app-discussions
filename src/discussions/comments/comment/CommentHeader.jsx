@@ -7,7 +7,7 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
-import { ThreadType } from '../../../data/constants';
+import { AvatarBorderAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import ActionsDropdown from '../../common/ActionsDropdown';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
@@ -19,11 +19,17 @@ function CommentHeader({
   actionHandlers,
 }) {
   const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
+  const colorClass = AvatarBorderAndLabelColors[comment.authorLabel];
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">
-        <Avatar className="m-2" alt={comment.author} src={authorAvatars?.imageUrlSmall} />
-        <AuthorLabel author={comment.author} authorLabel={comment.authorLabel} />
+        <Avatar
+          className={`m-2 ${colorClass && `border-${colorClass}`}`}
+          style={{ borderWidth: '2px' }}
+          alt={comment.author}
+          src={authorAvatars?.imageUrlSmall}
+        />
+        <AuthorLabel author={comment.author} authorLabel={comment.authorLabel} labelColor={colorClass && `text-${colorClass}`} />
       </div>
       <div className="d-flex align-items-center">
         {comment.endorsed && (postType === 'question'

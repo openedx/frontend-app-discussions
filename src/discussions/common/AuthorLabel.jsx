@@ -14,6 +14,7 @@ function AuthorLabel({
   author,
   authorLabel,
   linkToProfile,
+  labelColor,
 }) {
   let icon = null;
   let authorLabelMessage = null;
@@ -44,7 +45,7 @@ function AuthorLabel({
       )}
     </>
   );
-  const className = classNames('d-flex align-items-center');
+  const className = classNames('d-flex align-items-center', labelColor);
   return linkToProfile
     ? React.createElement('a', { href: '#nowhere', className }, labelContents)
     : React.createElement('div', { className }, labelContents);
@@ -55,11 +56,13 @@ AuthorLabel.propTypes = {
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
+  labelColor: PropTypes.string,
 };
 
 AuthorLabel.defaultProps = {
   linkToProfile: false,
   authorLabel: null,
+  labelColor: '',
 };
 
 export default injectIntl(AuthorLabel);

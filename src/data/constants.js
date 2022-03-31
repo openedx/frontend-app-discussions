@@ -69,6 +69,16 @@ export const RequestStatus = {
 };
 
 /**
+ * Enum for author label and avatar border color classes.
+ * @readonly
+ * @enum {string}
+ */
+export const AvatarBorderAndLabelColors = {
+  Staff: 'warning-700',
+  'Community TA': 'success-700',
+};
+
+/**
  * Enum for thread ordering.
  * @readonly
  * @enum {string}
