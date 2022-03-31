@@ -7,7 +7,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
 import { Bookmark } from '@edx/paragon/icons';
 
-import { ColorClasses, Routes, ThreadType } from '../../../data/constants';
+import { AvatarBorderAndLabelTextColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath } from '../../utils';
@@ -32,7 +32,7 @@ function PostLink({
     postId: post.id,
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
-  const authorLabelColor = ColorClasses[post.authorLabel];
+  const authorLabelColor = AvatarBorderAndLabelTextColors[post.authorLabel];
   return (
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"

@@ -7,7 +7,7 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
-import { ColorClasses, ThreadType } from '../../../data/constants';
+import { AvatarBorderAndLabelTextColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import ActionsDropdown from '../../common/ActionsDropdown';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
@@ -19,7 +19,7 @@ function CommentHeader({
   actionHandlers,
 }) {
   const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
-  const colorClass = ColorClasses[comment.authorLabel];
+  const colorClass = AvatarBorderAndLabelTextColors[comment.authorLabel];
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">
