@@ -8,6 +8,7 @@ Factory.define('thread')
   .sequence('type', (idx) => (idx % 2 === 1 ? 'discussion' : 'question'))
   .sequence('pinned', idx => (idx < 3))
   .sequence('topic_id', idx => `some-topic-${(idx % 3)}`)
+  .sequence('closed', idx => Boolean(idx % 3 === 2)) // Mark every 3rd post closed
   .attr('comment_list_url', ['id'], (threadId) => `http://test.site/api/discussion/v1/comments/?thread_id=${threadId}`)
   .attrs({
     created_at: () => (new Date()).toISOString(),
@@ -17,11 +18,13 @@ Factory.define('thread')
       'following',
       'group_id',
       'raw_body',
+      'closed',
       'read',
       'title',
       'topic_id',
       'type',
       'voted',
+      'pinned',
     ],
     author: 'test_user',
     author_label: 'Staff',
@@ -33,7 +36,6 @@ Factory.define('thread')
     group_id: null,
     group_name: null,
     abuse_flagged_count: 0,
-    closed: false,
     following: false,
     comment_count: 8,
     unread_comment_count: 0,

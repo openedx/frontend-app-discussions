@@ -71,6 +71,18 @@ function AlertBanner({
           </div>
         </Alert>
       )}
+      {reasonCodesEnabled && content.closed && (
+        <Alert variant="info" className="p-3 m-0 shadow-none mb-1 bg-light-200">
+          <div className="d-flex align-items-center">
+            {intl.formatMessage(messages.closedBy)}
+            <span className="ml-1 ">
+              <AuthorLabel author={content.closedBy} linkToProfile />
+            </span>
+            <span className="mx-1" />
+            {intl.formatMessage(messages.reason)}:&nbsp;{content.closeReason}
+          </div>
+        </Alert>
+      )}
     </>
   );
 }
