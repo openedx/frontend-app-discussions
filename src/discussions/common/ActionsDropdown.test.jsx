@@ -13,20 +13,30 @@ import messages from '../messages';
 import { ACTIONS_LIST } from '../utils';
 import ActionsDropdown from './ActionsDropdown';
 
-import '../posts/data/__factories__';
 import '../comments/data/__factories__';
+import '../posts/data/__factories__';
 
 let store;
 
-function buildTestContent(buildParams) {
+function buildTestContent(buildParams, testMeta) {
   const buildParamsSnakeCase = snakeCaseObject(buildParams);
   return [
-    Factory.build('comment', { ...buildParamsSnakeCase }, null),
-    // question
-    Factory.build('thread', { ...buildParamsSnakeCase }, null),
-    // thread
-    Factory.build('thread', { ...buildParamsSnakeCase }, null),
-  ].map(content => camelCaseObject(content));
+    {
+      testFor: 'comments',
+      ...camelCaseObject(Factory.build('comment', { ...buildParamsSnakeCase }, null)),
+      ...testMeta,
+    },
+    {
+      testFor: 'question threads',
+      ...camelCaseObject(Factory.build('thread', { ...buildParamsSnakeCase, type: 'question' }, null)),
+      ...testMeta,
+    },
+    {
+      testFor: 'discussion threads',
+      ...camelCaseObject(Factory.build('thread', { ...buildParamsSnakeCase, type: 'discussion' }, null)),
+      ...testMeta,
+    },
+  ];
 }
 
 const canPerformActionTestData = ACTIONS_LIST
@@ -40,18 +50,16 @@ const canPerformActionTestData = ACTIONS_LIST
           buildParams[conditionKey] = conditionValue;
         });
     }
-    return buildTestContent(buildParams)
-      .map(commentOrPost => ([defaultMessage, commentOrPost, action]));
+    return buildTestContent(buildParams, { label: defaultMessage, action });
   })
   .flat();
 
 const canNotPerformActionTestData = ACTIONS_LIST
   .map(({ action, conditions, label: { defaultMessage } }) => {
+    const label = defaultMessage;
     let content;
     if (!conditions) {
-      content = buildTestContent({
-        editable_fields: [],
-      });
+      content = buildTestContent({ editable_fields: [] }, { reason: 'field is not editable', label: defaultMessage });
     } else {
       const reversedConditions = Object.keys(conditions)
         .reduce(
@@ -67,23 +75,23 @@ const canNotPerformActionTestData = ACTIONS_LIST
         ...buildTestContent({
           editable_fields: [action],
           ...reversedConditions,
-        }),
+        }, { reason: 'field is editable but does not pass condition', label, action }),
         // passes conditions, but can't edit field
         ...(action === ContentActions.DELETE
           ? []
           : buildTestContent({
             editable_fields: [],
             ...conditions,
-          })
+          }, { reason: 'passes conditions but field is not editable', label, action })
         ),
         // can't edit field, and doesn't pass conditions
         ...buildTestContent({
           editable_fields: [],
           ...reversedConditions,
-        }),
+        }, { reason: 'can not edit field and does not match conditions', label, action }),
       ];
     }
-    return content.map(commentOrPost => ([defaultMessage, commentOrPost]));
+    return content;
   })
   .flat();
 
@@ -120,77 +128,69 @@ describe('ActionsDropdown', () => {
     });
   });
 
-  it.each(buildTestContent())(
-    'can open drop down if enabled',
-    async (commentOrPost) => {
-      renderComponent(commentOrPost, { disabled: false });
+  it.each(buildTestContent())('can open drop down if enabled', async (commentOrPost) => {
+    renderComponent(commentOrPost, { disabled: false });
 
-      const openButton = await findOpenActionsDropdownButton();
-      await act(async () => {
-        fireEvent.click(openButton);
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup')).toBeInTheDocument());
+  });
+
+  it.each(buildTestContent())('can not open drop down if disabled', async (commentOrPost) => {
+    renderComponent(commentOrPost, { disabled: true });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup')).not.toBeInTheDocument());
+  });
+
+  describe.each(canPerformActionTestData)('Actions', ({
+    testFor, action, label, reason, ...commentOrPost
+  }) => {
+    describe(`for ${testFor}`, () => {
+      it(`can "${label}" when allowed`, async () => {
+        const mockHandler = jest.fn();
+        renderComponent(
+          commentOrPost,
+          { actionHandlers: { [action]: mockHandler } },
+        );
+
+        const openButton = await findOpenActionsDropdownButton();
+        await act(async () => {
+          fireEvent.click(openButton);
+        });
+
+        await waitFor(() => expect(screen.queryByText(label))
+          .toBeInTheDocument());
+
+        await act(async () => {
+          fireEvent.click(screen.queryByText(label));
+        });
+        expect(mockHandler).toHaveBeenCalled();
       });
+    });
+  });
 
-      await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup'))
-        .toBeInTheDocument());
-    },
-  );
+  describe.each(canNotPerformActionTestData)('Actions', ({
+    testFor, action, label, reason, ...commentOrPost
+  }) => {
+    describe(`for ${testFor}`, () => {
+      it(`can't "${label}" when ${reason}`, async () => {
+        renderComponent(commentOrPost);
 
-  it.each(buildTestContent())(
-    'can not open drop down if disabled',
-    async (commentOrPost) => {
-      renderComponent(commentOrPost, { disabled: true });
+        const openButton = await findOpenActionsDropdownButton();
+        await act(async () => {
+          fireEvent.click(openButton);
+        });
 
-      const openButton = await findOpenActionsDropdownButton();
-      await act(async () => {
-        fireEvent.click(openButton);
+        await waitFor(() => expect(screen.queryByText(label)).not.toBeInTheDocument());
       });
-
-      await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup'))
-        .not
-        .toBeInTheDocument());
-    },
-  );
-
-  it.each(canPerformActionTestData)(
-    // not using jest $variable notation because it's not working (probably a bug)
-    'can perform action %s',
-    async (defaultMessage, commentOrPost, action) => {
-      const mockHandler = jest.fn();
-      renderComponent(
-        commentOrPost,
-        { actionHandlers: { [action]: mockHandler } },
-      );
-
-      const openButton = await findOpenActionsDropdownButton();
-      await act(async () => {
-        fireEvent.click(openButton);
-      });
-
-      await waitFor(() => expect(screen.queryByText(defaultMessage))
-        .toBeInTheDocument());
-
-      await act(async () => {
-        fireEvent.click(screen.queryByText(defaultMessage));
-      });
-
-      expect(mockHandler).toHaveBeenCalled();
-    },
-  );
-
-  it.each(canNotPerformActionTestData)(
-    // not using jest $variable notation because it's not working (probably a bug)
-    'can not perform action %s',
-    async (defaultMessage, commentOrPost) => {
-      renderComponent(commentOrPost);
-
-      const openButton = await findOpenActionsDropdownButton();
-      await act(async () => {
-        fireEvent.click(openButton);
-      });
-
-      await waitFor(() => expect(screen.queryByText(defaultMessage))
-        .not
-        .toBeInTheDocument());
-    },
-  );
+    });
+  });
 });

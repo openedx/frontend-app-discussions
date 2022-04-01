@@ -1,4 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
@@ -67,5 +70,21 @@ describe('DiscussionsHome', () => {
       .toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Close' }))
       .toBeInTheDocument();
+  });
+
+  test('the close button should post a message', async () => {
+    const { parent } = window;
+    delete window.parent;
+    window.parent = { ...window, postMessage: jest.fn() };
+    renderComponent(`/${courseId}/topics?inContext`);
+
+    const closeButton = screen.queryByRole('button', { name: 'Close' });
+
+    await act(async () => {
+      fireEvent.click(closeButton);
+    });
+
+    await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalled());
+    window.parent = parent;
   });
 });
