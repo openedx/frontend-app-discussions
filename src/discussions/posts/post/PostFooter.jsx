@@ -24,7 +24,7 @@ function PostFooter({
 }) {
   const dispatch = useDispatch();
   return (
-    <div className="d-flex align-items-center mt-3">
+    <div className="d-flex align-items-center mt-2">
       <LikeButton
         count={post.voteCount}
         onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
