@@ -44,7 +44,7 @@ function PostLink({
         </div>
       )}
       <div
-        className={classNames('d-flex flex-row flex-fill mw-100 p-3.5 border-primary-500', { 'bg-light-300': post.read })}
+        className={classNames('d-flex flex-row flex-fill mw-100 p-3 border-primary-500', { 'bg-light-300': post.read })}
         style={post.id === postId ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
