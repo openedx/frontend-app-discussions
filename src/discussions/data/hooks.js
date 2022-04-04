@@ -4,7 +4,6 @@ import { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
-import { getConfig } from '@edx/frontend-platform';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
@@ -13,7 +12,7 @@ import { fetchCourseBlocks } from '../../data/thunks';
 import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
-import { discussionsPath } from '../utils';
+import { discussionsPath, postMessageToParent } from '../utils';
 import { selectAreThreadsFiltered, selectPostThreadCount } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
@@ -111,12 +110,7 @@ function getOuterHeight(element) {
  */
 export function useContainerSizeForParent(refContainer) {
   function postResizeMessage(height) {
-    window.parent.postMessage({
-      type: 'plugin.resize',
-      payload: {
-        height,
-      },
-    }, getConfig().LEARNING_BASE_URL);
+    postMessageToParent('plugin.resize', { height });
   }
 
   const location = useLocation();

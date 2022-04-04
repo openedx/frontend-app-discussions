@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 import {
@@ -9,15 +9,13 @@ import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
-  useCourseDiscussionData,
-  useIsOnDesktop,
-  useRedirectToThread,
-  useSidebarVisible,
+  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider } from '../data/selectors';
 import { EmptyPosts, EmptyTopics } from '../empty-posts';
 import messages from '../messages';
 import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
+import { postMessageToParent } from '../utils';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 
@@ -29,6 +27,7 @@ export default function DiscussionsHome() {
   const {
     params: { page },
   } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
+  const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const {
     courseId,
@@ -42,8 +41,7 @@ export default function DiscussionsHome() {
   // Display the content area if we are currently viewing/editing a post or creating one.
   const displayContentArea = postId || postEditorVisible || learnerUsername;
 
-  const isSidebarVisible = useSidebarVisible();
-  let displaySidebar = isSidebarVisible;
+  let displaySidebar = useSidebarVisible();
 
   const isOnDesktop = useIsOnDesktop();
 
@@ -56,6 +54,11 @@ export default function DiscussionsHome() {
   const provider = useSelector(selectDiscussionProvider);
   useCourseDiscussionData(courseId);
   useRedirectToThread(courseId);
+  useEffect(() => {
+    if (path && path !== 'undefined') {
+      postMessageToParent('discussions.navigate', { path });
+    }
+  }, [path]);
 
   return (
     <DiscussionContext.Provider value={{
