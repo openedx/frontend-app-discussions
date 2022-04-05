@@ -374,19 +374,6 @@ function PostEditor({
                     {intl.formatMessage(messages.followPost)}
                   </Form.Checkbox>
                 </Form.Group>
-                {allowAnonymous && (
-                  <Form.Group>
-                    <Form.Checkbox
-                      name="anonymous"
-                      checked={values.anonymous}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className="mr-4"
-                    >
-                      {intl.formatMessage(messages.anonymousPost)}
-                    </Form.Checkbox>
-                  </Form.Group>
-                )}
                 {allowAnonymousToPeers
                   && (
                     <Form.Group>
