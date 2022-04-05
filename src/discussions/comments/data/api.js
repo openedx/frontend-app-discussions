@@ -117,3 +117,28 @@ export async function deleteComment(commentId) {
   await getAuthenticatedHttpClient()
     .delete(url);
 }
+
+/**
+ * Get the comments by a specific user in a course's discussions
+ *
+ * comments = responses + comments in the UI
+ *
+ * @param {string} courseId Course ID for the course
+ * @param {string} username Username of the user
+ * @returns API response in the format
+ *  {
+ *    results: [array of comments],
+ *    pagination: {count, num_pages, next, previous}
+ *  }
+
+ */
+export async function getUserComments(courseId, username) {
+  const { data } = await getAuthenticatedHttpClient()
+    .get(commentsApiUrl, {
+      params: {
+        course_id: courseId,
+        username,
+      },
+    });
+  return data;
+}

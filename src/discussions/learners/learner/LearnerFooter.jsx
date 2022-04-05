@@ -4,10 +4,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Icon, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import {
-  Edit, Error,
-  QuestionAnswer,
-} from '@edx/paragon/icons';
+import { Edit, QuestionAnswer, Report } from '@edx/paragon/icons';
 
 import messages from './messages';
 import { learnerShape } from './proptypes';
@@ -48,7 +45,7 @@ function LearnerFooter({
             )}
           >
             <div className="d-flex">
-              <Icon src={Error} className="mx-2 my-0 text-danger" />
+              <Icon src={Report} className="mx-2 my-0 text-danger" />
               <span style={{ minWidth: '2rem' }}>
                 {activeFlags} {Boolean(inactiveFlags) && `/ ${inactiveFlags}`}
               </span>

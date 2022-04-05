@@ -6,6 +6,7 @@ import { Route, Switch } from 'react-router';
 import { Routes } from '../../data/constants';
 import { CommentsView } from '../comments';
 import { useContainerSizeForParent } from '../data/hooks';
+import { LearnersContentView } from '../learners';
 import { PostEditor } from '../posts';
 
 export default function DiscussionContent() {
@@ -27,6 +28,9 @@ export default function DiscussionContent() {
             </Route>
             <Route path={Routes.COMMENTS.PATH}>
               <CommentsView />
+            </Route>
+            <Route path={Routes.LEARNERS.LEARNER}>
+              <LearnersContentView />
             </Route>
           </Switch>
         )}

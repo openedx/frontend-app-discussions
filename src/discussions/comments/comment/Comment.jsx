@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -21,6 +22,7 @@ import Reply from './Reply';
 function Comment({
   postType,
   comment,
+  showFullThread = true,
   intl,
 }) {
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ function Comment({
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
-    if (hasChildren && !currentPage) {
+    if (hasChildren && !currentPage && showFullThread) {
       dispatch(fetchCommentResponses(comment.id, { page: 1 }));
     }
   }, [comment.id]);
@@ -50,9 +52,10 @@ function Comment({
   const handleLoadMoreComments = () => (
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
+  const commentClasses = classNames('d-flex flex-column card', { 'my-3': showFullThread });
 
   return (
-    <div className="discussion-comment d-flex flex-column card my-3" data-testid={`comment-${comment.id}`}>
+    <div className={commentClasses} data-testid={`comment-${comment.id}`}>
       <DeleteConfirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteResponseTitle)}
@@ -100,7 +103,7 @@ function Comment({
             {intl.formatMessage(messages.loadMoreResponses)}
           </Button>
         )}
-        {!isNested
+        {!isNested && showFullThread
           && (
             isReplying
               ? (
@@ -126,7 +129,12 @@ function Comment({
 Comment.propTypes = {
   postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   comment: commentShape.isRequired,
+  showFullThread: PropTypes.bool,
   intl: intlShape.isRequired,
+};
+
+Comment.defaultProps = {
+  showFullThread: true,
 };
 
 export default injectIntl(Comment);
