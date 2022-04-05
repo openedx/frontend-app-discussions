@@ -117,15 +117,13 @@ describe('PostEditor', () => {
           .toHaveLength(3);
 
         expect(screen.queryByText('cohort', { exact: false }))
-          .not
-          .toBeInTheDocument();
+          .not.toBeInTheDocument();
         if (allowAnonymous) {
           expect(screen.queryByText('Post anonymously'))
-            .toBeInTheDocument();
+            .not.toBeInTheDocument();
         } else {
           expect(screen.queryByText('Post anonymously'))
-            .not
-            .toBeInTheDocument();
+            .not.toBeInTheDocument();
         }
         if (allowAnonymousToPeers) {
           expect(screen.queryByText('Post anonymously to peers'))
