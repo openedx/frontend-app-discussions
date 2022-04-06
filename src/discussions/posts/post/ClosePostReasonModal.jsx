@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ function ClosePostReasonModal({
   onCancel,
   onConfirm,
 }) {
+  const scrollTo = useRef(null);
   const [reasonCode, setReasonCode] = useState(null);
 
   const { postCloseReasons } = useSelector(selectModerationSettings);
@@ -32,12 +33,25 @@ function ClosePostReasonModal({
     }
   };
 
+  useEffect(() => {
+    /* istanbul ignore if: This API is not available in the test environment. */
+    if (scrollTo.current && scrollTo.current.scrollIntoView) {
+      // Use a timeout since the component is first given focus, which scrolls
+      // it into view but doesn't centrally align it. This should run after that.
+      setTimeout(() => {
+        scrollTo.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 0);
+    }
+  }, [scrollTo, isOpen]);
+
   return (
     <ModalDialog
       title={intl.formatMessage(messages.closePostModalTitle)}
       isOpen={isOpen}
       onClose={onCancel}
       hasCloseButton={false}
+      isFullscreenOnMobile
+      isFullscreenScroll
     >
       <ModalDialog.Header>
         <ModalDialog.Title>
@@ -45,7 +59,7 @@ function ClosePostReasonModal({
         </ModalDialog.Title>
       </ModalDialog.Header>
       <ModalDialog.Body>
-        <p>{intl.formatMessage(messages.closePostModalText)}</p>
+        <p ref={scrollTo}>{intl.formatMessage(messages.closePostModalText)}</p>
         <Form.Group>
           <Form.Control
             name="reasonCode"
