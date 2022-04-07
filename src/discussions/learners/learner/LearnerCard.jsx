@@ -6,10 +6,6 @@ import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import {
-  Icon, IconButton,
-} from '@edx/paragon';
-import { MoreVert } from '@edx/paragon/icons';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
@@ -63,12 +59,6 @@ function LearnerCard({
           </div>
           <LearnerFooter learner={learner} />
         </div>
-        <IconButton
-          src={MoreVert}
-          iconAs={Icon}
-          alt={learner.username}
-          disabled
-        />
       </div>
     </Link>
   );

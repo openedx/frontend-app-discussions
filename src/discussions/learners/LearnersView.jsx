@@ -46,8 +46,8 @@ function LearnersView() {
     }
   };
   return (
-    <div className="d-flex flex-column">
-      <div className="list-group list-group-flush">
+    <div className="d-flex flex-column border-right border-light-300 h-100">
+      <div className="list-group list-group-flush ">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
           to={{

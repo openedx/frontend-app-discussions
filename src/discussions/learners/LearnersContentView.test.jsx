@@ -16,10 +16,10 @@ import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { commentsApiUrl } from '../comments/data/api';
 import { DiscussionContext } from '../common/context';
+import DiscussionContent from '../discussions-home/DiscussionContent';
 import { threadsApiUrl } from '../posts/data/api';
 import { coursesApiUrl, userProfileApiUrl } from './data/api';
 import { fetchLearners } from './data/thunks';
-import LearnersContentView from './LearnersContentView';
 
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
@@ -37,7 +37,7 @@ function renderComponent(username = testUsername) {
         <DiscussionContext.Provider value={{ learnerUsername: username, courseId }}>
           <MemoryRouter initialEntries={[`/${courseId}/learners/${username}/${LearnerTabs.POSTS}`]}>
             <Route path="/:courseId/learners/:learnerUsername">
-              <LearnersContentView />
+              <DiscussionContent />
             </Route>
           </MemoryRouter>
         </DiscussionContext.Provider>
