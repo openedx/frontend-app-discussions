@@ -59,6 +59,30 @@ PostsList.defaultProps = {
   posts: [],
 };
 
+function AllPostsList() {
+  const posts = useSelector(selectAllThreads);
+  return <PostsList posts={posts} />;
+}
+
+function TopicPostsList({ topicId }) {
+  const posts = useSelector(selectTopicThreads([topicId]));
+  return <PostsList posts={posts} />;
+}
+
+TopicPostsList.propTypes = {
+  topicId: PropTypes.string.isRequired,
+};
+
+function CategoryPostsList({ category }) {
+  const topicIds = useSelector(selectTopicsUnderCategory)(category);
+  const posts = useSelector(selectTopicThreads(topicIds));
+  return <PostsList posts={posts} />;
+}
+
+CategoryPostsList.propTypes = {
+  category: PropTypes.string.isRequired,
+};
+
 function PostsView({ showOwnPosts }) {
   const {
     courseId,
@@ -67,23 +91,21 @@ function PostsView({ showOwnPosts }) {
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
-  let topicIds = null;
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
   const loadingStatus = useSelector(threadsLoadingStatus());
-
+  const topicIds = null;
   let postsListComponent = null;
-  let posts = [];
+
   if (topicId) {
-    posts = useSelector(selectTopicThreads([topicId]));
+    postsListComponent = <TopicPostsList topicId={topicId} />;
   } else if (category) {
-    topicIds = useSelector(selectTopicsUnderCategory)(category);
-    posts = useSelector(selectTopicThreads(topicIds));
+    postsListComponent = <CategoryPostsList category={category} />;
   } else {
-    posts = useSelector(selectAllThreads);
+    postsListComponent = <AllPostsList />;
   }
-  postsListComponent = <PostsList posts={posts} />;
+
   useEffect(() => {
     // The courseId from the URL is the course we WANT to load.
     dispatch(fetchThreads(courseId, {
