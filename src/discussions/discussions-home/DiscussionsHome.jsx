@@ -7,6 +7,7 @@ import {
 
 import { PostActionsBar } from '../../components';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
+import { useTheme } from '../../theme-hooks';
 import { DiscussionContext } from '../common/context';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
@@ -21,6 +22,7 @@ import DiscussionSidebar from './DiscussionSidebar';
 
 export default function DiscussionsHome() {
   const location = useLocation();
+  const ready = useTheme('red_theme');
   const postEditorVisible = useSelector(
     (state) => state.threads.postEditorVisible,
   );
@@ -59,6 +61,9 @@ export default function DiscussionsHome() {
       postMessageToParent('discussions.navigate', { path });
     }
   }, [path]);
+  if (!ready) {
+    return null;
+  }
 
   return (
     <DiscussionContext.Provider value={{

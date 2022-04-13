@@ -14,7 +14,6 @@ import appMessages from './i18n';
 import store from './store';
 
 import './assets/favicon.ico';
-import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
@@ -38,6 +37,7 @@ initialize({
     config() {
       mergeConfig({
         POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 2000,
+        THEME_LOADER_URL: process.env.THEME_LOADER_URL || 'http://localhost:8111/themes.js',
       });
     },
   },
