@@ -10,19 +10,20 @@ const apiBaseUrl = getConfig().LMS_BASE_URL;
 
 export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
 export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
-export const postsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
-export const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
 
 /**
  * Fetches all the learners in the given course.
  * @param {string} courseId
+ * @param {number} page
+ * @param {string} orderBy
  * @returns {Promise<{}>}
  */
 export async function getLearners(
-  courseId,
+  courseId, { page, orderBy },
 ) {
+  const params = { page, orderBy };
   const url = `${coursesApiUrl}${courseId}/activity_stats/`;
-  const { data } = await getAuthenticatedHttpClient().get(url);
+  const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
 }
 

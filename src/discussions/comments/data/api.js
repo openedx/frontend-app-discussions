@@ -132,12 +132,13 @@ export async function deleteComment(commentId) {
  *  }
 
  */
-export async function getUserComments(courseId, username) {
+export async function getUserComments(courseId, username, { page }) {
   const { data } = await getAuthenticatedHttpClient()
     .get(commentsApiUrl, {
       params: {
         course_id: courseId,
         username,
+        page,
       },
     });
   return data;
