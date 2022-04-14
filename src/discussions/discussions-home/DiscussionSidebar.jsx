@@ -24,11 +24,8 @@ export default function DiscussionSidebar({ displaySidebar }) {
       data-testid="sidebar"
     >
       <Switch>
-        <Route path={Routes.POSTS.MY_POSTS}>
-          <PostsView showOwnPosts />
-        </Route>
         <Route
-          path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}
+          path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY, Routes.POSTS.MY_POSTS]}
           component={PostsView}
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />

@@ -192,6 +192,8 @@ export const Routes = {
     ],
     PAGE: `${BASE_PATH}/:page`,
     PAGES: {
+      // The category page just uses the posts path since a category in itself doesn't have posts
+      category: `${BASE_PATH}/topics/:topicId/posts/:postId`,
       topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
       posts: `${BASE_PATH}/posts/:postId`,
       'my-posts': `${BASE_PATH}/my-posts/:postId`,
