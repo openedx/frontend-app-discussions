@@ -15,7 +15,7 @@ export default function DiscussionContent() {
   useContainerSizeForParent(refContainer);
 
   return (
-    <div className="d-flex bg-light-300 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 overflow-auto">
+    <div className="d-flex bg-light-400 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 overflow-auto">
       <div className="d-flex flex-column w-100 mw-xl" ref={refContainer}>
         {postEditorVisible ? (
           <Route path={Routes.POSTS.NEW_POST}>

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [12, 14, 16]
+        node: [16]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -33,7 +33,5 @@ jobs:
       run: npm run build
     - name: i18n_extract
       run: npm run i18n_extract
-    - name: is-es5
-      run: npm run is-es5
     - name: Coverage
       uses: codecov/codecov-action@v2
