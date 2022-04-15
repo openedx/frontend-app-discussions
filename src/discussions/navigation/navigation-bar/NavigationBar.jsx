@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { matchPath, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -27,6 +27,7 @@ function NavigationBar({ intl }) {
     },
     {
       route: Routes.TOPICS.ALL,
+      isActive: (match, location) => Boolean(matchPath(location.pathname, { path: Routes.TOPICS.PATH })),
       labelMessage: messages.allTopics,
     },
   ];
@@ -41,7 +42,12 @@ function NavigationBar({ intl }) {
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
-          <Nav.Link as={NavLink} to={discussionsPath(link.route, { courseId })} className="border">
+          <Nav.Link
+            as={NavLink}
+            to={discussionsPath(link.route, { courseId })}
+            className="border"
+            isActive={link.isActive}
+          >
             {intl.formatMessage(link.labelMessage)}
           </Nav.Link>
         </Nav.Item>

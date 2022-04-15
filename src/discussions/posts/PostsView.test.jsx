@@ -29,16 +29,19 @@ async function renderComponent({
   postId, topicId, category, myPosts,
 } = { myPosts: false }) {
   let path = generatePath(Routes.POSTS.ALL_POSTS, { courseId });
-  let showOwnPosts = false;
+  let page;
   if (postId) {
     path = generatePath(Routes.POSTS.ALL_POSTS, { courseId, postId });
+    page = 'posts';
   } else if (topicId) {
     path = generatePath(Routes.POSTS.PATH, { courseId, topicId });
+    page = 'posts';
   } else if (category) {
     path = generatePath(Routes.TOPICS.CATEGORY, { courseId, category });
+    page = 'category';
   } else if (myPosts) {
     path = generatePath(Routes.POSTS.MY_POSTS, { courseId });
-    showOwnPosts = myPosts;
+    page = 'my-posts';
   }
   await render(
     <IntlProvider locale="en">
@@ -49,11 +52,12 @@ async function renderComponent({
             postId,
             topicId,
             category,
+            page,
           }}
           >
             <Switch>
               <Route path={Routes.POSTS.MY_POSTS}>
-                <PostsView showOwnPosts={showOwnPosts} />
+                <PostsView />
               </Route>
               <Route
                 path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}

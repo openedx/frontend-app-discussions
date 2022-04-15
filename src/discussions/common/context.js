@@ -2,10 +2,11 @@
 import React from 'react';
 
 export const DiscussionContext = React.createContext({
+  page: null,
   courseId: null,
   postId: null,
-  category: null,
-  commentId: null,
-  learnerUsername: null,
+  topicId: null,
   inContext: false,
+  category: null,
+  learnerUsername: null,
 });
