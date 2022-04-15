@@ -37,6 +37,7 @@ function PostLink({
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"
       to={linkUrl}
+      style={{ lineHeight: '21px' }}
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
@@ -44,7 +45,7 @@ function PostLink({
         </div>
       )}
       <div
-        className={classNames('d-flex flex-row flex-fill mw-100 p-3 border-primary-500', { 'bg-light-300': post.read })}
+        className={classNames('d-flex flex-row flex-fill mw-100 p-1 border-primary-500', { 'bg-light-300': post.read })}
         style={post.id === postId ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
