@@ -84,14 +84,14 @@ describe('LearnersContentView', () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(200, Factory.build('threadsResult', {}, {
         topicId: undefined,
-        count: 5,
-        pageSize: 6,
+        count: 6,
+        pageSize: 5,
       }));
 
     axiosMock.onGet(commentsApiUrl)
       .reply(200, Factory.build('commentsResult', {}, {
-        count: 8,
-        pageSize: 10,
+        count: 9,
+        pageSize: 8,
       }));
   });
 
@@ -124,7 +124,7 @@ describe('LearnersContentView', () => {
       await renderComponent();
     });
     await act(async () => {
-      fireEvent.click(screen.getByText('Comments', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Comments \d+/i }));
     });
     expect(screen.queryAllByText('comment number', { exact: false })).toHaveLength(4);
   });
@@ -134,12 +134,12 @@ describe('LearnersContentView', () => {
       await renderComponent();
     });
     await act(async () => {
-      fireEvent.click(screen.getByText('Responses', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Responses \d+/i }));
     });
     expect(screen.queryAllByText('comment number', { exact: false })).toHaveLength(8);
 
     await act(async () => {
-      fireEvent.click(screen.getByText('Posts', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Posts \d+/i }));
     });
     expect(screen.queryAllByTestId('post')).toHaveLength(5);
   });
@@ -149,7 +149,7 @@ describe('LearnersContentView', () => {
       await act(async () => {
         await renderComponent('leaner-2');
       });
-      const button = screen.getByText('Posts', { exact: false });
+      const button = screen.getByRole('link', { name: /Posts/i });
       expect(button.innerHTML).not.toContain('svg');
     });
 
@@ -169,7 +169,7 @@ describe('LearnersContentView', () => {
       await act(async () => {
         await renderComponent('leaner-2');
       });
-      const button = screen.getByText('Posts', { exact: false });
+      const button = screen.getByRole('link', { name: /Posts/i });
       expect(button.innerHTML).toContain('svg');
     });
   });
