@@ -29,7 +29,7 @@ function LearnerFooter({
         && (
           <OverlayTrigger
             overlay={(
-              <Tooltip>
+              <Tooltip id={`learner-${learner.username}`}>
                 <div className="d-flex flex-column align-items-start">
                   <span>
                     {intl.formatMessage(messages.reported, { reported: activeFlags })}

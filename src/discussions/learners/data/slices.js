@@ -11,35 +11,34 @@ const learnersSlice = createSlice({
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     avatars: {},
-    learners: [],
     learnerProfiles: {},
     pages: [],
     nextPage: null,
     totalPages: null,
     totalLearners: null,
     sortedBy: LearnersOrdering.BY_LAST_ACTIVITY,
+    commentPaginationByUser: {
+
+    },
     commentsByUser: {
       // Map username to comments
     },
+    postPaginationByUser: {
+
+    },
     postsByUser: {
       // Map username to posts
-    },
-    commentCountByUser: {
-      // Map of username and comment count
-    },
-    postCountByUser: {
-      // Map of username and post count
     },
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.learners = payload.results;
+      state.pages[payload.page - 1] = payload.results;
       state.learnerProfiles = {
         ...state.learnerProfiles,
         ...(payload.learnerProfiles || {}),
       };
-      state.nextPage = payload.pagination.next;
+      state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
       state.totalPages = payload.pagination.numPages;
       state.totalLearners = payload.pagination.count;
     },
@@ -54,15 +53,17 @@ const learnersSlice = createSlice({
     },
     setSortedBy: (state, { payload }) => {
       state.sortedBy = payload;
-      state.pages = [];
     },
     fetchUserCommentsRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchUserCommentsSuccess: (state, { payload }) => {
-      state.commentsByUser[payload.username] = payload.comments;
-      state.commentCountByUser[payload.username] = payload.pagination.count;
-      state.status = RequestStatus.SUCCESS;
+      state.commentsByUser[payload.username] ??= [];
+      state.commentsByUser[payload.username][payload.page - 1] = payload.comments;
+      state.commentPaginationByUser[payload.username] = {
+        nextPage: (payload.page < payload.pagination.numPages) ? payload.page + 1 : null,
+        totalPages: payload.pagination.numPages,
+      };
     },
     fetchUserCommentsDenied: (state) => {
       state.status = RequestStatus.DENIED;
@@ -71,8 +72,12 @@ const learnersSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchUserPostsSuccess: (state, { payload }) => {
-      state.postsByUser[payload.username] = payload.posts;
-      state.postCountByUser[payload.username] = payload.pagination.count;
+      state.postsByUser[payload.username] ??= [];
+      state.postsByUser[payload.username][payload.page - 1] = payload.posts;
+      state.postPaginationByUser[payload.username] = {
+        nextPage: (payload.page < payload.pagination.numPages) ? payload.page + 1 : null,
+        totalPages: payload.pagination.numPages,
+      };
       state.status = RequestStatus.SUCCESS;
     },
     fetchUserPostsDenied: (state) => {

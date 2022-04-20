@@ -13,6 +13,11 @@ const messages = defineMessages({
     id: 'discussions.learner.lastLogin',
     defaultMessage: 'Last active {lastActiveTime}',
   },
+  loadMorePosts: {
+    id: 'discussions.learner.loadMostPosts',
+    defaultMessage: 'Load more posts',
+    description: 'Text on button for loading more posts by a user',
+  },
 });
 
 export default messages;

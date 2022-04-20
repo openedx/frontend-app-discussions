@@ -18,12 +18,12 @@ import { commentsApiUrl } from '../comments/data/api';
 import { DiscussionContext } from '../common/context';
 import { threadsApiUrl } from '../posts/data/api';
 import { coursesApiUrl, userProfileApiUrl } from './data/api';
-import { fetchLearners, fetchUserComments } from './data/thunks';
+import { fetchLearners } from './data/thunks';
 import LearnersContentView from './LearnersContentView';
 
-import './data/__factories__';
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
+import './data/__factories__';
 
 let store;
 let axiosMock;
@@ -64,28 +64,34 @@ describe('LearnersContentView', () => {
     Factory.resetAll();
 
     axiosMock.onGet(`${coursesApiUrl}${courseId}/activity_stats/`)
-      .reply(() => [200, Factory.build('learnersResult', {}, {
-        count: learnerCount,
-        pageSize: 5,
-      })]);
+      .reply(
+        200,
+        Factory.build('learnersResult', {}, {
+          count: learnerCount,
+          pageSize: 5,
+        }),
+      );
 
     axiosMock.onGet(`${userProfileApiUrl}?username=${testUsername}`)
-      .reply(() => [200, Factory.build('learnersProfile', {}, {
-        username: [testUsername],
-      }).profiles]);
+      .reply(
+        200,
+        Factory.build('learnersProfile', {}, {
+          username: [testUsername],
+        }).profiles,
+      );
     await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
 
-    axiosMock.onGet(threadsApiUrl, { params: { course_id: courseId, author: testUsername } })
+    axiosMock.onGet(threadsApiUrl)
       .reply(200, Factory.build('threadsResult', {}, {
         topicId: undefined,
-        count: 5,
-        pageSize: 6,
+        count: 6,
+        pageSize: 5,
       }));
 
-    axiosMock.onGet(commentsApiUrl, { params: { course_id: courseId, username: testUsername } })
+    axiosMock.onGet(commentsApiUrl)
       .reply(200, Factory.build('commentsResult', {}, {
-        count: 8,
-        pageSize: 10,
+        count: 9,
+        pageSize: 8,
       }));
   });
 
@@ -109,19 +115,17 @@ describe('LearnersContentView', () => {
   });
 
   test('it renders all the comments with parent id in comments tab', async () => {
-    axiosMock.onGet(commentsApiUrl, { params: { course_id: courseId, username: testUsername } })
+    axiosMock.onGet(commentsApiUrl)
       .reply(200, Factory.build('commentsResult', {}, {
         count: 4,
         parentId: 'test_parent_id',
       }));
-    executeThunk(fetchUserComments(courseId, testUsername), store.dispatch, store.state);
     await act(async () => {
       await renderComponent();
     });
     await act(async () => {
-      fireEvent.click(screen.getByText('Comments', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Comments \d+/i }));
     });
-
     expect(screen.queryAllByText('comment number', { exact: false })).toHaveLength(4);
   });
 
@@ -130,12 +134,12 @@ describe('LearnersContentView', () => {
       await renderComponent();
     });
     await act(async () => {
-      fireEvent.click(screen.getByText('Responses', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Responses \d+/i }));
     });
     expect(screen.queryAllByText('comment number', { exact: false })).toHaveLength(8);
 
     await act(async () => {
-      fireEvent.click(screen.getByText('Posts', { exact: false }));
+      fireEvent.click(screen.getByRole('link', { name: /Posts \d+/i }));
     });
     expect(screen.queryAllByTestId('post')).toHaveLength(5);
   });
@@ -145,7 +149,7 @@ describe('LearnersContentView', () => {
       await act(async () => {
         await renderComponent('leaner-2');
       });
-      const button = screen.getByText('Posts', { exact: false });
+      const button = screen.getByRole('link', { name: /Posts/i });
       expect(button.innerHTML).not.toContain('svg');
     });
 
@@ -165,7 +169,7 @@ describe('LearnersContentView', () => {
       await act(async () => {
         await renderComponent('leaner-2');
       });
-      const button = screen.getByText('Posts', { exact: false });
+      const button = screen.getByRole('link', { name: /Posts/i });
       expect(button.innerHTML).toContain('svg');
     });
   });
