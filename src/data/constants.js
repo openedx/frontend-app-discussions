@@ -179,6 +179,7 @@ export const Routes = {
       `${BASE_PATH}`,
     ],
     EDIT_POST: [
+      `${BASE_PATH}/category/:category/posts/:postId/edit`,
       `${BASE_PATH}/topics/:topicId/posts/:postId/edit`,
       `${BASE_PATH}/posts/:postId/edit`,
       `${BASE_PATH}/my-posts/:postId/edit`,
@@ -186,12 +187,14 @@ export const Routes = {
   },
   COMMENTS: {
     PATH: [
+      `${BASE_PATH}/category/:category/posts/:postId`,
       `${BASE_PATH}/topics/:topicId/posts/:postId`,
       `${BASE_PATH}/posts/:postId`,
       `${BASE_PATH}/my-posts/:postId`,
     ],
     PAGE: `${BASE_PATH}/:page`,
     PAGES: {
+      category: `${BASE_PATH}/category/:category/posts/:postId`,
       topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
       posts: `${BASE_PATH}/posts/:postId`,
       'my-posts': `${BASE_PATH}/my-posts/:postId`,
@@ -200,15 +203,18 @@ export const Routes = {
   TOPICS: {
     PATH: [
       `${BASE_PATH}/topics/:topicId?`,
+      `${BASE_PATH}/category/:category`,
+      `${BASE_PATH}/topics`,
     ],
     ALL: `${BASE_PATH}/topics`,
     CATEGORY: `${BASE_PATH}/category/:category`,
+    CATEGORY_POST: `${BASE_PATH}/category/:category/posts/:postId`,
     TOPIC: `${BASE_PATH}/topics/:topicId`,
   },
 };
 
 export const ALL_ROUTES = []
-  .concat([Routes.TOPICS.CATEGORY])
+  .concat([Routes.TOPICS.CATEGORY_POST, Routes.TOPICS.CATEGORY])
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])

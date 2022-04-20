@@ -24,12 +24,14 @@ function PostLink({
     page,
     postId,
     inContext,
+    category,
   } = useContext(DiscussionContext);
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: inContext ? 'in-context' : undefined,
     courseId: post.courseId,
     topicId: post.topicId,
     postId: post.id,
+    category,
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarBorderAndLabelColors[post.authorLabel];

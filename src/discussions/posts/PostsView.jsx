@@ -23,7 +23,32 @@ import PostFilterBar from './post-filter-bar/PostFilterBar';
 import NoResults from './NoResults';
 import { PostLink } from './post';
 
-function PostsList({ posts }) {
+function PostsList({ posts, topics }) {
+  const dispatch = useDispatch();
+  const {
+    courseId,
+    page,
+  } = useContext(DiscussionContext);
+  const loadingStatus = useSelector(threadsLoadingStatus());
+  const { authenticatedUser } = useContext(AppContext);
+  const orderBy = useSelector(selectThreadSorting());
+  const filters = useSelector(selectThreadFilters());
+  const nextPage = useSelector(selectThreadNextPage());
+  const showOwnPosts = page === 'my-posts';
+
+  const loadThreads = (topicIds, pageNum = undefined) => dispatch(fetchThreads(courseId, {
+    topicIds,
+    orderBy,
+    filters,
+    page: pageNum,
+    author: showOwnPosts ? authenticatedUser.username : null,
+  }));
+
+  useEffect(() => {
+    if (topics !== undefined) {
+      loadThreads(topics);
+    }
+  }, [courseId, orderBy, filters, page, JSON.stringify(topics)]);
   let lastPinnedIdx = null;
   const postInstances = posts && posts.map((post, idx) => {
     if (post.pinned && lastPinnedIdx !== false) {
@@ -44,6 +69,18 @@ function PostsList({ posts }) {
     <>
       {postInstances}
       {posts && posts.length === 0 && <NoResults />}
+      {loadingStatus === RequestStatus.IN_PROGRESS ? (
+        <div className="d-flex justify-content-center p-4">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
+      ) : (
+        nextPage && (
+          <ScrollThreshold onScroll={() => {
+            loadThreads(topics, nextPage);
+          }}
+          />
+        )
+      )}
     </>
   );
 }
@@ -53,20 +90,22 @@ PostsList.propTypes = {
     pinned: PropTypes.bool.isRequired,
     id: PropTypes.string.isRequired,
   })),
+  topics: PropTypes.arrayOf(PropTypes.string),
 };
 
 PostsList.defaultProps = {
   posts: [],
+  topics: undefined,
 };
 
 function AllPostsList() {
   const posts = useSelector(selectAllThreads);
-  return <PostsList posts={posts} />;
+  return <PostsList posts={posts} topics={null} />;
 }
 
 function TopicPostsList({ topicId }) {
   const posts = useSelector(selectTopicThreads([topicId]));
-  return <PostsList posts={posts} />;
+  return <PostsList posts={posts} topics={[topicId]} />;
 }
 
 TopicPostsList.propTypes = {
@@ -76,27 +115,22 @@ TopicPostsList.propTypes = {
 function CategoryPostsList({ category }) {
   const topicIds = useSelector(selectTopicsUnderCategory)(category);
   const posts = useSelector(selectTopicThreads(topicIds));
-  return <PostsList posts={posts} />;
+  return <PostsList posts={posts} topics={topicIds} />;
 }
 
 CategoryPostsList.propTypes = {
   category: PropTypes.string.isRequired,
 };
 
-function PostsView({ showOwnPosts }) {
+function PostsView() {
   const {
-    courseId,
     topicId,
     category,
+    page,
   } = useContext(DiscussionContext);
-  const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
-  const orderBy = useSelector(selectThreadSorting());
-  const filters = useSelector(selectThreadFilters());
-  const nextPage = useSelector(selectThreadNextPage());
-  const loadingStatus = useSelector(threadsLoadingStatus());
-  const topicIds = null;
-  let postsListComponent = null;
+
+  let postsListComponent;
+  const showOwnPosts = page === 'my-posts';
 
   if (topicId) {
     postsListComponent = <TopicPostsList topicId={topicId} />;
@@ -106,53 +140,17 @@ function PostsView({ showOwnPosts }) {
     postsListComponent = <AllPostsList />;
   }
 
-  useEffect(() => {
-    // The courseId from the URL is the course we WANT to load.
-    dispatch(fetchThreads(courseId, {
-      topicIds,
-      orderBy,
-      filters,
-      author: showOwnPosts ? authenticatedUser.username : null,
-    }));
-  }, [courseId, orderBy, filters, showOwnPosts, topicId, category]);
-
-  const loadMorePosts = async () => {
-    if (nextPage) {
-      dispatch(fetchThreads(courseId, {
-        topicIds,
-        orderBy,
-        filters,
-        page: nextPage,
-        author: showOwnPosts ? authenticatedUser.username : null,
-      }));
-    }
-  };
-
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
       <div className="list-group list-group-flush">
         {postsListComponent}
-        {loadingStatus === RequestStatus.IN_PROGRESS ? (
-          <div className="d-flex justify-content-center p-4">
-            <Spinner animation="border" variant="primary" size="lg" />
-          </div>
-        ) : (
-          nextPage && (
-            <ScrollThreshold onScroll={loadMorePosts} />
-          )
-        )}
       </div>
     </div>
   );
 }
 
 PostsView.propTypes = {
-  showOwnPosts: PropTypes.bool,
-};
-
-PostsView.defaultProps = {
-  showOwnPosts: false,
 };
 
 export default PostsView;
