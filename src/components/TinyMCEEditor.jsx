@@ -92,6 +92,8 @@ export default function TinyMCEEditor(props) {
         content_css: false,
         content_style: contentStyle,
         body_class: 'm-2',
+        default_link_target: '_blank',
+        target_list: false,
         images_upload_handler: uploadHandler,
         setup,
       }}
