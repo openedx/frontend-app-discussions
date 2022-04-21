@@ -112,7 +112,7 @@ function Comment({
                     threadId: comment.threadId,
                     parentId: comment.id,
                   }}
-                  editing={false}
+                  edit={false}
                   onCloseEditor={() => setReplying(false)}
                 />
               )

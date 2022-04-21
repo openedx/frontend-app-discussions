@@ -16,7 +16,7 @@ function ResponseEditor({
     ? (
       <CommentEditor
         comment={{ threadId: postId }}
-        editing={false}
+        edit={false}
         onCloseEditor={() => setAddingResponse(false)}
       />
     ) : (

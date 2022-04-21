@@ -20,7 +20,7 @@ function CommentEditor({
   intl,
   comment,
   onCloseEditor,
-  editing,
+  edit,
 }) {
   const { authenticatedUser } = useContext(AppContext);
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
@@ -67,7 +67,7 @@ function CommentEditor({
           {(reasonCodesEnabled
             && userIsPrivileged
             && comment.author !== authenticatedUser.username
-            && editing
+            && edit
           ) && (
             <Form.Group>
               <Form.Control
@@ -145,11 +145,11 @@ CommentEditor.propTypes = {
   }).isRequired,
   onCloseEditor: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  editing: PropTypes.bool,
+  edit: PropTypes.bool,
 };
 
 CommentEditor.defaultProps = {
-  editing: true,
+  edit: true,
 };
 
 export default injectIntl(CommentEditor);
