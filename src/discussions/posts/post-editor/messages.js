@@ -106,6 +106,11 @@ const messages = defineMessages({
     defaultMessage: 'Reason for editing',
     description: 'Label for field visible to moderators that allows them to select a reason for editing another user\'s post',
   },
+  editReasonCodeError: {
+    id: 'discussions.editor.posts.editReasonCode.error',
+    defaultMessage: 'Select reason for editing',
+    description: 'Error message visible to moderators when they submit the post/response/comment without select reason for editing',
+  },
 });
 
 export default messages;

@@ -26,7 +26,7 @@ const messages = defineMessages({
   },
   endorsedResponseCount: {
     id: 'discussions.comments.comment.endorsedResponseCount',
-    defaultMessage: `{num, plural, 
+    defaultMessage: `{num, plural,
       =0 {No endorsed responses}
       one {Showing # endorsed response}
       other {Showing # endorsed responses}
@@ -146,6 +146,11 @@ const messages = defineMessages({
     id: 'discussions.editor.comments.editReasonCode',
     defaultMessage: 'Reason for editing',
     description: 'Label for field visible to moderators that allows them to select a reason for editing another user\'s response',
+  },
+  editReasonCodeError: {
+    id: 'discussions.editor.posts.editReasonCode.error',
+    defaultMessage: 'Select reason for editing',
+    description: 'Error message visible to moderators when they submit the post/response/comment without select reason for editing',
   },
   editedBy: {
     id: 'discussions.comment.comments.editedBy',

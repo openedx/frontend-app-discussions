@@ -10,6 +10,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../components';
+import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectModerationSettings, selectUserIsPrivileged } from '../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
@@ -22,14 +23,38 @@ function CommentEditor({
   onCloseEditor,
   edit,
 }) {
+  const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
-  const editorRef = useRef(null);
+
+  const canDisplayEditReason = (reasonCodesEnabled && userIsPrivileged && edit
+    && comment.author !== authenticatedUser.username
+  );
+
+  const editReasonCodeValidation = canDisplayEditReason && {
+    editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
+  };
+
+  const validationSchema = Yup.object().shape({
+    comment: Yup.string()
+      .required(),
+    ...editReasonCodeValidation,
+  });
+
+  const initialValues = {
+    comment: comment.rawBody,
+    editReasonCode: comment?.lastEdit?.reasonCode || '',
+  };
+
   const saveUpdatedComment = async (values) => {
     if (comment.id) {
-      await dispatch(editComment(comment.id, values));
+      const payload = {
+        ...values,
+        editReasonCode: values.editReasonCode || undefined,
+      };
+      await dispatch(editComment(comment.id, payload));
     } else {
       await dispatch(addComment(values.comment, comment.threadId, comment.parentId));
     }
@@ -42,17 +67,11 @@ function CommentEditor({
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
   const editorId = `comment-editor-${comment.id || comment.parentId || comment.threadId}`;
+
   return (
     <Formik
-      initialValues={{ comment: comment.rawBody }}
-      validationSchema={Yup.object()
-        .shape({
-          comment: Yup.string()
-            .required(),
-          editReasonCode: Yup.string()
-            .nullable()
-            .default(undefined),
-        })}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={saveUpdatedComment}
     >
       {({
@@ -64,12 +83,13 @@ function CommentEditor({
         handleChange,
       }) => (
         <Form onSubmit={handleSubmit}>
-          {(reasonCodesEnabled
-            && userIsPrivileged
-            && comment.author !== authenticatedUser.username
-            && edit
-          ) && (
-            <Form.Group>
+          {canDisplayEditReason && (
+            <Form.Group
+              isInvalid={isFormikFieldInvalid('editReasonCode', {
+                errors,
+                touched,
+              })}
+            >
               <Form.Control
                 name="editReasonCode"
                 className="mt-2"
@@ -88,6 +108,7 @@ function CommentEditor({
                   <option key={code} value={code}>{label}</option>
                 ))}
               </Form.Control>
+              <FormikErrorFeedback name="editReasonCode" />
             </Form.Group>
           )}
           <TinyMCEEditor
@@ -142,6 +163,7 @@ CommentEditor.propTypes = {
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
     author: PropTypes.string,
+    lastEdit: PropTypes.object,
   }).isRequired,
   onCloseEditor: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
