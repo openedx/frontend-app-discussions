@@ -91,8 +91,8 @@ function PostEditor({
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
 
-  const canDisplayEditReason = (reasonCodesEnabled && editExisting && userIsPrivileged
-    && post.author !== authenticatedUser.username
+  const canDisplayEditReason = (reasonCodesEnabled && editExisting
+    && userIsPrivileged && post.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {

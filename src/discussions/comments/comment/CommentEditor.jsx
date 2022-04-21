@@ -29,8 +29,8 @@ function CommentEditor({
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
 
-  const canDisplayEditReason = (reasonCodesEnabled && userIsPrivileged && edit
-    && comment.author !== authenticatedUser.username
+  const canDisplayEditReason = (reasonCodesEnabled && userIsPrivileged
+    && edit && comment.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
