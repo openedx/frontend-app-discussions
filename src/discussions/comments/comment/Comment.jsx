@@ -112,6 +112,7 @@ function Comment({
                     threadId: comment.threadId,
                     parentId: comment.id,
                   }}
+                  edit={false}
                   onCloseEditor={() => setReplying(false)}
                 />
               )
