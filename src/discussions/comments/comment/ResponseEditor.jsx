@@ -14,7 +14,11 @@ function ResponseEditor({
   const [addingResponse, setAddingResponse] = useState(false);
   return addingResponse
     ? (
-      <CommentEditor comment={{ threadId: postId }} onCloseEditor={() => setAddingResponse(false)} />
+      <CommentEditor
+        comment={{ threadId: postId }}
+        editing={false}
+        onCloseEditor={() => setAddingResponse(false)}
+      />
     ) : (
       <div className="actions d-flex">
         <Button variant="primary" onClick={() => setAddingResponse(true)}>
