@@ -58,7 +58,7 @@ function PostsList({ posts, topics }) {
       // Add a spacing after the group of pinned posts
       return (
         <React.Fragment key={post.id}>
-          <div className="p-1 bg-light-300" />
+          <div className="p-1 bg-light-400" />
           <PostLink post={post} key={post.id} />
         </React.Fragment>
       );
