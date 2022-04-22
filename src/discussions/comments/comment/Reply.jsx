@@ -45,11 +45,17 @@ function Reply({
           hideDeleteConfirmation();
         }}
       />
-      <div className="d-flex flex-fill ml-6">
-        <AlertBanner postType={null} content={reply} intl={intl} />
-      </div>
-      <div className="d-flex">
 
+      <div className="d-flex">
+        <div className="d-flex mx-3 invisible">
+          <Avatar className="m-2" />
+        </div>
+        <div className="w-100">
+          <AlertBanner postType={null} content={reply} intl={intl} />
+        </div>
+      </div>
+
+      <div className="d-flex">
         <div className="d-flex m-3">
           <Avatar
             className={`m-2 ${colorClass && `border-${colorClass}`}`}
@@ -74,7 +80,6 @@ function Reply({
             // eslint-disable-next-line react/no-danger
             : <div dangerouslySetInnerHTML={{ __html: reply.renderedBody }} />}
         </div>
-
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>
         {timeago.format(reply.createdAt, intl.locale)}
