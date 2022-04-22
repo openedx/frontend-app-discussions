@@ -58,19 +58,21 @@ function normaliseCourseBlocks({
         } else {
           blocks[verticalId].children?.forEach(discussionId => {
             const discussion = camelCaseObject(blocks[discussionId]);
-            const { topicId } = discussion.studentViewData;
-            blockData[discussionId] = discussion;
-            // Add this topic id to the list of topics for the current chapter, sequential, and vertical
-            chapterData.topics.push(topicId);
-            blockData[sequentialId].topics.push(topicId);
-            blockData[verticalId].topics.push(topicId);
-            // Store the topic's context in the course in a map
-            topics[topicId] = {
-              chapterName: blockData[chapterId].displayName,
-              verticalName: blockData[sequentialId].displayName,
-              unitName: blockData[verticalId].displayName,
-              unitLink: blockData[verticalId].lmsWebUrl,
-            };
+            const { topicId } = discussion.studentViewData || {};
+            if (topicId) {
+              blockData[discussionId] = discussion;
+              // Add this topic id to the list of topics for the current chapter, sequential, and vertical
+              chapterData.topics.push(topicId);
+              blockData[sequentialId].topics.push(topicId);
+              blockData[verticalId].topics.push(topicId);
+              // Store the topic's context in the course in a map
+              topics[topicId] = {
+                chapterName: blockData[chapterId].displayName,
+                verticalName: blockData[sequentialId].displayName,
+                unitName: blockData[verticalId].displayName,
+                unitLink: blockData[verticalId].lmsWebUrl,
+              };
+            }
           });
         }
       });
