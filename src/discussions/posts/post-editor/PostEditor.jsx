@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
+import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -83,14 +84,21 @@ function PostEditor({
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(selectNonCoursewareIds);
   const coursewareTopics = useSelector(selectCoursewareTopics);
-  const {
-    allowAnonymous,
-    allowAnonymousToPeers,
-  } = useSelector(selectAnonymousPostingConfig);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const settings = useSelector(selectDivisionSettings);
+  const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
+  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+
+  const canDisplayEditReason = (reasonCodesEnabled && editExisting
+    && userIsPrivileged && post.author !== authenticatedUser.username
+  );
+
+  const editReasonCodeValidation = canDisplayEditReason && {
+    editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
+  };
+
   const canSelectCohort = (tId) => {
     // If the user isn't privileged, they can't edit the cohort.
     // If the topic is being edited the cohort can't be changed.
@@ -164,60 +172,48 @@ function PostEditor({
       </div>
     );
   }
-  let initialValues = {
-    postType: 'discussion',
-    topic: topicId || nonCoursewareTopics?.[0]?.id,
-    title: '',
-    comment: '',
-    follow: true,
-    anonymous: false,
-    anonymousToPeers: false,
+
+  const initialValues = {
+    postType: post?.type || 'discussion',
+    topic: post?.topicId || topicId || nonCoursewareTopics?.[0]?.id,
+    title: post?.title || '',
+    comment: post?.rawBody || '',
+    follow: isEmpty(post?.following) ? true : post?.following,
+    anonymous: allowAnonymous ? false : undefined,
+    anonymousToPeers: allowAnonymousToPeers ? false : undefined,
+    editReasonCode: post?.lastEdit?.reasonCode || '',
   };
-  if (editExisting) {
-    initialValues = {
-      postType: post.type,
-      topic: post.topicId,
-      title: post.title,
-      comment: post.rawBody,
-      follow: (post.following === null || post.following === undefined) ? true : post.following,
-      anonymous: allowAnonymous ? false : undefined,
-      anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    };
-  }
+
+  const validationSchema = Yup.object().shape({
+    postType: Yup.mixed()
+      .oneOf(['discussion', 'question']),
+    topic: Yup.string()
+      .required(),
+    title: Yup.string()
+      .required(intl.formatMessage(messages.titleError)),
+    comment: Yup.string()
+      .required(intl.formatMessage(messages.commentError)),
+    follow: Yup.bool()
+      .default(true),
+    anonymous: Yup.bool()
+      .default(false)
+      .nullable(),
+    anonymousToPeers: Yup.bool()
+      .default(false)
+      .nullable(),
+    cohort: Yup.string()
+      .nullable()
+      .default(null),
+    ...editReasonCodeValidation,
+  });
 
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
-
-  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
 
   return (
     <Formik
       enableReinitialize
       initialValues={initialValues}
-      validationSchema={Yup.object()
-        .shape({
-          postType: Yup.mixed()
-            .oneOf(['discussion', 'question']),
-          topic: Yup.string()
-            .required(),
-          title: Yup.string()
-            .required(intl.formatMessage(messages.titleError)),
-          comment: Yup.string()
-            .required(intl.formatMessage(messages.commentError)),
-          follow: Yup.bool()
-            .default(true),
-          anonymous: Yup.bool()
-            .default(false)
-            .nullable(),
-          anonymousToPeers: Yup.bool()
-            .default(false)
-            .nullable(),
-          cohort: Yup.string()
-            .nullable()
-            .default(null),
-          editReasonCode: Yup.string()
-            .nullable()
-            .default(null),
-        })}
+      validationSchema={validationSchema}
       onSubmit={submitForm}
     >{
       ({
@@ -304,7 +300,7 @@ function PostEditor({
           <div className="border-bottom my-1" />
           <div className="d-flex flex-row py-2 mt-4 justify-content-between">
             <Form.Group
-              className="d-flex flex-fill"
+              className="w-100"
               isInvalid={isFormikFieldInvalid('title', {
                 errors,
                 touched,
@@ -321,27 +317,31 @@ function PostEditor({
               />
               <FormikErrorFeedback name="title" />
             </Form.Group>
-            {(reasonCodesEnabled
-              && editExisting
-              && userIsPrivileged
-              && post.author !== authenticatedUser.username) && (
-                <Form.Group className="d-flex flex-fill">
-                  <Form.Control
-                    name="editReasonCode"
-                    className="ml-4"
-                    as="select"
-                    value={values.editReasonCode}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    aria-describedby="editReasonCodeInput"
-                    floatingLabel={intl.formatMessage(messages.editReasonCode)}
-                  >
-                    <option key="empty" value="">---</option>
-                    {editReasons.map(({ code, label }) => (
-                      <option key={code} value={code}>{label}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
+            {canDisplayEditReason && (
+              <Form.Group
+                className="w-100"
+                isInvalid={isFormikFieldInvalid('editReasonCode', {
+                  errors,
+                  touched,
+                })}
+              >
+                <Form.Control
+                  name="editReasonCode"
+                  className="m-0"
+                  as="select"
+                  value={values.editReasonCode}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-describedby="editReasonCodeInput"
+                  floatingLabel={intl.formatMessage(messages.editReasonCode)}
+                >
+                  <option key="empty" value="">---</option>
+                  {editReasons.map(({ code, label }) => (
+                    <option key={code} value={code}>{label}</option>
+                  ))}
+                </Form.Control>
+                <FormikErrorFeedback name="editReasonCode" />
+              </Form.Group>
             )}
           </div>
           <div className="py-2">
