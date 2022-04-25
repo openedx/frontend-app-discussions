@@ -75,7 +75,7 @@ function Post({
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex my-2 text-break">
         {/* eslint-disable-next-line react/no-danger */}
-        <div dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
+        <div id="post" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
       </div>
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">
