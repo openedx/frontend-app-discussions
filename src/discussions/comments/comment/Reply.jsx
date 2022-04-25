@@ -78,7 +78,7 @@ function Reply({
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
             // eslint-disable-next-line react/no-danger
-            : <div dangerouslySetInnerHTML={{ __html: reply.renderedBody }} />}
+            : <div id="reply" dangerouslySetInnerHTML={{ __html: reply.renderedBody }} />}
         </div>
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>

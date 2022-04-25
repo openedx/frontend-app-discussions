@@ -74,7 +74,7 @@ function Comment({
             <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
           )
           // eslint-disable-next-line react/no-danger
-          : <div className="comment-body px-2" dangerouslySetInnerHTML={{ __html: comment.renderedBody }} />}
+          : <div className="comment-body px-2" id="comment" dangerouslySetInnerHTML={{ __html: comment.renderedBody }} />}
         <CommentIcons
           comment={comment}
           following={comment.following}

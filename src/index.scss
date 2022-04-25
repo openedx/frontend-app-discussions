@@ -5,3 +5,11 @@
 
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
+
+
+#post, #comment, #reply {
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+}
