@@ -56,7 +56,7 @@ function AlertBanner({
         </Alert>
       )}
       {content.abuseFlagged && (
-        <Alert icon={Error} variant="danger" className="p-3 m-0 shadow-none mb-1 flex-fill">
+        <Alert icon={Error} variant="danger" className="p-3 m-0 shadow-none my-1 flex-fill">
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
