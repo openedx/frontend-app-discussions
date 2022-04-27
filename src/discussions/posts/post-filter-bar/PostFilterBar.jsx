@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
 import { Collapsible, Form, Icon } from '@edx/paragon';
 import { Check, Sort } from '@edx/paragon/icons';
 
 import {
   PostsStatusFilter, ThreadOrdering, ThreadType,
 } from '../../../data/constants';
+import { selectUserIsPrivileged } from '../../data/selectors';
 import { setPostsTypeFilter, setSortedBy, setStatusFilter } from '../data';
 import { selectThreadFilters, selectThreadSorting } from '../data/selectors';
 import messages from './messages';
@@ -44,8 +44,8 @@ function PostFilterBar({
   filterSelfPosts,
   intl,
 }) {
-  const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const currentSorting = useSelector(selectThreadSorting());
   const currentFilters = useSelector(selectThreadFilters());
   const [isOpen, setOpen] = useState(false);
@@ -147,7 +147,7 @@ function PostFilterBar({
             value={PostsStatusFilter.FOLLOWING}
             selected={currentFilters.status}
           />
-          {authenticatedUser.administrator
+          {userIsPrivileged
           && (
           <ActionItem
             id="status-reported"
