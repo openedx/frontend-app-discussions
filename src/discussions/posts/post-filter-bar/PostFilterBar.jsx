@@ -60,10 +60,9 @@ function PostFilterBar({
     if (name === 'type') {
       dispatch(setPostsTypeFilter(value));
       if (
-        (value === ThreadType.DISCUSSION && currentStatus === PostsStatusFilter.UNANSWERED)
-        || (value === ThreadType.QUESTION && currentStatus === PostsStatusFilter.UNREAD)
+        value === ThreadType.DISCUSSION && currentStatus === PostsStatusFilter.UNANSWERED
       ) {
-        // You can't filter discussions by unanswered or questions by unread
+        // You can't filter discussions by unanswered
         dispatch(setStatusFilter(PostsStatusFilter.ALL));
       }
     }
@@ -72,10 +71,6 @@ function PostFilterBar({
       if (value === PostsStatusFilter.UNANSWERED && currentType !== ThreadType.QUESTION) {
         // You can't filter discussions by unanswered so switch type to questions
         dispatch(setPostsTypeFilter(ThreadType.QUESTION));
-      }
-      if (value === PostsStatusFilter.UNREAD && currentType !== ThreadType.DISCUSSION) {
-        // You can't filter questions by unread so switch type to discussion
-        dispatch(setPostsTypeFilter(ThreadType.DISCUSSION));
       }
     }
     if (name === 'sort') {

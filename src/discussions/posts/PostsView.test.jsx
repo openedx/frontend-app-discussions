@@ -219,16 +219,6 @@ describe('PostsView', () => {
         secondClick: 'Discussions',
         selected: ['Discussions', 'Any'],
       },
-      {
-        firstClick: 'Questions',
-        secondClick: 'Unread',
-        selected: ['Discussions', 'Unread'],
-      },
-      {
-        firstClick: 'Unread',
-        secondClick: 'Questions',
-        selected: ['Questions', 'Any'],
-      },
     ])(
       'incompatible combinations',
       ({

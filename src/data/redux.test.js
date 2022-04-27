@@ -8,6 +8,7 @@ import { initializeStore } from '../store';
 import { executeThunk } from '../test-utils';
 import { getBlocksAPIResponse } from './__factories__';
 import { blocksAPIURL } from './api';
+import { RequestStatus } from './constants';
 import { fetchCourseBlocks } from './thunks';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
@@ -35,7 +36,7 @@ describe('Course blocks data layer tests', () => {
     axiosMock.reset();
   });
 
-  test('successfully processes block data', async () => {
+  it('successfully processes block data', async () => {
     axiosMock.onGet(blocksAPIURL)
       .reply(200, getBlocksAPIResponse());
 
@@ -76,5 +77,30 @@ describe('Course blocks data layer tests', () => {
             .toEqual(undefined);
         },
       );
+  });
+
+  it('handles network error', async () => {
+    axiosMock.onGet(blocksAPIURL).networkError();
+
+    await executeThunk(fetchCourseBlocks(courseId, 'test-user'), store.dispatch, store.getState);
+
+    expect(store.getState().blocks.status)
+      .toBe(RequestStatus.FAILED);
+  });
+  it('handles network timeout', async () => {
+    axiosMock.onGet(blocksAPIURL).timeout();
+
+    await executeThunk(fetchCourseBlocks(courseId, 'test-user'), store.dispatch, store.getState);
+
+    expect(store.getState().blocks.status)
+      .toBe(RequestStatus.FAILED);
+  });
+  it('handles access denied', async () => {
+    axiosMock.onGet(blocksAPIURL).reply(403, {});
+
+    await executeThunk(fetchCourseBlocks(courseId, 'test-user'), store.dispatch, store.getState);
+
+    expect(store.getState().blocks.status)
+      .toBe(RequestStatus.DENIED);
   });
 });

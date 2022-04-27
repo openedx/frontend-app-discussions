@@ -13,9 +13,9 @@ import messages from './messages';
 /**
  * Get HTTP Error status from generic error.
  * @param error Generic caught error.
- * @returns {number|undefined}
+ * @returns {number|null}
  */
-export const getHttpErrorStatus = error => error && error.customAttributes && error.customAttributes.httpErrorStatus;
+export const getHttpErrorStatus = error => error?.customAttributes?.httpErrorStatus ?? error?.response?.status;
 
 /**
  * Return true if a field has been modified and is no longer valid
