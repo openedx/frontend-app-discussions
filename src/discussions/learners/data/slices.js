@@ -64,6 +64,7 @@ const learnersSlice = createSlice({
         nextPage: (payload.page < payload.pagination.numPages) ? payload.page + 1 : null,
         totalPages: payload.pagination.numPages,
       };
+      state.status = RequestStatus.SUCCESSFUL;
     },
     fetchUserCommentsDenied: (state) => {
       state.status = RequestStatus.DENIED;
