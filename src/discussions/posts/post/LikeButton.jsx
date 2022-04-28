@@ -5,8 +5,8 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import { ThumbUpFilled, ThumbUpOutline } from '@edx/paragon/icons';
 
+import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
 import messages from './messages';
 
 function LikeButton({
@@ -34,7 +34,7 @@ function LikeButton({
       >
         <IconButton
           onClick={handleClick}
-          className="p-3 mr-2"
+          className="p-3 mr-2 mt-1"
           alt="Like"
           iconAs={Icon}
           size="inline"

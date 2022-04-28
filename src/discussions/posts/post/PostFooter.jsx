@@ -9,9 +9,15 @@ import {
   Badge, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Locked, People, QuestionAnswer, QuestionAnswerOutline, StarFilled, StarOutline,
+  Locked, People,
 } from '@edx/paragon/icons';
 
+import {
+  QuestionAnswer,
+  QuestionAnswerOutline,
+  StarFilled,
+  StarOutline,
+} from '../../../components/icons';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
@@ -45,14 +51,14 @@ function PostFooter({
           alt="Follow"
           iconAs={Icon}
           size="inline"
-          className="mx-2.5 my-0"
+          className="mx-2.5 my-0 mt-1.5"
           src={post.following ? StarFilled : StarOutline}
         />
       </OverlayTrigger>
       {preview && post.commentCount > 1
         && (
           <>
-            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="mx-2 my-0" />
+            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="mx-2 my-0 mt-2" />
             <span style={{ minWidth: '2rem' }}>
               {post.commentCount}
             </span>
