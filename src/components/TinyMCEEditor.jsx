@@ -23,7 +23,6 @@ import 'tinymce/plugins/image';
 import 'tinymce/plugins/imagetools';
 import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
-import 'tinymce/plugins/spellchecker';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis';
 import '@wiris/mathtype-tinymce5';
