@@ -11,7 +11,6 @@ import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
 import { DiscussionsHome } from './discussions';
 import appMessages from './i18n';
-import Latex from './latex';
 import store from './store';
 
 import './assets/favicon.ico';
@@ -20,9 +19,7 @@ import './index.scss';
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <Latex>
-        <DiscussionsHome />
-      </Latex>
+      <DiscussionsHome />
     </AppProvider>,
     document.getElementById('root'),
   );

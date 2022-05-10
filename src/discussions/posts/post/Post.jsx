@@ -18,6 +18,7 @@ import messages from './messages';
 import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
 import { postShape } from './proptypes';
+import MathJax from "react-mathjax-preview";
 
 function Post({
   post,
@@ -75,7 +76,8 @@ function Post({
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex my-2 text-break">
         {/* eslint-disable-next-line react/no-danger */}
-        <div id="post" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
+        <MathJax math={post.rawBody} id="post"/>
+        {/*<div dangerouslySetInnerHTML={{ __html: post.renderedBody }} />*/}
       </div>
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">
