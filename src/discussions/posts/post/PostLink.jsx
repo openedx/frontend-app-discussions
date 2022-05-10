@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 
 import classNames from 'classnames';
+import MathJax from 'react-mathjax-preview';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -15,7 +16,6 @@ import messages from './messages';
 import PostFooter from './PostFooter';
 import { PostAvatar } from './PostHeader';
 import { postShape } from './proptypes';
-import MathJax from 'react-mathjax-preview'
 
 function PostLink({
   post,
@@ -83,8 +83,8 @@ function PostLink({
             </div>
           </div>
           {/* eslint-disable-next-line react/no-danger */}
-          <MathJax math={post.rawBody} className="text-truncate"/>
-         {/* <div className="text-truncate" dangerouslySetInnerHTML={{ __html: post.previewBody }} />*/}
+          <MathJax math={post.rawBody} className="text-truncate" />
+          {/* <div className="text-truncate" dangerouslySetInnerHTML={{ __html: post.previewBody }} /> */}
           <PostFooter post={post} preview intl={intl} />
         </div>
       </div>
