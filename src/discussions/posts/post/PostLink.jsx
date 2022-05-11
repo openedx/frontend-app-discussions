@@ -82,9 +82,9 @@ function PostLink({
               />
             </div>
           </div>
-          {/* eslint-disable-next-line react/no-danger */}
-          <MathJax math={post.rawBody} className="text-truncate" />
-          {/* <div className="text-truncate" dangerouslySetInnerHTML={{ __html: post.previewBody }} /> */}
+          <div className="text-truncate" style={{ 'max-height': '1.6em' }}>
+            <MathJax math={post.rawBody} />
+          </div>
           <PostFooter post={post} preview intl={intl} />
         </div>
       </div>
