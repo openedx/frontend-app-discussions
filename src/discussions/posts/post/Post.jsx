@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import MathJax from 'react-mathjax-preview';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -74,8 +75,7 @@ function Post({
       </div>
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex my-2 text-break">
-        {/* eslint-disable-next-line react/no-danger */}
-        <div id="post" dangerouslySetInnerHTML={{ __html: post.renderedBody }} />
+        <MathJax math={post.rawBody} id="post" />
       </div>
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">
