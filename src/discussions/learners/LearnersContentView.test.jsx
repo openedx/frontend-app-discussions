@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
@@ -141,7 +143,7 @@ describe('LearnersContentView', () => {
     await act(async () => {
       fireEvent.click(screen.getByRole('link', { name: /Posts \d+/i }));
     });
-    expect(screen.queryAllByTestId('post')).toHaveLength(5);
+    await waitFor(() => expect(screen.queryAllByTestId('post')).toHaveLength(5));
   });
 
   describe('Posts Tab Button', () => {
