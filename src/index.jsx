@@ -37,7 +37,7 @@ initialize({
   handlers: {
     config() {
       mergeConfig({
-        POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 2000,
+        POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 0,
       });
     },
   },
