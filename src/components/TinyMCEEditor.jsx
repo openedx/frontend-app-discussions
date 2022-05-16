@@ -25,7 +25,6 @@ import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis';
-import '@wiris/mathtype-tinymce5';
 /* eslint import/no-webpack-loader-syntax: off */
 // eslint-disable-next-line import/no-unresolved
 import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
@@ -85,20 +84,14 @@ export default function TinyMCEEditor(props) {
         a11y_advanced_options: true,
         autosave_interval: '1s',
         autosave_restore_when_empty: true,
-        external_plugins: {
-          tiny_mce_wiris: 'node_modules/@wiris/mathtype-tinymce5/plugin.min.js',
-        },
-        plugins: 'autosave codesample link lists image imagetools code spellchecker emoticons',
+        plugins: 'autosave codesample link lists image imagetools code emoticons',
         toolbar: 'formatselect | bold italic underline'
           + ' | link blockquote openedx_code image'
           + ' | bullist numlist outdent indent'
           + ' | removeformat'
           + ' | openedx_html'
           + ' | undo redo'
-          + ' | emoticons'
-          + ' | tiny_mce_wiris_formulaEditor | tiny_mce_wiris_formulaEditorChemistry',
-        spellchecker_active: true,
-        spellchecker_dialog: true,
+          + ' | emoticons',
         content_css: false,
         content_style: contentStyle,
         body_class: 'm-2',
