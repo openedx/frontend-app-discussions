@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import MathJax from 'react-mathjax-preview';
 import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
@@ -77,8 +78,11 @@ function Reply({
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
-            // eslint-disable-next-line react/no-danger
-            : <div id="reply" dangerouslySetInnerHTML={{ __html: reply.renderedBody }} />}
+            : (
+              <div id="reply">
+                <MathJax math={reply.rawBody} />
+              </div>
+            )}
         </div>
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>

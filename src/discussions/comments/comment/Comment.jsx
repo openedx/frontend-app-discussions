@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import MathJax from 'react-mathjax-preview';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -73,8 +74,11 @@ function Comment({
           ? (
             <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
           )
-          // eslint-disable-next-line react/no-danger
-          : <div className="comment-body px-2" id="comment" dangerouslySetInnerHTML={{ __html: comment.renderedBody }} />}
+          : (
+            <div className="comment-body px-2" id="comment">
+              <MathJax math={comment.rawBody} />
+            </div>
+          )}
         <CommentIcons
           comment={comment}
           following={comment.following}
