@@ -40,7 +40,7 @@ function PostLink({
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"
       to={linkUrl}
-      style={{ lineHeight: '21px' }}
+      style={{ lineHeight: '21px', height: '7.5rem' }}
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
@@ -48,7 +48,7 @@ function PostLink({
         </div>
       )}
       <div
-        className={classNames('d-flex flex-row flex-fill mw-100 p-2.5 border-primary-500', { 'bg-light-300': post.read })}
+        className={classNames('d-flex flex-row flex-fill mw-100 p-2.5 pr-4 border-primary-500', { 'bg-light-300': post.read })}
         style={post.id === postId ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
@@ -58,13 +58,13 @@ function PostLink({
         <div className="d-flex flex-column" style={{ width: 'calc(100% - 4rem)' }}>
           <div className="align-items-center d-flex flex-row flex-fill">
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
-              <div className="d-flex align-items-center pb-0 mb-0 flex-fill" style={{ fontWeight: 500 }}>
-                <div className="flex-fill text-truncate">
+              <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
+                <div className="flex-fill text-truncate text-primary-500 font-weight-500 font-size-14">
                   {post.title}
                 </div>
                 {showAnsweredBadge
                   && (
-                    <div className="ml-auto mr-2">
+                    <div className="ml-auto">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
                     </div>
                   )}
@@ -82,7 +82,7 @@ function PostLink({
               />
             </div>
           </div>
-          <div className="text-truncate" style={{ 'max-height': '1.6em' }}>
+          <div className="text-truncate text-primary-500 font-weight-normal font-size-14" style={{ 'max-height': '1.6em' }}>
             <MathJax math={post.rawBody} />
           </div>
           <PostFooter post={post} preview intl={intl} />

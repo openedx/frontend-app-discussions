@@ -62,19 +62,19 @@ describe('PostFooter', () => {
 
   it("shows 'x new' badge for new comments", () => {
     renderComponent(mockPost);
-    expect(screen.getByText('2 new')).toBeTruthy();
+    expect(screen.getByText('2 New')).toBeTruthy();
   });
 
   it("doesn't have 'new' badge when there are 0 new comments", () => {
     renderComponent({ ...mockPost, unreadCommentCount: 0 });
-    expect(screen.queryByText('2 new')).toBeFalsy();
-    expect(screen.queryByText('0 new')).toBeFalsy();
+    expect(screen.queryByText('2 New')).toBeFalsy();
+    expect(screen.queryByText('0 New')).toBeFalsy();
   });
 
   it("doesn't has 'new' badge when the new-unread item is the post itself", () => {
     // commentCount === 1 means it's just the post without any further comments
     renderComponent({ ...mockPost, unreadCommentCount: 1, commentCount: 1 });
-    expect(screen.queryByText('1 new')).toBeFalsy();
+    expect(screen.queryByText('1 New')).toBeFalsy();
   });
 
   it('has the cohort icon only when group information is present', () => {

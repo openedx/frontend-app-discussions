@@ -74,7 +74,7 @@ export const RequestStatus = {
  * @enum {string}
  */
 export const AvatarBorderAndLabelColors = {
-  Staff: 'warning-700',
+  Staff: 'staff-color',
   'Community TA': 'success-700',
 };
 

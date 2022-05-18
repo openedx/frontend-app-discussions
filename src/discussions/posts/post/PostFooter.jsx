@@ -18,6 +18,7 @@ import {
   StarFilled,
   StarOutline,
 } from '../../../components/icons';
+import timeLocale from '../../common/time-locale';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
@@ -29,6 +30,7 @@ function PostFooter({
   preview,
 }) {
   const dispatch = useDispatch();
+  timeago.register('time-locale', timeLocale);
   return (
     <div className="d-flex align-items-center">
       <LikeButton
@@ -51,15 +53,14 @@ function PostFooter({
           alt="Follow"
           iconAs={Icon}
           size="inline"
-          className="mx-2.5 my-0 mt-1.5"
           src={post.following ? StarFilled : StarOutline}
         />
       </OverlayTrigger>
       {preview && post.commentCount > 1
         && (
           <>
-            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="mx-2 my-0 mt-2" />
-            <span style={{ minWidth: '2rem' }}>
+            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="ml-4 mr-2 my-0 mt-1.5" />
+            <span style={{ minWidth: '1rem' }}>
               {post.commentCount}
             </span>
           </>
@@ -82,19 +83,28 @@ function PostFooter({
                   <Icon
                     data-testid="cohort-icon"
                     src={People}
-                    className="text-gray-500"
                     style={{
                       width: '1em',
                       height: '1em',
+                      color: 'black',
                     }}
                   />
                 </OverlayTrigger>
-                <span className="text-gray-500 mx-1">·</span>
+                <span
+                  className="text-light-700 mx-1.5 ml-1.5 font-weight-500"
+                  style={{
+                    height: '1.5rem',
+                    width: '0.31rem',
+                    fontSize: '16px',
+                  }}
+                >
+                  ·
+                </span>
               </>
             ) : null
         }
         <span title={post.createdAt} className="text-gray-500">
-          {timeago.format(post.createdAt, intl.locale)}
+          {timeago.format(post.createdAt, 'time-locale')}
         </span>
         {!preview && post.closed
           && (
