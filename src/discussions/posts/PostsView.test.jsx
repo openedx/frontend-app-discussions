@@ -155,7 +155,7 @@ describe('PostsView', () => {
     test('test that the filter bar works', async () => {
       // 3 type filters: all, discussion, question
       // 5 status filters: any, unread, following, reported, unanswered
-      // 3 sort: activity, comments, votes
+      // 3 sort: activity, comments, likes
       expect(screen.queryAllByRole('radio')).toHaveLength(11);
     });
 
@@ -189,7 +189,7 @@ describe('PostsView', () => {
         queryParam: { order_by: 'comment_count' },
       },
       {
-        label: 'Most votes',
+        label: 'Most likes',
         queryParam: { order_by: 'vote_count' },
       },
     ])(

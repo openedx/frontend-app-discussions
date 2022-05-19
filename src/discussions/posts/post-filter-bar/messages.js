@@ -78,7 +78,7 @@ const messages = defineMessages({
   },
   voteCount: {
     id: 'discussions.posts.sort.voteCount',
-    defaultMessage: 'Most votes',
+    defaultMessage: 'Most likes',
     description: 'Option in dropdown to sort posts by most votes',
   },
   sortFilterStatus: {
