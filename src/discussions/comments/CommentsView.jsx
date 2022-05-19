@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
-import { ensureConfig, getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
@@ -18,21 +17,16 @@ import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
 import messages from './messages';
 
-ensureConfig(['POST_MARK_AS_READ_DELAY'], 'Comment thread view');
-
 function usePost(postId) {
   const dispatch = useDispatch();
   const thread = useSelector(selectThread(postId));
+
   useEffect(() => {
-    const markReadTimer = setTimeout(() => {
-      if (thread && !thread.read) {
-        dispatch(markThreadAsRead(postId));
-      }
-    }, getConfig().POST_MARK_AS_READ_DELAY);
-    return () => {
-      clearTimeout(markReadTimer);
-    };
+    if (thread && !thread.read) {
+      dispatch(markThreadAsRead(postId));
+    }
   }, [postId]);
+
   return thread;
 }
 

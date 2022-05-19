@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
-  APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
+  APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
@@ -34,11 +34,4 @@ initialize({
   messages: [
     appMessages,
   ],
-  handlers: {
-    config() {
-      mergeConfig({
-        POST_MARK_AS_READ_DELAY: process.env.POST_MARK_AS_READ_DELAY || 0,
-      });
-    },
-  },
 });
