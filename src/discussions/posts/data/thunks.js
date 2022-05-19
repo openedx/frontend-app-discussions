@@ -26,6 +26,7 @@ import {
   postThreadFailed,
   postThreadRequest,
   postThreadSuccess,
+  updateThreadAsRead,
   updateThreadDenied,
   updateThreadFailed,
   updateThreadRequest,
@@ -155,6 +156,7 @@ export function fetchThread(threadId) {
 export function markThreadAsRead(threadId) {
   return async (dispatch) => {
     try {
+      dispatch(updateThreadAsRead({ threadId }));
       dispatch(updateThreadRequest({ threadId, read: true }));
       const data = await updateThread(threadId, { read: true });
       dispatch(updateThreadSuccess(camelCaseObject(data)));
