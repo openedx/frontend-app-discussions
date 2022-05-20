@@ -102,6 +102,9 @@ const threadsSlice = createSlice({
       state.postStatus = RequestStatus.IN_PROGRESS;
       state.threadDraft = payload;
     },
+    updateThreadAsRead: (state, { payload }) => {
+      state.threadsById[payload.threadId] = { ...state.threadsById[payload.threadId], read: true };
+    },
     updateThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
       state.threadsById[payload.id] = { ...state.threadsById[payload.id], ...payload };
@@ -184,6 +187,7 @@ export const {
   updateThreadDenied,
   updateThreadFailed,
   updateThreadRequest,
+  updateThreadAsRead,
   updateThreadSuccess,
   setPostsTypeFilter,
   setSortedBy,
