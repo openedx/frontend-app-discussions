@@ -25,6 +25,7 @@ import 'tinymce/plugins/link';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis';
+import 'tinymce/plugins/charmap';
 /* eslint import/no-webpack-loader-syntax: off */
 // eslint-disable-next-line import/no-unresolved
 import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
@@ -84,14 +85,15 @@ export default function TinyMCEEditor(props) {
         a11y_advanced_options: true,
         autosave_interval: '1s',
         autosave_restore_when_empty: true,
-        plugins: 'autosave codesample link lists image imagetools code emoticons',
+        plugins: 'autosave codesample link lists image imagetools code emoticons charmap',
         toolbar: 'formatselect | bold italic underline'
           + ' | link blockquote openedx_code image'
           + ' | bullist numlist outdent indent'
           + ' | removeformat'
           + ' | openedx_html'
           + ' | undo redo'
-          + ' | emoticons',
+          + ' | emoticons'
+          + ' | charmap',
         content_css: false,
         content_style: contentStyle,
         body_class: 'm-2',
