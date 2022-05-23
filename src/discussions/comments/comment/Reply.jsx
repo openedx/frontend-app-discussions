@@ -7,6 +7,7 @@ import * as timeago from 'timeago.js';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
+import HTMLLoader from '../../../components/HTMLLoader';
 import { AvatarBorderAndLabelColors, ContentActions } from '../../../data/constants';
 import {
   ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
@@ -77,8 +78,7 @@ function Reply({
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
-            // eslint-disable-next-line react/no-danger
-            : <div id="reply" dangerouslySetInnerHTML={{ __html: reply.renderedBody }} />}
+            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} />}
         </div>
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>

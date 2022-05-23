@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 
 import classNames from 'classnames';
-import MathJax from 'react-mathjax-preview';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
 import { Bookmark } from '@edx/paragon/icons';
 
+import HTMLLoader from '../../../components/HTMLLoader';
 import { AvatarBorderAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
@@ -83,7 +83,7 @@ function PostLink({
             </div>
           </div>
           <div className="text-truncate text-primary-500 font-weight-normal font-size-14" style={{ 'max-height': '1.6em' }}>
-            <MathJax math={post.rawBody} />
+            <HTMLLoader htmlNode={post.rawBody} />
           </div>
           <PostFooter post={post} preview intl={intl} />
         </div>
