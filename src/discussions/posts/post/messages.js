@@ -98,7 +98,7 @@ const messages = defineMessages({
   },
   newLabel: {
     id: 'discussions.post.label.new',
-    defaultMessage: '{count} new',
+    defaultMessage: '{count} New',
     description: 'Label shown on the badge indicating new comments/posts like "3 new"',
   },
   editedBy: {
