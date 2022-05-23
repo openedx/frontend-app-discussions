@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import MathJax from 'react-mathjax-preview';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
+import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, DeleteConfirmation } from '../../common';
@@ -75,7 +75,7 @@ function Post({
       </div>
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex my-2 text-break">
-        <MathJax math={post.rawBody} id="post" />
+        <HTMLLoader htmlNode={post.rawBody} id="post" />
       </div>
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">

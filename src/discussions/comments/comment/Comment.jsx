@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import MathJax from 'react-mathjax-preview';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, useToggle } from '@edx/paragon';
 
+import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation } from '../../common';
 import { fetchThread } from '../../posts/data/thunks';
@@ -74,11 +74,7 @@ function Comment({
           ? (
             <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
           )
-          : (
-            <div className="comment-body px-2" id="comment">
-              <MathJax math={comment.rawBody} />
-            </div>
-          )}
+          : <HTMLLoader cssClassName="comment-body px-2" componentId="comment" htmlNode={comment.renderedBody} />}
         <CommentIcons
           comment={comment}
           following={comment.following}
