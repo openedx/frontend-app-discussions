@@ -111,6 +111,11 @@ const messages = defineMessages({
     defaultMessage: 'Select reason for editing',
     description: 'Error message visible to moderators when they submit the post/response/comment without select reason for editing',
   },
+  showPreviewButton: {
+    id: 'discussions.editor.posts.showPreview.button',
+    defaultMessage: 'Show Preview',
+    description: 'show preview button text to allow user to see their post content.',
+  },
 });
 
 export default messages;
