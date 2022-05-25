@@ -24,15 +24,19 @@ export function PostAvatar({ post, authorLabel, fromPostLink }) {
           src={Help}
           className="position-absolute bg-white rounded-circle"
           style={{
-            width: '1.75rem',
-            height: '1.75rem',
+            width: '1.5rem',
+            height: '1.5rem',
           }}
         />
         )}
         <Avatar
           size={fromPostLink ? 'sm' : 'md'}
           className={`${borderColor && `border-${borderColor}`} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
-          style={{ borderWidth: '2px', height: '1.5rem', width: '1.5rem' }}
+          style={{
+            borderWidth: '2px',
+            height: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
+            width: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
+          }}
           alt={post.author}
           src={authorAvatars?.imageUrlSmall}
         />

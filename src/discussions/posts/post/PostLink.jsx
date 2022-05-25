@@ -59,7 +59,7 @@ function PostLink({
           <div className="align-items-center d-flex flex-row flex-fill">
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-                <div className="flex-fill text-truncate text-primary-500 font-weight-500 font-size-14">
+                <div className="flex-fill text-truncate text-primary-500 font-weight-500 font-size-14 font-style-normal font-family-inter">
                   {post.title}
                 </div>
                 {showAnsweredBadge
@@ -82,7 +82,7 @@ function PostLink({
               />
             </div>
           </div>
-          <div className="text-truncate text-primary-500 font-weight-normal font-size-14" style={{ 'max-height': '1.6em' }}>
+          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'max-height': '1.6em' }}>
             <HTMLLoader htmlNode={post.rawBody} />
           </div>
           <PostFooter post={post} preview intl={intl} />
