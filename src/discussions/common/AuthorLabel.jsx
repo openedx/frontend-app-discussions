@@ -28,7 +28,7 @@ function AuthorLabel({
   }
   const labelContents = (
     <>
-      <span className="mr-1 font-weight-normal font-size-14">{author}</span>
+      <span className="mr-1 font-weight-normal font-size-14 font-style-normal font-family-inter">{author}</span>
       {icon && (
         <Icon
           style={{
@@ -39,7 +39,7 @@ function AuthorLabel({
         />
       )}
       {authorLabelMessage && (
-        <span className="mr-3 ml-1 font-weight-normal font-size-14">
+        <span className="mr-3 ml-1 font-weight-normal font-size-14 font-style-normal font-family-inter">
           {authorLabelMessage}
         </span>
       )}
