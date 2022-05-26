@@ -75,7 +75,7 @@ function Post({
       </div>
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex my-2 text-break">
-        <HTMLLoader htmlNode={post.rawBody} id="post" />
+        <HTMLLoader htmlNode={post.renderedBody} id="post" />
       </div>
       {topicContext && topic && (
         <div className="border p-3 rounded mb-3 mt-2 align-self-start">
