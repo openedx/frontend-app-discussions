@@ -2,6 +2,7 @@ import React from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { MathJaxContext } from 'better-react-mathjax';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import {
@@ -45,28 +46,30 @@ async function renderComponent({
   }
   await render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <MemoryRouter initialEntries={[path]}>
-          <DiscussionContext.Provider value={{
-            courseId,
-            postId,
-            topicId,
-            category,
-            page,
-          }}
-          >
-            <Switch>
-              <Route path={Routes.POSTS.MY_POSTS}>
-                <PostsView />
-              </Route>
-              <Route
-                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}
-                component={PostsView}
-              />
-            </Switch>
-          </DiscussionContext.Provider>
-        </MemoryRouter>
-      </AppProvider>
+      <MathJaxContext>
+        <AppProvider store={store}>
+          <MemoryRouter initialEntries={[path]}>
+            <DiscussionContext.Provider value={{
+              courseId,
+              postId,
+              topicId,
+              category,
+              page,
+            }}
+            >
+              <Switch>
+                <Route path={Routes.POSTS.MY_POSTS}>
+                  <PostsView />
+                </Route>
+                <Route
+                  path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}
+                  component={PostsView}
+                />
+              </Switch>
+            </DiscussionContext.Provider>
+          </MemoryRouter>
+        </AppProvider>
+      </MathJaxContext>
     </IntlProvider>,
   );
 }
