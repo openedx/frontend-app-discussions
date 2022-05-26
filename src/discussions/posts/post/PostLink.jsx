@@ -83,7 +83,7 @@ function PostLink({
             </div>
           </div>
           <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'max-height': '1.6em' }}>
-            <HTMLLoader htmlNode={post.rawBody} />
+            <HTMLLoader htmlNode={post.renderedBody || post.rawBody} />
           </div>
           <PostFooter post={post} preview intl={intl} />
         </div>
