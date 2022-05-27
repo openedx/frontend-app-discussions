@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useRef,
+  useContext, useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,10 +14,11 @@ import { AppContext } from '@edx/frontend-platform/react';
 import {
   Button, Card, Form, Spinner, StatefulButton,
 } from '@edx/paragon';
-import { Help, Post } from '@edx/paragon/icons';
+import { Cancel, Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
+import HTMLLoader from '../../../components/HTMLLoader';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
@@ -77,6 +78,7 @@ function PostEditor({
   const history = useHistory();
   const location = useLocation();
   const commentsPagePath = useCommentsPagePath();
+  const [showPreview, setShowPreview] = useState(false);
   const {
     courseId,
     topicId,
@@ -361,7 +363,14 @@ function PostEditor({
             />
             <FormikErrorFeedback name="comment" />
           </div>
-
+          {!showPreview
+            ? <Button onClick={() => setShowPreview(true)} size="sm">{intl.formatMessage(messages.showPreviewButton)}</Button>
+            : (
+              <div className="p-2 bg-gray-100">
+                <Cancel onClick={() => setShowPreview(false)} className="float-right" />
+                <HTMLLoader htmlNode={values.comment} />
+              </div>
+            )}
           {!editExisting
             && (
               <div className="d-flex flex-row mt-3">
