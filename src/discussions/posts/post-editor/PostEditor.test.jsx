@@ -3,7 +3,6 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
-import { MathJaxContext } from 'better-react-mathjax';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
@@ -36,15 +35,13 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
   const path = editExisting ? Routes.POSTS.EDIT_POST : Routes.POSTS.NEW_POSTS;
   await render(
     <IntlProvider locale="en">
-      <MathJaxContext>
-        <AppProvider store={store}>
-          <MemoryRouter initialEntries={[location]}>
-            <Route path={path}>
-              <PostEditor editExisting={editExisting} />
-            </Route>
-          </MemoryRouter>
-        </AppProvider>
-      </MathJaxContext>
+      <AppProvider store={store}>
+        <MemoryRouter initialEntries={[location]}>
+          <Route path={path}>
+            <PostEditor editExisting={editExisting} />
+          </Route>
+        </MemoryRouter>
+      </AppProvider>
     </IntlProvider>,
   );
 }

@@ -1,7 +1,6 @@
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
-import { MathJaxContext } from 'better-react-mathjax';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
@@ -21,13 +20,11 @@ function renderComponent(location = `/${courseId}/`) {
   render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
-        <MathJaxContext>
-          <AppProvider store={store}>
-            <MemoryRouter initialEntries={[location]}>
-              <DiscussionsHome />
-            </MemoryRouter>
-          </AppProvider>
-        </MathJaxContext>
+        <AppProvider store={store}>
+          <MemoryRouter initialEntries={[location]}>
+            <DiscussionsHome />
+          </MemoryRouter>
+        </AppProvider>
       </ResponsiveContext.Provider>
     </IntlProvider>,
   );

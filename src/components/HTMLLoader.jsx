@@ -1,14 +1,15 @@
-// eslint-disable react/no-danger
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { MathJax } from 'better-react-mathjax';
+import MathJax from 'react-mathjax-preview';
 
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
+  const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/);
+
   return (
-    <MathJax>
-      <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: htmlNode }} />
-    </MathJax>
+    isLatex ? <MathJax math={htmlNode} id={componentId} className={cssClassName} />
+      // eslint-disable-next-line react/no-danger
+      : <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: htmlNode }} />
   );
 }
 
