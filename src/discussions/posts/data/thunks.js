@@ -122,6 +122,9 @@ export function fetchThreads(courseId, {
   if (filters.search) {
     options.textSearch = filters.search;
   }
+  if (filters.cohort) {
+    options.cohort = filters.cohort;
+  }
   return async (dispatch) => {
     try {
       dispatch(fetchThreadsRequest({ courseId }));

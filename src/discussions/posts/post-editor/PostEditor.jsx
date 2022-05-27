@@ -161,7 +161,7 @@ function PostEditor({
   };
 
   useEffect(() => {
-    if (userIsPrivileged) {
+    if (userIsPrivileged && isEmpty(cohorts)) {
       dispatch(fetchCourseCohorts(courseId));
     }
     if (editExisting) {

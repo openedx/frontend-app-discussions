@@ -42,6 +42,7 @@ export async function getThreads(
     flagged,
     threadType,
     countFlagged,
+    cohort,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -58,6 +59,7 @@ export async function getThreads(
     author,
     flagged,
     countFlagged,
+    groupId: cohort,
   });
   const { data } = await getAuthenticatedHttpClient().get(threadsApiUrl, { params });
   return data;

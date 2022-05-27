@@ -83,8 +83,8 @@ const messages = defineMessages({
   },
   sortFilterStatus: {
     id: 'discussions.posts.sort-filter.sortFilterStatus',
-    defaultMessage: `{own, select, 
-      false {All} 
+    defaultMessage: `{own, select,
+      false {All}
       true {Own}
     } {status, select,
       statusAll {}
@@ -92,15 +92,18 @@ const messages = defineMessages({
       statusFollowing {followed}
       statusReported {reported}
       statusUnanswered {unanswered}
-    } {type, select,  
-      discussion {discussions} 
+    } {type, select,
+      discussion {discussions}
       question {questions}
       all {posts}
-     } by {sort, select,
-        lastActivityAt {recent activity}
-        commentCount {most activity}
-        voteCount {most votes}
-     }`,
+    } {cohortType, select,
+        all {}
+        group {in {cohort}}
+    } by {sort, select,
+      lastActivityAt {recent activity}
+      commentCount {most activity}
+      voteCount {most votes}
+    }`,
     description: 'Status message showing current sorting and filtering status',
   },
 });
