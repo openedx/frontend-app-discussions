@@ -4,8 +4,6 @@ import 'regenerator-runtime/runtime';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { MathJaxContext } from 'better-react-mathjax';
-
 import {
   APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
@@ -13,7 +11,6 @@ import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
 import { DiscussionsHome } from './discussions';
 import appMessages from './i18n';
-import configMaths from './mathjax-config';
 import store from './store';
 
 import './assets/favicon.ico';
@@ -21,11 +18,9 @@ import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <MathJaxContext version={3} config={configMaths}>
-      <AppProvider store={store}>
-        <DiscussionsHome />
-      </AppProvider>
-    </MathJaxContext>,
+    <AppProvider store={store}>
+      <DiscussionsHome />
+    </AppProvider>,
     document.getElementById('root'),
   );
 });

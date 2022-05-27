@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
-import { MathJaxContext } from 'better-react-mathjax';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
@@ -26,13 +25,11 @@ function renderComponent(displaySidebar = true, location = `/${courseId}/`) {
   const wrapper = render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
-        <MathJaxContext>
-          <AppProvider store={store}>
-            <MemoryRouter initialEntries={[location]}>
-              <DiscussionSidebar displaySidebar={displaySidebar} />
-            </MemoryRouter>
-          </AppProvider>
-        </MathJaxContext>
+        <AppProvider store={store}>
+          <MemoryRouter initialEntries={[location]}>
+            <DiscussionSidebar displaySidebar={displaySidebar} />
+          </MemoryRouter>
+        </AppProvider>
       </ResponsiveContext.Provider>
     </IntlProvider>,
   );
