@@ -159,7 +159,8 @@ describe('PostsView', () => {
       // 3 type filters: all, discussion, question
       // 5 status filters: any, unread, following, reported, unanswered
       // 3 sort: activity, comments, likes
-      expect(screen.queryAllByRole('radio')).toHaveLength(11);
+      // 1 cohort: all groups
+      expect(screen.queryAllByRole('radio')).toHaveLength(12);
     });
 
     describe.each([
