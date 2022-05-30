@@ -4,6 +4,7 @@ import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { MathJaxContext } from 'better-react-mathjax';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
@@ -35,15 +36,17 @@ const testUsername = 'leaner-1';
 function renderComponent(username = testUsername) {
   return render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <DiscussionContext.Provider value={{ learnerUsername: username, courseId }}>
-          <MemoryRouter initialEntries={[`/${courseId}/learners/${username}/${LearnerTabs.POSTS}`]}>
-            <Route path="/:courseId/learners/:learnerUsername">
-              <DiscussionContent />
-            </Route>
-          </MemoryRouter>
-        </DiscussionContext.Provider>
-      </AppProvider>
+      <MathJaxContext>
+        <AppProvider store={store}>
+          <DiscussionContext.Provider value={{ learnerUsername: username, courseId }}>
+            <MemoryRouter initialEntries={[`/${courseId}/learners/${username}/${LearnerTabs.POSTS}`]}>
+              <Route path="/:courseId/learners/:learnerUsername">
+                <DiscussionContent />
+              </Route>
+            </MemoryRouter>
+          </DiscussionContext.Provider>
+        </AppProvider>
+      </MathJaxContext>
     </IntlProvider>,
   );
 }

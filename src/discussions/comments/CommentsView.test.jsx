@@ -2,6 +2,7 @@ import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { MathJaxContext } from 'better-react-mathjax';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
 import { Factory } from 'rosie';
@@ -80,18 +81,20 @@ function mockAxiosReturnPagedCommentsResponses() {
 function renderComponent(postId) {
   render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
-          <DiscussionContent />
-          <Route
-            path="*"
-            render={({ location }) => {
-              testLocation = location;
-              return null;
-            }}
-          />
-        </MemoryRouter>
-      </AppProvider>
+      <MathJaxContext>
+        <AppProvider store={store}>
+          <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
+            <DiscussionContent />
+            <Route
+              path="*"
+              render={({ location }) => {
+                testLocation = location;
+                return null;
+              }}
+            />
+          </MemoryRouter>
+        </AppProvider>
+      </MathJaxContext>
     </IntlProvider>,
   );
 }
