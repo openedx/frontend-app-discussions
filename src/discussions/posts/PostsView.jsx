@@ -10,6 +10,7 @@ import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
+import { selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 import {
   selectAllThreads,
   selectThreadFilters,
@@ -22,7 +23,6 @@ import { fetchThreads } from './data/thunks';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import NoResults from './NoResults';
 import { PostLink } from './post';
-import { selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 
 function PostsList({ posts, topics }) {
   const dispatch = useDispatch();
