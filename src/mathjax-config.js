@@ -1,4 +1,4 @@
-const config = {
+const configMaths = {
   loader: { load: ['[tex]/html'] },
   tex: {
     packages: { '[+]': ['html'] },
@@ -17,4 +17,4 @@ const config = {
     typeset: false,
   },
 };
-export default config;
+export default configMaths;
