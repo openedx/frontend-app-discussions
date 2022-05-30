@@ -13,7 +13,7 @@ import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
 import { DiscussionsHome } from './discussions';
 import appMessages from './i18n';
-import config from './mathjax-config';
+import configMaths from './mathjax-config';
 import store from './store';
 
 import './assets/favicon.ico';
@@ -21,7 +21,7 @@ import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <MathJaxContext version={3} config={config}>
+    <MathJaxContext version={3} config={configMaths}>
       <AppProvider store={store}>
         <DiscussionsHome />
       </AppProvider>
