@@ -22,6 +22,7 @@ import { fetchThreads } from './data/thunks';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import NoResults from './NoResults';
 import { PostLink } from './post';
+import { selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 
 function PostsList({ posts, topics }) {
   const dispatch = useDispatch();
@@ -35,13 +36,15 @@ function PostsList({ posts, topics }) {
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
   const showOwnPosts = page === 'my-posts';
-
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userIsStaff = useSelector(selectUserIsStaff);
   const loadThreads = (topicIds, pageNum = undefined) => dispatch(fetchThreads(courseId, {
     topicIds,
     orderBy,
     filters,
     page: pageNum,
     author: showOwnPosts ? authenticatedUser.username : null,
+    countFlagged: userIsPrivileged || userIsStaff,
   }));
 
   useEffect(() => {

@@ -86,6 +86,7 @@ function normaliseThreads(data) {
  * @param {ThreadOrdering} orderBy The results will be sorted on this basis.
  * @param {ThreadFilter} filters The set of filters to apply to the thread.
  * @param {number} page Page to fetch
+ * @param {boolean} countFlagged
  * @returns {(function(*): Promise<void>)|*}
  */
 export function fetchThreads(courseId, {
@@ -94,12 +95,14 @@ export function fetchThreads(courseId, {
   author = null,
   filters = {},
   page = 1,
+  countFlagged,
 } = {}) {
   const options = {
     orderBy,
     topicIds,
     page,
     author,
+    countFlagged,
   };
   if (filters.status === PostsStatusFilter.FOLLOWING) {
     options.following = true;

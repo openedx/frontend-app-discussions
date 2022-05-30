@@ -68,7 +68,8 @@ function PostLink({
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
                     </div>
                   )}
-                {post.abuseFlagged
+
+                {(post.abuseFlagged || post.abuseFlaggedCount)
                   && (
                     <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
                       <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
