@@ -12,6 +12,7 @@ const configSlice = createSlice({
     allowAnonymousToPeers: false,
     userRoles: [],
     userIsPrivileged: false,
+    isUserAdmin: false,
     learnersTabEnabled: false,
     settings: {
       divisionScheme: 'none',

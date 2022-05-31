@@ -26,6 +26,7 @@ export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
  * @param {boolean} flagged If true, only threads that have been reported will be returned.
  * @param {string} threadType Can be 'discussion' or 'question'.
  * @param {ThreadViewStatus} view Set to "unread" on "unanswered" to filter to only those statuses.
+ * @param {boolean} countFlagged If true, abuseFlaggedCount will be available.
  * @returns {Promise<{}>}
  */
 export async function getThreads(
@@ -40,6 +41,7 @@ export async function getThreads(
     author,
     flagged,
     threadType,
+    countFlagged,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -55,8 +57,8 @@ export async function getThreads(
     requestedFields: 'profile_image',
     author,
     flagged,
+    countFlagged,
   });
-
   const { data } = await getAuthenticatedHttpClient().get(threadsApiUrl, { params });
   return data;
 }

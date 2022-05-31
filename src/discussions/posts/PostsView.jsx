@@ -10,6 +10,7 @@ import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
+import { selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 import {
   selectAllThreads,
   selectThreadFilters,
@@ -35,13 +36,15 @@ function PostsList({ posts, topics }) {
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
   const showOwnPosts = page === 'my-posts';
-
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userIsStaff = useSelector(selectUserIsStaff);
   const loadThreads = (topicIds, pageNum = undefined) => dispatch(fetchThreads(courseId, {
     topicIds,
     orderBy,
     filters,
     page: pageNum,
     author: showOwnPosts ? authenticatedUser.username : null,
+    countFlagged: userIsPrivileged || userIsStaff,
   }));
 
   useEffect(() => {
