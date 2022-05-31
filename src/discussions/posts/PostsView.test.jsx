@@ -16,11 +16,13 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { Routes, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
+import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
 import { threadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
 import './data/__factories__';
+import '../cohorts/data/__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
@@ -92,6 +94,7 @@ describe('PostsView', () => {
     });
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
     axiosMock.onGet(threadsApiUrl)
       .reply((args) => {
         const threadAttrs = {};
@@ -155,12 +158,25 @@ describe('PostsView', () => {
         fireEvent.click(dropDownButton);
       });
     });
+
     test('test that the filter bar works', async () => {
       // 3 type filters: all, discussion, question
       // 5 status filters: any, unread, following, reported, unanswered
       // 3 sort: activity, comments, likes
-      // 1 cohort: all groups
-      expect(screen.queryAllByRole('radio')).toHaveLength(12);
+      // 2 cohort: all groups, 1 api mock response cohort
+      expect(screen.queryAllByRole('radio')).toHaveLength(13);
+    });
+
+    test('test that the cohorts filter works', async () => {
+      await act(async () => {
+        fireEvent.click(screen.getByLabelText('Cohort 1'));
+      });
+
+      dropDownButton = screen.getByRole('button', {
+        name: /All posts in Cohort 1 by recent activity/i,
+      });
+
+      expect(dropDownButton).toBeInTheDocument();
     });
 
     describe.each([
@@ -195,6 +211,14 @@ describe('PostsView', () => {
       {
         label: 'Most likes',
         queryParam: { order_by: 'vote_count' },
+      },
+      {
+        label: 'All groups',
+        queryParam: { group_id: undefined },
+      },
+      {
+        label: 'Cohort 1',
+        queryParam: { group_id: 'cohort-1' },
       },
     ])(
       'one at a time',
