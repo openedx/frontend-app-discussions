@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import MathJax from 'react-mathjax-preview';
 
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
-  const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/);
+  const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/)
+                  || htmlNode.match(/(\[mathjax](.+?)\[\\mathjax])+/)
+                  || htmlNode.match(/(\[mathjaxinline](.+?)\[\\mathjaxinline])+/)
+                  || htmlNode.match(/(\\\[(.+?)\\\])+/);
 
   return (
     isLatex ? <MathJax math={htmlNode} id={componentId} className={cssClassName} />
