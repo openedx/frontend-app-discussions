@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
-import { MathJaxContext } from 'better-react-mathjax';
 import { IntlProvider } from 'react-intl';
 
 import { initializeMockApp } from '@edx/frontend-platform';
@@ -15,11 +14,9 @@ let store;
 function renderComponent(comment, postType, actionHandlers) {
   return render(
     <IntlProvider locale="en">
-      <MathJaxContext>
-        <AppProvider store={store}>
-          <CommentHeader comment={comment} postType={postType} actionHandlers={actionHandlers} />
-        </AppProvider>
-      </MathJaxContext>
+      <AppProvider store={store}>
+        <CommentHeader comment={comment} postType={postType} actionHandlers={actionHandlers} />
+      </AppProvider>
     </IntlProvider>,
   );
 }
