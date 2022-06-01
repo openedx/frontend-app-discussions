@@ -31,6 +31,7 @@ const threadsSlice = createSlice({
     filters: {
       status: PostsStatusFilter.ALL,
       postType: ThreadType.ALL,
+      cohort: '',
       search: '',
     },
     postEditorVisible: false,
@@ -146,6 +147,10 @@ const threadsSlice = createSlice({
       state.filters.postType = payload;
       state.pages = [];
     },
+    setCohortFilter: (state, { payload }) => {
+      state.filters.cohort = payload;
+      state.pages = [];
+    },
     setSearchQuery: (state, { payload }) => {
       state.filters.search = payload;
       // Search doesn't work with following
@@ -190,6 +195,7 @@ export const {
   updateThreadAsRead,
   updateThreadSuccess,
   setPostsTypeFilter,
+  setCohortFilter,
   setSortedBy,
   setStatusFilter,
   setSearchQuery,

@@ -137,7 +137,7 @@ describe('PostEditor', () => {
     );
   });
 
-  describe('chorting', () => {
+  describe('cohorting', () => {
     const dividedncw = ['ncw-topic-2'];
     const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
 
