@@ -17,12 +17,13 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
 }
 
 HTMLLoader.propTypes = {
-  htmlNode: PropTypes.node.isRequired,
+  htmlNode: PropTypes.node,
   componentId: PropTypes.string,
   cssClassName: PropTypes.string,
 };
 
 HTMLLoader.defaultProps = {
+  htmlNode: '',
   componentId: null,
   cssClassName: '',
 };
