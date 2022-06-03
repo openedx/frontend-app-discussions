@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useRef, useState,
+  useContext, useEffect, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,11 +14,11 @@ import { AppContext } from '@edx/frontend-platform/react';
 import {
   Button, Card, Form, Spinner, StatefulButton,
 } from '@edx/paragon';
-import { Cancel, Help, Post } from '@edx/paragon/icons';
+import { Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
-import HTMLLoader from '../../../components/HTMLLoader';
+import PostPreviewPane from '../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
@@ -78,7 +78,6 @@ function PostEditor({
   const history = useHistory();
   const location = useLocation();
   const commentsPagePath = useCommentsPagePath();
-  const [showPreview, setShowPreview] = useState(false);
   const {
     courseId,
     topicId,
@@ -363,29 +362,25 @@ function PostEditor({
             />
             <FormikErrorFeedback name="comment" />
           </div>
-          {!showPreview
-            ? <Button onClick={() => setShowPreview(true)} size="sm">{intl.formatMessage(messages.showPreviewButton)}</Button>
-            : (
-              <div className="p-2 bg-gray-100">
-                <Cancel onClick={() => setShowPreview(false)} className="float-right" />
-                <HTMLLoader htmlNode={values.comment} />
-              </div>
-            )}
-          {!editExisting
-            && (
-              <div className="d-flex flex-row mt-3">
-                <Form.Group>
-                  <Form.Checkbox
-                    name="follow"
-                    checked={values.follow}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="mr-4"
-                  >
-                    {intl.formatMessage(messages.followPost)}
-                  </Form.Checkbox>
-                </Form.Group>
-                {allowAnonymousToPeers
+
+          <PostPreviewPane htmlNode={values.comment} isPost />
+
+          <div className="d-flex flex-row mt-n4.5 w-75">
+            {!editExisting
+              && (
+                <>
+                  <Form.Group>
+                    <Form.Checkbox
+                      name="follow"
+                      checked={values.follow}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="mr-4"
+                    >
+                      {intl.formatMessage(messages.followPost)}
+                    </Form.Checkbox>
+                  </Form.Group>
+                  {allowAnonymousToPeers
                   && (
                     <Form.Group>
                       <Form.Checkbox
@@ -398,14 +393,16 @@ function PostEditor({
                       </Form.Checkbox>
                     </Form.Group>
                   )}
-              </div>
-            )}
+                </>
+              )}
+          </div>
 
           <div className="d-flex justify-content-end">
             <Button
               variant="outline-primary"
               onClick={hideEditor}
-            >{intl.formatMessage(messages.cancel)}
+            >
+              {intl.formatMessage(messages.cancel)}
             </Button>
             <StatefulButton
               labels={{
