@@ -14,7 +14,7 @@ function PostPreviewPane({ htmlNode, intl, isPost }) {
   return (
     <>
       {showPreviewPane && (
-        <div className={`p-2 bg-light-200 rounded shadow-sm ${isPost ? 'mt-3 mb-5.5' : 'my-3'}`}>
+        <div className={`p-2 bg-light-200 rounded shadow-sm ${isPost ? 'mt-3 mb-5.5' : 'my-3'}`} style={{ maxHeight: '200px', overflow: 'scroll' }}>
           <Close onClick={() => setShowPreviewPane(false)} className="float-right text-primary-500 mb" />
           <HTMLLoader htmlNode={htmlNode} />
         </div>
