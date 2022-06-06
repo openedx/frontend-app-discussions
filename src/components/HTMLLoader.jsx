@@ -23,9 +23,10 @@ const baseConfig = {
 
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/)
-                  || htmlNode.match(/(\[mathjax](.+?)\[\\mathjax])+/)
-                  || htmlNode.match(/(\[mathjaxinline](.+?)\[\\mathjaxinline])+/)
-                  || htmlNode.match(/(\\\[(.+?)\\\])+/);
+                  || htmlNode.match(/(\[mathjax](.+?)\[\/mathjax])+/)
+                  || htmlNode.match(/(\[mathjaxinline](.+?)\[\/mathjaxinline])+/)
+                  || htmlNode.match(/(\\\[(.+?)\\\])+/)
+                  || htmlNode.match(/(\\\((.+?)\\\))+/);
 
   return (
     isLatex ? (
