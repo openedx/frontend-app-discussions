@@ -8,7 +8,9 @@ import { Close } from '@edx/paragon/icons';
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPane({ htmlNode, intl, isPost }) {
+function PostPreviewPane({
+  htmlNode, intl, isPost, editExisting,
+}) {
   const [showPreviewPane, setShowPreviewPane] = useState(false);
 
   return (
@@ -26,7 +28,7 @@ function PostPreviewPane({ htmlNode, intl, isPost }) {
             variant="link"
             size="md"
             onClick={() => setShowPreviewPane(true)}
-            className="text-primary-500"
+            className={`text-primary-500 ${editExisting && 'mb-4.5'}`}
           >
             {intl.formatMessage(messages.showPreviewButton)}
           </Button>
@@ -40,10 +42,12 @@ PostPreviewPane.propTypes = {
   intl: intlShape.isRequired,
   htmlNode: PropTypes.node.isRequired,
   isPost: PropTypes.bool,
+  editExisting: PropTypes.bool,
 };
 
 PostPreviewPane.defaultProps = {
   isPost: false,
+  editExisting: false,
 };
 
 export default injectIntl(PostPreviewPane);

@@ -363,7 +363,7 @@ function PostEditor({
             <FormikErrorFeedback name="comment" />
           </div>
 
-          <PostPreviewPane htmlNode={values.comment} isPost />
+          <PostPreviewPane htmlNode={values.comment} isPost editExisting={editExisting} />
 
           <div className="d-flex flex-row mt-n4.5 w-75">
             {!editExisting
