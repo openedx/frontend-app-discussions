@@ -39,11 +39,11 @@ function PostLink({
   const authorLabelColor = AvatarBorderAndLabelColors[post.authorLabel];
   return (
     <Link
-      className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"
+      className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
       to={linkUrl}
-      style={{ lineHeight: '21px', height: '7.5rem' }}
       aria-current={isSelected(post.id) ? 'page' : undefined}
       onClick={() => isSelected(post.id)}
+      style={{ lineHeight: '21px' }}
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
@@ -52,44 +52,53 @@ function PostLink({
         </div>
       )}
       <div
-        className={classNames('d-flex flex-row flex-fill mw-100 p-2.5 pr-4 border-primary-500', { 'bg-light-300': post.read })}
+        className={
+          classNames('d-flex flex-row py-2.5 px-4 border-primary-500',
+            { 'bg-light-300': post.read })
+        }
         style={post.id === postId ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
         } : null}
       >
         <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink />
-        <div className="d-flex flex-column" style={{ width: 'calc(100% - 4rem)' }}>
-          <div className="align-items-center d-flex flex-row flex-fill">
-            <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
-              <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-                <div className="flex-fill text-truncate text-primary-500 font-weight-500 font-size-14 font-style-normal font-family-inter">
-                  {post.title}
-                </div>
-                {showAnsweredBadge
-                  && (
-                    <div className="ml-auto">
-                      <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
-                      <span className="sr-only">{' '}answered</span>
-                    </div>
-                  )}
-
-                {(post.abuseFlagged || post.abuseFlaggedCount)
-                  && (
-                    <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
-                      <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
-                      <span className="sr-only">{' '}reported</span>
-                    </div>
-                  )}
+        <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
+          <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
+            <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
+              <div
+                className="text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter"
+              >
+                {post.title}
               </div>
-              <AuthorLabel
-                author={post.author || intl.formatMessage(messages.anonymous)}
-                authorLabel={post.authorLabel}
-                labelColor={authorLabelColor && `text-${authorLabelColor}`}
-              />
+
+              {showAnsweredBadge && (
+                <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
+                  {intl.formatMessage(messages.answered)}
+                  <span className="sr-only">{' '}answered</span>
+                </Badge>
+              )}
+
+              {(post.abuseFlagged || post.abuseFlaggedCount) && (
+                <Badge
+                  variant="danger"
+                  data-testid="reported-post"
+                  className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                >
+                  {intl.formatMessage(messages.contentReported)}
+                  <span className="sr-only">{' '}reported</span>
+                </Badge>
+              )}
             </div>
           </div>
-          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ maxHeight: '1.6em' }}>
+          <AuthorLabel
+            author={post.author || intl.formatMessage(messages.anonymous)}
+            authorLabel={post.authorLabel}
+            labelColor={authorLabelColor && `text-${authorLabelColor}`}
+          />
+          <div
+            className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
+            style={{ 'max-height': '1.5rem' }}
+          >
             {isPostPreviewAvailable(post.previewBody)
               ? post.previewBody
               : intl.formatMessage(messages.postWithoutPreview)}
