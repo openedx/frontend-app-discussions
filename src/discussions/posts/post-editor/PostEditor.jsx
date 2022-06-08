@@ -146,7 +146,7 @@ function PostEditor({
         type: values.postType,
         title: values.title,
         content: values.comment,
-        following: values.following,
+        following: values.follow,
         anonymous: allowAnonymous ? values.anonymous : undefined,
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
