@@ -1,4 +1,5 @@
-export { default as Help } from './Help';
+export { default as People } from './People';
+export { default as Question } from './Question';
 export { default as QuestionAnswer } from './QuestionAnswer';
 export { default as QuestionAnswerOutline } from './QuestionAnswerOutline';
 export { default as StarFilled } from './StarFilled';
