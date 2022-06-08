@@ -224,3 +224,17 @@ export function postMessageToParent(type, payload = {}) {
     });
   }
 }
+
+export const isPostPreviewAvailable = (htmlNode) => {
+  const containsImage = htmlNode.match(/(<img((?:\\.|.)*)>)/);
+  const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)/)
+                  || htmlNode.match(/(\[mathjax](.+?))+/)
+                  || htmlNode.match(/(\[mathjaxinline](.+?))+/)
+                  || htmlNode.match(/(\\\[(.+?))+/)
+                  || htmlNode.match(/(\\\((.+?))+/);
+
+  if (containsImage || isLatex || htmlNode === '') {
+    return false;
+  }
+  return true;
+};
