@@ -97,7 +97,7 @@ function PostLink({
           />
           <div
             className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
-            style={{ 'max-height': '1.5rem' }}
+            style={{ maxHeight: '1.5rem' }}
           >
             {isPostPreviewAvailable(post.previewBody)
               ? post.previewBody
