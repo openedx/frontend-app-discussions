@@ -47,7 +47,7 @@ function PostLink({
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
-          <span className="sr-only">{" "}pinned</span>
+          <span className="sr-only">{' '}pinned</span>
           <Icon src={Bookmark} className="position-absolute mt-n1" />
         </div>
       )}
@@ -70,7 +70,7 @@ function PostLink({
                   && (
                     <div className="ml-auto">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
-                      <span className="sr-only">{" "}answered</span>
+                      <span className="sr-only">{' '}answered</span>
                     </div>
                   )}
 
@@ -78,7 +78,7 @@ function PostLink({
                   && (
                     <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
                       <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
-                      <span className="sr-only">{" "}reported</span>
+                      <span className="sr-only">{' '}reported</span>
                     </div>
                   )}
               </div>
@@ -89,7 +89,7 @@ function PostLink({
               />
             </div>
           </div>
-          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'maxHeight': '1.6em' }}>
+          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ maxHeight: '1.6em' }}>
             {isPostPreviewAvailable(post.previewBody)
               ? post.previewBody
               : intl.formatMessage(messages.postWithoutPreview)}
