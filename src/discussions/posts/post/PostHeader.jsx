@@ -26,20 +26,23 @@ export function PostAvatar({ post, authorLabel, fromPostLink }) {
           style={{
             width: '1.75rem',
             height: '1.75rem',
-            top: '10px',
-            left: '14px',
+            top: fromPostLink ? '10px' : '',
+            left: fromPostLink ? '14px' : '',
+            marginTop: !fromPostLink ? '5px' : '',
           }}
         />
       )}
       <Avatar
         size={fromPostLink ? 'sm' : 'md'}
         className={`${borderColor && `border-${borderColor}`}
-         ${post.type === ThreadType.QUESTION ? 'mt-3 ml-2' : ''}
+         ${post.type === ThreadType.QUESTION && fromPostLink ? 'mt-3 ml-2' : ''}
         `}
         style={{
           borderWidth: '2px',
           height: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
           width: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
+          marginTop: post.type === ThreadType.QUESTION ? '22px' : '',
+          marginLeft: post.type === ThreadType.QUESTION ? '18px' : '',
         }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
