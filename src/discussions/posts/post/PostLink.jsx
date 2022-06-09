@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -18,6 +19,7 @@ import { postShape } from './proptypes';
 
 function PostLink({
   post,
+  isSelected,
   intl,
 }) {
   const {
@@ -40,9 +42,12 @@ function PostLink({
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"
       to={linkUrl}
       style={{ lineHeight: '21px', height: '7.5rem' }}
+      aria-current={isSelected(post.id) ? 'page' : undefined}
+      onClick={() => isSelected(post.id)}
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
+          <span className="sr-only">{" "}pinned</span>
           <Icon src={Bookmark} className="position-absolute mt-n1" />
         </div>
       )}
@@ -65,6 +70,7 @@ function PostLink({
                   && (
                     <div className="ml-auto">
                       <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>
+                      <span className="sr-only">{" "}answered</span>
                     </div>
                   )}
 
@@ -72,6 +78,7 @@ function PostLink({
                   && (
                     <div className={showAnsweredBadge ? 'ml-2' : 'ml-auto'}>
                       <Badge variant="danger" data-testid="reported-post">{intl.formatMessage(messages.contentReported)}</Badge>
+                      <span className="sr-only">{" "}reported</span>
                     </div>
                   )}
               </div>
@@ -82,7 +89,7 @@ function PostLink({
               />
             </div>
           </div>
-          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'max-height': '1.6em' }}>
+          <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'maxHeight': '1.6em' }}>
             {isPostPreviewAvailable(post.previewBody)
               ? post.previewBody
               : intl.formatMessage(messages.postWithoutPreview)}
@@ -96,6 +103,7 @@ function PostLink({
 
 PostLink.propTypes = {
   post: postShape.isRequired,
+  isSelected: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
 };
 
