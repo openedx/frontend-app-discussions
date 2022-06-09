@@ -111,6 +111,11 @@ const messages = defineMessages({
     defaultMessage: 'Reason',
     description: 'Message shown to user to inform them why a post was edited',
   },
+  postWithoutPreview: {
+    id: 'discussions.post.postWithoutPreview',
+    defaultMessage: 'No preview available',
+    description: 'No preview available',
+  },
 });
 
 export default messages;

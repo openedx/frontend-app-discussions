@@ -73,7 +73,10 @@ describe('DiscussionSidebar', () => {
   test('User will be redirected to "All Posts" by default', async () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
-        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
+        threadAttrs: {
+          title: `Thread by ${params.author || 'other users'}`,
+          previewBody: 'thread preview body',
+        },
       })]);
     renderComponent();
     await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
@@ -85,7 +88,10 @@ describe('DiscussionSidebar', () => {
     axiosMock.onGet(threadsApiUrl)
       .reply(({ params }) => [200, Factory.build('threadsResult', {}, {
         count: postCount,
-        threadAttrs: { title: `Thread by ${params.author || 'other users'}` },
+        threadAttrs: {
+          title: `Thread by ${params.author || 'other users'}`,
+          previewBody: 'thread preview body',
+        },
       })]);
     renderComponent();
     await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());

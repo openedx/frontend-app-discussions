@@ -94,7 +94,7 @@ describe('PostsView', () => {
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
     axiosMock.onGet(threadsApiUrl)
       .reply((args) => {
-        const threadAttrs = {};
+        const threadAttrs = { previewBody: 'thread preview body' };
         if (args.params.author) {
           threadAttrs.author = args.params.author;
         }

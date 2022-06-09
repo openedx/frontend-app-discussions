@@ -7,11 +7,10 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
 import { Bookmark } from '@edx/paragon/icons';
 
-import HTMLLoader from '../../../components/HTMLLoader';
 import { AvatarBorderAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
-import { discussionsPath } from '../../utils';
+import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import messages from './messages';
 import PostFooter from './PostFooter';
 import { PostAvatar } from './PostHeader';
@@ -84,7 +83,9 @@ function PostLink({
             </div>
           </div>
           <div className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter" style={{ 'max-height': '1.6em' }}>
-            <HTMLLoader htmlNode={post.renderedBody || post.rawBody} />
+            {isPostPreviewAvailable(post.previewBody)
+              ? post.previewBody
+              : intl.formatMessage(messages.postWithoutPreview)}
           </div>
           <PostFooter post={post} preview intl={intl} />
         </div>
