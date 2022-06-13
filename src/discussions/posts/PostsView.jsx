@@ -149,7 +149,7 @@ function PostsView() {
   return (
     <div className="discussion-posts d-flex flex-column">
       <PostFilterBar filterSelfPosts={showOwnPosts} />
-      <div className="list-group list-group-flush">
+      <div className="list-group list-group-flush" role="list">
         {postsListComponent}
       </div>
     </div>
