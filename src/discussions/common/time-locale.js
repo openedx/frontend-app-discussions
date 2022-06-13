@@ -11,8 +11,8 @@ export default function timeLocale(number, index, totalSec) {
     ['%sd', 'in %s days'],
     ['1w', 'in 1 week'],
     ['%sw', 'in %s weeks'],
-    ['1m', 'in 1 month'],
-    ['%sm', 'in %s months'],
+    ['1M', 'in 1 month'],
+    ['%sM', 'in %s months'],
     ['1y', 'in 1 year'],
     ['%sy', 'in %s years'],
   ][index];

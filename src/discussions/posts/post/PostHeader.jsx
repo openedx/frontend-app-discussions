@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 
-import { Question } from '../../../components/icons';
+import { Help } from '../../../components/icons';
 import { AvatarBorderAndLabelColors, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { selectAuthorAvatars } from '../data/selectors';
@@ -16,37 +16,31 @@ import { postShape } from './proptypes';
 export function PostAvatar({ post, authorLabel, fromPostLink }) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   const borderColor = AvatarBorderAndLabelColors[authorLabel];
-
   return (
-    <div className={`mr-3 ${post.type !== ThreadType.QUESTION && 'pt-1.5'}`}>
-      {post.type === ThreadType.QUESTION && (
+    <div style={{ width: '3.75rem' }} className="d-flex pr-2.5">
+      <div className="ml-auto mr-auto">
+        {post.type === ThreadType.QUESTION && (
         <Icon
-          src={Question}
+          src={Help}
           className="position-absolute bg-white rounded-circle"
           style={{
-            width: '1.75rem',
-            height: '1.75rem',
-            top: fromPostLink ? '10px' : '',
-            left: fromPostLink ? '14px' : '',
-            marginTop: !fromPostLink ? '5px' : '',
+            width: '1.5rem',
+            height: '1.5rem',
           }}
         />
-      )}
-      <Avatar
-        size={fromPostLink ? 'sm' : 'md'}
-        className={`${borderColor && `border-${borderColor}`}
-         ${post.type === ThreadType.QUESTION && fromPostLink ? 'mt-3 ml-2' : ''}
-        `}
-        style={{
-          borderWidth: '2px',
-          height: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
-          width: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
-          marginTop: post.type === ThreadType.QUESTION ? '22px' : '',
-          marginLeft: post.type === ThreadType.QUESTION ? '18px' : '',
-        }}
-        alt={post.author}
-        src={authorAvatars?.imageUrlSmall}
-      />
+        )}
+        <Avatar
+          size={fromPostLink ? 'sm' : 'md'}
+          className={`${borderColor && `border-${borderColor}`} ${post.type === ThreadType.QUESTION ? 'mt-2.5 ml-2.5' : ''}`}
+          style={{
+            borderWidth: '2px',
+            height: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
+            width: post.type === ThreadType.QUESTION ? '1.5rem' : '2rem',
+          }}
+          alt={post.author}
+          src={authorAvatars?.imageUrlSmall}
+        />
+      </div>
     </div>
   );
 }
