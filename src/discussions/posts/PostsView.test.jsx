@@ -114,18 +114,21 @@ describe('PostsView', () => {
       });
       expect(screen.getAllByText(/this is thread-\d+/i)).toHaveLength(threadCount);
     });
+
     test('displays a list of user posts', async () => {
       await act(async () => {
         await renderComponent({ myPosts: true });
       });
-      expect(screen.getAllByText('abc123')).toHaveLength(threadCount);
+      expect(screen.getAllByText('Abc123')).toHaveLength(threadCount);
     });
+
     test('displays a list of posts in a topic', async () => {
       await act(async () => {
         await renderComponent({ topicId: 'some-topic-1' });
       });
       expect(screen.getAllByText(/this is thread-\d+ in topic some-topic-1/i)).toHaveLength(Math.ceil(threadCount / 3));
     });
+
     test('displays a list of posts in a category', async () => {
       await act(async () => {
         await renderComponent({ category: 'test-usage-key' });

@@ -48,6 +48,11 @@ const messages = defineMessages({
     defaultMessage: 'Unlike',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
   },
+  viewActivity: {
+    id: 'discussions.post.viewActivity',
+    defaultMessage: 'View Activity',
+    description: 'Tooltip/alttext for button to view the activity of a discussion post',
+  },
   postClosed: {
     id: 'discussions.post.closed',
     defaultMessage: 'Post closed for responses and comments',
