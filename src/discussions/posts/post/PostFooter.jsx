@@ -57,9 +57,15 @@ function PostFooter({
       />
       {preview && post.commentCount > 1 && (
         <div className="d-flex align-items-center ml-4">
-          <Icon
+          <IconButtonWithTooltip
+            tooltipPlacement="top"
+            tooltipContent={intl.formatMessage(messages.viewActivity)}
             src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline}
-            className="mr-0.5 icon-size"
+            iconAs={Icon}
+            alt="Comment Count"
+            size="inline"
+            className="p-3 mr-0.5"
+            iconClassNames="icon-size"
           />
           {post.commentCount}
         </div>
@@ -77,7 +83,9 @@ function PostFooter({
                 <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
               )}
             >
-              <People />
+              <span data-testid="cohort-icon">
+                <People />
+              </span>
             </OverlayTrigger>
             <span
               className="text-light-700 mx-1.5 font-weight-500"

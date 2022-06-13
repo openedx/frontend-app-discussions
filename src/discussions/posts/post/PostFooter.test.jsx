@@ -61,7 +61,7 @@ describe('PostFooter', () => {
   });
 
   it("shows 'x new' badge for new comments", () => {
-    renderComponent(mockPost);
+    renderComponent(mockPost, true);
     expect(screen.getByText('2 New')).toBeTruthy();
   });
 
@@ -84,6 +84,7 @@ describe('PostFooter', () => {
     renderComponent({ ...mockPost, groupId: 5, groupName: 'Test Cohort' });
     expect(screen.getByTestId('cohort-icon')).toBeTruthy();
   });
+
   it.each([[true, /unfollow/i], [false, /follow/i]])('test follow button when following=%s', async (following, message) => {
     renderComponent({ ...mockPost, following });
     const followButton = screen.getByRole('button', { name: /follow/i });
