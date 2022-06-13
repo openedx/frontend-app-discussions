@@ -5,6 +5,7 @@ module.exports = createConfig('eslint',
   "plugins": ["simple-import-sort"],
     "rules": {
       'import/no-extraneous-dependencies': 'off',
+      'react-hooks/exhaustive-deps': 'off',
       'simple-import-sort/imports': [
         'error', {
           groups: [
