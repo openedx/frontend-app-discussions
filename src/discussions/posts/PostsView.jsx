@@ -52,9 +52,6 @@ function PostsList({ posts, topics }) {
       loadThreads(topics);
     }
   }, [courseId, orderBy, filters, page, JSON.stringify(topics)]);
-
-  const checkIsSelected = (id) => window.location.pathname.includes(id);
-
   let lastPinnedIdx = null;
   const postInstances = posts && posts.map((post, idx) => {
     if (post.pinned && lastPinnedIdx !== false) {
@@ -65,11 +62,11 @@ function PostsList({ posts, topics }) {
       return (
         <React.Fragment key={post.id}>
           <div className="p-1 bg-light-400" />
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} />
+          <PostLink post={post} key={post.id} />
         </React.Fragment>
       );
     }
-    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} />);
+    return (<PostLink post={post} key={post.id} />);
   });
   return (
     <>

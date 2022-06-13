@@ -15,7 +15,7 @@ function renderComponent(post) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <PostLink post={post} key={post.id} isSelected={() => true} />
+        <PostLink post={post} key={post.id} />
       </AppProvider>
     </IntlProvider>,
   );
