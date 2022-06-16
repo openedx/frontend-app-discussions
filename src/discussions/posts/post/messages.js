@@ -33,8 +33,8 @@ const messages = defineMessages({
     defaultMessage: 'Answered',
     description: 'Tooltip/alttext for button to unfollow a discussion post',
   },
-  unfollow: {
-    id: 'discussions.post.unfollow',
+  unFollow: {
+    id: 'discussions.post.unFollow',
     defaultMessage: 'Unfollow',
     description: 'Tooltip/alttext for button to unfollow a discussion post',
   },
@@ -45,8 +45,13 @@ const messages = defineMessages({
   },
   removeLike: {
     id: 'discussions.post.removeLike',
-    defaultMessage: 'Remove like',
+    defaultMessage: 'Unlike',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
+  },
+  viewActivity: {
+    id: 'discussions.post.viewActivity',
+    defaultMessage: 'View Activity',
+    description: 'Tooltip/alttext for button to view the activity of a discussion post',
   },
   postClosed: {
     id: 'discussions.post.closed',
@@ -57,11 +62,6 @@ const messages = defineMessages({
     id: 'discussions.post.relatedTo',
     defaultMessage: 'Related to',
     description: 'Message followed the category and topic of post linking to in-course context',
-  },
-  visibleToAll: {
-    id: 'discussions.post.cohort.everyone',
-    defaultMessage: 'Everyone',
-    description: 'Cohort visibility indicator for all people',
   },
   deletePostTitle: {
     id: 'discussions.editor.delete.post.title',

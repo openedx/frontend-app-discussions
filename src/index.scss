@@ -6,8 +6,9 @@
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 
-
-#post, #comment, #reply {
+#post,
+#comment,
+#reply {
   img {
     height: auto;
     max-width: 100%;
@@ -20,6 +21,10 @@ $fa-font-path: "~font-awesome/fonts";
 
 .border-staff-color {
   border-color: #998200;
+}
+
+.border-anonymous {
+  border-color: #F2F0EF;
 }
 
 .font-size-14 {
@@ -35,5 +40,23 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .font-family-inter {
-  font-family: 'Inter';
+  font-family: "Inter";
+}
+
+.icon-size {
+  height: 20px !important;
+  width: 20px !important;
+}
+
+.mr-0\.5 {
+  margin-right: 2px;
+}
+
+.badge-padding {
+  padding-top: 1px;
+  padding-bottom: 1px
+}
+
+.discussion-post:hover {
+  background-color: unset !important;
 }
