@@ -46,7 +46,7 @@ function PostLink({
       style={{ lineHeight: '21px' }}
     >
       {post.pinned && (
-        <div className="d-flex flex-fill justify-content-end mr-4 text-light-500 p-0">
+        <div className="d-flex flex-fill justify-content-end mr-4 text-primary-500 p-0">
           <span className="sr-only">{' '}pinned</span>
           <Icon src={Bookmark} className="position-absolute mt-n1" />
         </div>
@@ -66,7 +66,10 @@ function PostLink({
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
             <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
               <div
-                className="text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter"
+                className={
+                  classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
+                    { 'font-weight-bolder': !post.read })
+}
               >
                 {post.title}
               </div>
