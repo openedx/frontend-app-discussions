@@ -135,17 +135,6 @@ export const LearnersOrdering = {
 };
 
 /**
- * Enum for Learner content tabs
- * @readonly
- * @enum {string}
- */
-export const LearnerTabs = {
-  POSTS: 'posts',
-  COMMENTS: 'comments',
-  RESPONSES: 'responses',
-};
-
-/**
  * Enum for discussion provider types supported by the MFE.
  * @type {{OPEN_EDX: string, LEGACY: string}}
  */
@@ -162,12 +151,7 @@ export const Routes = {
   },
   LEARNERS: {
     PATH: `${BASE_PATH}/learners`,
-    LEARNER: `${BASE_PATH}/learners/:learnerUsername`,
-    TABS: {
-      posts: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.POSTS}`,
-      responses: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.RESPONSES}`,
-      comments: `${BASE_PATH}/learners/:learnerUsername/${LearnerTabs.COMMENTS}`,
-    },
+    POSTS: `${BASE_PATH}/learners/:learnerUsername/posts(/:postId)?`,
   },
   POSTS: {
     PATH: `${BASE_PATH}/topics/:topicId`,
@@ -191,6 +175,7 @@ export const Routes = {
       `${BASE_PATH}/topics/:topicId/posts/:postId`,
       `${BASE_PATH}/posts/:postId`,
       `${BASE_PATH}/my-posts/:postId`,
+      `${BASE_PATH}/learners/:learnerUsername/posts/:postId`,
     ],
     PAGE: `${BASE_PATH}/:page`,
     PAGES: {
@@ -198,6 +183,7 @@ export const Routes = {
       topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
       posts: `${BASE_PATH}/posts/:postId`,
       'my-posts': `${BASE_PATH}/my-posts/:postId`,
+      learners: `${BASE_PATH}/learners/:learnerUsername/posts/:postId`,
     },
   },
   TOPICS: {
@@ -218,5 +204,5 @@ export const ALL_ROUTES = []
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])
-  .concat([Routes.LEARNERS.LEARNER, Routes.LEARNERS.PATH])
+  .concat([Routes.LEARNERS.POSTS, Routes.LEARNERS.PATH])
   .concat([Routes.DISCUSSIONS.PATH]);

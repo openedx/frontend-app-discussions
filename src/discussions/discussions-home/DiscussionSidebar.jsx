@@ -7,7 +7,7 @@ import {
 } from 'react-router';
 
 import { Routes } from '../../data/constants';
-import { LearnersView } from '../learners';
+import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
 
@@ -29,6 +29,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
           component={PostsView}
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+        <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
         <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         <Redirect
           from={Routes.DISCUSSIONS.PATH}

@@ -6,7 +6,7 @@ import {
 } from '@edx/paragon';
 import { Edit, QuestionAnswer, Report } from '@edx/paragon/icons';
 
-import messages from './messages';
+import messages from '../messages';
 import { learnerShape } from './proptypes';
 
 function LearnerFooter({

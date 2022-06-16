@@ -14,14 +14,10 @@ export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
 /**
  * Fetches all the learners in the given course.
  * @param {string} courseId
- * @param {number} page
- * @param {string} orderBy
+ * @param {object} params {page, order_by}
  * @returns {Promise<{}>}
  */
-export async function getLearners(
-  courseId, { page, orderBy },
-) {
-  const params = { page, orderBy };
+export async function getLearners(courseId, params) {
   const url = `${coursesApiUrl}${courseId}/activity_stats/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
@@ -34,5 +30,25 @@ export async function getLearners(
 export async function getUserProfiles(usernames) {
   const url = `${userProfileApiUrl}?username=${usernames.join()}`;
   const { data } = await getAuthenticatedHttpClient().get(url);
+  return data;
+}
+
+/**
+ * Get the posts by a specific user in a course's discussions
+ *
+ * @param {string} courseId Course ID of the course
+ * @param {string} username Username of the user
+ * @param {number} page
+ * @returns API Response object in the format
+ *  {
+ *    results: [array of posts],
+ *    pagination: {count, num_pages, next, previous}
+ *  }
+ */
+export async function getUserPosts(courseId, userId, { page }) {
+  const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
+
+  const { data } = await getAuthenticatedHttpClient()
+    .get(learnerPostsApiUrl, { params: { user_id: userId, page } });
   return data;
 }

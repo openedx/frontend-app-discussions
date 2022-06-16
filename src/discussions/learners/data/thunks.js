@@ -1,24 +1,21 @@
 /* eslint-disable import/prefer-default-export */
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject, snakeCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { getUserComments } from '../../comments/data/api';
-import { getUserPosts } from '../../posts/data/api';
-import { getHttpErrorStatus } from '../../utils';
 import {
-  getLearners, getUserProfiles,
-} from './api';
+  fetchLearnerThreadsRequest,
+  fetchThreadsDenied,
+  fetchThreadsFailed,
+  fetchThreadsSuccess,
+} from '../../posts/data/slices';
+import { normaliseThreads } from '../../posts/data/thunks';
+import { getHttpErrorStatus } from '../../utils';
+import { getLearners, getUserPosts, getUserProfiles } from './api';
 import {
   fetchLearnersDenied,
   fetchLearnersFailed,
   fetchLearnersRequest,
   fetchLearnersSuccess,
-  fetchUserCommentsDenied,
-  fetchUserCommentsRequest,
-  fetchUserCommentsSuccess,
-  fetchUserPostsDenied,
-  fetchUserPostsRequest,
-  fetchUserPostsSuccess,
 } from './slices';
 
 /**
@@ -33,13 +30,11 @@ export function fetchLearners(courseId, {
   page = 1,
 } = {}) {
   return async (dispatch) => {
-    const options = {
-      orderBy,
-      page,
-    };
     try {
+      const params = snakeCaseObject({ orderBy, page });
+
       dispatch(fetchLearnersRequest({ courseId }));
-      const learnerStats = await getLearners(courseId, options);
+      const learnerStats = await getLearners(courseId, params);
       const learnerProfilesData = await getUserProfiles(learnerStats.results.map((l) => l.username));
       const learnerProfiles = {};
       learnerProfilesData.forEach(
@@ -60,57 +55,30 @@ export function fetchLearners(courseId, {
 }
 
 /**
- * Fetch the comments of a user for the specified course and update the
- * redux state
- *
- * @param {string} courseId Course ID of the course eg., course-v1:X+Y+Z
- * @param {string} username Username of the learner
- * @param {number} page
- * @returns a promise that will update the state with the learner's comments
- */
-export function fetchUserComments(courseId, username, { page = 1 } = {}) {
-  return async (dispatch) => {
-    try {
-      dispatch(fetchUserCommentsRequest());
-      const data = await getUserComments(courseId, username, { page });
-      dispatch(fetchUserCommentsSuccess(camelCaseObject({
-        page,
-        username,
-        comments: data.results,
-        pagination: data.pagination,
-      })));
-    } catch (error) {
-      if (getHttpErrorStatus(error) === 403) {
-        dispatch(fetchUserCommentsDenied());
-      }
-    }
-  };
-}
-
-/**
  * Fetch the posts of a user for the specified course and update the
  * redux state
  *
  * @param {string} courseId Course ID of the course eg., course-v1:X+Y+Z
- * @param {string} username Username of the learner
+ * @param {string} userId userId of the learner
  * @param page
  * @returns a promise that will update the state with the learner's posts
  */
-export function fetchUserPosts(courseId, username, { page = 1 } = {}) {
+export function fetchUserPosts(courseId, username, userId, { page = 1 } = {}) {
   return async (dispatch) => {
     try {
-      dispatch(fetchUserPostsRequest());
-      const data = await getUserPosts(courseId, username, { page });
-      dispatch(fetchUserPostsSuccess(camelCaseObject({
-        page,
-        username,
-        posts: data.results,
-        pagination: data.pagination,
-      })));
+      dispatch(fetchLearnerThreadsRequest({ courseId, author: username }));
+
+      const data = await getUserPosts(courseId, userId, { page });
+      const normalisedData = normaliseThreads(camelCaseObject(data));
+
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page, author: username }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
-        dispatch(fetchUserPostsDenied());
+        dispatch(fetchThreadsDenied());
+      } else {
+        dispatch(fetchThreadsFailed());
       }
+      logError(error);
     }
   };
 }

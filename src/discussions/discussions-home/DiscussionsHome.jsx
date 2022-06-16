@@ -12,7 +12,7 @@ import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider } from '../data/selectors';
-import { EmptyPosts, EmptyTopics } from '../empty-posts';
+import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
 import messages from '../messages';
 import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { postMessageToParent } from '../utils';
@@ -39,8 +39,7 @@ export default function DiscussionsHome() {
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
 
   // Display the content area if we are currently viewing/editing a post or creating one.
-  const displayContentArea = postId || postEditorVisible || learnerUsername;
-
+  const displayContentArea = postId || postEditorVisible || (learnerUsername && postId);
   let displaySidebar = useSidebarVisible();
 
   const isOnDesktop = useIsOnDesktop();
@@ -96,9 +95,10 @@ export default function DiscussionsHome() {
               render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
             />
             <Route
-              path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS]}
+              path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
               render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
             />
+            <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />
           </Switch>
           )}
         </div>

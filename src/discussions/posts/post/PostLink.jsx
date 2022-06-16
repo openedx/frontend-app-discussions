@@ -27,6 +27,7 @@ function PostLink({
     postId,
     inContext,
     category,
+    learnerUsername,
   } = useContext(DiscussionContext);
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: inContext ? 'in-context' : undefined,
@@ -34,6 +35,7 @@ function PostLink({
     topicId: post.topicId,
     postId: post.id,
     category,
+    learnerUsername,
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarBorderAndLabelColors[post.authorLabel];

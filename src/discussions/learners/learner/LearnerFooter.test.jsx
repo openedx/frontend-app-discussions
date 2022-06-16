@@ -7,8 +7,8 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
+import messages from '../messages';
 import LearnerFooter from './LearnerFooter';
-import messages from './messages';
 
 let store;
 
