@@ -48,7 +48,7 @@ function LearnersView() {
   return (
     <div className="d-flex flex-column border-right border-light-300 h-100">
       <LearnerFilterBar />
-      <div className="list-group list-group-flush ">
+      <div className="list-group list-group-flush learner">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
           to={{
