@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -58,12 +58,6 @@ function LearnerFilterBar({
     }
     setOpen(false);
   };
-
-  useEffect(() => {
-    if (userIsPrivileged && currentSorting !== LearnersOrdering.BY_FLAG) {
-      dispatch(setSortedBy(LearnersOrdering.BY_FLAG));
-    }
-  }, []);
 
   return (
     <Collapsible.Advanced
