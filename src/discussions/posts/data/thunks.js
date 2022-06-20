@@ -46,7 +46,7 @@ import {
  * @param data
  * @returns {{pagination, threadsById: {}, threadsInTopic: {}, avatars: {}}}
  */
-function normaliseThreads(data) {
+export function normaliseThreads(data) {
   const normalized = {};
   let threads;
   if ('results' in data) {

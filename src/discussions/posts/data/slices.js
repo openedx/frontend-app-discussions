@@ -39,6 +39,13 @@ const threadsSlice = createSlice({
     sortedBy: ThreadOrdering.BY_LAST_ACTIVITY,
   },
   reducers: {
+    fetchLearnerThreadsRequest: (state, { payload }) => {
+      if (state.author !== payload.author) {
+        state.pages = [];
+        state.author = payload.author;
+      }
+      state.status = RequestStatus.IN_PROGRESS;
+    },
     fetchThreadsRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
@@ -177,6 +184,7 @@ export const {
   deleteThreadFailed,
   deleteThreadRequest,
   deleteThreadSuccess,
+  fetchLearnerThreadsRequest,
   fetchThreadDenied,
   fetchThreadFailed,
   fetchThreadRequest,

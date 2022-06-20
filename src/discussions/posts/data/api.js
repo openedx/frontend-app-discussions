@@ -200,21 +200,3 @@ export async function uploadFile(blob, filename, courseId, threadKey) {
   }
   return data;
 }
-
-/**
- * Get the posts by a specific user in a course's discussions
- *
- * @param {string} courseId Course ID of the course
- * @param {string} username Username of the user
- * @param {number} page
- * @returns API Response object in the format
- *  {
- *    results: [array of posts],
- *    pagination: {count, num_pages, next, previous}
- *  }
- */
-export async function getUserPosts(courseId, username, { page }) {
-  const { data } = await getAuthenticatedHttpClient()
-    .get(threadsApiUrl, { params: { course_id: courseId, author: username, page } });
-  return data;
-}

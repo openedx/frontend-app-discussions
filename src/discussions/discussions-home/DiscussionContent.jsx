@@ -6,8 +6,6 @@ import { Route, Switch } from 'react-router';
 import { Routes } from '../../data/constants';
 import { CommentsView } from '../comments';
 import { useContainerSizeForParent } from '../data/hooks';
-import { LearnersContentView } from '../learners';
-import LearnerPageHeader from '../learners/LearnerPageHeader';
 import { PostEditor } from '../posts';
 
 export default function DiscussionContent() {
@@ -17,9 +15,6 @@ export default function DiscussionContent() {
 
   return (
     <div className="d-flex bg-light-400 flex-column w-75 w-xs-100 w-xl-75 align-items-center h-100 overflow-auto">
-      <Route path={Routes.LEARNERS.LEARNER}>
-        <LearnerPageHeader />
-      </Route>
       <div className="d-flex flex-column w-100 mw-xl" ref={refContainer}>
         {postEditorVisible ? (
           <Route path={Routes.POSTS.NEW_POST}>
@@ -32,9 +27,6 @@ export default function DiscussionContent() {
             </Route>
             <Route path={Routes.COMMENTS.PATH}>
               <CommentsView />
-            </Route>
-            <Route path={Routes.LEARNERS.LEARNER}>
-              <LearnersContentView />
             </Route>
           </Switch>
         )}

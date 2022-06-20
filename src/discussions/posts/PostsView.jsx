@@ -38,14 +38,17 @@ function PostsList({ posts, topics }) {
   const showOwnPosts = page === 'my-posts';
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const loadThreads = (topicIds, pageNum = undefined) => dispatch(fetchThreads(courseId, {
-    topicIds,
-    orderBy,
-    filters,
-    page: pageNum,
-    author: showOwnPosts ? authenticatedUser.username : null,
-    countFlagged: userIsPrivileged || userIsStaff,
-  }));
+
+  const loadThreads = (topicIds, pageNum = undefined) => (
+    dispatch(fetchThreads(courseId, {
+      topicIds,
+      orderBy,
+      filters,
+      page: pageNum,
+      author: showOwnPosts ? authenticatedUser.username : null,
+      countFlagged: userIsPrivileged || userIsStaff,
+    }))
+  );
 
   useEffect(() => {
     if (topics !== undefined) {
@@ -71,10 +74,11 @@ function PostsList({ posts, topics }) {
     }
     return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} />);
   });
+
   return (
     <>
       {postInstances}
-      {posts && posts.length === 0 && <NoResults />}
+      {posts?.length === 0 && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS ? (
         <div className="d-flex justify-content-center p-4">
           <Spinner animation="border" variant="primary" size="lg" />

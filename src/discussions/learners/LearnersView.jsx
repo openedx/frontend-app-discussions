@@ -17,12 +17,10 @@ import {
   selectLearnerSorting,
 } from './data/selectors';
 import { fetchLearners } from './data/thunks';
-import { LearnerCard } from './learner';
+import { LearnerCard, LearnerFilterBar } from './learner';
 
 function LearnersView() {
-  const {
-    courseId,
-  } = useParams();
+  const { courseId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
   const orderBy = useSelector(selectLearnerSorting());
@@ -31,6 +29,7 @@ function LearnersView() {
   const courseConfigLoadingStatus = useSelector(selectconfigLoadingStatus);
   const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   const learners = useSelector(selectAllLearners);
+
   useEffect(() => {
     if (learnersTabEnabled) {
       dispatch(fetchLearners(courseId, { orderBy }));
@@ -45,9 +44,11 @@ function LearnersView() {
       }));
     }
   };
+
   return (
     <div className="d-flex flex-column border-right border-light-300 h-100">
-      <div className="list-group list-group-flush ">
+      <LearnerFilterBar />
+      <div className="list-group list-group-flush learner">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
           to={{

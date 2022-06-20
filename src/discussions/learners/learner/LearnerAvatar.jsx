@@ -10,12 +10,15 @@ import { learnerShape } from './proptypes';
 function LearnerAvatar({ learner }) {
   const learnerAvatar = useSelector(selectLearnerAvatar(learner.username));
   return (
-    <div className="mr-2">
+    <div className="mr-3 mt-1">
       <Avatar
-        size="md"
-        className="mt-2.5 ml-2.5"
+        size="sm"
         alt={learner.username}
         src={learnerAvatar}
+        style={{
+          height: '2rem',
+          width: '2rem',
+        }}
       />
     </div>
   );
