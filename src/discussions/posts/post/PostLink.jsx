@@ -47,7 +47,6 @@ function PostLink({
       onClick={() => isSelected(post.id)}
       style={{ lineHeight: '21px' }}
       role="listitem"
-      aria-level="1"
     >
       {post.pinned && (
         <div className="d-flex flex-fill justify-content-end mr-4 text-primary-500 p-0">

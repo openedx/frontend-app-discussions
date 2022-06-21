@@ -78,7 +78,7 @@ function PostHeader({
           {preview
             ? (
               <div className="h4 d-flex align-items-center pb-0 mb-0 flex-fill">
-                <div className="flex-fill text-truncate">
+                <div className="flex-fill text-truncate" role="heading" aria-level="1">
                   {post.title}
                 </div>
                 {showAnsweredBadge
