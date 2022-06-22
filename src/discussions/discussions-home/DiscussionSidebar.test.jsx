@@ -11,6 +11,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import { threadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';
@@ -27,9 +28,11 @@ function renderComponent(displaySidebar = true, location = `/${courseId}/`) {
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
         <AppProvider store={store}>
-          <MemoryRouter initialEntries={[location]}>
-            <DiscussionSidebar displaySidebar={displaySidebar} />
-          </MemoryRouter>
+          <DiscussionContext.Provider value={{ courseId }}>
+            <MemoryRouter initialEntries={[location]}>
+              <DiscussionSidebar displaySidebar={displaySidebar} />
+            </MemoryRouter>
+          </DiscussionContext.Provider>
         </AppProvider>
       </ResponsiveContext.Provider>
     </IntlProvider>,
