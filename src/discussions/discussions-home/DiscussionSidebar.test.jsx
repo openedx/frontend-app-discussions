@@ -15,6 +15,7 @@ import { threadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';
 
 import '../posts/data/__factories__';
+import { fetchConfigSuccess } from '../data/slices';
 
 let store;
 let container;
@@ -51,6 +52,7 @@ describe('DiscussionSidebar', () => {
     store = initializeStore({
       blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
     });
+    store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });

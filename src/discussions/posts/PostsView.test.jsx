@@ -22,6 +22,7 @@ import { PostsView } from './index';
 
 import './data/__factories__';
 import '../cohorts/data/__factories__';
+import { fetchConfigSuccess } from '../data/slices';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
@@ -89,6 +90,7 @@ describe('PostsView', () => {
       blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
       config: { userIsPrivileged: true },
     });
+    store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
