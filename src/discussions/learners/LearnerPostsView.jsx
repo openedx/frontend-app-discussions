@@ -34,13 +34,14 @@ function LearnerPostsView({ intl }) {
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
   const { id: userId } = useSelector(selectLearnerProfile(username));
+  const authorId = history.location.state?.authorId;
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, username, userId));
+    dispatch(fetchUserPosts(courseId, username, userId || authorId));
   }, [courseId, username]);
 
   const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, username, userId, {
+    dispatch(fetchUserPosts(courseId, username, userId || authorId, {
       page: nextPage,
     }))
   );
@@ -57,11 +58,11 @@ function LearnerPostsView({ intl }) {
       return (
         <React.Fragment key={post.id}>
           <div className="p-1 bg-light-400" />
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} />
+          <PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />
         </React.Fragment>
       );
     }
-    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} />);
+    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />);
   });
 
   return (
@@ -89,10 +90,10 @@ function LearnerPostsView({ intl }) {
             <Spinner animation="border" variant="primary" size="lg" />
           </div>
         ) : (
-          nextPage && (
-          <Button onClick={() => loadMorePosts()} variant="primary" size="md">
-            {intl.formatMessage(messages.loadMore)}
-          </Button>
+          nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
+            <Button onClick={() => loadMorePosts()} variant="primary" size="md">
+              {intl.formatMessage(messages.loadMore)}
+            </Button>
           )
         )}
       </div>

@@ -66,7 +66,7 @@ function LearnersView({ intl }) {
             <Spinner animation="border" variant="primary" size="lg" />
           </div>
         ) : (
-          nextPage && (
+          nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
             <Button onClick={() => loadPage()} variant="primary" size="md">
               {intl.formatMessage(messages.loadMore)}
             </Button>

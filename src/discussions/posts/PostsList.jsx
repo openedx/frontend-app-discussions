@@ -79,7 +79,7 @@ function PostsList({ posts, topics, intl }) {
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
       ) : (
-        nextPage && (
+        nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
           <Button onClick={() => loadThreads(topics, nextPage)} variant="primary" size="md">
             {intl.formatMessage(messages.loadMorePosts)}
           </Button>

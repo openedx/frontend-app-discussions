@@ -21,6 +21,7 @@ function PostLink({
   post,
   isSelected,
   intl,
+  learnerTab,
 }) {
   const {
     page,
@@ -72,7 +73,7 @@ function PostLink({
                 className={
                   classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
                     { 'font-weight-bolder': !post.read })
-}
+                  }
               >
                 {post.title}
               </div>
@@ -100,6 +101,7 @@ function PostLink({
             author={post.author || intl.formatMessage(messages.anonymous)}
             authorLabel={post.authorLabel}
             labelColor={authorLabelColor && `text-${authorLabelColor}`}
+            linkToProfile={!learnerTab && post.author}
           />
           <div
             className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
@@ -120,6 +122,11 @@ PostLink.propTypes = {
   post: postShape.isRequired,
   isSelected: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
+  learnerTab: PropTypes.bool,
+};
+
+PostLink.defaultProps = {
+  learnerTab: false,
 };
 
 export default injectIntl(PostLink);
