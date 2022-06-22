@@ -17,12 +17,12 @@ import { Routes, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
+import { fetchConfigSuccess } from '../data/slices';
 import { threadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
 import './data/__factories__';
 import '../cohorts/data/__factories__';
-import { fetchConfigSuccess } from '../data/slices';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;

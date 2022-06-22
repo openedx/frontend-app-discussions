@@ -11,11 +11,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { fetchConfigSuccess } from '../data/slices';
 import { threadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';
 
 import '../posts/data/__factories__';
-import { fetchConfigSuccess } from '../data/slices';
 
 let store;
 let container;
