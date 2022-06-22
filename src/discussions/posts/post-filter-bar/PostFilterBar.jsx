@@ -18,7 +18,7 @@ import {
 } from '../../../data/constants';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { selectUserIsPrivileged } from '../../data/selectors';
+import { selectUserIsPrivileged, selectUserIsStaff } from '../../data/selectors';
 import {
   setCohortFilter, setPostsTypeFilter, setSortedBy, setStatusFilter,
 } from '../data';
@@ -64,6 +64,8 @@ function PostFilterBar({
   const currentFilters = useSelector(selectThreadFilters());
   const { status } = useSelector(state => state.cohorts);
   const cohorts = useSelector(selectCourseCohorts);
+  const userIsStaff = useSelector(selectUserIsStaff);
+
   const [isOpen, setOpen] = useState(false);
 
   const selectedCohort = useMemo(() => cohorts.find(cohort => (
@@ -184,7 +186,7 @@ function PostFilterBar({
                 value={PostsStatusFilter.FOLLOWING}
                 selected={currentFilters.status}
               />
-              {userIsPrivileged && (
+              {(userIsPrivileged || userIsStaff) && (
                 <ActionItem
                   id="status-reported"
                   label={intl.formatMessage(messages.filterReported)}

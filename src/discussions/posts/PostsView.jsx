@@ -10,7 +10,7 @@ import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
-import { selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
+import { selectconfigLoadingStatus, selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 import {
   selectAllThreads,
   selectThreadFilters,
@@ -38,6 +38,7 @@ function PostsList({ posts, topics }) {
   const showOwnPosts = page === 'my-posts';
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const userIsStaff = useSelector(selectUserIsStaff);
+  const configStatus = useSelector(selectconfigLoadingStatus);
 
   const loadThreads = (topicIds, pageNum = undefined) => (
     dispatch(fetchThreads(courseId, {
@@ -51,10 +52,10 @@ function PostsList({ posts, topics }) {
   );
 
   useEffect(() => {
-    if (topics !== undefined) {
+    if (topics !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
       loadThreads(topics);
     }
-  }, [courseId, orderBy, filters, page, JSON.stringify(topics)]);
+  }, [courseId, orderBy, filters, page, JSON.stringify(topics), configStatus]);
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);
 
