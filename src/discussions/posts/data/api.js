@@ -27,6 +27,7 @@ export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
  * @param {string} threadType Can be 'discussion' or 'question'.
  * @param {ThreadViewStatus} view Set to "unread" on "unanswered" to filter to only those statuses.
  * @param {boolean} countFlagged If true, abuseFlaggedCount will be available.
+ * @param {number} cohort
  * @returns {Promise<{}>}
  */
 export async function getThreads(
