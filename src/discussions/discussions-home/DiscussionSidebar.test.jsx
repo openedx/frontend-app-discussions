@@ -11,6 +11,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { fetchConfigSuccess } from '../data/slices';
 import { threadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';
 
@@ -51,6 +52,7 @@ describe('DiscussionSidebar', () => {
     store = initializeStore({
       blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
     });
+    store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });

@@ -17,6 +17,7 @@ import { Routes, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
+import { fetchConfigSuccess } from '../data/slices';
 import { threadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
@@ -89,6 +90,7 @@ describe('PostsView', () => {
       blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
       config: { userIsPrivileged: true },
     });
+    store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
