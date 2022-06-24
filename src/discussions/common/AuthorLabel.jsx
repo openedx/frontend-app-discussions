@@ -73,6 +73,7 @@ function AuthorLabel({
   return linkToProfile
     ? (
       <Link
+        data-testid="learner-posts-link"
         to={{
           ...discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location),
           state: { authorId },
