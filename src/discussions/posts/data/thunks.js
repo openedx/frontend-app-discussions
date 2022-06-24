@@ -44,9 +44,10 @@ import {
  * Normalises raw data returned by threads API by mapping threads to id and
  * mapping topic ids to threads in them.
  * @param data
+ * @param {[string]?} topicIds
  * @returns {{pagination, threadsById: {}, threadsInTopic: {}, avatars: {}}}
  */
-export function normaliseThreads(data) {
+export function normaliseThreads(data, topicIds = null) {
   const normalized = {};
   let threads;
   if ('results' in data) {
@@ -59,6 +60,11 @@ export function normaliseThreads(data) {
   const threadsById = {};
   let avatars = {};
   const ids = [];
+  if (topicIds) {
+    topicIds.forEach(topicId => {
+      threadsInTopic[topicId] = [];
+    });
+  }
   threads.forEach(
     thread => {
       const { topicId, id } = thread;
@@ -129,7 +135,7 @@ export function fetchThreads(courseId, {
     try {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
-      const normalisedData = normaliseThreads(camelCaseObject(data));
+      const normalisedData = normaliseThreads(camelCaseObject(data), topicIds);
       dispatch(fetchThreadsSuccess({ ...normalisedData, page, author }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
