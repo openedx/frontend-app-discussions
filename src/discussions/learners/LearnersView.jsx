@@ -5,9 +5,9 @@ import {
   Redirect, useLocation, useParams,
 } from 'react-router';
 
-import { Spinner } from '@edx/paragon';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Button, Spinner } from '@edx/paragon';
 
-import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectconfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
 import {
@@ -18,8 +18,9 @@ import {
 } from './data/selectors';
 import { fetchLearners } from './data/thunks';
 import { LearnerCard, LearnerFilterBar } from './learner';
+import messages from './messages';
 
-function LearnersView() {
+function LearnersView({ intl }) {
   const { courseId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -66,7 +67,9 @@ function LearnersView() {
           </div>
         ) : (
           nextPage && (
-            <ScrollThreshold onScroll={loadPage} />
+            <Button onClick={() => loadPage()} variant="primary" size="md">
+              {intl.formatMessage(messages.loadMore)}
+            </Button>
           )
         )}
       </div>
@@ -74,4 +77,8 @@ function LearnersView() {
   );
 }
 
-export default LearnersView;
+LearnersView.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(LearnersView);

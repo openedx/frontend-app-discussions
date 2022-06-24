@@ -34,7 +34,7 @@ function AuthorLabel({
 
   const labelContents = (
     <>
-      <span className={`mr-1 font-size-14 font-style-normal font-family-inter ${fontWeight}`}>
+      <span className={`mr-1 font-size-14 font-style-normal font-family-inter ${fontWeight}`} role="heading" aria-level="2">
         {capitalize(author)}
       </span>
       {icon && (

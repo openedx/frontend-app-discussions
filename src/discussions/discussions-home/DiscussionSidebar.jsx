@@ -18,7 +18,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
     <div
       className={classNames('flex-column', {
         'd-none': !displaySidebar,
-        'd-flex w-25 w-xs-100 w-lg-25 overflow-auto h-100 pb-2': displaySidebar,
+        'd-flex w-25 w-xs-100 w-lg-25 overflow-auto h-100': displaySidebar,
       })}
       style={{ minWidth: '30rem' }}
       data-testid="sidebar"

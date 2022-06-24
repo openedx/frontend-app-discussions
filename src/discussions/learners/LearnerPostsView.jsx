@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Icon, IconButton, Spinner } from '@edx/paragon';
+import {
+  Button, Icon, IconButton, Spinner,
+} from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
-import ScrollThreshold from '../../components/ScrollThreshold';
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
@@ -89,10 +90,9 @@ function LearnerPostsView({ intl }) {
           </div>
         ) : (
           nextPage && (
-            <ScrollThreshold onScroll={() => {
-              loadMorePosts();
-            }}
-            />
+          <Button onClick={() => loadMorePosts()} variant="primary" size="md">
+            {intl.formatMessage(messages.loadMore)}
+          </Button>
           )
         )}
       </div>
