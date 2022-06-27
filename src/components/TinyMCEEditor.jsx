@@ -96,7 +96,7 @@ export default function TinyMCEEditor(props) {
           + ' | charmap',
         content_css: false,
         content_style: contentStyle,
-        body_class: 'm-2',
+        body_class: 'm-2 text-editor',
         default_link_target: '_blank',
         target_list: false,
         images_upload_handler: uploadHandler,
