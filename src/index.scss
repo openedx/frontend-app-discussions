@@ -9,7 +9,9 @@ $fa-font-path: "~font-awesome/fonts";
 #post,
 #comment,
 #reply,
-.discussion-comments {
+.discussion-comments,
+.text-editor,
+.post-preview {
   img {
     height: auto;
     max-width: 100%;
