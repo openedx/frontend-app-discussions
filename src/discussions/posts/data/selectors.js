@@ -46,7 +46,3 @@ export const selectThreadNextPage = () => state => state.threads.nextPage;
 export const selectAuthorAvatars = author => state => (
   state.threads.avatars?.[author]?.profile.image
 );
-
-export const selectAuthorId = author => state => (
-  state.threads.avatars?.[author]?.profile.id
-);

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import capitalize from 'lodash/capitalize';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -12,7 +11,6 @@ import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
-import { selectAuthorId } from '../posts/data/selectors';
 import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
 
@@ -24,7 +22,6 @@ function AuthorLabel({
   labelColor,
 }) {
   const location = useLocation();
-  const authorId = useSelector(selectAuthorId(author));
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
@@ -74,10 +71,7 @@ function AuthorLabel({
     ? (
       <Link
         data-testid="learner-posts-link"
-        to={{
-          ...discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location),
-          state: { authorId },
-        }}
+        to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
         className="text-decoration-none"
         style={{ width: 'fit-content' }}
       >

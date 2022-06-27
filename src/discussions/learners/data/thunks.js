@@ -59,16 +59,16 @@ export function fetchLearners(courseId, {
  * redux state
  *
  * @param {string} courseId Course ID of the course eg., course-v1:X+Y+Z
- * @param {string} userId userId of the learner
+ * @param {string} username name of the learner
  * @param page
  * @returns a promise that will update the state with the learner's posts
  */
-export function fetchUserPosts(courseId, username, userId, { page = 1 } = {}) {
+export function fetchUserPosts(courseId, username, { page = 1 } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchLearnerThreadsRequest({ courseId, author: username }));
 
-      const data = await getUserPosts(courseId, userId, { page });
+      const data = await getUserPosts(courseId, username, { page });
       const normalisedData = normaliseThreads(camelCaseObject(data));
 
       dispatch(fetchThreadsSuccess({ ...normalisedData, page, author: username }));

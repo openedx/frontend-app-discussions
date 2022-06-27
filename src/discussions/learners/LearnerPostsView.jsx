@@ -20,7 +20,6 @@ import {
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
 import { discussionsPath } from '../utils';
-import { selectLearnerProfile } from './data/selectors';
 import { fetchUserPosts } from './data/thunks';
 import messages from './messages';
 
@@ -33,15 +32,13 @@ function LearnerPostsView({ intl }) {
   const loadingStatus = useSelector(threadsLoadingStatus());
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
-  const { id: userId } = useSelector(selectLearnerProfile(username));
-  const authorId = history.location.state?.authorId;
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, username, userId || authorId));
+    dispatch(fetchUserPosts(courseId, username));
   }, [courseId, username]);
 
   const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, username, userId || authorId, {
+    dispatch(fetchUserPosts(courseId, username, {
       page: nextPage,
     }))
   );
