@@ -11,6 +11,7 @@ import {
 } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
+import { Search } from '../../../components';
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath, postMessageToParent } from '../../utils';
@@ -32,6 +33,11 @@ function PostActionsBar({
   };
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">
+      {!inContext && (
+        <>
+          <Search />
+        </>
+      )}
       {!inContext && (
         <>
           <SearchField
