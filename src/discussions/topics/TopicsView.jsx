@@ -9,9 +9,10 @@ import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
 import { fetchCourseTopics } from './data/thunks';
+import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
+import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
-import TopicGroup from './topic-group/TopicGroup';
 import TopicSearchBar from './topic-search-bar/TopicSearchBar';
 
 function CourseWideTopics() {
@@ -32,13 +33,19 @@ function CourseWideTopics() {
 
 function CoursewareTopics() {
   const sequences = useSelector(selectSequences);
-  return sequences?.map(
-    sequence => (
-      <TopicGroup
-        sequence={sequence}
-        key={sequence.id}
-      />
-    ),
+
+  return (
+    <>
+      { sequences?.map(
+        sequence => (
+          <SequenceTopicGroup
+            sequence={sequence}
+            key={sequence.id}
+          />
+        ),
+      )}
+      <ArchivedTopicGroup />
+    </>
   );
 }
 

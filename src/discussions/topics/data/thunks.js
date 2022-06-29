@@ -29,14 +29,17 @@ function normaliseTopics(data) {
 function normaliseTopicsV2(data) {
   const nonCoursewareIds = [];
   const topics = {};
+  const archivedIds = [];
   data.forEach(topic => {
-    if (topic.usageKey === null) {
+    if (!topic.enabledInContext) {
+      archivedIds.push(topic.id);
+    } else if (topic.usageKey === null) {
       nonCoursewareIds.push(topic.id);
     }
     topics[topic.id] = topic;
   });
   return {
-    topics, nonCoursewareIds,
+    topics, nonCoursewareIds, archivedIds,
   };
 }
 

@@ -26,6 +26,11 @@ const messages = defineMessages({
     defaultMessage: 'Find a topic',
     description: 'Placeholder text in search bar',
   },
+  archivedTopics: {
+    id: 'discussions.topics.archived.label',
+    defaultMessage: 'Archived',
+    description: 'Heading for displaying topics that are archived.',
+  },
 });
 
 export default messages;
