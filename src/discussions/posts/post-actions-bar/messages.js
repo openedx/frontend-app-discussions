@@ -10,6 +10,16 @@ const messages = defineMessages({
     defaultMessage: 'Search all posts',
     description: 'Placeholder text in search box',
   },
+  search: {
+    id: 'discussions.posts.actionBar.search',
+    defaultMessage: `{page, select,
+      topics {Find a topic}
+      posts {Search all posts}
+      learners {Search all posts}
+      my-posts {Search all posts}
+    }`,
+    description: 'Placeholder text in search box',
+  },
   addAPost: {
     id: 'discussion.posts.actionBar.add',
     defaultMessage: 'Add a post',

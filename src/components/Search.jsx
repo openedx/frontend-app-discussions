@@ -1,55 +1,45 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { SearchField } from '@edx/paragon';
 
 import { DiscussionContext } from '../discussions/common/context';
 import { setSearchQuery } from '../discussions/posts/data';
-import { default as postsMessages } from '../discussions/posts/post-actions-bar/messages';
+import postsMessages from '../discussions/posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../discussions/topics/data/slices';
-import { default as topicsMessages } from '../discussions/topics/topic-search-bar/messages';
 
 function Search({ intl }) {
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
-  const element = useRef(null);
-
-  useEffect(() => {
-    dispatch(setTopicFilter(''));
-    dispatch(setSearchQuery(''));
-    element.value = '';
-  }, [page]);
+  const postSearch = useSelector(({ threads }) => threads.filters.search);
+  const TopicSearch = useSelector(({ topics }) => topics.filter);
+  const isPostSearch = ['posts', 'my-posts', 'learners'].includes(page);
 
   const onClear = () => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
   };
+
   const onSubmit = (query) => {
-    if (page === 'posts') {
+    if (isPostSearch) {
       dispatch(setSearchQuery(query));
     } else if (page === 'topics') {
       dispatch(setTopicFilter(query));
     }
   };
-  let placeholder = 'Search';
 
-  if (page === 'posts') {
-    placeholder = intl.formatMessage(postsMessages.searchAllPosts);
-  } else if (page === 'topics') {
-    placeholder = intl.formatMessage(topicsMessages.findATopic);
-  }
+  useEffect(() => onClear(), [page]);
 
   return (
-    <>
-      <SearchField
-        onClear={onClear}
-        onSubmit={onSubmit}
-        placeholder={placeholder}
-        inputProps={{ className: 'small-font', ref: element }}
-      />
-    </>
+    <SearchField
+      onClear={onClear}
+      onSubmit={onSubmit}
+      value={isPostSearch ? postSearch : TopicSearch}
+      placeholder={intl.formatMessage(postsMessages.search, { page })}
+      inputProps={{ className: 'small-font' }}
+    />
   );
 }
 
