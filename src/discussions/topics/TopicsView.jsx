@@ -13,7 +13,6 @@ import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
-import TopicSearchBar from './topic-search-bar/TopicSearchBar';
 
 function CourseWideTopics() {
   const { category } = useParams();
@@ -80,7 +79,6 @@ function TopicsView() {
       className="discussion-topics d-flex flex-column card"
       data-testid="topics-view"
     >
-      <TopicSearchBar />
       <div className="list-group list-group-flush">
         <CourseWideTopics />
         {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}

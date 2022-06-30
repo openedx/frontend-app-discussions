@@ -1,21 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
-import { useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Button, Icon, IconButton, SearchField,
+  Button, Icon, IconButton,
 } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
-import { Search } from '../../../components';
-import { Routes } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
-import { discussionsPath, postMessageToParent } from '../../utils';
-import { setSearchQuery, showPostEditor } from '../data';
+import Search from '../../../components/Search';
+import { postMessageToParent } from '../../utils';
+import { showPostEditor } from '../data';
 import messages from './messages';
 
 import './actionBar.scss';
@@ -25,9 +21,6 @@ function PostActionsBar({
   inContext,
 }) {
   const dispatch = useDispatch();
-  const { courseId } = useContext(DiscussionContext);
-  const location = useLocation();
-  const history = useHistory();
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
   };
@@ -36,20 +29,6 @@ function PostActionsBar({
       {!inContext && (
         <>
           <Search />
-        </>
-      )}
-      {!inContext && (
-        <>
-          <SearchField
-            onClear={() => dispatch(setSearchQuery(''))}
-            onSubmit={(value) => {
-              dispatch(setSearchQuery(value));
-              history.push(discussionsPath(Routes.POSTS.ALL_POSTS, { courseId })(location));
-            }}
-            placeholder={intl.formatMessage(messages.searchAllPosts)}
-            inputProps={{ className: 'small-font' }}
-          />
-          <div className="border-right mr-3 ml-4" />
         </>
       )}
       {inContext && (

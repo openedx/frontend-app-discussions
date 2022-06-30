@@ -14,7 +14,7 @@ function Search({ intl }) {
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
   const postSearch = useSelector(({ threads }) => threads.filters.search);
-  const TopicSearch = useSelector(({ topics }) => topics.filter);
+  const topicSearch = useSelector(({ topics }) => topics.filter);
   const isPostSearch = ['posts', 'my-posts', 'learners'].includes(page);
 
   const onClear = () => {
@@ -36,7 +36,7 @@ function Search({ intl }) {
     <SearchField
       onClear={onClear}
       onSubmit={onSubmit}
-      value={isPostSearch ? postSearch : TopicSearch}
+      value={isPostSearch ? postSearch : topicSearch}
       placeholder={intl.formatMessage(postsMessages.search, { page })}
       inputProps={{ className: 'small-font' }}
     />
