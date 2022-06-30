@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import capitalize from 'lodash/capitalize';
+import { Link, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
+import { Routes } from '../../data/constants';
 import messages from '../messages';
+import { discussionsPath } from '../utils';
+import { DiscussionContext } from './context';
 
 function AuthorLabel({
   intl,
@@ -17,6 +21,8 @@ function AuthorLabel({
   linkToProfile,
   labelColor,
 }) {
+  const location = useLocation();
+  const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
 
@@ -33,8 +39,12 @@ function AuthorLabel({
   const className = classNames('d-flex align-items-center', labelColor);
 
   const labelContents = (
-    <>
-      <span className={`mr-1 font-size-14 font-style-normal font-family-inter ${fontWeight}`} role="heading" aria-level="2">
+    <div className={className}>
+      <span
+        className={`mr-1 font-size-14 font-style-normal font-family-inter ${fontWeight}`}
+        role="heading"
+        aria-level="2"
+      >
         {capitalize(author)}
       </span>
       {icon && (
@@ -54,16 +64,25 @@ function AuthorLabel({
           {authorLabelMessage}
         </span>
       )}
-    </>
+    </div>
   );
 
   return linkToProfile
-    ? React.createElement('a', { href: '#nowhere', className }, labelContents)
-    : React.createElement('div', { className }, labelContents);
+    ? (
+      <Link
+        data-testid="learner-posts-link"
+        to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
+        className="text-decoration-none"
+        style={{ width: 'fit-content' }}
+      >
+        {labelContents}
+      </Link>
+    )
+    : <>{labelContents}</>;
 }
 
 AuthorLabel.propTypes = {
-  intl: intlShape,
+  intl: intlShape.isRequired,
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,

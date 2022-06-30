@@ -45,10 +45,10 @@ export async function getUserProfiles(usernames) {
  *    pagination: {count, num_pages, next, previous}
  *  }
  */
-export async function getUserPosts(courseId, userId, { page }) {
+export async function getUserPosts(courseId, username, { page }) {
   const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
 
   const { data } = await getAuthenticatedHttpClient()
-    .get(learnerPostsApiUrl, { params: { user_id: userId, page } });
+    .get(learnerPostsApiUrl, { params: { username, page } });
   return data;
 }

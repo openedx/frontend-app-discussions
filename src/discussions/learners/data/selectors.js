@@ -25,5 +25,3 @@ export const selectLearner = (username) => createSelector(
   [selectAllLearners],
   learners => learners.find(l => l.username === username) || {},
 );
-
-export const selectLearnerProfile = (username) => state => state.learners.learnerProfiles[username] || {};

@@ -20,7 +20,6 @@ import {
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
 import { discussionsPath } from '../utils';
-import { selectLearnerProfile } from './data/selectors';
 import { fetchUserPosts } from './data/thunks';
 import messages from './messages';
 
@@ -33,14 +32,13 @@ function LearnerPostsView({ intl }) {
   const loadingStatus = useSelector(threadsLoadingStatus());
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
-  const { id: userId } = useSelector(selectLearnerProfile(username));
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, username, userId));
+    dispatch(fetchUserPosts(courseId, username));
   }, [courseId, username]);
 
   const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, username, userId, {
+    dispatch(fetchUserPosts(courseId, username, {
       page: nextPage,
     }))
   );
@@ -57,11 +55,11 @@ function LearnerPostsView({ intl }) {
       return (
         <React.Fragment key={post.id}>
           <div className="p-1 bg-light-400" />
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} />
+          <PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />
         </React.Fragment>
       );
     }
-    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} />);
+    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />);
   });
 
   return (
@@ -89,10 +87,10 @@ function LearnerPostsView({ intl }) {
             <Spinner animation="border" variant="primary" size="lg" />
           </div>
         ) : (
-          nextPage && (
-          <Button onClick={() => loadMorePosts()} variant="primary" size="md">
-            {intl.formatMessage(messages.loadMore)}
-          </Button>
+          nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
+            <Button onClick={() => loadMorePosts()} variant="primary" size="md">
+              {intl.formatMessage(messages.loadMore)}
+            </Button>
           )
         )}
       </div>

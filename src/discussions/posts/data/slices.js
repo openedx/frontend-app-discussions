@@ -43,6 +43,7 @@ const threadsSlice = createSlice({
       if (state.author !== payload.author) {
         state.pages = [];
         state.author = payload.author;
+        state.totalThreads = null;
       }
       state.status = RequestStatus.IN_PROGRESS;
     },

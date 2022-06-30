@@ -7,15 +7,19 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
+import { DiscussionContext } from '../../common/context';
 import PostLink from './PostLink';
 
+const courseId = 'course-v1:edX+DemoX+Demo_Course';
 let store;
 
-function renderComponent(post) {
+function renderComponent(post, learnerTab = false) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <PostLink post={post} key={post.id} isSelected={() => true} />
+        <DiscussionContext.Provider value={{ courseId }}>
+          <PostLink post={post} key={post.id} isSelected={() => true} learnerTab={learnerTab} />
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
@@ -63,5 +67,32 @@ describe('PostFooter', () => {
 
     renderComponent({ ...mockPost, abuseFlagged: true });
     expect(screen.getByTestId('reported-post')).toBeTruthy();
+  });
+});
+
+describe('Post username', () => {
+  beforeEach(async () => {
+    initializeMockApp({
+      authenticatedUser: {
+        userId: 3,
+        username: 'abc123',
+        administrator: true,
+        roles: [],
+      },
+    });
+    store = initializeStore();
+  });
+
+  it.each([
+    true,
+    false,
+  ])('is a clickable link %s', (leanerTab) => {
+    renderComponent(mockPost, leanerTab);
+
+    if (leanerTab) {
+      expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
+    } else {
+      expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
+    }
   });
 });
