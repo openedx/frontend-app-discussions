@@ -26,8 +26,8 @@ function TopicGroupBase({
   const topicElements = topics.filter(
     topic => (
       filter
-        ? topic.name.toLowerCase()
-          .includes(filter)
+        ? (topic.name.toLowerCase()
+          .includes(filter) || matchesFilter)
         : true
     ),
   )

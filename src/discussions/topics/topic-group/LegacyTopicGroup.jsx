@@ -11,7 +11,6 @@ function LegacyTopicGroup({
   category,
 }) {
   const topics = useSelector(selectTopicsInCategory(category));
-
   return (
     <TopicGroupBase groupId={id} groupTitle={category} topics={topics} />
   );

@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import SearchInfo from '../../components/SearchInfo';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
 import {
   selectAllThreads,
   selectTopicThreads,
 } from './data/selectors';
+import { setSearchQuery } from './data/slices';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import PostsList from './PostsList';
 
@@ -42,6 +44,9 @@ function PostsView() {
     category,
     page,
   } = useContext(DiscussionContext);
+  const dispatch = useDispatch();
+  const searchString = useSelector(({ threads }) => threads.filters.search);
+  const resultsFound = useSelector(({ threads }) => threads.totalThreads);
 
   let postsListComponent;
   const showOwnPosts = page === 'my-posts';
@@ -56,6 +61,11 @@ function PostsView() {
 
   return (
     <div className="discussion-posts d-flex flex-column">
+      {
+        searchString === ''
+          ? ''
+          : <SearchInfo count={resultsFound} text={searchString} onClear={() => dispatch(setSearchQuery(''))} />
+      }
       <PostFilterBar filterSelfPosts={showOwnPosts} />
       <div className="list-group list-group-flush" role="list">
         {postsListComponent}
