@@ -15,7 +15,7 @@ import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
-import { countFilteredTopics } from './utils';
+import countFilteredTopics from './utils';
 
 function CourseWideTopics() {
   const { category } = useParams();

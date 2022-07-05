@@ -1,7 +1,6 @@
 import { DiscussionProvider } from '../../data/constants';
 
-// eslint-disable-next-line import/prefer-default-export
-export function countFilteredTopics(topicsSelector, provider) {
+export default function countFilteredTopics(topicsSelector, provider) {
   let count = 0;
   const query = topicsSelector?.filter?.trim().toLowerCase();
   // Counting non-courseware topics

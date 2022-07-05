@@ -16,7 +16,7 @@ const messages = defineMessages({
       topics {Find a topic}
       posts {Search all posts}
       learners {Search learner}
-      my-posts {Search all posts}
+      myPosts {Search all posts}
     }`,
     description: 'Placeholder text in search box',
   },

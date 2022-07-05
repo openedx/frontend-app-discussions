@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 
+import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -31,13 +32,12 @@ function Search({ intl }) {
   };
 
   useEffect(() => onClear(), [page]);
-
   return (
     <SearchField
       onClear={onClear}
       onSubmit={onSubmit}
       value={isPostSearch ? postSearch : topicSearch}
-      placeholder={intl.formatMessage(postsMessages.search, { page })}
+      placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
       inputProps={{ className: 'small-font' }}
     />
   );
