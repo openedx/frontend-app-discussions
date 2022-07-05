@@ -6,7 +6,7 @@ const messages = defineMessages({
     defaultMessage: 'Discussions',
   },
   searchAllPosts: {
-    id: 'discussions.posts.actionBar.search',
+    id: 'discussions.posts.actionBar.searchAllPosts',
     defaultMessage: 'Search all posts',
     description: 'Placeholder text in search box',
   },
