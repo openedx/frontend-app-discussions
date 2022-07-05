@@ -9,12 +9,13 @@ import { selectSequences } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
-import { setFilter } from './data/slices';
+import { setFilter, setTopicsCount } from './data/slices';
 import { fetchCourseTopics } from './data/thunks';
 import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
+import { countFilteredTopics } from './utils';
 
 function CourseWideTopics() {
   const { category } = useParams();
@@ -68,7 +69,7 @@ function LegacyCoursewareTopics() {
 function TopicsView() {
   const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
-  const loadStatus = useSelector(({ topics }) => topics.status);
+  const topicsSelector = useSelector(({ topics }) => topics);
   const filteredTopicsCount = useSelector(({ topics }) => topics.results.count);
   const { courseId } = useContext(DiscussionContext);
   const dispatch = useDispatch();
@@ -81,7 +82,9 @@ function TopicsView() {
   }, [provider]);
 
   useEffect(() => {
-  }, [topicFilter, loadStatus]);
+    const count = countFilteredTopics(topicsSelector, provider);
+    dispatch(setTopicsCount(count));
+  }, [topicFilter]);
 
   return (
     <div
@@ -89,9 +92,7 @@ function TopicsView() {
       data-testid="topics-view"
     >
       {
-        topicFilter === ''
-          ? ''
-          : <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
+        topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
       }
       <div className="list-group list-group-flush">
         <CourseWideTopics />

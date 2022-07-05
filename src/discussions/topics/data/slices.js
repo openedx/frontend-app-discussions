@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus, TopicOrdering } from '../../../data/constants';
 
@@ -43,37 +43,12 @@ const topicsSlice = createSlice({
     },
     setFilter: (state, { payload }) => {
       state.filter = payload;
-      let count = 0;
-      const currentState = current(state);
-      // Counting non-courseware topics
-      const nonCoursewareTopicsList = currentState.nonCoursewareIds.map(
-        id => currentState.topics[id],
-      ).filter(item => (payload
-        ? item.name.toLowerCase().includes(payload)
-        : true
-      ));
-      count += nonCoursewareTopicsList.length;
-      // Counting legacy topics
-      const categories = currentState.categoryIds;
-      const filteredTopics = categories?.map(categoryId => {
-        const topics = currentState.topicsInCategory[categoryId]?.map(
-          id => currentState.topics[id],
-        ) || [];
-        const matchesFilter = payload ? categoryId?.toLowerCase().includes(payload) : true;
-        return topics.filter(
-          topic => (
-            payload
-              ? (topic.name.toLowerCase()
-                .includes(payload) || matchesFilter)
-              : true
-          ),
-        );
-      });
-      count += [].concat(...filteredTopics).length;
-      state.results.count = count;
     },
     setSortBy: (state, { payload }) => {
       state.sortBy = payload;
+    },
+    setTopicsCount: (state, { payload }) => {
+      state.results.count = payload;
     },
   },
 });
@@ -84,6 +59,7 @@ export const {
   fetchCourseTopicsFailed,
   setFilter,
   setSortBy,
+  setTopicsCount,
 } = topicsSlice.actions;
 
 export const topicsReducer = topicsSlice.reducer;

@@ -62,9 +62,7 @@ function PostsView() {
   return (
     <div className="discussion-posts d-flex flex-column">
       {
-        searchString === ''
-          ? ''
-          : <SearchInfo count={resultsFound} text={searchString} onClear={() => dispatch(setSearchQuery(''))} />
+        searchString && <SearchInfo count={resultsFound} text={searchString} onClear={() => dispatch(setSearchQuery(''))} />
       }
       <PostFilterBar filterSelfPosts={showOwnPosts} />
       <div className="list-group list-group-flush" role="list">
