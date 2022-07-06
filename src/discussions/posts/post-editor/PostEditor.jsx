@@ -124,6 +124,8 @@ function PostEditor({
     }
     dispatch(hidePostEditor());
   };
+  // null stands for no cohort restriction ("All learners" option)
+  const selectedCohort = (cohort) => (cohort === 'default' ? null : cohort);
 
   const submitForm = async (values) => {
     if (editExisting) {
@@ -135,11 +137,8 @@ function PostEditor({
         editReasonCode: values.editReasonCode || undefined,
       }));
     } else {
-      const cohort = canSelectCohort(values.topic)
-        // null stands for no cohort restriction ("All learners" option)
-        ? (values.cohort || null)
-        // if not allowed to set cohort, always undefined, so no value is sent to backend
-        : undefined;
+      const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
+      // if not allowed to set cohort, always undefined, so no value is sent to backend
       await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
@@ -185,6 +184,7 @@ function PostEditor({
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
     editReasonCode: post?.lastEdit?.reasonCode || '',
+    cohort: post?.cohort || 'default',
   };
 
   const validationSchema = Yup.object().shape({
@@ -281,24 +281,24 @@ function PostEditor({
                 ))}
               </Form.Control>
             </Form.Group>
-            {canSelectCohort(values.topic)
-              && (
-                <Form.Group className="w-50 d-inline-block pl-2">
-                  <Form.Control
-                    name="cohort"
-                    as="select"
-                    value={values.cohort}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    floatingLabel={intl.formatMessage(messages.cohortVisibility)}
-                  >
-                    <option value="">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
-                    {cohorts.map(cohort => (
-                      <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
-                    ))}
-                  </Form.Control>
-                </Form.Group>
-              )}
+            {canSelectCohort(values.topic) && (
+            <Form.Group className="w-50 d-inline-block pl-2">
+              <Form.Control
+                name="cohort"
+                as="select"
+                value={values.cohort}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="cohortAreaInput"
+                floatingLabel={intl.formatMessage(messages.cohortVisibility)}
+              >
+                <option value="default">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
+                {cohorts.map(cohort => (
+                  <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            )}
           </div>
           <div className="border-bottom my-1" />
           <div className="d-flex flex-row py-2 mt-4 justify-content-between">
