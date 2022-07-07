@@ -19,6 +19,9 @@ const topicsSlice = createSlice({
     topics: {},
     filter: '',
     sortBy: TopicOrdering.BY_COURSE_STRUCTURE,
+    results: {
+      count: 0,
+    },
   },
   reducers: {
     fetchCourseTopicsRequest: (state) => {
@@ -44,6 +47,9 @@ const topicsSlice = createSlice({
     setSortBy: (state, { payload }) => {
       state.sortBy = payload;
     },
+    setTopicsCount: (state, { payload }) => {
+      state.results.count = payload;
+    },
   },
 });
 
@@ -53,6 +59,7 @@ export const {
   fetchCourseTopicsFailed,
   setFilter,
   setSortBy,
+  setTopicsCount,
 } = topicsSlice.actions;
 
 export const topicsReducer = topicsSlice.reducer;

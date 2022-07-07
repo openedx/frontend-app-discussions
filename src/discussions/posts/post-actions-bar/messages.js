@@ -6,9 +6,29 @@ const messages = defineMessages({
     defaultMessage: 'Discussions',
   },
   searchAllPosts: {
-    id: 'discussions.posts.actionBar.search',
+    id: 'discussions.posts.actionBar.searchAllPosts',
     defaultMessage: 'Search all posts',
     description: 'Placeholder text in search box',
+  },
+  search: {
+    id: 'discussions.posts.actionBar.search',
+    defaultMessage: `{page, select,
+      topics {Find a topic}
+      posts {Search all posts}
+      learners {Search learner}
+      myPosts {Search all posts}
+    }`,
+    description: 'Placeholder text in search box',
+  },
+  searchInfo: {
+    id: 'discussions.actionBar.searchInfo',
+    defaultMessage: 'Showing {count} results for "{text}"',
+    description: 'Message displayed when user performs a search',
+  },
+  clearSearch: {
+    id: 'discussions.actionBar.clearSearch',
+    defaultMessage: 'Clear',
+    description: 'Button to clear search',
   },
   addAPost: {
     id: 'discussion.posts.actionBar.add',

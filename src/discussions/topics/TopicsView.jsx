@@ -3,17 +3,19 @@ import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
+import SearchInfo from '../../components/SearchInfo';
 import { DiscussionProvider } from '../../data/constants';
 import { selectSequences } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
+import { setFilter, setTopicsCount } from './data/slices';
 import { fetchCourseTopics } from './data/thunks';
 import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
-import TopicSearchBar from './topic-search-bar/TopicSearchBar';
+import countFilteredTopics from './utils';
 
 function CourseWideTopics() {
   const { category } = useParams();
@@ -66,8 +68,12 @@ function LegacyCoursewareTopics() {
 
 function TopicsView() {
   const provider = useSelector(selectDiscussionProvider);
+  const topicFilter = useSelector(selectTopicFilter);
+  const topicsSelector = useSelector(({ topics }) => topics);
+  const filteredTopicsCount = useSelector(({ topics }) => topics.results.count);
   const { courseId } = useContext(DiscussionContext);
   const dispatch = useDispatch();
+
   useEffect(() => {
     // Don't load till the provider information is available
     if (provider) {
@@ -75,12 +81,19 @@ function TopicsView() {
     }
   }, [provider]);
 
+  useEffect(() => {
+    const count = countFilteredTopics(topicsSelector, provider);
+    dispatch(setTopicsCount(count));
+  }, [topicFilter]);
+
   return (
     <div
       className="discussion-topics d-flex flex-column card"
       data-testid="topics-view"
     >
-      <TopicSearchBar />
+      {
+        topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
+      }
       <div className="list-group list-group-flush">
         <CourseWideTopics />
         {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
