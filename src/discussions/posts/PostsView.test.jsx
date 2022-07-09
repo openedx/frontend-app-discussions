@@ -121,7 +121,7 @@ describe('PostsView', () => {
       await act(async () => {
         await renderComponent({ myPosts: true });
       });
-      expect(screen.getAllByText('Abc123')).toHaveLength(threadCount);
+      expect(screen.getAllByText('abc123')).toHaveLength(threadCount);
     });
 
     test('displays a list of posts in a topic', async () => {
