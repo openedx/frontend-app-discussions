@@ -39,6 +39,7 @@ function PostFooter({
         count={post.voteCount}
         onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
         voted={post.voted}
+        preview={preview}
       />
       <IconButtonWithTooltip
         id={`follow-${post.id}-tooltip`}
@@ -51,9 +52,9 @@ function PostFooter({
           dispatch(updateExistingThread(post.id, { following: !post.following }));
           return true;
         }}
-        size="inline"
-        className="p-3"
-        iconClassNames="icon-size"
+        size={preview ? 'inline' : 'sm'}
+        className={preview && 'p-3'}
+        iconClassNames={preview && 'icon-size'}
       />
       {preview && post.commentCount > 1 && (
         <div className="d-flex align-items-center ml-4">
@@ -110,8 +111,8 @@ function PostFooter({
               <Icon
                 src={Locked}
                 style={{
-                  width: '1em',
-                  height: '1em',
+                  width: '1rem',
+                  height: '1rem',
                 }}
                 className="ml-3"
               />

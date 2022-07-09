@@ -20,7 +20,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
         'd-none': !displaySidebar,
         'd-flex w-25 w-xs-100 w-lg-25 overflow-auto h-100': displaySidebar,
       })}
-      style={{ minWidth: '30rem' }}
+      style={{ minWidth: '29rem' }}
       data-testid="sidebar"
     >
       <Switch>

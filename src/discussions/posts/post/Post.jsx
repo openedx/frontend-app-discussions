@@ -58,7 +58,7 @@ function Post({
   );
 
   return (
-    <div className="d-flex flex-column p-2.5 w-100 mw-100" data-testid={`post-${post.id}`}>
+    <div className="d-flex flex-column w-100 mw-100" data-testid={`post-${post.id}`}>
       <DeleteConfirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deletePostTitle)}
@@ -70,16 +70,14 @@ function Post({
           hideDeleteConfirmation();
         }}
       />
-      <div className="mb-4">
-        <AlertBanner postType={post.type} content={post} />
-      </div>
+      <AlertBanner postType={post.type} content={post} />
       <PostHeader post={post} actionHandlers={actionHandlers} />
-      <div className="d-flex my-2 text-break">
+      <div className="d-flex mt-4 mb-2 text-break font-style-normal text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} id="post" />
       </div>
       {topicContext && topic && (
-        <div className="border p-3 rounded mb-3 mt-2 align-self-start">
-          {intl.formatMessage(messages.relatedTo)}{' '}
+        <div className="border px-3 rounded mb-4 border-light-400 align-self-start py-2.5">
+          <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
             destination={topicContext.unitLink}
             target="_top"
@@ -88,7 +86,9 @@ function Post({
           </Hyperlink>
         </div>
       )}
-      <PostFooter post={post} preview={preview} />
+      <div className="mb-3">
+        <PostFooter post={post} preview={preview} />
+      </div>
       <ClosePostReasonModal
         isOpen={isClosing}
         onCancel={hideClosePostModal}

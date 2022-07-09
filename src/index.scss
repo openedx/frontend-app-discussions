@@ -22,12 +22,20 @@ $fa-font-path: "~font-awesome/fonts";
   color: #998200;
 }
 
-.border-staff-color {
-  border-color: #998200;
+.outline-staff-color {
+  outline: #998200 solid 2px;
 }
 
-.border-anonymous {
-  border-color: #F2F0EF;
+.text-TA-color {
+  color: #175B3C;
+}
+
+.outline-TA-color {
+  outline: #175B3C solid 2px;
+}
+
+.outline-anonymous {
+  outline: #EAE6E5 solid 2px;
 }
 
 .font-size-14 {
@@ -55,6 +63,14 @@ $fa-font-path: "~font-awesome/fonts";
   margin-right: 2px;
 }
 
+.mt-0\.5 {
+  margin-top: 2px;
+}
+
+.ml-0\.5 {
+  margin-left: 2px;
+}
+
 .badge-padding {
   padding-top: 1px;
   padding-bottom: 1px
@@ -66,4 +82,9 @@ $fa-font-path: "~font-awesome/fonts";
 
 .learner > a:hover {
   background-color: #F2F0EF;
+}
+
+.py-10px {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

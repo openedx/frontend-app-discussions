@@ -116,7 +116,7 @@ function CommentsView({ intl }) {
   }
   return (
     <>
-      <div className="discussion-comments d-flex flex-column mt-3 mb-0 mx-3 p-4 card">
+      <div className="discussion-comments d-flex flex-column m-4 p-4.5 card">
         <Post post={thread} />
         <ResponseEditor postId={postId} />
       </div>

@@ -8,7 +8,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
 import { Bookmark } from '@edx/paragon/icons';
 
-import { AvatarBorderAndLabelColors, Routes, ThreadType } from '../../../data/constants';
+import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
@@ -39,7 +39,7 @@ function PostLink({
     learnerUsername,
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
-  const authorLabelColor = AvatarBorderAndLabelColors[post.authorLabel];
+  const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   return (
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
@@ -57,7 +57,7 @@ function PostLink({
       )}
       <div
         className={
-          classNames('d-flex flex-row py-2.5 px-4 border-primary-500',
+          classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
             { 'bg-light-300': post.read })
         }
         style={post.id === postId ? {
@@ -111,7 +111,9 @@ function PostLink({
               ? post.previewBody
               : intl.formatMessage(messages.postWithoutPreview)}
           </div>
-          <PostFooter post={post} preview intl={intl} />
+          <div className="mt-1">
+            <PostFooter post={post} preview intl={intl} />
+          </div>
         </div>
       </div>
     </Link>
