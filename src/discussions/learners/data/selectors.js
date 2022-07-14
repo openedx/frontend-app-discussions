@@ -9,6 +9,8 @@ export const selectAllLearners = createSelector(
 
 export const learnersLoadingStatus = () => state => state.learners.status;
 
+export const selectUsernameSearch = () => state => state.learners.usernameSearch;
+
 export const selectLearnerSorting = () => state => state.learners.sortedBy;
 
 export const selectLearnerNextPage = () => state => state.learners.nextPage;

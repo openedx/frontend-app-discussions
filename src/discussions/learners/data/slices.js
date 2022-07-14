@@ -16,6 +16,7 @@ const learnersSlice = createSlice({
     totalPages: null,
     totalLearners: null,
     sortedBy: LearnersOrdering.BY_LAST_ACTIVITY,
+    usernameSearch: null,
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => {
@@ -41,6 +42,9 @@ const learnersSlice = createSlice({
     setSortedBy: (state, { payload }) => {
       state.sortedBy = payload;
     },
+    setUsernameSearch: (state, { payload }) => {
+      state.usernameSearch = payload;
+    },
   },
 });
 
@@ -50,6 +54,7 @@ export const {
   fetchLearnersSuccess,
   fetchLearnersDenied,
   setSortedBy,
+  setUsernameSearch,
 } = learnersSlice.actions;
 
 export const learnersReducer = learnersSlice.reducer;

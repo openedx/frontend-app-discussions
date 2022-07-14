@@ -23,16 +23,20 @@ import {
  * @param {string} courseId The course ID for the course to fetch data for.
  * @param {string} orderBy
  * @param {number} page
+ * @param {usernameSearch} username
  * @returns {(function(*): Promise<void>)|*}
  */
 export function fetchLearners(courseId, {
   orderBy,
   page = 1,
+  usernameSearch = null,
 } = {}) {
   return async (dispatch) => {
     try {
       const params = snakeCaseObject({ orderBy, page });
-
+      if (usernameSearch) {
+        params.username = usernameSearch;
+      }
       dispatch(fetchLearnersRequest({ courseId }));
       const learnerStats = await getLearners(courseId, params);
       const learnerProfilesData = await getUserProfiles(learnerStats.results.map((l) => l.username));

@@ -15,6 +15,7 @@ import {
   selectAllLearners,
   selectLearnerNextPage,
   selectLearnerSorting,
+  selectUsernameSearch,
 } from './data/selectors';
 import { fetchLearners } from './data/thunks';
 import { LearnerCard, LearnerFilterBar } from './learner';
@@ -27,21 +28,27 @@ function LearnersView({ intl }) {
   const orderBy = useSelector(selectLearnerSorting());
   const nextPage = useSelector(selectLearnerNextPage());
   const loadingStatus = useSelector(learnersLoadingStatus());
+  const usernameSearch = useSelector(selectUsernameSearch());
   const courseConfigLoadingStatus = useSelector(selectconfigLoadingStatus);
   const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   const learners = useSelector(selectAllLearners);
 
   useEffect(() => {
     if (learnersTabEnabled) {
-      dispatch(fetchLearners(courseId, { orderBy }));
+      if (usernameSearch) {
+        dispatch(fetchLearners(courseId, { orderBy, usernameSearch }));
+      } else {
+        dispatch(fetchLearners(courseId, { orderBy }));
+      }
     }
-  }, [courseId, orderBy, learnersTabEnabled]);
+  }, [courseId, orderBy, learnersTabEnabled, usernameSearch]);
 
   const loadPage = async () => {
     if (nextPage) {
       dispatch(fetchLearners(courseId, {
         orderBy,
         page: nextPage,
+        usernameSearch,
       }));
     }
   };
