@@ -21,7 +21,7 @@ function ResponseEditor({
       />
     ) : (
       <div className="actions d-flex">
-        <Button variant="primary" onClick={() => setAddingResponse(true)}>
+        <Button variant="primary" className="px-2.5 py-2" onClick={() => setAddingResponse(true)}>
           {intl.formatMessage(messages.addResponse)}
         </Button>
       </div>

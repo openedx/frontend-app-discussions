@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import capitalize from 'lodash/capitalize';
 import { Link, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -45,7 +44,7 @@ function AuthorLabel({
         role="heading"
         aria-level="2"
       >
-        {capitalize(author)}
+        {author}
       </span>
       {icon && (
         <Icon

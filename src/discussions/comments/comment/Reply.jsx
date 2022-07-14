@@ -8,7 +8,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { AvatarBorderAndLabelColors, ContentActions } from '../../../data/constants';
+import { AvatarOutlineAndLabelColors, ContentActions } from '../../../data/constants';
 import {
   ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
 } from '../../common';
@@ -33,7 +33,7 @@ function Reply({
     [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
-  const colorClass = AvatarBorderAndLabelColors[reply.authorLabel];
+  const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
   return (
     <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`}>
       <DeleteConfirmation
@@ -59,7 +59,7 @@ function Reply({
       <div className="d-flex">
         <div className="d-flex m-3">
           <Avatar
-            className={`m-2 ${colorClass && `border-${colorClass}`}`}
+            className={`m-2 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             style={{ borderWidth: '2px' }}
             alt={reply.author}
             src={authorAvatars?.imageUrlSmall}

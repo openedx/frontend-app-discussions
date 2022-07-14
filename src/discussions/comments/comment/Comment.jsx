@@ -68,7 +68,7 @@ function Comment({
         }}
       />
       <AlertBanner postType={postType} content={comment} />
-      <div className="d-flex flex-column p-4">
+      <div className="d-flex flex-column px-4 pb-4">
         <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
         {isEditing
           ? (

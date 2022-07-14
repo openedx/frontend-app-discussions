@@ -40,6 +40,7 @@ function ActionsDropdown({
           src={MoreHoriz}
           iconAs={Icon}
           disabled={disabled}
+          size="sm"
         />
       </span>
       <ModalPopup

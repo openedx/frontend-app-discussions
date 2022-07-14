@@ -30,7 +30,7 @@ function AlertBanner({
       {content.endorsed && (
         <Alert
           variant="plain"
-          className={`p-3 m-0 align-items-center shadow-none ${classes}`}
+          className={`px-3 mb-4.5 py-10px align-items-center shadow-none ${classes}`}
           style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
           icon={iconClass}
         >
@@ -56,12 +56,12 @@ function AlertBanner({
         </Alert>
       )}
       {content.abuseFlagged && (
-        <Alert icon={Error} variant="danger" className="p-3 m-0 shadow-none my-1 flex-fill">
+        <Alert icon={Error} variant="danger" className="px-3 mb-4 py-10px shadow-none flex-fill">
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
       {reasonCodesEnabled && userIsPrivileged && content.lastEdit?.reason && (
-        <Alert variant="info" className="p-3 m-0 shadow-none mb-1 bg-light-200">
+        <Alert variant="info" className="px-3 shadow-none mb-4 py-10px bg-light-200">
           <div className="d-flex align-items-center">
             {intl.formatMessage(messages.editedBy)}
             <span className="ml-1 mr-3">
@@ -72,7 +72,7 @@ function AlertBanner({
         </Alert>
       )}
       {reasonCodesEnabled && content.closed && (
-        <Alert variant="info" className="p-3 m-0 shadow-none mb-1 bg-light-200">
+        <Alert variant="info" className="px-3 shadow-none mb-4 py-10px bg-light-200">
           <div className="d-flex align-items-center">
             {intl.formatMessage(messages.closedBy)}
             <span className="ml-1 ">

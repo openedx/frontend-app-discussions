@@ -50,7 +50,7 @@ const messages = defineMessages({
   },
   viewActivity: {
     id: 'discussions.post.viewActivity',
-    defaultMessage: 'View Activity',
+    defaultMessage: 'View activity',
     description: 'Tooltip/alttext for button to view the activity of a discussion post',
   },
   postClosed: {

@@ -7,7 +7,7 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
-import { AvatarBorderAndLabelColors, ThreadType } from '../../../data/constants';
+import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import ActionsDropdown from '../../common/ActionsDropdown';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
@@ -19,13 +19,12 @@ function CommentHeader({
   actionHandlers,
 }) {
   const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
-  const colorClass = AvatarBorderAndLabelColors[comment.authorLabel];
+  const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
   return (
     <div className="d-flex flex-row justify-content-between">
       <div className="align-items-center d-flex flex-row">
         <Avatar
-          className={`m-2 ${colorClass && `border-${colorClass}`}`}
-          style={{ borderWidth: '2px' }}
+          className={`m-2 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
           alt={comment.author}
           src={authorAvatars?.imageUrlSmall}
         />
