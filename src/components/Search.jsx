@@ -7,6 +7,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { SearchField } from '@edx/paragon';
 
 import { DiscussionContext } from '../discussions/common/context';
+import { setUsernameSearch } from '../discussions/learners/data';
 import { setSearchQuery } from '../discussions/posts/data';
 import postsMessages from '../discussions/posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../discussions/topics/data/slices';
@@ -16,11 +17,12 @@ function Search({ intl }) {
   const { page } = useContext(DiscussionContext);
   const postSearch = useSelector(({ threads }) => threads.filters.search);
   const topicSearch = useSelector(({ topics }) => topics.filter);
-  const isPostSearch = ['posts', 'my-posts', 'learners'].includes(page);
+  const isPostSearch = ['posts', 'my-posts'].includes(page);
 
   const onClear = () => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
+    dispatch(setUsernameSearch(''));
   };
 
   const onSubmit = (query) => {
@@ -28,6 +30,8 @@ function Search({ intl }) {
       dispatch(setSearchQuery(query));
     } else if (page === 'topics') {
       dispatch(setTopicFilter(query));
+    } else if (page === 'learners') {
+      dispatch(setUsernameSearch(query));
     }
   };
 
