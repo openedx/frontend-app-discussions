@@ -56,7 +56,7 @@ function Comment({
   const commentClasses = classNames('d-flex flex-column card', { 'my-3': showFullThread });
 
   return (
-    <div className={commentClasses} data-testid={`comment-${comment.id}`}>
+    <div className={commentClasses} data-testid={`comment-${comment.id}`} role="listitem">
       <DeleteConfirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteResponseTitle)}
@@ -81,7 +81,8 @@ function Comment({
           onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
           createdAt={comment.createdAt}
         />
-        <div className="d-flex my-2 flex-column">
+        <div className="sr-only" role="heading" aria-level="3"> {intl.formatMessage(messages.replies, { count: inlineReplies.length })}</div>
+        <div className="d-flex my-2 flex-column" role="list">
           {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
           {inlineReplies.map(inlineReply => (
             <Reply

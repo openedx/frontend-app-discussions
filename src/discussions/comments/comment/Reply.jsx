@@ -35,7 +35,7 @@ function Reply({
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
   return (
-    <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`}>
+    <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`} role="listitem">
       <DeleteConfirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteCommentTitle)}
