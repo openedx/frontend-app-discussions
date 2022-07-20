@@ -1,3 +1,4 @@
+export { default as Issue } from './Issue';
 export { default as People } from './People';
 export { default as Question } from './Question';
 export { default as QuestionAnswer } from './QuestionAnswer';

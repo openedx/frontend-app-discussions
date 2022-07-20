@@ -6,39 +6,43 @@ import { useSelector } from 'react-redux';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 
-import { Question } from '../../../components/icons';
+import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-export function PostAvatar({ post, authorLabel, fromPostLink }) {
+export function PostAvatar({
+  post, authorLabel, fromPostLink, read,
+}) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
   const avatarSize = () => {
-    let size = '2rem';
-    if (post.type !== ThreadType.QUESTION && !fromPostLink) {
+    let size = '1.75rem';
+    if (post.type === ThreadType.DISCUSSION && !fromPostLink) {
       size = '2.375rem';
     } else if (post.type === ThreadType.QUESTION) {
-      size = '1.5rem';
+      size = '1.375rem';
     }
     return size;
   };
 
   return (
     <div className={`mr-3
-      ${post.type !== ThreadType.QUESTION && fromPostLink ? 'pt-1.5' : 'ml-0.5 mt-0.5'}`}
+      ${post.type === ThreadType.DISCUSSION && fromPostLink
+      ? 'pt-2 ml-0.5'
+      : post.type === ThreadType.DISCUSSION && 'ml-0.5 mt-0.5'}`}
     >
       {post.type === ThreadType.QUESTION && (
         <Icon
-          src={Question}
+          src={read ? Issue : Question}
           className="position-absolute bg-white rounded-circle"
           style={{
-            width: '1.75rem',
-            height: '1.75rem',
-            top: fromPostLink ? '10px' : '',
+            width: '1.625rem',
+            height: '1.625rem',
+            top: fromPostLink ? '12px' : '',
             left: fromPostLink ? '14px' : '',
           }}
         />
@@ -50,8 +54,8 @@ export function PostAvatar({ post, authorLabel, fromPostLink }) {
         style={{
           height: avatarSize(),
           width: avatarSize(),
-          marginTop: post.type === ThreadType.QUESTION ? '16px' : '',
-          marginLeft: post.type === ThreadType.QUESTION ? '18px' : '',
+          marginTop: post.type === ThreadType.QUESTION ? '17px' : '',
+          marginLeft: post.type === ThreadType.QUESTION ? '17px' : '',
         }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
@@ -64,11 +68,13 @@ PostAvatar.propTypes = {
   post: postShape.isRequired,
   authorLabel: PropTypes.string,
   fromPostLink: PropTypes.bool,
+  read: PropTypes.bool,
 };
 
 PostAvatar.defaultProps = {
   authorLabel: null,
   fromPostLink: false,
+  read: false,
 };
 
 function PostHeader({
