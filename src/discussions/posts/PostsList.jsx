@@ -73,7 +73,7 @@ function PostsList({ posts, topics, intl }) {
   return (
     <>
       {postInstances}
-      {posts?.length === 0 && <NoResults />}
+      {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS ? (
         <div className="d-flex justify-content-center p-4">
           <Spinner animation="border" variant="primary" size="lg" />
