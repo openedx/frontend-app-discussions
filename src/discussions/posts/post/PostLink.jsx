@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
-import { Bookmark } from '@edx/paragon/icons';
+import { PushPin } from '@edx/paragon/icons';
 
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
@@ -40,6 +40,7 @@ function PostLink({
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
+  const postReported = post.abuseFlagged || post.abuseFlaggedCount;
   return (
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
@@ -49,12 +50,6 @@ function PostLink({
       style={{ lineHeight: '21px' }}
       role="listitem"
     >
-      {post.pinned && (
-        <div className="d-flex flex-fill justify-content-end mr-4 text-primary-500 p-0">
-          <span className="sr-only">{' '}pinned</span>
-          <Icon src={Bookmark} className="position-absolute mt-n1" />
-        </div>
-      )}
       <div
         className={
           classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
@@ -85,7 +80,7 @@ function PostLink({
                 </Badge>
               )}
 
-              {(post.abuseFlagged || post.abuseFlaggedCount) && (
+              {postReported && (
                 <Badge
                   variant="danger"
                   data-testid="reported-post"
@@ -94,6 +89,10 @@ function PostLink({
                   {intl.formatMessage(messages.contentReported)}
                   <span className="sr-only">{' '}reported</span>
                 </Badge>
+              )}
+
+              {post.pinned && (
+                <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
               )}
             </div>
           </div>
