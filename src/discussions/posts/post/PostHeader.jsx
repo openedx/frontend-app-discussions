@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -19,7 +20,7 @@ export function PostAvatar({
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
-  const avatarSize = () => {
+  const avatarSize = useMemo(() => {
     let size = '1.75rem';
     if (post.type === ThreadType.DISCUSSION && !fromPostLink) {
       size = '2.375rem';
@@ -27,35 +28,38 @@ export function PostAvatar({
       size = '1.375rem';
     }
     return size;
-  };
+  }, [post.type]);
+
+  const avatarSpacing = useMemo(() => {
+    let spacing = 'mr-3 ';
+    if (post.type === ThreadType.DISCUSSION && fromPostLink) {
+      spacing += 'pt-2 ml-0.5';
+    } else if (post.type === ThreadType.DISCUSSION) {
+      spacing += 'ml-0.5 mt-0.5';
+    }
+    return spacing;
+  }, [post.type]);
 
   return (
-    <div className={`mr-3
-      ${post.type === ThreadType.DISCUSSION && fromPostLink
-      ? 'pt-2 ml-0.5'
-      : post.type === ThreadType.DISCUSSION && 'ml-0.5 mt-0.5'}`}
-    >
+    <div className={avatarSpacing}>
       {post.type === ThreadType.QUESTION && (
         <Icon
           src={read ? Issue : Question}
-          className="position-absolute bg-white rounded-circle"
-          style={{
-            width: '1.625rem',
-            height: '1.625rem',
-            top: fromPostLink ? '12px' : '',
-            left: fromPostLink ? '14px' : '',
-          }}
+          className={classNames('position-absolute bg-white rounded-circle question-icon-size', {
+            'question-icon-position': fromPostLink,
+          })}
         />
       )}
       <Avatar
-        className={`border-0 ${outlineColor ? `outline-${outlineColor}` : 'outline-anonymous'}
-         ${post.type === ThreadType.QUESTION && fromPostLink ? 'mt-3 ml-2' : ''}
-        `}
+        className={classNames('border-0', {
+          [`outline-${outlineColor}`]: outlineColor,
+          'outline-anonymous': !outlineColor,
+          'mt-3 ml-2': post.type === ThreadType.QUESTION && fromPostLink,
+          'avarat-img-position': post.type === ThreadType.QUESTION,
+        })}
         style={{
-          height: avatarSize(),
-          width: avatarSize(),
-          marginTop: post.type === ThreadType.QUESTION ? '17px' : '',
-          marginLeft: post.type === ThreadType.QUESTION ? '17px' : '',
+          height: avatarSize,
+          width: avatarSize,
         }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
