@@ -11,7 +11,7 @@ import { EndorsementStatus, ThreadType } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
-import { markThreadAsRead } from '../posts/data/thunks';
+import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
 import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -112,7 +112,9 @@ DiscussionCommentsView.propTypes = {
 function CommentsView({ intl }) {
   const { postId } = useParams();
   const thread = usePost(postId);
+  const dispatch = useDispatch();
   if (!thread) {
+    dispatch(fetchThread(postId));
     return (
       <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );
