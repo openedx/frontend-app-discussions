@@ -66,34 +66,37 @@ function DiscussionCommentsView({
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
   return (
-    <div className="m-3">
-      <div className="my-3">
+    <>
+      <div className="m-3" role="heading" aria-level="2">
         {endorsed === EndorsementStatus.ENDORSED
           ? intl.formatMessage(messages.endorsedResponseCount, { num: comments.length })
           : intl.formatMessage(messages.responseCount, { num: comments.length })}
       </div>
-      {comments.map(comment => (
-        <Comment comment={comment} key={comment.id} postType={postType} />
-      ))}
+      <div className="mx-3" role="list">
+        {comments.map(comment => (
+          <Comment comment={comment} key={comment.id} postType={postType} />
+        ))}
 
-      {hasMorePages && !isLoading && (
-        <Button
-          onClick={handleLoadMoreResponses}
-          variant="link"
-          block="true"
-          className="card p-4"
-          data-testid="load-more-comments"
-        >
-          {intl.formatMessage(messages.loadMoreResponses)}
-        </Button>
-      )}
-      {isLoading
+        {hasMorePages && !isLoading && (
+          <Button
+            onClick={handleLoadMoreResponses}
+            variant="link"
+            block="true"
+            className="card p-4"
+            data-testid="load-more-comments"
+          >
+            {intl.formatMessage(messages.loadMoreResponses)}
+          </Button>
+        )}
+        {isLoading
         && (
           <div className="card my-4 p-4 d-flex align-items-center">
             <Spinner animation="border" variant="primary" />
           </div>
         )}
-    </div>
+      </div>
+    </>
+
   );
 }
 

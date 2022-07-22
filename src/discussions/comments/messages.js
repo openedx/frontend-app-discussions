@@ -166,6 +166,11 @@ const messages = defineMessages({
     id: 'discussions.post.closedBy',
     defaultMessage: 'Post closed by',
   },
+  replies: {
+    id: 'discussion.comment.repliesHeading',
+    defaultMessage: '{count} replies for the response added',
+    description: 'Text added for screen reader to understand nesting replies.',
+  },
 });
 
 export default messages;
