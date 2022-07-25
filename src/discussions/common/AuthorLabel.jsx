@@ -45,7 +45,7 @@ function AuthorLabel({
         role="heading"
         aria-level="2"
       >
-        {author}
+        {author.startsWith('retired__user') ? '(Deactivated)' : author }
       </span>
       {icon && (
         <Icon
