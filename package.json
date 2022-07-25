@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
-    "@edx/frontend-platform": "1.15.4",
-    "@edx/paragon": "19.10.1",
+    "@edx/frontend-platform": "2.5.0",
+    "@edx/paragon": "20.5.0",
     "@reduxjs/toolkit": "1.8.0",
     "@tinymce/tinymce-react": "3.13.1",
     "babel-polyfill": "6.26.0",
