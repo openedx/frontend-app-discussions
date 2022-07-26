@@ -57,48 +57,47 @@ function Comment({
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
 
-  const commentClasses = classNames('d-flex flex-column card', { 'my-3': showFullThread });
-
   return (
-    <div className={commentClasses} data-testid={`comment-${comment.id}`} role="listitem">
-      <DeleteConfirmation
-        isOpen={isDeleting}
-        title={intl.formatMessage(messages.deleteResponseTitle)}
-        description={intl.formatMessage(messages.deleteResponseDescription)}
-        onClose={hideDeleteConfirmation}
-        onDelete={() => {
-          dispatch(removeComment(comment.id));
-          hideDeleteConfirmation();
-        }}
-      />
-      <EndorsedAlertBanner postType={postType} content={comment} />
-      <div className="d-flex flex-column p-4.5">
-        <AlertBanner content={comment} />
-        <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
-        {isEditing
-          ? (
-            <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
-          )
-          : <HTMLLoader cssClassName="comment-body pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
-        <CommentIcons
-          comment={comment}
-          following={comment.following}
-          onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-          createdAt={comment.createdAt}
+    <div className={classNames({ 'py-2 my-3': showFullThread })}>
+      <div className="d-flex flex-column card" data-testid={`comment-${comment.id}`} role="listitem">
+        <DeleteConfirmation
+          isOpen={isDeleting}
+          title={intl.formatMessage(messages.deleteResponseTitle)}
+          description={intl.formatMessage(messages.deleteResponseDescription)}
+          onClose={hideDeleteConfirmation}
+          onDelete={() => {
+            dispatch(removeComment(comment.id));
+            hideDeleteConfirmation();
+          }}
         />
-        <div className="sr-only" role="heading" aria-level="3"> {intl.formatMessage(messages.replies, { count: inlineReplies.length })}</div>
-        <div className="d-flex flex-column" role="list">
-          {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
-          {inlineReplies.map(inlineReply => (
-            <Reply
-              reply={inlineReply}
-              postType={postType}
-              key={inlineReply.id}
-              intl={intl}
-            />
-          ))}
-        </div>
-        {hasMorePages && (
+        <EndorsedAlertBanner postType={postType} content={comment} />
+        <div className="d-flex flex-column p-4.5">
+          <AlertBanner content={comment} />
+          <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
+          {isEditing
+            ? (
+              <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
+            )
+            : <HTMLLoader cssClassName="comment-body pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
+          <CommentIcons
+            comment={comment}
+            following={comment.following}
+            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+            createdAt={comment.createdAt}
+          />
+          <div className="sr-only" role="heading" aria-level="3"> {intl.formatMessage(messages.replies, { count: inlineReplies.length })}</div>
+          <div className="d-flex flex-column" role="list">
+            {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
+            {inlineReplies.map(inlineReply => (
+              <Reply
+                reply={inlineReply}
+                postType={postType}
+                key={inlineReply.id}
+                intl={intl}
+              />
+            ))}
+          </div>
+          {hasMorePages && (
           <Button
             onClick={handleLoadMoreComments}
             variant="link"
@@ -111,23 +110,24 @@ function Comment({
           >
             {intl.formatMessage(messages.loadMoreResponses)}
           </Button>
-        )}
-        {!isNested && showFullThread && (
-          isReplying ? (
-            <CommentEditor
-              comment={{
-                threadId: comment.threadId,
-                parentId: comment.id,
-              }}
-              edit={false}
-              onCloseEditor={() => setReplying(false)}
-            />
-          ) : (
-            <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
-              {intl.formatMessage(messages.addComment)}
-            </Button>
-          )
-        )}
+          )}
+          {!isNested && showFullThread && (
+            isReplying ? (
+              <CommentEditor
+                comment={{
+                  threadId: comment.threadId,
+                  parentId: comment.id,
+                }}
+                edit={false}
+                onCloseEditor={() => setReplying(false)}
+              />
+            ) : (
+              <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
+                {intl.formatMessage(messages.addComment)}
+              </Button>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
