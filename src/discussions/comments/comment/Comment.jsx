@@ -9,7 +9,7 @@ import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
-import { AlertBanner, DeleteConfirmation } from '../../common';
+import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
 import { fetchThread } from '../../posts/data/thunks';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
@@ -35,12 +35,14 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
+
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
     if (hasChildren && !currentPage && showFullThread) {
       dispatch(fetchCommentResponses(comment.id, { page: 1 }));
     }
   }, [comment.id]);
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
@@ -50,9 +52,11 @@ function Comment({
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
   };
+
   const handleLoadMoreComments = () => (
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
+
   const commentClasses = classNames('d-flex flex-column card', { 'my-3': showFullThread });
 
   return (
@@ -67,14 +71,15 @@ function Comment({
           hideDeleteConfirmation();
         }}
       />
-      <AlertBanner postType={postType} content={comment} />
-      <div className="d-flex flex-column px-4 pb-4">
+      <EndorsedAlertBanner postType={postType} content={comment} />
+      <div className="d-flex flex-column p-4.5">
+        <AlertBanner content={comment} />
         <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
         {isEditing
           ? (
             <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
           )
-          : <HTMLLoader cssClassName="comment-body px-2" componentId="comment" htmlNode={comment.renderedBody} />}
+          : <HTMLLoader cssClassName="comment-body pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
         <CommentIcons
           comment={comment}
           following={comment.following}
@@ -82,7 +87,7 @@ function Comment({
           createdAt={comment.createdAt}
         />
         <div className="sr-only" role="heading" aria-level="3"> {intl.formatMessage(messages.replies, { count: inlineReplies.length })}</div>
-        <div className="d-flex my-2 flex-column" role="list">
+        <div className="d-flex flex-column" role="list">
           {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
           {inlineReplies.map(inlineReply => (
             <Reply
@@ -98,31 +103,31 @@ function Comment({
             onClick={handleLoadMoreComments}
             variant="link"
             block="true"
-            className="my-4"
+            className="mt-4.5 font-size-14 font-style-normal font-family-inter font-weight-500 px-2.5 py-2"
             data-testid="load-more-comments-responses"
+            style={{
+              lineHeight: '20px',
+            }}
           >
             {intl.formatMessage(messages.loadMoreResponses)}
           </Button>
         )}
-        {!isNested && showFullThread
-          && (
-            isReplying
-              ? (
-                <CommentEditor
-                  comment={{
-                    threadId: comment.threadId,
-                    parentId: comment.id,
-                  }}
-                  edit={false}
-                  onCloseEditor={() => setReplying(false)}
-                />
-              )
-              : (
-                <Button className="d-flex flex-grow " variant="outline-secondary" onClick={() => setReplying(true)}>
-                  {intl.formatMessage(messages.addComment)}
-                </Button>
-              )
-          )}
+        {!isNested && showFullThread && (
+          isReplying ? (
+            <CommentEditor
+              comment={{
+                threadId: comment.threadId,
+                parentId: comment.id,
+              }}
+              edit={false}
+              onCloseEditor={() => setReplying(false)}
+            />
+          ) : (
+            <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
+              {intl.formatMessage(messages.addComment)}
+            </Button>
+          )
+        )}
       </div>
     </div>
   );

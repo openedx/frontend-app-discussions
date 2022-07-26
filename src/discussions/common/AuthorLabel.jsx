@@ -34,13 +34,14 @@ function AuthorLabel({
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
   }
 
-  const fontWeight = authorLabelMessage ? 'font-weight-500' : 'font-weight-normal text-primary-500';
   const className = classNames('d-flex align-items-center', labelColor);
 
   const labelContents = (
     <div className={className}>
       <span
-        className={`mr-1 font-size-14 font-style-normal font-family-inter ${fontWeight}`}
+        className={classNames('mr-1 font-size-14 font-style-normal font-family-inter font-weight-500', {
+          'text-primary-500': !authorLabelMessage,
+        })}
         role="heading"
         aria-level="2"
       >
@@ -57,7 +58,9 @@ function AuthorLabel({
       )}
       {authorLabelMessage && (
         <span
-          className={`mr-3 font-size-14 font-style-normal font-family-inter ${fontWeight}`}
+          className={classNames('mr-3 font-size-14 font-style-normal font-family-inter font-weight-500', {
+            'text-primary-500': !authorLabelMessage,
+          })}
           style={{ marginLeft: '2px' }}
         >
           {authorLabelMessage}

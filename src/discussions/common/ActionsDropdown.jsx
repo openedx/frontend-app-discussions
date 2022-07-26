@@ -33,16 +33,15 @@ function ActionsDropdown({
   };
   return (
     <>
-      <span ref={dropdownIconRef}>
-        <IconButton
-          onClick={() => setOpen(!isOpen)}
-          alt={intl.formatMessage(messages.actionsAlt)}
-          src={MoreHoriz}
-          iconAs={Icon}
-          disabled={disabled}
-          size="sm"
-        />
-      </span>
+      <IconButton
+        onClick={() => setOpen(!isOpen)}
+        alt={intl.formatMessage(messages.actionsAlt)}
+        src={MoreHoriz}
+        iconAs={Icon}
+        disabled={disabled}
+        size="sm"
+        ref={dropdownIconRef}
+      />
       <ModalPopup
         onClose={() => setOpen(false)}
         positionRef={dropdownIconRef}
