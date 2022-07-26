@@ -6,7 +6,9 @@
     "type": "git",
     "url": "git+https://github.com/edx/frontend-app-discussions.git"
   },
-  "browserslist": ["extends @edx/browserslist-config"],
+  "browserslist": [
+    "extends @edx/browserslist-config"
+  ],
   "scripts": {
     "build": "fedx-scripts webpack",
     "i18n_extract": "BABEL_ENV=i18n fedx-scripts babel src --quiet > /dev/null",
@@ -58,17 +60,18 @@
   "devDependencies": {
     "@edx/browserslist-config": "1.1.0",
     "@edx/frontend-build": "11.0.1",
+    "@edx/reactifex": "1.0.3",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "13.5.0",
     "axios-mock-adapter": "1.20.0",
+    "babel-plugin-react-intl": "8.2.25",
     "codecov": "3.8.3",
     "es-check": "6.2.1",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "glob": "7.2.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "reactifex": "1.1.1",
     "rosie": "2.1.0"
   }
 }

@@ -1,3 +1,4 @@
+export TRANSIFEX_RESOURCE = frontend-app-discussions
 transifex_resource = frontend-app-discussions
 transifex_langs = "ar,fr,es_419,zh_CN"
 
@@ -10,12 +11,24 @@ tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/$(transi
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
 
+NPM_TESTS=build i18n_extract lint test
+
+.PHONY: test
+test: $(addprefix test.npm.,$(NPM_TESTS))  ## validate ci suite
+
+.PHONY: test.npm.*
+test.npm.%: validate-no-uncommitted-package-lock-changes
+	test -d node_modules || $(MAKE) requirements
+	npm run $(*)
+
+.PHONY: requirements
+
 precommit:
 	npm run lint
 	npm audit
 
-requirements:
-	npm install
+requirements:  ## install ci requirements
+	npm ci
 
 i18n.extract:
 	# Pulling display strings from .jsx files into .json files...
@@ -38,11 +51,11 @@ push_translations:
 	# Pushing strings to Transifex...
 	tx push -s
 	# Fetching hashes from Transifex...
-	./node_modules/reactifex/bash_scripts/get_hashed_strings.sh $(tx_url1)
+	./node_modules/@edx/reactifex/bash_scripts/get_hashed_strings_v3.sh
 	# Writing out comments to file...
-	$(transifex_utils) $(transifex_temp) --comments
+	$(transifex_utils) $(transifex_temp) --comments --v3-scripts-path
 	# Pushing comments to Transifex...
-	./node_modules/reactifex/bash_scripts/put_comments.sh $(tx_url2)
+	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
 # Pulls translations from Transifex.
 pull_translations:
