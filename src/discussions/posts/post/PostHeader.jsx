@@ -1,57 +1,65 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 
-import { Question } from '../../../components/icons';
+import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-export function PostAvatar({ post, authorLabel, fromPostLink }) {
+export function PostAvatar({
+  post, authorLabel, fromPostLink, read,
+}) {
   const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
-  const avatarSize = () => {
-    let size = '2rem';
-    if (post.type !== ThreadType.QUESTION && !fromPostLink) {
+  const avatarSize = useMemo(() => {
+    let size = '1.75rem';
+    if (post.type === ThreadType.DISCUSSION && !fromPostLink) {
       size = '2.375rem';
     } else if (post.type === ThreadType.QUESTION) {
-      size = '1.5rem';
+      size = '1.375rem';
     }
     return size;
-  };
+  }, [post.type]);
+
+  const avatarSpacing = useMemo(() => {
+    let spacing = 'mr-3 ';
+    if (post.type === ThreadType.DISCUSSION && fromPostLink) {
+      spacing += 'pt-2 ml-0.5';
+    } else if (post.type === ThreadType.DISCUSSION) {
+      spacing += 'ml-0.5 mt-0.5';
+    }
+    return spacing;
+  }, [post.type]);
 
   return (
-    <div className={`mr-3
-      ${post.type !== ThreadType.QUESTION && fromPostLink ? 'pt-1.5' : 'ml-0.5 mt-0.5'}`}
-    >
+    <div className={avatarSpacing}>
       {post.type === ThreadType.QUESTION && (
         <Icon
-          src={Question}
-          className="position-absolute bg-white rounded-circle"
-          style={{
-            width: '1.75rem',
-            height: '1.75rem',
-            top: fromPostLink ? '10px' : '',
-            left: fromPostLink ? '14px' : '',
-          }}
+          src={read ? Issue : Question}
+          className={classNames('position-absolute bg-white rounded-circle question-icon-size', {
+            'question-icon-position': fromPostLink,
+          })}
         />
       )}
       <Avatar
-        className={`border-0 ${outlineColor ? `outline-${outlineColor}` : 'outline-anonymous'}
-         ${post.type === ThreadType.QUESTION && fromPostLink ? 'mt-3 ml-2' : ''}
-        `}
+        className={classNames('border-0', {
+          [`outline-${outlineColor}`]: outlineColor,
+          'outline-anonymous': !outlineColor,
+          'mt-3 ml-2': post.type === ThreadType.QUESTION && fromPostLink,
+          'avarat-img-position': post.type === ThreadType.QUESTION,
+        })}
         style={{
-          height: avatarSize(),
-          width: avatarSize(),
-          marginTop: post.type === ThreadType.QUESTION ? '16px' : '',
-          marginLeft: post.type === ThreadType.QUESTION ? '18px' : '',
+          height: avatarSize,
+          width: avatarSize,
         }}
         alt={post.author}
         src={authorAvatars?.imageUrlSmall}
@@ -64,11 +72,13 @@ PostAvatar.propTypes = {
   post: postShape.isRequired,
   authorLabel: PropTypes.string,
   fromPostLink: PropTypes.bool,
+  read: PropTypes.bool,
 };
 
 PostAvatar.defaultProps = {
   authorLabel: null,
   fromPostLink: false,
+  read: false,
 };
 
 function PostHeader({

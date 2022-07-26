@@ -1,3 +1,4 @@
+export { default as Issue } from './Issue';
 export { default as People } from './People';
 export { default as PushPin } from './PushPin';
 export { default as Question } from './Question';

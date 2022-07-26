@@ -60,7 +60,7 @@ function PostLink({
           borderRightStyle: 'solid',
         } : null}
       >
-        <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink />
+        <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={post.read} />
         <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
             <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
