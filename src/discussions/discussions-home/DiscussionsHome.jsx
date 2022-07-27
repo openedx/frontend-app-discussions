@@ -6,6 +6,7 @@ import {
 } from 'react-router';
 
 import { PostActionsBar } from '../../components';
+import { CourseTabsNavigation } from '../../components/NavigationBar';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
@@ -27,6 +28,10 @@ export default function DiscussionsHome() {
   const {
     params: { page },
   } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
+  // navbar logic items
+  const showNavBar = true;
+  const activeTab = 'discussion';
+
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const {
@@ -71,12 +76,14 @@ export default function DiscussionsHome() {
     }}
     >
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
+        {showNavBar
+          && <CourseTabsNavigation activeTab={activeTab} courseId={courseId} />}
         <div
           className="d-flex flex-row justify-content-between navbar fixed-top"
           style={{ boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}
         >
           {!inContext && (
-          <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
+            <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
           )}
           <PostActionsBar inContext={inContext} />
         </div>
