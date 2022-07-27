@@ -10,6 +10,7 @@ import { Avatar, Badge, Icon } from '@edx/paragon';
 import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { ActionsDropdown, AuthorLabel } from '../../common';
+import { useAlertBannerVisible } from '../../data/hooks';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
@@ -89,8 +90,10 @@ function PostHeader({
 }) {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
+  const hasAnyAlert = useAlertBannerVisible(post);
+
   return (
-    <div className="d-flex flex-fill mw-100" style={{ height: '2.625rem' }}>
+    <div className={classNames('d-flex flex-fill mw-100', { 'mt-2': hasAnyAlert && !preview })} style={{ height: '2.625rem' }}>
       <PostAvatar post={post} authorLabel={post.authorLabel} />
       <div className="align-items-center d-flex flex-row">
         <div className="d-flex flex-column justify-content-start mw-100">

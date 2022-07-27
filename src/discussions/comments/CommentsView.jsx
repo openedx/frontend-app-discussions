@@ -67,12 +67,12 @@ function DiscussionCommentsView({
   } = usePostComments(postId, endorsed);
   return (
     <>
-      <div className="m-3" role="heading" aria-level="2">
+      <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
         {endorsed === EndorsementStatus.ENDORSED
           ? intl.formatMessage(messages.endorsedResponseCount, { num: comments.length })
           : intl.formatMessage(messages.responseCount, { num: comments.length })}
       </div>
-      <div className="mx-3" role="list">
+      <div className="mx-4" role="list">
         {comments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} />
         ))}

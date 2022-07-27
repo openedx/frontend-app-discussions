@@ -8,7 +8,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../comments/messages';
-import AlertBanner from './AlertBanner';
+import EndorsedAlertBanner from './EndorsedAlertBanner';
 
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
@@ -21,13 +21,14 @@ function buildTestContent(type, buildParams) {
 }
 
 function renderComponent(
-  content,
+  content, postType,
 ) {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <AlertBanner
+        <EndorsedAlertBanner
           content={content}
+          postType={postType}
         />
       </AppProvider>
     </IntlProvider>,
@@ -36,35 +37,28 @@ function renderComponent(
 
 describe.each([
   {
-    label: 'flagged comment',
+    label: 'Staff endorsed comment in a question thread',
     type: 'comment',
     postType: ThreadType.QUESTION,
-    props: { abuseFlagged: true },
-    expectText: [messages.abuseFlaggedMessage.defaultMessage],
+    props: { endorsed: true, endorsedBy: 'test-user', endorsedByLabel: 'Staff' },
+    expectText: [messages.answer.defaultMessage, messages.answeredLabel.defaultMessage, 'test-user', 'Staff'],
   },
   {
-    label: 'flagged thread',
-    type: 'thread',
-    postType: null,
-    props: { abuseFlagged: true },
-    expectText: [messages.abuseFlaggedMessage.defaultMessage],
+    label: 'TA endorsed comment in a question thread',
+    type: 'comment',
+    postType: ThreadType.QUESTION,
+    props: { endorsed: true, endorsedBy: 'test-user', endorsedByLabel: 'Community TA' },
+    expectText: [messages.answer.defaultMessage, messages.answeredLabel.defaultMessage, 'test-user', 'TA'],
   },
   {
-    label: 'edited content',
-    type: 'thread',
-    postType: null,
-    props: { last_edit: { reason: 'test-reason', editorUsername: 'editor-user' } },
-    expectText: [messages.editedBy.defaultMessage, messages.reason.defaultMessage, 'editor-user', 'test-reason'],
+    label: 'endorsed comment in a discussion thread',
+    type: 'comment',
+    postType: ThreadType.DISCUSSION,
+    props: { endorsed: true, endorsedBy: 'test-user' },
+    expectText: [messages.endorsed.defaultMessage, messages.endorsedLabel.defaultMessage, 'test-user'],
   },
-  {
-    label: 'closed post',
-    type: 'thread',
-    postType: null,
-    props: { closed: true, closeReason: 'test-close-reason', closedBy: 'closing-user' },
-    expectText: [messages.closedBy.defaultMessage, 'closing-user', 'test-close-reason'],
-  },
-])('AlertBanner', ({
-  label, type, props, expectText,
+])('EndorsedAlertBanner', ({
+  label, type, postType, props, expectText,
 }) => {
   beforeEach(async () => {
     initializeMockApp({
@@ -82,7 +76,7 @@ describe.each([
       },
     });
     const content = buildTestContent(type, props);
-    renderComponent(content);
+    renderComponent(content, postType);
   });
 
   it(`should show correct banner for a ${label}`, async () => {

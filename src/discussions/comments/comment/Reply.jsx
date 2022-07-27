@@ -12,6 +12,8 @@ import { AvatarOutlineAndLabelColors, ContentActions } from '../../../data/const
 import {
   ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
 } from '../../common';
+import timeLocale from '../../common/time-locale';
+import { useAlertBannerVisible } from '../../data/hooks';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
 import { editComment, removeComment } from '../data/thunks';
 import messages from '../messages';
@@ -23,6 +25,7 @@ function Reply({
   postType,
   intl,
 }) {
+  timeago.register('time-locale', timeLocale);
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
@@ -34,8 +37,10 @@ function Reply({
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
+  const hasAnyAlert = useAlertBannerVisible(reply);
+
   return (
-    <div className="d-flex my-2 flex-column" data-testid={`reply-${reply.id}`} role="listitem">
+    <div className="d-flex flex-column mt-4.5" data-testid={`reply-${reply.id}`} role="listitem">
       <DeleteConfirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteCommentTitle)}
@@ -47,26 +52,31 @@ function Reply({
         }}
       />
 
-      <div className="d-flex">
-        <div className="d-flex mx-3 invisible">
-          <Avatar className="m-2" />
+      {hasAnyAlert && (
+        <div className="d-flex">
+          <div className="d-flex invisible">
+            <Avatar />
+          </div>
+          <div className="w-100">
+            <AlertBanner content={reply} intl={intl} />
+          </div>
         </div>
-        <div className="w-100">
-          <AlertBanner postType={null} content={reply} intl={intl} />
-        </div>
-      </div>
+      )}
 
       <div className="d-flex">
-        <div className="d-flex m-3">
+        <div className="d-flex mr-3 mt-2.5">
           <Avatar
-            className={`m-2 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
-            style={{ borderWidth: '2px' }}
+            className={`ml-0.5 mt-0.5 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             alt={reply.author}
             src={authorAvatars?.imageUrlSmall}
+            style={{
+              width: '32px',
+              height: '32px',
+            }}
           />
         </div>
-        <div className="rounded bg-light-300 px-4 py-2 flex-fill">
-          <div className="d-flex flex-row justify-content-between align-items-center">
+        <div className="rounded bg-light-300 px-4 pb-2 pt-2.5 flex-fill">
+          <div className="d-flex flex-row justify-content-between align-items-center mb-0.5">
             <AuthorLabel author={reply.author} authorLabel={reply.authorLabel} labelColor={colorClass && `text-${colorClass}`} />
             <ActionsDropdown
               commentOrPost={{
@@ -78,11 +88,11 @@ function Reply({
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
-            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} />}
+            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} cssClassName="text-primary-500" />}
         </div>
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>
-        {timeago.format(reply.createdAt, intl.locale)}
+        {timeago.format(reply.createdAt, 'time-locale')}
       </div>
     </div>
   );

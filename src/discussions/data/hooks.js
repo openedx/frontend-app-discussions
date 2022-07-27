@@ -13,7 +13,9 @@ import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, postMessageToParent } from '../utils';
-import { selectAreThreadsFiltered, selectPostThreadCount } from './selectors';
+import {
+  selectAreThreadsFiltered, selectModerationSettings, selectPostThreadCount, selectUserIsPrivileged,
+} from './selectors';
 import { fetchCourseConfig } from './thunks';
 
 export function useTotalTopicThreadCount() {
@@ -141,3 +143,14 @@ export function useContainerSizeForParent(refContainer) {
     };
   }, [refContainer, resizeObserver, location]);
 }
+
+export const useAlertBannerVisible = (content) => {
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
+
+  return (
+    (content.abuseFlagged)
+    || (reasonCodesEnabled && userIsPrivileged && content.lastEdit?.reason)
+    || (reasonCodesEnabled && content.closed)
+  );
+};
