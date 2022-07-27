@@ -4,7 +4,8 @@ import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { SearchField } from '@edx/paragon';
+import { Icon, SearchField } from '@edx/paragon';
+import { Search as SearchIcon } from '@edx/paragon/icons';
 
 import { DiscussionContext } from '../discussions/common/context';
 import { setUsernameSearch } from '../discussions/learners/data';
@@ -18,11 +19,16 @@ function Search({ intl }) {
   const postSearch = useSelector(({ threads }) => threads.filters.search);
   const topicSearch = useSelector(({ topics }) => topics.filter);
   const isPostSearch = ['posts', 'my-posts'].includes(page);
+  let searchValue = '';
 
   const onClear = () => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
     dispatch(setUsernameSearch(''));
+  };
+
+  const onChange = (query) => {
+    searchValue = query;
   };
 
   const onSubmit = (query) => {
@@ -37,13 +43,26 @@ function Search({ intl }) {
 
   useEffect(() => onClear(), [page]);
   return (
-    <SearchField
-      onClear={onClear}
-      onSubmit={onSubmit}
-      value={isPostSearch ? postSearch : topicSearch}
-      placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
-      inputProps={{ className: 'small-font' }}
-    />
+    <>
+      <SearchField.Advanced
+        onClear={onClear}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        value={isPostSearch ? postSearch : topicSearch}
+      >
+        <SearchField.Label />
+        <SearchField.Input
+          style={{ paddingRight: '1rem' }}
+          placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
+        />
+        <span className="mt-auto mb-auto mr-2.5">
+          <Icon
+            src={SearchIcon}
+            onClick={() => onSubmit(searchValue)}
+          />
+        </span>
+      </SearchField.Advanced>
+    </>
   );
 }
 
