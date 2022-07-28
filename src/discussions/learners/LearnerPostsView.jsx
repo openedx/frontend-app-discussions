@@ -22,6 +22,7 @@ import { PostLink } from '../posts/post';
 import { discussionsPath } from '../utils';
 import { fetchUserPosts } from './data/thunks';
 import messages from './messages';
+import { selectconfigLoadingStatus, selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
 
 function LearnerPostsView({ intl }) {
   const location = useLocation();
@@ -32,15 +33,25 @@ function LearnerPostsView({ intl }) {
   const loadingStatus = useSelector(threadsLoadingStatus());
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
+  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userIsStaff = useSelector(selectUserIsStaff);
+  const configStatus = useSelector(selectconfigLoadingStatus);
+
+  const getUserPosts = (pageNumber = 1) => {
+    dispatch(fetchUserPosts(courseId, username, {
+      page: pageNumber,
+      countFlagged: userIsPrivileged || userIsStaff,
+    }));
+  };
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, username));
-  }, [courseId, username]);
+    if (configStatus === RequestStatus.SUCCESSFUL) {
+      getUserPosts();
+    }
+  }, [courseId, username, configStatus]);
 
   const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, username, {
-      page: nextPage,
-    }))
+    getUserPosts(nextPage)
   );
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);

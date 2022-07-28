@@ -18,6 +18,7 @@ export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
  * @returns {Promise<{}>}
  */
 export async function getLearners(courseId, params) {
+  debugger;
   const url = `${coursesApiUrl}${courseId}/activity_stats/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
@@ -39,16 +40,16 @@ export async function getUserProfiles(usernames) {
  * @param {string} courseId Course ID of the course
  * @param {string} username Username of the user
  * @param {number} page
+ * @param {boolean} countFlagged
  * @returns API Response object in the format
  *  {
  *    results: [array of posts],
  *    pagination: {count, num_pages, next, previous}
  *  }
  */
-export async function getUserPosts(courseId, username, { page }) {
+export async function getUserPosts(courseId, username, { page, countFlagged }) {
   const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
-
   const { data } = await getAuthenticatedHttpClient()
-    .get(learnerPostsApiUrl, { params: { username, page } });
+    .get(learnerPostsApiUrl, { params: { username, page, count_flagged: countFlagged } });
   return data;
 }
