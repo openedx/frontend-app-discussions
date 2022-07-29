@@ -34,7 +34,7 @@ function AuthorLabel({
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
   }
 
-  const isRetiredUser = author.startsWith('retired__user');
+  const isRetiredUser = author ? author.startsWith('retired__user') : false;
 
   const className = classNames('d-flex align-items-center', labelColor);
 
