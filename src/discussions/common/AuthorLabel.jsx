@@ -34,18 +34,21 @@ function AuthorLabel({
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
   }
 
+  const isRetiredUser = author ? author.startsWith('retired__user') : false;
+
   const className = classNames('d-flex align-items-center', labelColor);
 
   const labelContents = (
     <div className={className}>
       <span
         className={classNames('mr-1 font-size-14 font-style-normal font-family-inter font-weight-500', {
-          'text-primary-500': !authorLabelMessage,
+          'text-primary-500': !authorLabelMessage && !isRetiredUser,
+          'text-gray-700': isRetiredUser,
         })}
         role="heading"
         aria-level="2"
       >
-        {author}
+        {isRetiredUser ? '[Deactivated]' : author }
       </span>
       {icon && (
         <Icon
