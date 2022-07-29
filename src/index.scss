@@ -107,3 +107,7 @@ $fa-font-path: "~font-awesome/fonts";
   margin-top: 17px;
   margin-left: 17px;
 }
+
+header nav.nav.secondary-menu-container {
+  z-index: 10000;
+}
