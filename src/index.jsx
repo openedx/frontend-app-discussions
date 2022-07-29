@@ -4,6 +4,8 @@ import 'regenerator-runtime/runtime';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { messages as footerMessages } from '@edx/frontend-component-footer';
+import { messages as headerMessages } from '@edx/frontend-component-header';
 import {
   APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
@@ -32,6 +34,8 @@ subscribe(APP_INIT_ERROR, (error) => {
 initialize({
   requireAuthenticatedUser: true,
   messages: [
+    headerMessages,
+    footerMessages,
     appMessages,
   ],
 });

@@ -5,6 +5,9 @@ import {
   Route, Switch, useLocation, useRouteMatch,
 } from 'react-router';
 
+import Footer from '@edx/frontend-component-footer';
+import Header from '@edx/frontend-component-header';
+
 import { PostActionsBar } from '../../components';
 import { CourseTabsNavigation } from '../../components/NavigationBar';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
@@ -73,6 +76,7 @@ export default function DiscussionsHome() {
       learnerUsername,
     }}
     >
+      {!inIframe && <Header />}
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
@@ -108,6 +112,7 @@ export default function DiscussionsHome() {
           )}
         </div>
       </main>
+      {!inIframe && <Footer />}
     </DiscussionContext.Provider>
   );
 }
