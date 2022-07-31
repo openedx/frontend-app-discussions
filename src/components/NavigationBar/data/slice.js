@@ -44,7 +44,6 @@ export const {
   fetchTabFailure,
   fetchTabRequest,
   fetchTabSuccess,
-
 } = slice.actions;
 
 export const courseTabsReducer = slice.reducer;

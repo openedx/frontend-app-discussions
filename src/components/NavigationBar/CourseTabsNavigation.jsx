@@ -10,17 +10,16 @@ import { fetchTab } from './data/thunks';
 import Tabs from './tabs/Tabs';
 import messages from './messages';
 
+import './navBar.scss';
+
 function CourseTabsNavigation({
-  activeTab, className, intl, courseId,
+  activeTab, className, intl, courseId, rootSlug,
 }) {
   const dispatch = useDispatch();
 
   const tabs = useSelector(state => state.courseTabs.tabs);
   useEffect(() => {
-    async function fetchTabs() {
-      await dispatch(fetchTab(courseId));
-    }
-    fetchTabs();
+    dispatch(fetchTab(courseId, rootSlug));
   }, [courseId]);
 
   return (
@@ -51,6 +50,7 @@ function CourseTabsNavigation({
 CourseTabsNavigation.propTypes = {
   activeTab: PropTypes.string,
   className: PropTypes.string,
+  rootSlug: PropTypes.string,
   courseId: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
 };
@@ -58,6 +58,7 @@ CourseTabsNavigation.propTypes = {
 CourseTabsNavigation.defaultProps = {
   activeTab: undefined,
   className: null,
+  rootSlug: 'outline',
 };
 
 export default injectIntl(CourseTabsNavigation);

@@ -28,9 +28,6 @@ export default function DiscussionsHome() {
   const {
     params: { page },
   } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
-  // navbar logic items
-  const showNavBar = true;
-  const activeTab = 'discussion';
 
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
@@ -42,6 +39,7 @@ export default function DiscussionsHome() {
     learnerUsername,
   } = params;
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
+  const inIframe = new URLSearchParams(location.search).get('inIframe') !== null;
 
   // Display the content area if we are currently viewing/editing a post or creating one.
   const displayContentArea = postId || postEditorVisible || (learnerUsername && postId);
@@ -76,8 +74,8 @@ export default function DiscussionsHome() {
     }}
     >
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
-        {showNavBar
-          && <CourseTabsNavigation activeTab={activeTab} courseId={courseId} />}
+        {!inIframe
+          && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
         <div
           className="d-flex flex-row justify-content-between navbar fixed-top"
           style={{ boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}
