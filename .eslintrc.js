@@ -6,6 +6,7 @@ module.exports = createConfig('eslint',
     "rules": {
       'import/no-extraneous-dependencies': 'off',
       'react-hooks/exhaustive-deps': 'off',
+      'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
       'simple-import-sort/imports': [
         'error', {
           groups: [

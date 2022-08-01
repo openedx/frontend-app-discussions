@@ -35,6 +35,10 @@ const ActionItem = ({
     htmlFor={id}
     className="focus border-bottom-0 d-flex align-items-center w-100 py-2 m-0 font-weight-500"
     data-testid={value === selected ? 'selected' : null}
+    role="menuitemradio"
+    tabIndex={0}
+    style={{ cursor: 'pointer' }}
+    aria-checked={value === selected}
   >
     <Icon src={Check} className={classNames('text-success mr-2', { invisible: value !== selected })} />
     <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex={0}>
