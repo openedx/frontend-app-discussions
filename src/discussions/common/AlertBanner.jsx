@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
@@ -19,6 +20,7 @@ function AlertBanner({
 }) {
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
+  const currentUser = getAuthenticatedUser().username;
 
   return (
     <>
@@ -27,7 +29,7 @@ function AlertBanner({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      {reasonCodesEnabled && userIsPrivileged && content.lastEdit?.reason && (
+      {reasonCodesEnabled && (userIsPrivileged || currentUser === content.author) && content.lastEdit?.reason && (
         <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
           <div className="d-flex align-items-center">
             {intl.formatMessage(messages.editedBy)}

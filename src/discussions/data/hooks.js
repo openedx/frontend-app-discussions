@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
@@ -147,10 +148,11 @@ export function useContainerSizeForParent(refContainer) {
 export const useAlertBannerVisible = (content) => {
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
+  const currentUser = getAuthenticatedUser().username;
 
   return (
     (content.abuseFlagged)
-    || (reasonCodesEnabled && userIsPrivileged && content.lastEdit?.reason)
+    || (reasonCodesEnabled && (userIsPrivileged || currentUser === content.author) && content.lastEdit?.reason)
     || (reasonCodesEnabled && content.closed)
   );
 };
