@@ -12,10 +12,6 @@ const slice = createSlice({
     courseStatus: 'loading',
     courseId: null,
     tabs: [],
-    // toastBodyText: null,
-    // toastBodyLink: null,
-    // toastHeader: '',
-    // proctoringPanelStatus: 'loading',
   },
   reducers: {
     fetchTabDenied: (state, { payload }) => {

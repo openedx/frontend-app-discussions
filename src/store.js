@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { courseTabsReducer } from './components/NavigationBar/data/slice';
+import { courseTabsReducer } from './components/NavigationBar/data';
 import { blocksReducer } from './data/slices';
 import { cohortsReducer } from './discussions/cohorts/data';
 import { commentsReducer } from './discussions/comments/data';
