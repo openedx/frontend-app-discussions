@@ -6,6 +6,11 @@ const messages = defineMessages({
     defaultMessage: 'Actions menu',
     description: 'Alt-text for dropdown button for actions related to a post or comment',
   },
+  backAlt: {
+    id: 'discussions.actions.back.alt',
+    defaultMessage: 'Back',
+    description: 'Text on button for back to posts list',
+  },
   editAction: {
     id: 'discussions.actions.edit',
     defaultMessage: 'Edit',

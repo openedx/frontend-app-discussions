@@ -91,6 +91,11 @@ export function useIsOnDesktop() {
   return windowSize.width >= breakpoints.large.minWidth;
 }
 
+export function useIsOnXLDesktop() {
+  const windowSize = useWindowSize();
+  return windowSize.width >= breakpoints.extraLarge.minWidth;
+}
+
 /**
  * Given an element this attempts to get the height of the entire UI.
  *
