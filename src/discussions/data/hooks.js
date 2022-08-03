@@ -148,11 +148,12 @@ export function useContainerSizeForParent(refContainer) {
 export const useAlertBannerVisible = (content) => {
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
-  const currentUser = getAuthenticatedUser().username;
+  const userIsContentAuthor = getAuthenticatedUser().username === content.author;
 
   return (
-    (content.abuseFlagged)
-    || (reasonCodesEnabled && (userIsPrivileged || currentUser === content.author) && content.lastEdit?.reason)
-    || (reasonCodesEnabled && content.closed)
+    (reasonCodesEnabled
+      && (userIsPrivileged || userIsContentAuthor)
+      && (content.lastEdit?.reason || content.closed)
+    ) || content.abuseFlagged
   );
 };

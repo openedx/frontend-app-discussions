@@ -20,7 +20,7 @@ function AlertBanner({
 }) {
   const userIsPrivileged = useSelector(selectUserIsPrivileged);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
-  const currentUser = getAuthenticatedUser().username;
+  const userIsContentAuthor = getAuthenticatedUser().username === content.author;
 
   return (
     <>
@@ -29,28 +29,32 @@ function AlertBanner({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      {reasonCodesEnabled && (userIsPrivileged || currentUser === content.author) && content.lastEdit?.reason && (
-        <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-          <div className="d-flex align-items-center">
-            {intl.formatMessage(messages.editedBy)}
-            <span className="ml-1 mr-3">
-              <AuthorLabel author={content.lastEdit.editorUsername} />
-            </span>
-            {intl.formatMessage(messages.reason)}:&nbsp;{content.lastEdit.reason}
-          </div>
-        </Alert>
-      )}
-      {reasonCodesEnabled && content.closed && (
-        <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-          <div className="d-flex align-items-center">
-            {intl.formatMessage(messages.closedBy)}
-            <span className="ml-1 ">
-              <AuthorLabel author={content.closedBy} />
-            </span>
-            <span className="mx-1" />
-            {intl.formatMessage(messages.reason)}:&nbsp;{content.closeReason}
-          </div>
-        </Alert>
+      {reasonCodesEnabled && (userIsPrivileged || userIsContentAuthor) && (
+        <>
+          {content.lastEdit?.reason && (
+            <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
+              <div className="d-flex align-items-center">
+                {intl.formatMessage(messages.editedBy)}
+                <span className="ml-1 mr-3">
+                  <AuthorLabel author={content.lastEdit.editorUsername} />
+                </span>
+                {intl.formatMessage(messages.reason)}:&nbsp;{content.lastEdit.reason}
+              </div>
+            </Alert>
+          )}
+          {content.closed && (
+            <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
+              <div className="d-flex align-items-center">
+                {intl.formatMessage(messages.closedBy)}
+                <span className="ml-1 ">
+                  <AuthorLabel author={content.closedBy} />
+                </span>
+                <span className="mx-1" />
+                {intl.formatMessage(messages.reason)}:&nbsp;{content.closeReason}
+              </div>
+            </Alert>
+          )}
+        </>
       )}
     </>
   );
