@@ -1,6 +1,6 @@
 export TRANSIFEX_RESOURCE = frontend-app-discussions
 transifex_resource = frontend-app-discussions
-transifex_langs = "ar,fr,es_419,zh_CN"
+transifex_langs = "ar,fr,es_419,zh_CN,tr_TR,pl,fr_CA,fr_FR,de_DE,it_IT"
 
 transifex_utils = ./node_modules/.bin/transifex-utils.js
 i18n = ./src/i18n
