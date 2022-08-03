@@ -18,7 +18,6 @@ export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
  * @returns {Promise<{}>}
  */
 export async function getLearners(courseId, params) {
-  debugger;
   const url = `${coursesApiUrl}${courseId}/activity_stats/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
