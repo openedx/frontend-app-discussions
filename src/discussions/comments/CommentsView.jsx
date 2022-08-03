@@ -114,7 +114,7 @@ function CommentsView({ intl }) {
   const thread = usePost(postId);
   const dispatch = useDispatch();
   if (!thread) {
-    dispatch(fetchThread(postId));
+    dispatch(fetchThread(postId, true));
     return (
       <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );

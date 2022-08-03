@@ -55,8 +55,12 @@ const threadsSlice = createSlice({
         state.pages = [];
         state.author = payload.author;
       }
+      if (state.pages[payload.page - 1]) {
+        state.pages[payload.page - 1] = [...state.pages[payload.page - 1], ...payload.ids];
+      } else {
+        state.pages[payload.page - 1] = payload.ids;
+      }
       state.status = RequestStatus.SUCCESSFUL;
-      state.pages[payload.page - 1] = payload.ids;
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
       state.threadsInTopic = { ...state.threadsInTopic, ...payload.threadsInTopic };
       state.avatars = { ...state.avatars, ...payload.avatars };
@@ -76,6 +80,13 @@ const threadsSlice = createSlice({
     fetchThreadSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
+      state.avatars = { ...state.avatars, ...payload.avatars };
+    },
+    fetchThreadByDirectLinkSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.pages[payload.page - 1] = payload.ids;
+      state.threadsInTopic = { ...payload.threadsInTopic, ...state.threadsInTopic };
+      state.threadsById = { ...payload.threadsById, ...state.threadsById };
       state.avatars = { ...state.avatars, ...payload.avatars };
     },
     fetchThreadFailed: (state) => {
@@ -194,6 +205,7 @@ export const {
   fetchThreadsRequest,
   fetchThreadsSuccess,
   fetchThreadSuccess,
+  fetchThreadByDirectLinkSuccess,
   postThreadDenied,
   postThreadFailed,
   postThreadRequest,

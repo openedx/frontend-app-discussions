@@ -14,6 +14,7 @@ import {
   deleteThreadFailed,
   deleteThreadRequest,
   deleteThreadSuccess,
+  fetchThreadByDirectLinkSuccess,
   fetchThreadDenied,
   fetchThreadFailed,
   fetchThreadRequest,
@@ -148,12 +149,16 @@ export function fetchThreads(courseId, {
   };
 }
 
-export function fetchThread(threadId) {
+export function fetchThread(threadId, isDirectLinkPost = false) {
   return async (dispatch) => {
     try {
       dispatch(fetchThreadRequest({ threadId }));
       const data = await getThread(threadId);
-      dispatch(fetchThreadSuccess(normaliseThreads(camelCaseObject(data))));
+      if (isDirectLinkPost) {
+        dispatch(fetchThreadByDirectLinkSuccess({ ...normaliseThreads(camelCaseObject(data)), page: 1 }));
+      } else {
+        dispatch(fetchThreadSuccess(normaliseThreads(camelCaseObject(data))));
+      }
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadDenied());
