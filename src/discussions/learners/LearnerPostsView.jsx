@@ -20,9 +20,9 @@ import {
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
 import { discussionsPath } from '../utils';
-import { fetchUserPosts } from './data/thunks';
 import messages from './messages';
 import { selectconfigLoadingStatus, selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
+import { fetchThreads } from '../posts/data/thunks';
 
 function LearnerPostsView({ intl }) {
   const location = useLocation();
@@ -38,8 +38,9 @@ function LearnerPostsView({ intl }) {
   const configStatus = useSelector(selectconfigLoadingStatus);
 
   const getUserPosts = (pageNumber = 1) => {
-    dispatch(fetchUserPosts(courseId, username, {
+    dispatch(fetchThreads(courseId, {
       page: pageNumber,
+      author: username,
       countFlagged: userIsPrivileged || userIsStaff,
     }));
   };
@@ -91,8 +92,8 @@ function LearnerPostsView({ intl }) {
       </div>
       <div className="bg-light-400 border border-light-300" />
       <div className="list-group list-group-flush">
-        {postInstances}
-        {posts?.length === 0 && <NoResults />}
+        {loadingStatus === RequestStatus.SUCCESSFUL && postInstances}
+        {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
