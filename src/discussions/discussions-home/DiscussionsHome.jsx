@@ -78,15 +78,12 @@ export default function DiscussionsHome() {
     >
       {!inIframe && <Header />}
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
-        {!inIframe
-          && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+        {!inIframe && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
         <div
           className="d-flex flex-row justify-content-between navbar fixed-top"
           style={{ boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}
         >
-          {!inContext && (
-            <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
-          )}
+          {!inContext && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
           <PostActionsBar inContext={inContext} />
         </div>
         <Route
@@ -97,18 +94,18 @@ export default function DiscussionsHome() {
           <DiscussionSidebar displaySidebar={displaySidebar} />
           {displayContentArea && <DiscussionContent />}
           {!displayContentArea && (
-          <Switch>
-            <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
-            <Route
-              path={Routes.POSTS.MY_POSTS}
-              render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
-            />
-            <Route
-              path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
-              render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
-            />
-            <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />
-          </Switch>
+            <Switch>
+              <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
+              <Route
+                path={Routes.POSTS.MY_POSTS}
+                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
+              />
+              <Route
+                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
+                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
+              />
+              <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />
+            </Switch>
           )}
         </div>
       </main>
