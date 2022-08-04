@@ -76,6 +76,7 @@ function AuthorLabel({
     ? (
       <Link
         data-testid="learner-posts-link"
+        id="learner-posts-link"
         to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
         className="text-decoration-none"
         style={{ width: 'fit-content' }}

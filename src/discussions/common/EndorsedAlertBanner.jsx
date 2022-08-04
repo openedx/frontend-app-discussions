@@ -44,7 +44,7 @@ function EndorsedAlertBanner({
                   : messages.endorsedLabel,
               )}
             </span>
-            <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} />
+            <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} linkToProfile />
             {timeago.format(content.endorsedAt, intl.locale)}
           </span>
         </div>
