@@ -1,0 +1,47 @@
+@import "@edx/brand/paragon/fonts.scss";
+@import "@edx/brand/paragon/variables.scss";
+@import "@edx/paragon/scss/core/core.scss";
+@import "@edx/brand/paragon/overrides.scss";
+
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+.course-tabs-navigation {
+  border-bottom: solid 1px #eaeaea;
+
+  .nav a,
+  .nav button {
+    &:hover {
+      background-color: $light-400;
+    }
+  }
+
+  .nav a {
+    &:not(.active):hover {
+      background-color: $light-400;
+      border-bottom: none;
+    }
+  }
+}
+
+.nav-underline-tabs {
+  margin: 0 0 -1px;
+
+  .nav-link {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    color: $gray-700;
+
+    // temporary until we can remove .btn class from dropdowns
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
+    &:hover,
+    &:focus,
+    &.active {
+      font-weight: $font-weight-normal;
+      color: $primary-500;
+      border-bottom-color: $primary-500;
+    }
+  }
+}
