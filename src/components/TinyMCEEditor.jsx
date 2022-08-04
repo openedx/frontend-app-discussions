@@ -33,6 +33,7 @@ import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 // eslint-disable-next-line import/no-unresolved
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
+import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 
 /* istanbul ignore next */
 const setup = (editor) => {
@@ -60,6 +61,11 @@ export default function TinyMCEEditor(props) {
   const uploadHandler = async (blobInfo, success, failure) => {
     try {
       const blob = blobInfo.blob();
+      const imageSize = blobInfo.blob().size / 1024;
+      if (imageSize > MAX_UPLOAD_FILE_SIZE) {
+        failure(`Images size should not exceed ${MAX_UPLOAD_FILE_SIZE} KB`);
+        return;
+      }
       const filename = blobInfo.filename();
       const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
       success(location);
