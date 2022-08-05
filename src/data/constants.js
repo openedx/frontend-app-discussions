@@ -199,6 +199,14 @@ export const Routes = {
   },
 };
 
+export const PostsPages = {
+  category: `${BASE_PATH}/category/:category/posts`,
+  topics: `${BASE_PATH}/topics/:topicId/posts`,
+  posts: `${BASE_PATH}/posts`,
+  'my-posts': `${BASE_PATH}/my-posts`,
+  learners: `${BASE_PATH}/learners/:learnerUsername/posts`,
+};
+
 export const ALL_ROUTES = []
   .concat([Routes.TOPICS.CATEGORY_POST, Routes.TOPICS.CATEGORY])
   .concat(Routes.COMMENTS.PATH)

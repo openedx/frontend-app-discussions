@@ -29,14 +29,14 @@ function EndorsedAlertBanner({
         style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
         icon={iconClass}
       >
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between flex-wrap">
           <strong className="lead">{intl.formatMessage(
             isQuestion
               ? messages.answer
               : messages.endorsed,
           )}
           </strong>
-          <span className="d-flex align-items-center mr-1">
+          <span className="d-flex align-items-center mr-1 flex-wrap">
             <span className="mr-2">
               {intl.formatMessage(
                 isQuestion

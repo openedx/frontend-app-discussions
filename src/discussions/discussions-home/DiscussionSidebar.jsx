@@ -7,20 +7,25 @@ import {
 } from 'react-router';
 
 import { Routes } from '../../data/constants';
+import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
 
 export default function DiscussionSidebar({ displaySidebar }) {
   const location = useLocation();
+  const isOnDesktop = useIsOnDesktop();
+  const isOnXLDesktop = useIsOnXLDesktop();
 
   return (
     <div
       className={classNames('flex-column', {
         'd-none': !displaySidebar,
-        'd-flex w-25 w-xs-100 w-lg-25 h-100 overflow-auto': displaySidebar,
+        'd-flex h-100 overflow-auto': displaySidebar,
+        'w-100': !isOnDesktop,
+        'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'w-25 sidebar-XL-width': isOnXLDesktop,
       })}
-      style={{ minWidth: '29rem' }}
       data-testid="sidebar"
     >
       <Switch>

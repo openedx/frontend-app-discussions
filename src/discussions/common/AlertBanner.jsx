@@ -33,7 +33,7 @@ function AlertBanner({
         <>
           {content.lastEdit?.reason && (
             <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center flex-wrap">
                 {intl.formatMessage(messages.editedBy)}
                 <span className="ml-1 mr-3">
                   <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile />
@@ -44,7 +44,7 @@ function AlertBanner({
           )}
           {content.closed && (
             <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center flex-wrap">
                 {intl.formatMessage(messages.closedBy)}
                 <span className="ml-1 ">
                   <AuthorLabel author={content.closedBy} linkToProfile />
