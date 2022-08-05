@@ -8,8 +8,10 @@ import {
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
+import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectconfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
+import NoResults from '../posts/NoResults';
 import {
   learnersLoadingStatus,
   selectAllLearners,
@@ -17,6 +19,7 @@ import {
   selectLearnerSorting,
   selectUsernameSearch,
 } from './data/selectors';
+import { setUsernameSearch } from './data/slices';
 import { fetchLearners } from './data/thunks';
 import { LearnerCard, LearnerFilterBar } from './learner';
 import messages from './messages';
@@ -55,7 +58,8 @@ function LearnersView({ intl }) {
 
   return (
     <div className="d-flex flex-column border-right border-light-300 h-100">
-      <LearnerFilterBar />
+      { !usernameSearch && <LearnerFilterBar /> }
+      { usernameSearch && <SearchInfo text={usernameSearch} count={learners.length} onClear={() => dispatch(setUsernameSearch(''))} /> }
       <div className="list-group list-group-flush learner">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
@@ -65,9 +69,12 @@ function LearnersView({ intl }) {
           }}
         />
         )}
-        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learnersTabEnabled && learners.map((learner) => (
-          <LearnerCard learner={learner} key={learner.username} courseId={courseId} />
-        ))}
+        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL
+          && learnersTabEnabled
+          && learners.map((learner, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <LearnerCard learner={learner} key={index} courseId={courseId} />
+          ))}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
@@ -79,6 +86,7 @@ function LearnersView({ intl }) {
             </Button>
           )
         )}
+        { usernameSearch !== '' && learners.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       </div>
     </div>
   );

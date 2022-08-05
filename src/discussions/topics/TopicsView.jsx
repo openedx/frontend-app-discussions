@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import SearchInfo from '../../components/SearchInfo';
-import { DiscussionProvider } from '../../data/constants';
+import { DiscussionProvider, RequestStatus } from '../../data/constants';
 import { selectSequences } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
+import NoResults from '../posts/NoResults';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
 import { setFilter, setTopicsCount } from './data/slices';
 import { fetchCourseTopics } from './data/thunks';
@@ -71,6 +72,7 @@ function TopicsView() {
   const topicFilter = useSelector(selectTopicFilter);
   const topicsSelector = useSelector(({ topics }) => topics);
   const filteredTopicsCount = useSelector(({ topics }) => topics.results.count);
+  const loadingStatus = useSelector(({ topics }) => topics.status);
   const { courseId } = useContext(DiscussionContext);
   const dispatch = useDispatch();
 
@@ -87,18 +89,23 @@ function TopicsView() {
   }, [topicFilter]);
 
   return (
-    <div
-      className="discussion-topics d-flex flex-column card"
-      data-testid="topics-view"
-    >
-      {
-        topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
-      }
-      <div className="list-group list-group-flush">
-        <CourseWideTopics />
-        {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
-        {provider === DiscussionProvider.LEGACY && <LegacyCoursewareTopics />}
+    <div>
+      <div
+        className="discussion-topics d-flex flex-column card"
+        data-testid="topics-view"
+      >
+        {
+          topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
+        }
+        <div className="list-group list-group-flush">
+          <CourseWideTopics />
+          {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
+          {provider === DiscussionProvider.LEGACY && <LegacyCoursewareTopics />}
+        </div>
       </div>
+      {
+        filteredTopicsCount === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />
+      }
     </div>
   );
 }

@@ -14,7 +14,7 @@ function SearchInfo({
   onClear,
 }) {
   return (
-    <div className="d-flex flex-row">
+    <div className="d-flex flex-row border-bottom">
       <Icon src={Search} className="justify-content-start ml-3.5 mr-2 mb-2 mt-2.5" />
       <Button variant="" size="inline">
         {intl.formatMessage(messages.searchInfo, { count, text })}
