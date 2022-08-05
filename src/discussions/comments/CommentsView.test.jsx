@@ -160,9 +160,10 @@ describe('CommentsView', () => {
     it('should show and hide the editor', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      const addResponseButtons = screen.getAllByRole('button', { name: /add a response/i });
       await act(async () => {
         fireEvent.click(
-          screen.getByRole('button', { name: /add a response/i }),
+          addResponseButtons[0],
         );
       });
       expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
@@ -171,15 +172,17 @@ describe('CommentsView', () => {
       });
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
     });
+
     it('should allow posting a response', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+      const responseButtons = screen.getAllByRole('button', { name: /add a response/i });
       await act(async () => {
         fireEvent.click(
-          screen.getByRole('button', { name: /add a response/i }),
+          responseButtons[0],
         );
       });
-      act(() => {
+      await act(() => {
         fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });
       });
 
@@ -191,6 +194,7 @@ describe('CommentsView', () => {
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
       await waitFor(async () => expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument());
     });
+
     it('should allow posting a comment', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
