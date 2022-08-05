@@ -1,29 +1,22 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath } from '../../utils';
-import { selectLearnerLastLogin } from '../data/selectors';
-import messages from '../messages';
 import LearnerAvatar from './LearnerAvatar';
 import LearnerFooter from './LearnerFooter';
 import { learnerShape } from './proptypes';
 
 function LearnerCard({
   learner,
-  intl,
   courseId,
 }) {
   const { inContext, learnerUsername } = useContext(DiscussionContext);
-  const learnerLastLogin = useSelector(selectLearnerLastLogin(learner.username));
-  const lastActiveTime = timeago.format(new Date(learnerLastLogin), intl.locale);
   const linkUrl = discussionsPath(Routes.LEARNERS.POSTS, {
     0: inContext ? 'in-context' : undefined,
     learnerUsername: learner.username,
@@ -52,19 +45,6 @@ function LearnerCard({
                 {learner.username}
               </div>
             </div>
-            {learnerLastLogin && (
-            <div className="d-flex align-items-center flex-fill">
-              <div
-                className="text-gray-500 font-style-normal font-family-inter"
-                style={{
-                  lineHeight: '20px',
-                  fontSize: '12px',
-                }}
-              >
-                {intl.formatMessage(messages.lastActive, { lastActiveTime })}
-              </div>
-            </div>
-            )}
             <LearnerFooter learner={learner} />
           </div>
         </div>
@@ -75,7 +55,6 @@ function LearnerCard({
 
 LearnerCard.propTypes = {
   learner: learnerShape.isRequired,
-  intl: intlShape.isRequired,
   courseId: PropTypes.string.isRequired,
 };
 
