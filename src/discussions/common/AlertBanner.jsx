@@ -36,7 +36,7 @@ function AlertBanner({
               <div className="d-flex align-items-center">
                 {intl.formatMessage(messages.editedBy)}
                 <span className="ml-1 mr-3">
-                  <AuthorLabel author={content.lastEdit.editorUsername} />
+                  <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile />
                 </span>
                 {intl.formatMessage(messages.reason)}:&nbsp;{content.lastEdit.reason}
               </div>
@@ -47,7 +47,7 @@ function AlertBanner({
               <div className="d-flex align-items-center">
                 {intl.formatMessage(messages.closedBy)}
                 <span className="ml-1 ">
-                  <AuthorLabel author={content.closedBy} />
+                  <AuthorLabel author={content.closedBy} linkToProfile />
                 </span>
                 <span className="mx-1" />
                 {intl.formatMessage(messages.reason)}:&nbsp;{content.closeReason}

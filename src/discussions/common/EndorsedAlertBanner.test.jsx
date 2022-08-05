@@ -8,6 +8,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../comments/messages';
+import { DiscussionContext } from './context';
 import EndorsedAlertBanner from './EndorsedAlertBanner';
 
 import '../comments/data/__factories__';
@@ -26,10 +27,14 @@ function renderComponent(
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <EndorsedAlertBanner
-          content={content}
-          postType={postType}
-        />
+        <DiscussionContext.Provider
+          value={{ courseId: 'course-v1:edX+DemoX+Demo_Course' }}
+        >
+          <EndorsedAlertBanner
+            content={content}
+            postType={postType}
+          />
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );

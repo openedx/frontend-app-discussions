@@ -9,6 +9,7 @@ import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../comments/messages';
 import AlertBanner from './AlertBanner';
+import { DiscussionContext } from './context';
 
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
@@ -26,9 +27,13 @@ function renderComponent(
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <AlertBanner
-          content={content}
-        />
+        <DiscussionContext.Provider
+          value={{ courseId: 'course-v1:edX+TestX+Test_Course' }}
+        >
+          <AlertBanner
+            content={content}
+          />
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
@@ -53,7 +58,7 @@ describe.each([
     label: 'edited content',
     type: 'thread',
     postType: null,
-    props: { last_edit: { reason: 'test-reason', editorUsername: 'editor-user' } },
+    props: { closed: false, last_edit: { reason: 'test-reason', editorUsername: 'editor-user' } },
     expectText: [messages.editedBy.defaultMessage, messages.reason.defaultMessage, 'editor-user', 'test-reason'],
   },
   {

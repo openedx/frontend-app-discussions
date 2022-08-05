@@ -7,6 +7,7 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
+import { DiscussionContext } from '../../common/context';
 import CommentHeader from './CommentHeader';
 
 let store;
@@ -15,7 +16,11 @@ function renderComponent(comment, postType, actionHandlers) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <CommentHeader comment={comment} postType={postType} actionHandlers={actionHandlers} />
+        <DiscussionContext.Provider
+          value={{ courseId: 'course-v1:edX+TestX+Test_Course' }}
+        >
+          <CommentHeader comment={comment} postType={postType} actionHandlers={actionHandlers} />
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );

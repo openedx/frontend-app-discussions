@@ -112,6 +112,7 @@ function PostHeader({
             author={post.author || intl.formatMessage(messages.anonymous)}
             authorLabel={post.authorLabel}
             labelColor={authorLabelColor && `text-${authorLabelColor}`}
+            linkToProfile
           />
         </div>
       </div>

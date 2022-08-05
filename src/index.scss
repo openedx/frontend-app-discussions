@@ -111,3 +111,10 @@ $fa-font-path: "~font-awesome/fonts";
 header nav.nav.secondary-menu-container {
   z-index: 10000;
 }
+
+#learner-posts-link {
+  color: inherit;
+  span[role=heading]:hover {
+    text-decoration: underline;
+  }
+}
