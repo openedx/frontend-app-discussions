@@ -72,7 +72,7 @@ function AuthorLabel({
     </div>
   );
 
-  return linkToProfile
+  return linkToProfile && author
     ? (
       <Link
         data-testid="learner-posts-link"

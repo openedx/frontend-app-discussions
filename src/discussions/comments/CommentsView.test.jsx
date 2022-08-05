@@ -12,6 +12,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { DiscussionContext } from '../common/context';
 import { courseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
@@ -81,16 +82,20 @@ function renderComponent(postId) {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
-          <DiscussionContent />
-          <Route
-            path="*"
-            render={({ location }) => {
-              testLocation = location;
-              return null;
-            }}
-          />
-        </MemoryRouter>
+        <DiscussionContext.Provider
+          value={{ courseId }}
+        >
+          <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
+            <DiscussionContent />
+            <Route
+              path="*"
+              render={({ location }) => {
+                testLocation = location;
+                return null;
+              }}
+            />
+          </MemoryRouter>
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
