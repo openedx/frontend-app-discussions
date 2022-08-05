@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
 
+import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 import { uploadFile } from '../discussions/posts/data/api';
 
 import 'tinymce/plugins/code';
@@ -60,6 +61,11 @@ export default function TinyMCEEditor(props) {
   const uploadHandler = async (blobInfo, success, failure) => {
     try {
       const blob = blobInfo.blob();
+      const imageSize = blobInfo.blob().size / 1024;
+      if (imageSize > MAX_UPLOAD_FILE_SIZE) {
+        failure(`Images size should not exceed ${MAX_UPLOAD_FILE_SIZE} KB`);
+        return;
+      }
       const filename = blobInfo.filename();
       const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
       success(location);

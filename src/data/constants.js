@@ -206,3 +206,5 @@ export const ALL_ROUTES = []
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])
   .concat([Routes.LEARNERS.POSTS, Routes.LEARNERS.PATH])
   .concat([Routes.DISCUSSIONS.PATH]);
+
+export const MAX_UPLOAD_FILE_SIZE = 1024;
