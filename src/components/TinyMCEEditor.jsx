@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
 
+import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 import { uploadFile } from '../discussions/posts/data/api';
 
 import 'tinymce/plugins/code';
@@ -33,7 +34,6 @@ import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 // eslint-disable-next-line import/no-unresolved
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
-import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 
 /* istanbul ignore next */
 const setup = (editor) => {
