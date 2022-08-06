@@ -54,8 +54,7 @@ function LearnerPostsView({ intl }) {
       // Add a spacing after the group of pinned posts
       return (
         <React.Fragment key={post.id}>
-          <div className="p-1 bg-light-400" />
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />
+          <PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab showDivider />
         </React.Fragment>
       );
     }

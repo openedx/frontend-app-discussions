@@ -22,6 +22,8 @@ function PostLink({
   isSelected,
   intl,
   learnerTab,
+  showDivider,
+  idx,
 }) {
   const {
     page,
@@ -41,20 +43,24 @@ function PostLink({
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
+
   return (
+
     <Link
       className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
       to={linkUrl}
-      aria-current={isSelected(post.id) ? 'page' : undefined}
       onClick={() => isSelected(post.id)}
       style={{ lineHeight: '21px' }}
-      role="listitem"
+      aria-current={isSelected(post.id) ? 'page' : undefined}
+      role="option"
+      tabindex={(isSelected(post.id) || idx === 0) ? 0 : -1}
     >
+      {showDivider && <div className="p-1 bg-light-400" /> }
       <div
         className={
-          classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
-            { 'bg-light-300': post.read })
-        }
+            classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
+              { 'bg-light-300': post.read })
+          }
         style={post.id === postId ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
@@ -66,33 +72,33 @@ function PostLink({
             <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
               <div
                 className={
-                  classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
-                    { 'font-weight-bolder': !post.read })
+                    classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
+                      { 'font-weight-bolder': !post.read })
                   }
               >
                 {post.title}
               </div>
 
               {showAnsweredBadge && (
-                <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
-                  {intl.formatMessage(messages.answered)}
-                  <span className="sr-only">{' '}answered</span>
-                </Badge>
+              <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
+                {intl.formatMessage(messages.answered)}
+                <span className="sr-only">{' '}answered</span>
+              </Badge>
               )}
 
               {postReported && (
-                <Badge
-                  variant="danger"
-                  data-testid="reported-post"
-                  className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-                >
-                  {intl.formatMessage(messages.contentReported)}
-                  <span className="sr-only">{' '}reported</span>
-                </Badge>
+              <Badge
+                variant="danger"
+                data-testid="reported-post"
+                className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+              >
+                {intl.formatMessage(messages.contentReported)}
+                <span className="sr-only">{' '}reported</span>
+              </Badge>
               )}
 
               {post.pinned && (
-                <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
+              <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
               )}
             </div>
           </div>
@@ -124,10 +130,14 @@ PostLink.propTypes = {
   isSelected: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
   learnerTab: PropTypes.bool,
+  showDivider: PropTypes.bool,
+  idx: PropTypes.number,
 };
 
 PostLink.defaultProps = {
   learnerTab: false,
+  showDivider: false,
+  idx: -1,
 };
 
 export default injectIntl(PostLink);
