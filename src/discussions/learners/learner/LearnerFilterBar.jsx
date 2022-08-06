@@ -22,8 +22,10 @@ const ActionItem = ({
 }) => (
   <label
     htmlFor={id}
-    className="focus border-bottom-0 d-flex align-items-center w-100 py-2 m-0 font-weight-500"
+    className="focus border-bottom-0 d-flex align-items-center w-100 py-2 m-0 font-weight-500 filter-menu"
     data-testid={value === selected ? 'selected' : null}
+    style={{ cursor: 'pointer' }}
+    aria-checked={value === selected}
   >
     <Icon src={Check} className={classNames('text-success mr-2', { invisible: value !== selected })} />
     <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex={0}>
@@ -56,7 +58,6 @@ function LearnerFilterBar({
     if (name === 'sort') {
       dispatch(setSortedBy(value));
     }
-    setOpen(false);
   };
 
   return (

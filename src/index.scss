@@ -126,3 +126,7 @@ header nav.nav.secondary-menu-container {
 .sidebar-XL-width {
   min-width: 29rem;
 }
+
+.filter-menu:focus-within {
+  background-color: #e9e6e4 !important;
+}

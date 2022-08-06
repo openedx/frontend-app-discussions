@@ -59,13 +59,27 @@ function PostsView() {
     postsListComponent = <AllPostsList />;
   }
 
+  const handleKeyDown = (event) => {
+    const { key } = event;
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
+    const option = event.target;
+
+    let selectedOption;
+    if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
+    if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
+
+    if (selectedOption) {
+      selectedOption.focus();
+    }
+  };
+
   return (
     <div className="discussion-posts d-flex flex-column">
       {
         searchString && <SearchInfo count={resultsFound} text={searchString} onClear={() => dispatch(setSearchQuery(''))} />
       }
       <PostFilterBar filterSelfPosts={showOwnPosts} />
-      <div className="list-group list-group-flush" role="list">
+      <div className="list-group list-group-flush" role="list" onKeyDown={e => handleKeyDown(e)}>
         {postsListComponent}
       </div>
     </div>
