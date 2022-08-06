@@ -76,7 +76,8 @@ function DiscussionCommentsView({
         {comments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} />
         ))}
-
+        {!!comments.length
+          && <ResponseEditor postId={postId} addWrappingDiv />}
         {hasMorePages && !isLoading && (
           <Button
             onClick={handleLoadMoreResponses}
