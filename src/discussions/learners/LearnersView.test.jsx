@@ -85,7 +85,6 @@ describe('LearnersView', () => {
       await act(async () => {
         await renderComponent();
       });
-      expect(screen.queryAllByText(/Last active/i, { exact: false }).length).toBeGreaterThan(0);
     });
   });
 });
