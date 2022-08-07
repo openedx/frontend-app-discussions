@@ -1,4 +1,6 @@
 {
+  "navigation.course.tabs.label": "Course Material",
+  "learn.course.tabs.navigation.overflow.menu": "More...",
   "discussions.comments.comment.addResponse": "Add a response",
   "discussions.comments.comment.addComment": "Add a comment",
   "discussions.comments.comment.abuseFlaggedMessage": "Content reported for staff to review",
