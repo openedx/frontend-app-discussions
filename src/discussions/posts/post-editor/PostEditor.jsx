@@ -47,16 +47,16 @@ function DiscussionPostType({
 }) {
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
-    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
+    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-2 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
       <Card
         className={classNames('border-2', {
           'border-primary': selected,
           'border-light-400': !selected,
         })}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', width: '14.25rem' }}
       >
-        <Card.Section className="p-3 d-flex flex-column align-items-center">
+        <Card.Section className="py-3 px-10px d-flex flex-column align-items-center">
           <span className="text-primary-300 mb-0.5">{icon}</span>
           <span className="text-gray-700 mb-0.5">{type}</span>
           <span className="x-small text-gray-500">{description}</span>
@@ -235,14 +235,14 @@ function PostEditor({
         handleChange,
       }) => (
         <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
-          <h3 className="mb-4">
+          <h3 className="mb-3">
             {editExisting
               ? intl.formatMessage(messages.editPostHeading)
               : intl.formatMessage(messages.addPostHeading)}
           </h3>
           <Form.RadioSet
             name="postType"
-            className="d-flex flex-row"
+            className="d-flex flex-row flex-wrap"
             value={values.postType}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -289,7 +289,7 @@ function PostEditor({
                 ))}
               </Form.Control>
             </Form.Group>
-            {!canSelectCohort(values.topic) && (
+            {canSelectCohort(values.topic) && (
             <Form.Group className="w-100 ml-3 mb-0">
               <Form.Control
                 className="m-0"
