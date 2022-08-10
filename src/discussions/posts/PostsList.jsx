@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+import uniqBy from 'lodash/uniqBy';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -54,7 +55,9 @@ function PostsList({ posts, topics, intl }) {
   const checkIsSelected = (id) => window.location.pathname.includes(id);
 
   let lastPinnedIdx = null;
-  const postInstances = posts && posts.map((post, idx) => {
+  const sortedPosts = uniqBy(posts, 'id').sort((a, b) => b.pinned - a.pinned);
+
+  const postInstances = sortedPosts.map((post, idx) => {
     if (post.pinned && lastPinnedIdx !== false) {
       lastPinnedIdx = idx;
     } else if (lastPinnedIdx != null && lastPinnedIdx !== false) {
