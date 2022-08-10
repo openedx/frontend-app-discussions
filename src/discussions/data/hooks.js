@@ -87,8 +87,7 @@ export function useRedirectToThread(courseId) {
 }
 
 export function useIsOnDesktop() {
-  const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.large.minWidth;
+  return window.outerWidth >= breakpoints.large.minWidth;
 }
 
 export function useIsOnXLDesktop() {
