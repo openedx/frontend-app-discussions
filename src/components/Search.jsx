@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,8 +18,22 @@ function Search({ intl }) {
   const { page } = useContext(DiscussionContext);
   const postSearch = useSelector(({ threads }) => threads.filters.search);
   const topicSearch = useSelector(({ topics }) => topics.filter);
+  const learnerSearch = useSelector(({ learners }) => learners.usernameSearch);
   const isPostSearch = ['posts', 'my-posts'].includes(page);
+  const isTopicSearch = 'topics'.includes(page);
   let searchValue = '';
+
+  const currentValue = useMemo(() => {
+    let value = '';
+    if (isPostSearch) {
+      value = postSearch;
+    } else if (isTopicSearch) {
+      value = topicSearch;
+    } else {
+      value = learnerSearch;
+    }
+    return value;
+  }, [isPostSearch, isTopicSearch, learnerSearch]);
 
   const onClear = () => {
     dispatch(setSearchQuery(''));
@@ -48,7 +62,7 @@ function Search({ intl }) {
         onClear={onClear}
         onChange={onChange}
         onSubmit={onSubmit}
-        value={isPostSearch ? postSearch : topicSearch}
+        value={currentValue}
       >
         <SearchField.Label />
         <SearchField.Input

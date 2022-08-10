@@ -6,18 +6,21 @@ import { selectAreThreadsFiltered } from '../data/selectors';
 import messages from '../messages';
 
 function NoResults({ intl }) {
-  const isFiltered = useSelector(selectAreThreadsFiltered);
+  const postsFiltered = useSelector(selectAreThreadsFiltered);
+  const topicsFilter = useSelector(({ topics }) => topics.filter);
   const filters = useSelector((state) => state.threads.filters);
+  const learnersFilter = useSelector(({ learners }) => learners.usernameSearch);
+  const isFiltered = postsFiltered || (topicsFilter !== '') || (learnersFilter !== null);
 
   let helpMessage = messages.removeFilters;
   if (!isFiltered) {
     return null;
-  } if (filters.search) {
+  } if (filters.search || topicsFilter || learnersFilter) {
     helpMessage = messages.removeKeywords;
   }
 
   return (
-    <div className="h-100 mt-5 align-self-center w-50 d-flex flex-column justify-content-center text-center">
+    <div className="h-100 mt-5 align-self-center mx-auto w-50 d-flex flex-column justify-content-center text-center">
       <h4>{intl.formatMessage(messages.noResultsFound)}</h4>
       <small>{intl.formatMessage(helpMessage)}</small>
     </div>
