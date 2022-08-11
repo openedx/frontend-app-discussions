@@ -171,6 +171,11 @@ const messages = defineMessages({
     defaultMessage: '{count} replies for the response added',
     description: 'Text added for screen reader to understand nesting replies.',
   },
+  time: {
+    id: 'discussion.comment.time',
+    defaultMessage: '{time} ago',
+    description: 'Time text for endorse banner',
+  },
 });
 
 export default messages;

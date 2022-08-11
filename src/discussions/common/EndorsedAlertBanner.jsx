@@ -11,12 +11,14 @@ import { ThreadType } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../comments/messages';
 import AuthorLabel from './AuthorLabel';
+import timeLocale from './time-locale';
 
 function EndorsedAlertBanner({
   intl,
   content,
   postType,
 }) {
+  timeago.register('time-locale', timeLocale);
   const isQuestion = postType === ThreadType.QUESTION;
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
   const iconClass = isQuestion ? CheckCircle : Verified;
@@ -45,7 +47,7 @@ function EndorsedAlertBanner({
               )}
             </span>
             <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} linkToProfile />
-            {timeago.format(content.endorsedAt, intl.locale)}
+            {intl.formatMessage(messages.time, { time: timeago.format(content.endorsedAt, 'time-locale') })}
           </span>
         </div>
       </Alert>
