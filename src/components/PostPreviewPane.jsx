@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button } from '@edx/paragon';
+import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
 import messages from '../discussions/posts/post-editor/messages';
@@ -16,9 +16,20 @@ function PostPreviewPane({
   return (
     <>
       {showPreviewPane && (
-        <div className={`p-2 bg-light-200 rounded shadow-sm post-preview ${isPost ? 'mt-3 mb-5.5' : 'my-3'}`} style={{ maxHeight: '200px', overflow: 'scroll' }}>
-          <Close onClick={() => setShowPreviewPane(false)} className="float-right text-primary-500 mb" />
-          <HTMLLoader htmlNode={htmlNode} />
+        <div
+          className={`p-2 bg-light-200 rounded box-shadow-down-1 post-preview ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
+          style={{ maxHeight: '200px', overflow: 'scroll' }}
+        >
+          <IconButton
+            onClick={() => setShowPreviewPane(false)}
+            alt={intl.formatMessage(messages.actionsAlt)}
+            src={Close}
+            iconAs={Icon}
+            size="inline"
+            className="float-right p-3"
+            iconClassNames="icon-size"
+          />
+          <HTMLLoader htmlNode={htmlNode} cssClassName="text-primary" />
         </div>
       )}
       <div className="d-flex justify-content-end">
@@ -28,7 +39,7 @@ function PostPreviewPane({
             variant="link"
             size="md"
             onClick={() => setShowPreviewPane(true)}
-            className={`text-primary-500 ${editExisting && 'mb-4.5'}`}
+            className={`text-primary-500 px-0 ${editExisting && 'mb-4.5'}`}
           >
             {intl.formatMessage(messages.showPreviewButton)}
           </Button>

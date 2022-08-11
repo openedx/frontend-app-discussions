@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,12 +47,18 @@ function DiscussionPostType({
 }) {
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
-    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
+    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-2 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
-      <Card className={selected ? 'border border-primary border-2' : ''} isClickable>
-        <Card.Section className="p-3 d-flex flex-column align-items-center">
-          <span className="text-gray-900">{icon}</span>
-          <span>{type}</span>
+      <Card
+        className={classNames('border-2', {
+          'border-primary': selected,
+          'border-light-400': !selected,
+        })}
+        style={{ cursor: 'pointer', width: '14.25rem' }}
+      >
+        <Card.Section className="py-3 px-10px d-flex flex-column align-items-center">
+          <span className="text-primary-300 mb-0.5">{icon}</span>
+          <span className="text-gray-700 mb-0.5">{type}</span>
           <span className="x-small text-gray-500">{description}</span>
         </Card.Section>
       </Card>
@@ -227,15 +234,15 @@ function PostEditor({
         handleBlur,
         handleChange,
       }) => (
-        <Form className="m-4 card p-4" onSubmit={handleSubmit}>
-          <h3>
+        <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
+          <h3 className="mb-3">
             {editExisting
               ? intl.formatMessage(messages.editPostHeading)
               : intl.formatMessage(messages.addPostHeading)}
           </h3>
           <Form.RadioSet
             name="postType"
-            className="d-flex flex-row my-3"
+            className="d-flex flex-row flex-wrap"
             value={values.postType}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -256,9 +263,10 @@ function PostEditor({
               description={intl.formatMessage(messages.questionDescription)}
             />
           </Form.RadioSet>
-          <div className="py-3">
-            <Form.Group className="w-50 d-inline-block pr-2">
+          <div className="d-flex flex-row my-4.5 justify-content-between">
+            <Form.Group className="w-100 m-0">
               <Form.Control
+                className="m-0"
                 name="topic"
                 as="select"
                 value={values.topic}
@@ -282,8 +290,9 @@ function PostEditor({
               </Form.Control>
             </Form.Group>
             {canSelectCohort(values.topic) && (
-            <Form.Group className="w-50 d-inline-block pl-2">
+            <Form.Group className="w-100 ml-3 mb-0">
               <Form.Control
+                className="m-0"
                 name="cohort"
                 as="select"
                 value={values.cohort}
@@ -300,16 +309,17 @@ function PostEditor({
             </Form.Group>
             )}
           </div>
-          <div className="border-bottom my-1" />
-          <div className="d-flex flex-row py-2 mt-4 justify-content-between">
+          <div className="border-bottom border-light-400" />
+          <div className="d-flex flex-row my-4.5 justify-content-between">
             <Form.Group
-              className="w-100"
+              className="w-100 m-0"
               isInvalid={isFormikFieldInvalid('title', {
                 errors,
                 touched,
               })}
             >
               <Form.Control
+                className="m-0"
                 name="title"
                 type="text"
                 onChange={handleChange}
@@ -322,7 +332,7 @@ function PostEditor({
             </Form.Group>
             {canDisplayEditReason && (
               <Form.Group
-                className="w-100"
+                className="w-100 ml-3 mb-0"
                 isInvalid={isFormikFieldInvalid('editReasonCode', {
                   errors,
                   touched,
@@ -347,7 +357,7 @@ function PostEditor({
               </Form.Group>
             )}
           </div>
-          <div className="py-2">
+          <div className="mb-2">
             <TinyMCEEditor
               onInit={
                 /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
@@ -365,39 +375,37 @@ function PostEditor({
 
           <PostPreviewPane htmlNode={values.comment} isPost editExisting={editExisting} />
 
-          <div className="d-flex flex-row mt-n4.5 w-75">
-            {!editExisting
-              && (
-                <>
+          <div className="d-flex flex-row mt-n4.5 w-75 text-primary">
+            {!editExisting && (
+              <>
+                <Form.Group>
+                  <Form.Checkbox
+                    name="follow"
+                    checked={values.follow}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="mr-4.5"
+                  >
+                    {intl.formatMessage(messages.followPost)}
+                  </Form.Checkbox>
+                </Form.Group>
+                {allowAnonymousToPeers && (
                   <Form.Group>
                     <Form.Checkbox
-                      name="follow"
-                      checked={values.follow}
+                      name="anonymousToPeers"
+                      checked={values.anonymousToPeers}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="mr-4"
                     >
-                      {intl.formatMessage(messages.followPost)}
+                      {intl.formatMessage(messages.anonymousToPeersPost)}
                     </Form.Checkbox>
                   </Form.Group>
-                  {allowAnonymousToPeers
-                  && (
-                    <Form.Group>
-                      <Form.Checkbox
-                        name="anonymousToPeers"
-                        checked={values.anonymousToPeers}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      >
-                        {intl.formatMessage(messages.anonymousToPeersPost)}
-                      </Form.Checkbox>
-                    </Form.Group>
-                  )}
-                </>
-              )}
+                )}
+              </>
+            )}
           </div>
 
-          <div className="d-flex justify-content-end">
+          <div className="d-flex justify-content-end mt-2.5">
             <Button
               variant="outline-primary"
               onClick={hideEditor}

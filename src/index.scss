@@ -96,6 +96,11 @@ $fa-font-path: "~font-awesome/fonts";
   padding-bottom: 10px;
 }
 
+.px-10px {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .question-icon-size {
   width: 1.625rem;
   height: 1.625rem;
@@ -132,4 +137,15 @@ header nav.nav.secondary-menu-container {
 
 .filter-menu:focus-within {
   background-color: #e9e6e4 !important;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.post-form {
+  input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+  }
 }
