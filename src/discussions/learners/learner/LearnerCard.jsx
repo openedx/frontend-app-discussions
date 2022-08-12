@@ -45,7 +45,7 @@ function LearnerCard({
                 {learner.username}
               </div>
             </div>
-            <LearnerFooter learner={learner} />
+            {learner.threads === null ? null : <LearnerFooter learner={learner} /> }
           </div>
         </div>
       </div>
