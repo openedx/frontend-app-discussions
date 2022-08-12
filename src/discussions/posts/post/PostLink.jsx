@@ -45,83 +45,84 @@ function PostLink({
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
 
   return (
-
-    <Link
-      className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
-      to={linkUrl}
-      onClick={() => isSelected(post.id)}
-      style={{ lineHeight: '21px' }}
-      aria-current={isSelected(post.id) ? 'page' : undefined}
-      role="option"
-      tabindex={(isSelected(post.id) || idx === 0) ? 0 : -1}
-    >
-      {showDivider && <div className="p-1 bg-light-400" /> }
-      <div
-        className={
+    <>
+      {showDivider && <div className="p-1 bg-light-400" />}
+      <Link
+        className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
+        to={linkUrl}
+        onClick={() => isSelected(post.id)}
+        style={{ lineHeight: '21px' }}
+        aria-current={isSelected(post.id) ? 'page' : undefined}
+        role="option"
+        tabindex={(isSelected(post.id) || idx === 0) ? 0 : -1}
+      >
+        <div
+          className={
             classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
               { 'bg-light-300': post.read })
           }
-        style={post.id === postId ? {
-          borderRightWidth: '4px',
-          borderRightStyle: 'solid',
-        } : null}
-      >
-        <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={post.read} />
-        <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
-          <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
-            <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-              <div
-                className={
+          style={post.id === postId ? {
+            borderRightWidth: '4px',
+            borderRightStyle: 'solid',
+          } : null}
+        >
+          <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={post.read} />
+          <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
+            <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
+              <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
+                <div
+                  className={
                     classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
                       { 'font-weight-bolder': !post.read })
                   }
-              >
-                {post.title}
+                >
+                  {post.title}
+                </div>
+
+                {showAnsweredBadge && (
+                <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
+                  {intl.formatMessage(messages.answered)}
+                  <span className="sr-only">{' '}answered</span>
+                </Badge>
+                )}
+
+                {postReported && (
+                <Badge
+                  variant="danger"
+                  data-testid="reported-post"
+                  className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                >
+                  {intl.formatMessage(messages.contentReported)}
+                  <span className="sr-only">{' '}reported</span>
+                </Badge>
+                )}
+
+                {post.pinned && (
+                <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
+                )}
               </div>
-
-              {showAnsweredBadge && (
-              <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
-                {intl.formatMessage(messages.answered)}
-                <span className="sr-only">{' '}answered</span>
-              </Badge>
-              )}
-
-              {postReported && (
-              <Badge
-                variant="danger"
-                data-testid="reported-post"
-                className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-              >
-                {intl.formatMessage(messages.contentReported)}
-                <span className="sr-only">{' '}reported</span>
-              </Badge>
-              )}
-
-              {post.pinned && (
-              <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
-              )}
+            </div>
+            <AuthorLabel
+              author={post.author || intl.formatMessage(messages.anonymous)}
+              authorLabel={post.authorLabel}
+              labelColor={authorLabelColor && `text-${authorLabelColor}`}
+              linkToProfile={!learnerTab && post.author}
+            />
+            <div
+              className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
+              style={{ maxHeight: '1.5rem' }}
+            >
+              {isPostPreviewAvailable(post.previewBody)
+                ? post.previewBody
+                : intl.formatMessage(messages.postWithoutPreview)}
+            </div>
+            <div className="mt-1">
+              <PostFooter post={post} preview intl={intl} />
             </div>
           </div>
-          <AuthorLabel
-            author={post.author || intl.formatMessage(messages.anonymous)}
-            authorLabel={post.authorLabel}
-            labelColor={authorLabelColor && `text-${authorLabelColor}`}
-            linkToProfile={!learnerTab && post.author}
-          />
-          <div
-            className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
-            style={{ maxHeight: '1.5rem' }}
-          >
-            {isPostPreviewAvailable(post.previewBody)
-              ? post.previewBody
-              : intl.formatMessage(messages.postWithoutPreview)}
-          </div>
-          <div className="mt-1">
-            <PostFooter post={post} preview intl={intl} />
-          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </>
   );
 }
 
