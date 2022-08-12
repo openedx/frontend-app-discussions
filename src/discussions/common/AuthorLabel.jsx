@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -9,6 +10,7 @@ import { Icon } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
+import { selectLearnersTabEnabled } from '../data/selectors';
 import messages from '../messages';
 import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
@@ -22,6 +24,7 @@ function AuthorLabel({
 }) {
   const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
+  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   let icon = null;
   let authorLabelMessage = null;
 
@@ -72,7 +75,7 @@ function AuthorLabel({
     </div>
   );
 
-  return linkToProfile && author
+  return linkToProfile && author && learnersTabEnabled
     ? (
       <Link
         data-testid="learner-posts-link"
