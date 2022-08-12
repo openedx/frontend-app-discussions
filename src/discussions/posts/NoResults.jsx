@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -20,11 +21,17 @@ function NoResults({ intl }) {
   } if (topicsFilter) {
     helpMessage = messages.removeKeywordsOnly;
   }
+  const titleCssClasses = classNames(
+    { 'font-weight-normal text-primary-500': topicsFilter || learnersFilter },
+  );
+  const textCssClasses = classNames(
+    { 'font-weight-normal text-gray-700': topicsFilter || learnersFilter },
+  );
 
   return (
-    <div className="h-100 align-self-center mx-auto w-50 d-flex flex-column justify-content-center text-center">
-      <h4>{intl.formatMessage(messages.noResultsFound)}</h4>
-      <small>{intl.formatMessage(helpMessage)}</small>
+    <div className="h-100 mt-5 align-self-center mx-auto w-50 d-flex flex-column justify-content-center text-center">
+      <h4 className={titleCssClasses}>{intl.formatMessage(messages.noResultsFound)}</h4>
+      <small className={textCssClasses}>{intl.formatMessage(helpMessage)}</small>
     </div>
   );
 }
