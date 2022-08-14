@@ -1,4 +1,6 @@
 {
+  "navigation.course.tabs.label": "Course Material",
+  "learn.course.tabs.navigation.overflow.menu": "More...",
   "discussions.comments.comment.addResponse": "Agregar una respuesta",
   "discussions.comments.comment.addComment": "Agregar un comentario",
   "discussions.comments.comment.abuseFlaggedMessage": "Contenido informado para que el personal lo revise",
@@ -41,6 +43,7 @@
   "discussions.learner.reportedActivity": "Actividad reportada",
   "discussions.learner.sortFilterStatus": "Todos los alumnos por {sort, select, flagged {reported activity} actividad {most activity} }",
   "discussions.actions.button.alt": "Menú de acciones",
+  "discussions.actions.back.alt": "Back",
   "discussions.actions.unpin": "Desmarcar",
   "discussions.actions.close": "Cerrar",
   "discussions.actions.reopen": "Reabrir",
