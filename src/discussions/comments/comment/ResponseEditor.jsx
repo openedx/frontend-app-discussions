@@ -18,7 +18,7 @@ function ResponseEditor({
 
   return addingResponse
     ? (
-      <div className={classNames({ 'bg-white p-4': addWrappingDiv })}>
+      <div className={classNames({ 'bg-white p-4 mb-4 rounded': addWrappingDiv })}>
         <CommentEditor
           comment={{ threadId: postId }}
           edit={false}
