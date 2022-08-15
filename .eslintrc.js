@@ -7,6 +7,7 @@ module.exports = createConfig('eslint',
       'import/no-extraneous-dependencies': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
+      'jsx-a11y/no-access-key': 'off',
       'simple-import-sort/imports': [
         'error', {
           groups: [

@@ -77,7 +77,7 @@ export default function DiscussionsHome() {
     }}
     >
       {!inIframe && <Header />}
-      <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden">
+      <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden" id="main" tabIndex={-1}>
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
         <div
