@@ -116,8 +116,16 @@ $fa-font-path: "~font-awesome/fonts";
   margin-left: 17px;
 }
 
-header nav.nav.secondary-menu-container {
-  z-index: 10000;
+header {
+  .user-dropdown {
+    z-index: 10000;
+  }
+  .logo {
+    margin-right: 1rem;
+    img {
+      height: 1.75rem;
+    }
+  }
 }
 
 #learner-posts-link {
