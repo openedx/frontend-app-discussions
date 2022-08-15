@@ -55,6 +55,7 @@ const messages = defineMessages({
     defaultMessage: `{postType, select,
       discussion {Discussion}
       question {Question}
+      other {{postType}}
     } posted {relativeTime} by`,
     description: 'Timestamp for when a user posted the message followed by username. The relative time is already translated.',
   },
