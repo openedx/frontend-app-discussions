@@ -12,6 +12,9 @@ const slice = createSlice({
     courseStatus: 'loading',
     courseId: null,
     tabs: [],
+    courseTitle: null,
+    courseNumber: null,
+    org: null,
   },
   reducers: {
     fetchTabDenied: (state, { payload }) => {
@@ -31,6 +34,9 @@ const slice = createSlice({
       state.targetUserId = payload.targetUserId;
       state.tabs = payload.tabs;
       state.courseStatus = LOADED;
+      state.courseTitle = payload.courseTitle;
+      state.courseNumber = payload.courseNumber;
+      state.org = payload.org;
     },
   },
 });
