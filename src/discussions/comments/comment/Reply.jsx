@@ -75,7 +75,10 @@ function Reply({
             }}
           />
         </div>
-        <div className="bg-light-300 px-4 pb-2 pt-2.5 flex-fill">
+        <div
+          className="bg-light-300 px-4 pb-2 pt-2.5 flex-fill"
+          style={{ borderRadius: '0rem 0.375rem 0.375rem' }}
+        >
           <div className="d-flex flex-row justify-content-between align-items-center mb-0.5">
             <AuthorLabel author={reply.author} authorLabel={reply.authorLabel} labelColor={colorClass && `text-${colorClass}`} linkToProfile />
             <ActionsDropdown

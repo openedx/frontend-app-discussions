@@ -1,17 +1,23 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
 
 import { initializeMockApp } from '@edx/frontend-platform';
+import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
+import { executeThunk } from '../../../test-utils';
 import { DiscussionContext } from '../../common/context';
+import { courseConfigApiUrl } from '../../data/api';
+import { fetchCourseConfig } from '../../data/thunks';
 import PostLink from './PostLink';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 let store;
+let axiosMock;
 
 function renderComponent(post, learnerTab = false) {
   return render(
@@ -81,12 +87,17 @@ describe('Post username', () => {
       },
     });
     store = initializeStore();
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+      learners_tab_enabled: true,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   });
 
   it.each([
     true,
     false,
-  ])('is a clickable link %s', (leanerTab) => {
+  ])('is a clickable link %s', async (leanerTab) => {
     renderComponent(mockPost, leanerTab);
 
     if (leanerTab) {
