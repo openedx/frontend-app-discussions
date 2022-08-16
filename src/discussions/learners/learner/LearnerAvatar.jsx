@@ -9,8 +9,6 @@ import { learnerShape } from './proptypes';
 
 function LearnerAvatar({ learner }) {
   const learnerAvatar = useSelector(selectLearnerAvatar(learner.username));
-  console.log(learnerAvatar);
-
   return (
     <div className="mr-3 mt-1">
       <Avatar
