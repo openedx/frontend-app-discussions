@@ -93,8 +93,10 @@ function PostHeader({
   const hasAnyAlert = useAlertBannerVisible(post);
 
   return (
-    <div className={classNames('d-flex flex-fill mw-100', { 'mt-2': hasAnyAlert && !preview })} style={{ height: '2.625rem' }}>
-      <PostAvatar post={post} authorLabel={post.authorLabel} />
+    <div className={classNames('d-flex flex-fill mw-100', { 'mt-2': hasAnyAlert && !preview })}>
+      <div className="flex-shrink-0">
+        <PostAvatar post={post} authorLabel={post.authorLabel} />
+      </div>
       <div className="align-items-center d-flex flex-row">
         <div className="d-flex flex-column justify-content-start mw-100">
           {preview
