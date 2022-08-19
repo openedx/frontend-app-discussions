@@ -10,7 +10,7 @@ import { Button, Spinner } from '@edx/paragon';
 
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
-import { selectconfigLoadingStatus, selectUserIsPrivileged, selectUserIsStaff } from '../data/selectors';
+import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import messages from '../messages';
 import {
   selectThreadFilters, selectThreadNextPage, selectThreadSorting, threadsLoadingStatus,
@@ -31,7 +31,7 @@ function PostsList({ posts, topics, intl }) {
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
   const showOwnPosts = page === 'my-posts';
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
 
@@ -42,7 +42,7 @@ function PostsList({ posts, topics, intl }) {
       filters,
       page: pageNum,
       author: showOwnPosts ? authenticatedUser.username : null,
-      countFlagged: userIsPrivileged || userIsStaff,
+      countFlagged: userHasModerationPrivileges || userIsStaff,
     }))
   );
 

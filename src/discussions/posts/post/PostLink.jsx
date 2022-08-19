@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -11,6 +12,7 @@ import { PushPin } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
+import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import messages from './messages';
 import PostFooter from './PostFooter';
@@ -40,9 +42,12 @@ function PostLink({
     category,
     learnerUsername,
   });
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
+  const canSeeReportedBadge = (userHasModerationPrivileges || userIsGroupTa);
 
   return (
     <>
@@ -86,7 +91,7 @@ function PostLink({
                 </Badge>
                 )}
 
-                {postReported && (
+                {postReported && canSeeReportedBadge && (
                 <Badge
                   variant="danger"
                   data-testid="reported-post"

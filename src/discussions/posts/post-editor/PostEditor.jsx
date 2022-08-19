@@ -27,7 +27,8 @@ import {
   selectAnonymousPostingConfig,
   selectDivisionSettings,
   selectModerationSettings,
-  selectUserIsPrivileged,
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
 } from '../../data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
@@ -96,13 +97,14 @@ function PostEditor({
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const settings = useSelector(selectDivisionSettings);
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
-    && userIsPrivileged && post.author !== authenticatedUser.username
+    && (userHasModerationPrivileges || userIsGroupTa) && post?.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -112,7 +114,7 @@ function PostEditor({
   const canSelectCohort = (tId) => {
     // If the user isn't privileged, they can't edit the cohort.
     // If the topic is being edited the cohort can't be changed.
-    if (!userIsPrivileged || editExisting) {
+    if (!userHasModerationPrivileges && editExisting) {
       return false;
     }
     if (nonCoursewareIds.includes(tId)) {
@@ -166,7 +168,7 @@ function PostEditor({
   };
 
   useEffect(() => {
-    if (userIsPrivileged && isEmpty(cohorts)) {
+    if (userHasModerationPrivileges && isEmpty(cohorts)) {
       dispatch(fetchCourseCohorts(courseId));
     }
     if (editExisting) {

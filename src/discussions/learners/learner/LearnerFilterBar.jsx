@@ -9,7 +9,7 @@ import { Collapsible, Form, Icon } from '@edx/paragon';
 import { Check, Tune } from '@edx/paragon/icons';
 
 import { LearnersOrdering } from '../../../data/constants';
-import { selectUserIsPrivileged } from '../../data/selectors';
+import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { setSortedBy } from '../data';
 import { selectLearnerSorting } from '../data/selectors';
 import messages from '../messages';
@@ -48,7 +48,8 @@ function LearnerFilterBar({
   intl,
 }) {
   const dispatch = useDispatch();
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const currentSorting = useSelector(selectLearnerSorting());
   const [isOpen, setOpen] = useState(false);
 
@@ -94,7 +95,7 @@ function LearnerFilterBar({
                 value={LearnersOrdering.BY_LAST_ACTIVITY}
                 selected={currentSorting}
               />
-              {userIsPrivileged && (
+              {(userHasModerationPrivileges || userIsGroupTa) && (
                 <ActionItem
                   id="sort-reported"
                   label={intl.formatMessage(messages.reportedActivity)}

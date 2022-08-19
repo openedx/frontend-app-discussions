@@ -18,7 +18,7 @@ import {
 } from '../../../data/constants';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { selectUserIsPrivileged, selectUserIsStaff } from '../../data/selectors';
+import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import {
   setCohortFilter, setPostsTypeFilter, setSortedBy, setStatusFilter,
 } from '../data';
@@ -61,12 +61,12 @@ function PostFilterBar({
 }) {
   const dispatch = useDispatch();
   const { courseId } = useParams();
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const currentSorting = useSelector(selectThreadSorting());
   const currentFilters = useSelector(selectThreadFilters());
   const { status } = useSelector(state => state.cohorts);
   const cohorts = useSelector(selectCourseCohorts);
-  const userIsStaff = useSelector(selectUserIsStaff);
 
   const [isOpen, setOpen] = useState(false);
 
@@ -106,10 +106,10 @@ function PostFilterBar({
   };
 
   useEffect(() => {
-    if (userIsPrivileged && isEmpty(cohorts)) {
+    if (userHasModerationPrivileges && isEmpty(cohorts)) {
       dispatch(fetchCourseCohorts(courseId));
     }
-  }, [courseId, userIsPrivileged]);
+  }, [courseId, userHasModerationPrivileges]);
 
   return (
     <Collapsible.Advanced
@@ -187,7 +187,7 @@ function PostFilterBar({
                 value={PostsStatusFilter.FOLLOWING}
                 selected={currentFilters.status}
               />
-              {(userIsPrivileged || userIsStaff) && (
+              {(userHasModerationPrivileges || userIsGroupTa) && (
                 <ActionItem
                   id="status-reported"
                   label={intl.formatMessage(messages.filterReported)}
@@ -228,7 +228,7 @@ function PostFilterBar({
               />
             </Form.RadioSet>
           </div>
-          {userIsPrivileged && (
+          {userHasModerationPrivileges && (
             <>
               <div className="border-bottom my-2" />
               {status === RequestStatus.IN_PROGRESS ? (

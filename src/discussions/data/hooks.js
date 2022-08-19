@@ -15,7 +15,11 @@ import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, postMessageToParent } from '../utils';
 import {
-  selectAreThreadsFiltered, selectModerationSettings, selectPostThreadCount, selectUserIsPrivileged,
+  selectAreThreadsFiltered,
+  selectModerationSettings,
+  selectPostThreadCount,
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
@@ -150,13 +154,14 @@ export function useContainerSizeForParent(refContainer) {
 }
 
 export const useAlertBannerVisible = (content) => {
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
 
   return (
     (reasonCodesEnabled
-      && (userIsPrivileged || userIsContentAuthor)
+      && (userHasModerationPrivileges || userIsGroupTa || userIsContentAuthor)
       && (content.lastEdit?.reason || content.closed)
     ) || content.abuseFlagged
   );
