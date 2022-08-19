@@ -75,7 +75,7 @@ function AuthorLabel({
     </div>
   );
 
-  return linkToProfile && author && learnersTabEnabled
+  return linkToProfile && author && learnersTabEnabled && author !== messages.anonymous
     ? (
       <Link
         data-testid="learner-posts-link"
