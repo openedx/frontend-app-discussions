@@ -80,7 +80,7 @@ function LearnerPostsView({ intl }) {
       <div className="bg-light-400 border border-light-300" />
       <div className="list-group list-group-flush">
         {postInstances}
-        {posts?.length === 0 && <NoResults />}
+        {loadingStatus !== RequestStatus.IN_PROGRESS && posts?.length === 0 && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
