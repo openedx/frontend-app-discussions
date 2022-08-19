@@ -108,7 +108,7 @@ function getOuterHeight(element) {
   const elementContainerHeight = element.parentNode.clientHeight;
   // The difference between the body height and the container height is the size of the header footer etc.
   // Add to that the element's own height and we get the size the UI should be to fit everything.
-  return bodyHeight - elementContainerHeight + element.scrollHeight;
+  return bodyHeight - elementContainerHeight + element.scrollHeight + 10;
 }
 
 /**
