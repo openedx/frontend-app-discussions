@@ -15,8 +15,10 @@ function NoResults({ intl }) {
   let helpMessage = messages.removeFilters;
   if (!isFiltered) {
     return null;
-  } if (filters.search || topicsFilter || learnersFilter) {
+  } if (filters.search || learnersFilter) {
     helpMessage = messages.removeKeywords;
+  } if (topicsFilter) {
+    helpMessage = messages.removeKeywordsOnly;
   }
 
   return (

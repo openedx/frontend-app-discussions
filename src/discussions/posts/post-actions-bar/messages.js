@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
   clearSearch: {
     id: 'discussions.actionBar.clearSearch',
-    defaultMessage: 'Clear',
+    defaultMessage: 'Clear results',
     description: 'Button to clear search',
   },
   addAPost: {

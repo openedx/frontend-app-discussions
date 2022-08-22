@@ -128,6 +128,11 @@ const messages = defineMessages({
     defaultMessage: 'Try searching different keywords or removing some filters',
     description: 'Message shown on discussion sidebar if user searched with keywords.',
   },
+  removeKeywordsOnly: {
+    id: 'discussions.sidebar.removeKeywordsOnly',
+    defaultMessage: 'Try searching different keywords',
+    description: 'Message shown on discussion sidebar if user searched with keywords only.',
+  },
   removeFilters: {
     id: 'discussions.sidebar.removeFilters',
     defaultMessage: 'Try removing some filters',
