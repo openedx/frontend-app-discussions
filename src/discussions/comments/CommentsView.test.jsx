@@ -195,6 +195,12 @@ describe('CommentsView', () => {
       await waitFor(async () => expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument());
     });
 
+    it('should not allow posting a response on a closed post', async () => {
+      renderComponent(closedPostId);
+      await waitFor(() => screen.findByText('Thread-2', { exact: false }));
+      expect(screen.queryByRole('button', { name: /add a response/i })).not.toBeInTheDocument();
+    });
+
     it('should allow posting a comment', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));
@@ -215,6 +221,17 @@ describe('CommentsView', () => {
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
       await waitFor(async () => expect(await screen.findByText('testing123', { exact: false })).toBeInTheDocument());
     });
+
+    it('should not allow posting a comment on a closed post', async () => {
+      renderComponent(closedPostId);
+      await waitFor(() => screen.findByText('thread-2', { exact: false }));
+      await act(async () => {
+        expect(
+          screen.queryByRole('button', { name: /add a comment/i }),
+        ).not.toBeInTheDocument();
+      });
+    });
+
     it('should allow editing an existing comment', async () => {
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByText('comment number 1', { exact: false }));

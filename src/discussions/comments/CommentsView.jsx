@@ -58,6 +58,7 @@ function DiscussionCommentsView({
   postId,
   intl,
   endorsed,
+  isClosed,
 }) {
   const {
     comments,
@@ -74,9 +75,9 @@ function DiscussionCommentsView({
       </div>
       <div className="mx-4" role="list">
         {comments.map(comment => (
-          <Comment comment={comment} key={comment.id} postType={postType} />
+          <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
         ))}
-        {!!comments.length
+        {!!comments.length && !isClosed
           && <ResponseEditor postId={postId} addWrappingDiv />}
         {hasMorePages && !isLoading && (
           <Button
@@ -104,6 +105,7 @@ function DiscussionCommentsView({
 DiscussionCommentsView.propTypes = {
   postId: PropTypes.string.isRequired,
   postType: PropTypes.string.isRequired,
+  isClosed: PropTypes.bool.isRequired,
   intl: intlShape.isRequired,
   endorsed: PropTypes.oneOf([
     EndorsementStatus.ENDORSED, EndorsementStatus.UNENDORSED, EndorsementStatus.DISCUSSION,
@@ -124,7 +126,7 @@ function CommentsView({ intl }) {
     <>
       <div className="discussion-comments d-flex flex-column m-4 p-4.5 card">
         <Post post={thread} />
-        <ResponseEditor postId={postId} />
+        {!thread.closed && <ResponseEditor postId={postId} /> }
       </div>
       {thread.type === ThreadType.DISCUSSION
         && (
@@ -133,6 +135,7 @@ function CommentsView({ intl }) {
           intl={intl}
           postType={thread.type}
           endorsed={EndorsementStatus.DISCUSSION}
+          isClosed={thread.closed}
         />
         )}
       {thread.type === ThreadType.QUESTION && (
@@ -142,12 +145,14 @@ function CommentsView({ intl }) {
             intl={intl}
             postType={thread.type}
             endorsed={EndorsementStatus.ENDORSED}
+            isClosed={thread.closed}
           />
           <DiscussionCommentsView
             postId={postId}
             intl={intl}
             postType={thread.type}
             endorsed={EndorsementStatus.UNENDORSED}
+            isClosed={thread.closed}
           />
         </>
       )}

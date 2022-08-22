@@ -24,6 +24,7 @@ function Comment({
   postType,
   comment,
   showFullThread = true,
+  isClosedPost,
   intl,
 }) {
   const dispatch = useDispatch();
@@ -122,9 +123,14 @@ function Comment({
                 onCloseEditor={() => setReplying(false)}
               />
             ) : (
-              <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
-                {intl.formatMessage(messages.addComment)}
-              </Button>
+              <>
+                {!isClosedPost
+                  && (
+                  <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
+                    {intl.formatMessage(messages.addComment)}
+                  </Button>
+                  )}
+              </>
             )
           )}
         </div>
@@ -137,11 +143,13 @@ Comment.propTypes = {
   postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   comment: commentShape.isRequired,
   showFullThread: PropTypes.bool,
+  isClosedPost: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 
 Comment.defaultProps = {
   showFullThread: true,
+  isClosedPost: false,
 };
 
 export default injectIntl(Comment);

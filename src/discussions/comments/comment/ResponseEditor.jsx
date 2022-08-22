@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -15,6 +15,10 @@ function ResponseEditor({
   addWrappingDiv,
 }) {
   const [addingResponse, setAddingResponse] = useState(false);
+
+  useEffect(() => {
+    setAddingResponse(false);
+  }, [postId]);
 
   return addingResponse
     ? (

@@ -94,12 +94,12 @@ export default function TinyMCEEditor(props) {
         autosave_interval: '1s',
         autosave_restore_when_empty: true,
         plugins: 'autosave codesample link lists image imagetools code emoticons charmap',
-        toolbar: 'formatselect | bold italic underline'
+        toolbar: 'undo redo'
+          + ' | formatselect | bold italic underline'
           + ' | link blockquote openedx_code image'
           + ' | bullist numlist outdent indent'
           + ' | removeformat'
           + ' | openedx_html'
-          + ' | undo redo'
           + ' | emoticons'
           + ' | charmap',
         content_css: false,
