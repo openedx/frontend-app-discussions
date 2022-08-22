@@ -44,6 +44,7 @@ const learnersSlice = createSlice({
     },
     setUsernameSearch: (state, { payload }) => {
       state.usernameSearch = payload;
+      state.pages = [];
     },
   },
 });

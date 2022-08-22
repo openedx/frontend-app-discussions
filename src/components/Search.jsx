@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,18 +22,14 @@ function Search({ intl }) {
   const isPostSearch = ['posts', 'my-posts'].includes(page);
   const isTopicSearch = 'topics'.includes(page);
   let searchValue = '';
-
-  const currentValue = useMemo(() => {
-    let value = '';
-    if (isPostSearch) {
-      value = postSearch;
-    } else if (isTopicSearch) {
-      value = topicSearch;
-    } else {
-      value = learnerSearch;
-    }
-    return value;
-  }, [isPostSearch, isTopicSearch, learnerSearch]);
+  let currentValue = '';
+  if (isPostSearch) {
+    currentValue = postSearch;
+  } else if (isTopicSearch) {
+    currentValue = topicSearch;
+  } else {
+    currentValue = learnerSearch;
+  }
 
   const onClear = () => {
     dispatch(setSearchQuery(''));
