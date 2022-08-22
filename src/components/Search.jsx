@@ -46,6 +46,9 @@ function Search({ intl }) {
   };
 
   const onSubmit = (query) => {
+    if (query === '') {
+      return;
+    }
     if (isPostSearch) {
       dispatch(setSearchQuery(query));
     } else if (page === 'topics') {
@@ -69,7 +72,7 @@ function Search({ intl }) {
           style={{ paddingRight: '1rem' }}
           placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
         />
-        <span className="mt-auto mb-auto mr-2.5">
+        <span className="mt-auto mb-auto mr-2.5 pointer-cursor-hover">
           <Icon
             src={SearchIcon}
             onClick={() => onSubmit(searchValue)}
