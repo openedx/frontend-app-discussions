@@ -82,7 +82,7 @@ describe.each([
     });
     store = initializeStore({
       config: {
-        userIsPrivileged: true,
+        hasModerationPrivileges: true,
         reasonCodesEnabled: true,
       },
     });

@@ -23,8 +23,8 @@ function AlertBanner({
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
-  const isReportedCurrentUser = getAuthenticatedUser().username === content?.abuseFlaggedBy;
-  const canSeeReportedBanner = (userHasModerationPrivileges || userIsGroupTa || isReportedCurrentUser);
+  const isReportedByCurrentUser = getAuthenticatedUser().username === content?.abuseFlaggedBy;
+  const canSeeReportedBanner = (userHasModerationPrivileges || userIsGroupTa || isReportedByCurrentUser);
 
   return (
     <>

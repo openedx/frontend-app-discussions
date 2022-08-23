@@ -114,13 +114,14 @@ function PostEditor({
   const canSelectCohort = (tId) => {
     // If the user isn't privileged, they can't edit the cohort.
     // If the topic is being edited the cohort can't be changed.
-    if (!userHasModerationPrivileges && editExisting) {
+    if (!userHasModerationPrivileges) {
       return false;
     }
     if (nonCoursewareIds.includes(tId)) {
       return settings.dividedCourseWideDiscussions.includes(tId);
     }
-    return settings.alwaysDivideInlineDiscussions || settings.dividedInlineDiscussions.includes(tId);
+    const isCohorting = settings.alwaysDivideInlineDiscussions || settings.dividedInlineDiscussions.includes(tId);
+    return isCohorting;
   };
   const hideEditor = () => {
     if (editExisting) {

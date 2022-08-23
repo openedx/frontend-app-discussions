@@ -158,11 +158,12 @@ export const useAlertBannerVisible = (content) => {
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
+  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
+  const isReportedByCurrentUser = getAuthenticatedUser().username === content?.abuseFlaggedBy;
+  const canSeeReportedBanner = (userHasModerationPrivileges || userIsGroupTa || isReportedByCurrentUser);
 
   return (
-    (reasonCodesEnabled
-      && (userHasModerationPrivileges || userIsGroupTa || userIsContentAuthor)
-      && (content.lastEdit?.reason || content.closed)
-    ) || content.abuseFlagged
+    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (content.lastEdit?.reason || content.closed))
+    || (content.abuseFlagged && canSeeReportedBanner)
   );
 };
