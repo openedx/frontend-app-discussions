@@ -6,7 +6,7 @@ import {
 } from 'react-router';
 
 import Footer from '@edx/frontend-component-footer';
-import { LearningHeader as Header } from '@edx/frontend-component-header';
+import Header from '@edx/frontend-component-header';
 
 import { PostActionsBar } from '../../components';
 import { CourseTabsNavigation } from '../../components/NavigationBar';
@@ -50,10 +50,6 @@ export default function DiscussionsHome() {
 
   const isOnDesktop = useIsOnDesktop();
 
-  const { courseNumber, courseTitle, org } = useSelector(
-    (state) => state.courseTabs,
-  );
-
   if (displayContentArea) {
     // If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
     // However, for smaller screens or embeds, only show the sidebar if the content area isn't displayed.
@@ -80,7 +76,7 @@ export default function DiscussionsHome() {
       learnerUsername,
     }}
     >
-      {!inIframe && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
+      {!inIframe && <Header />}
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden" id="main" tabIndex="-1">
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}

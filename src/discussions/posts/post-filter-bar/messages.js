@@ -86,28 +86,23 @@ const messages = defineMessages({
     defaultMessage: `{own, select,
       false {All}
       true {Own}
-      other {{own}}
     } {status, select,
       statusAll {}
       statusUnread {unread}
       statusFollowing {followed}
       statusReported {reported}
       statusUnanswered {unanswered}
-      other {{status}}
     } {type, select,
       discussion {discussions}
       question {questions}
       all {posts}
-      other {{type}}
     } {cohortType, select,
         all {}
         group {in {cohort}}
-        other {{cohortType}}
     } by {sort, select,
       lastActivityAt {recent activity}
       commentCount {most activity}
       voteCount {most votes}
-      other {{sort}}
     }`,
     description: 'Status message showing current sorting and filtering status',
   },
