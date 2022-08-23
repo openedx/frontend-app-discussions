@@ -42,8 +42,7 @@ export default function DiscussionsHome() {
     learnerUsername,
   } = params;
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
-  const inIframe = new URLSearchParams(location.search).get('inIframe') !== null;
-
+  const inIframe = new URLSearchParams(location.search).get('inIframe')?.toLowerCase() === 'true';
   // Display the content area if we are currently viewing/editing a post or creating one.
   const displayContentArea = postId || postEditorVisible || (learnerUsername && postId);
   let displaySidebar = useSidebarVisible();
