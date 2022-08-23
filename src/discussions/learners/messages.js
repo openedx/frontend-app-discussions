@@ -43,7 +43,6 @@ const messages = defineMessages({
     defaultMessage: `All learners by {sort, select,
       flagged {reported activity}
       activity {most activity}
-      other {{sort}}
     }`,
     description: 'Text for current selected learners filter',
   },
