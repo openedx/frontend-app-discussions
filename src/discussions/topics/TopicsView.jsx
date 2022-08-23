@@ -95,7 +95,7 @@ function TopicsView() {
         data-testid="topics-view"
       >
         {
-          topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} onClear={() => dispatch(setFilter(''))} />
+          topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} loadingStatus={loadingStatus} onClear={() => dispatch(setFilter(''))} />
         }
         <div className="list-group list-group-flush">
           <CourseWideTopics />

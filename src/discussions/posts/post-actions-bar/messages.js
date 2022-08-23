@@ -25,6 +25,11 @@ const messages = defineMessages({
     defaultMessage: 'Showing {count} results for "{text}"',
     description: 'Message displayed when user performs a search',
   },
+  searchInfoSearching: {
+    id: 'discussions.actionBar.searchInfoSearching',
+    defaultMessage: 'Searching...',
+    description: 'Message displayed when user performs a search',
+  },
   clearSearch: {
     id: 'discussions.actionBar.clearSearch',
     defaultMessage: 'Clear',

@@ -47,6 +47,7 @@ function PostsView() {
   const dispatch = useDispatch();
   const searchString = useSelector(({ threads }) => threads.filters.search);
   const resultsFound = useSelector(({ threads }) => threads.totalThreads);
+  const loadingStatus = useSelector(({ threads }) => threads.status);
 
   let postsListComponent;
   const showOwnPosts = page === 'my-posts';
@@ -76,7 +77,7 @@ function PostsView() {
   return (
     <div className="discussion-posts d-flex flex-column">
       {
-        searchString && <SearchInfo count={resultsFound} text={searchString} onClear={() => dispatch(setSearchQuery(''))} />
+        searchString && <SearchInfo count={resultsFound} text={searchString} loadingStatus={loadingStatus} onClear={() => dispatch(setSearchQuery(''))} />
       }
       <PostFilterBar filterSelfPosts={showOwnPosts} />
       <div className="list-group list-group-flush" role="list" onKeyDown={e => handleKeyDown(e)}>
