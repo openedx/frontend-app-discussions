@@ -153,6 +153,11 @@ const messages = defineMessages({
     defaultMessage: 'Load more posts',
     description: 'Text on button for loading more posts by a user',
   },
+  anonymous: {
+    id: 'discussions.post.anonymous.author',
+    defaultMessage: 'anonymous',
+    description: 'Author name displayed when a post is anonymous',
+  },
 });
 
 export default messages;

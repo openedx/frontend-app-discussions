@@ -39,7 +39,7 @@ const ActionItem = ({
     aria-checked={value === selected}
   >
     <Icon src={Check} className={classNames('text-success mr-2', { invisible: value !== selected })} />
-    <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex={0}>
+    <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex="0">
       {label}
     </Form.Radio>
     <span aria-hidden className="text-truncate">

@@ -106,4 +106,16 @@ describe('Post username', () => {
       expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
     }
   });
+
+  it.each([
+    true,
+    false,
+  ])('is only clickable if user is not anonymous', async (isAnonymous) => {
+    renderComponent({ ...mockPost, author: isAnonymous ? null : 'test-user' });
+    if (isAnonymous) {
+      expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
+    } else {
+      expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
+    }
+  });
 });
