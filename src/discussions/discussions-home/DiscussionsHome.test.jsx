@@ -87,4 +87,36 @@ describe('DiscussionsHome', () => {
     await waitFor(() => expect(window.parent.postMessage).toHaveBeenCalled());
     window.parent = parent;
   });
+
+  describe.each([
+    {
+      queryParam: 'inIframe=True',
+      iframeView: true,
+    },
+    {
+      queryParam: 'inIframe=False',
+      iframeView: false,
+    },
+    {
+      queryParam: '',
+      iframeView: false,
+    },
+  ])(
+    'Header/Footer visibility',
+    ({
+      queryParam,
+      iframeView,
+    }) => {
+      test(`inIframe query param ${queryParam}`, async () => {
+        renderComponent(`/${courseId}/topics?${queryParam}`);
+        if (iframeView) {
+          expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+          expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument();
+        } else {
+          expect(screen.queryByRole('banner')).toBeInTheDocument();
+          expect(screen.queryByRole('contentinfo')).toBeInTheDocument();
+        }
+      });
+    },
+  );
 });
