@@ -10,7 +10,7 @@ import { Error } from '@edx/paragon/icons';
 
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../comments/messages';
-import { selectModerationSettings, selectUserIsPrivileged } from '../data/selectors';
+import { selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../data/selectors';
 import { postShape } from '../posts/post/proptypes';
 import AuthorLabel from './AuthorLabel';
 
@@ -18,18 +18,22 @@ function AlertBanner({
   intl,
   content,
 }) {
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
+  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
+  const isReportedByCurrentUser = getAuthenticatedUser().username === content?.abuseFlaggedBy;
+  const canSeeReportedBanner = (userHasModerationPrivileges || userIsGroupTa || isReportedByCurrentUser);
 
   return (
     <>
-      {content.abuseFlagged && (
+      {content.abuseFlagged && canSeeReportedBanner && (
         <Alert icon={Error} variant="danger" className="px-3 mb-2 py-10px shadow-none flex-fill">
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      {reasonCodesEnabled && (userIsPrivileged || userIsContentAuthor) && (
+      {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
         <>
           {content.lastEdit?.reason && (
             <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
@@ -50,7 +54,7 @@ function AlertBanner({
                   <AuthorLabel author={content.closedBy} linkToProfile />
                 </span>
                 <span className="mx-1" />
-                {intl.formatMessage(messages.reason)}:&nbsp;{content.closeReason}
+                {content.closeReason && (`${intl.formatMessage(messages.reason)}: ${content.closeReason}`)}
               </div>
             </Alert>
           )}

@@ -257,7 +257,7 @@ describe('CommentsView', () => {
 
     async function setupCourseConfig(reasonCodesEnabled = true) {
       axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-        user_is_privileged: true,
+        has_moderation_privileges: true,
         reason_codes_enabled: reasonCodesEnabled,
         editReasons: [
           { code: 'reason-1', label: 'reason 1' },

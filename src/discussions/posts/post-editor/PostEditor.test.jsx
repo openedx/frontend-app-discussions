@@ -151,8 +151,7 @@ describe('PostEditor', () => {
         config: {
           provider: 'legacy',
           userRoles: ['Student', 'Moderator'],
-          userIsPrivileged: true,
-          moderationSettings: {},
+          hasModerationPrivileges: true,
           settings: {
             dividedInlineDiscussions: dividedcw,
             dividedCourseWideDiscussions: dividedncw,
@@ -252,7 +251,7 @@ describe('PostEditor', () => {
       });
     });
     test('test unprivileged user', async () => {
-      await setupData({ userIsPrivileged: false });
+      await setupData({ hasModerationPrivileges: false });
       await renderComponent();
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
         act(() => {
@@ -271,9 +270,9 @@ describe('PostEditor', () => {
           .toBeInTheDocument();
       });
     });
-    test('edit existing post should not show cohort selector', async () => {
+    test('edit existing post should not show cohort selector to unprivileged users', async () => {
       const threadId = 'thread-1';
-      await setupData();
+      await setupData({ hasModerationPrivileges: false });
       axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
         .reply(200, Factory.build('thread'));
       await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
@@ -315,10 +314,13 @@ describe('PostEditor', () => {
   describe('Edit codes', () => {
     const threadId = 'thread-1';
     beforeEach(async () => {
+      const dividedncw = ['ncw-topic-2'];
+      const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
+
       store = initializeStore({
         config: {
           provider: 'legacy',
-          userIsPrivileged: true,
+          hasModerationPrivileges: true,
           reasonCodesEnabled: true,
           editReasons: [
             {
@@ -330,6 +332,10 @@ describe('PostEditor', () => {
               label: 'Reason 2',
             },
           ],
+          settings: {
+            dividedInlineDiscussions: dividedcw,
+            dividedCourseWideDiscussions: dividedncw,
+          },
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);

@@ -6,9 +6,11 @@ export const selectAnonymousPostingConfig = state => ({
   allowAnonymousToPeers: state.config.allowAnonymousToPeers,
 });
 
-export const selectUserIsPrivileged = state => state.config.userIsPrivileged;
+export const selectUserHasModerationPrivileges = state => state.config.hasModerationPrivileges;
 
 export const selectUserIsStaff = state => state.config.isUserAdmin;
+
+export const selectUserIsGroupTa = state => state.config.isGroupTa;
 
 export const selectconfigLoadingStatus = state => state.config.status;
 

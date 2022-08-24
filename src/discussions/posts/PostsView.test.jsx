@@ -88,7 +88,7 @@ describe('PostsView', () => {
 
     store = initializeStore({
       blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
-      config: { userIsPrivileged: true },
+      config: { hasModerationPrivileges: true },
     });
     store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();

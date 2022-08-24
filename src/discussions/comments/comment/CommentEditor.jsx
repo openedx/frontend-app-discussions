@@ -13,7 +13,11 @@ import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import PostPreviewPane from '../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../data/hooks';
-import { selectModerationSettings, selectUserIsPrivileged } from '../../data/selectors';
+import {
+  selectModerationSettings,
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
+} from '../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
 import { addComment, editComment } from '../data/thunks';
 import messages from '../messages';
@@ -26,11 +30,12 @@ function CommentEditor({
 }) {
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
-  const userIsPrivileged = useSelector(selectUserIsPrivileged);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
 
-  const canDisplayEditReason = (reasonCodesEnabled && userIsPrivileged
+  const canDisplayEditReason = (reasonCodesEnabled && (userHasModerationPrivileges || userIsGroupTa)
     && edit && comment.author !== authenticatedUser.username
   );
 

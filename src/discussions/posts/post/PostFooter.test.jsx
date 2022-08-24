@@ -57,7 +57,11 @@ describe('PostFooter', () => {
         roles: [],
       },
     });
-    store = initializeStore();
+    store = initializeStore({
+      config: {
+        hasModerationPrivileges: true,
+      },
+    });
   });
 
   it("shows 'x new' badge for new comments", () => {

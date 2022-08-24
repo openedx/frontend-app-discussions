@@ -4,6 +4,6 @@ Factory.define('config')
   .attrs({
     allow_anonymous: false,
     allow_anonymous_to_peers: false,
-    user_is_privileged: false,
+    has_moderation_privileges: false,
   })
-  .attr('user_roles', ['user_is_privileged'], (userIsPrivileged) => (userIsPrivileged ? ['Student', 'Moderator'] : ['Student']));
+  .attr('user_roles', ['has_moderation_privileges'], (hasModerationPrivileges) => (hasModerationPrivileges ? ['Student', 'Moderator'] : ['Student']));

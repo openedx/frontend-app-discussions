@@ -65,9 +65,15 @@ describe('PostFooter', () => {
       },
     });
     store = initializeStore();
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+      has_moderation_privileges: true,
+    });
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   });
 
-  it('has reported text only when abuseFlagged is true', () => {
+  it('has reported text only when abuseFlagged is true', async () => {
     renderComponent(mockPost);
     expect(screen.queryByTestId('reported-post')).toBeFalsy();
 
@@ -90,7 +96,9 @@ describe('Post username', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
       learners_tab_enabled: true,
+      has_moderation_privileges: true,
     });
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -20,6 +20,7 @@ import {
   StarOutline,
 } from '../../../components/icons';
 import timeLocale from '../../common/time-locale';
+import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
@@ -31,6 +32,7 @@ function PostFooter({
   preview,
 }) {
   const dispatch = useDispatch();
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   timeago.register('time-locale', timeLocale);
 
   return (
@@ -77,7 +79,7 @@ function PostFooter({
         </Badge>
       )}
       <div className="d-flex flex-fill justify-content-end align-items-center">
-        {post.groupId && (
+        {post.groupId && userHasModerationPrivileges && (
           <>
             <OverlayTrigger
               overlay={(
