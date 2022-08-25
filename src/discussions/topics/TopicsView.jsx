@@ -89,9 +89,9 @@ function TopicsView() {
   }, [topicFilter]);
 
   return (
-    <div>
+    <div className="d-flex flex-column flex-fill">
       <div
-        className="discussion-topics d-flex flex-column card"
+        className="discussion-topics card"
         data-testid="topics-view"
       >
         {
@@ -104,7 +104,10 @@ function TopicsView() {
         </div>
       </div>
       {
-        filteredTopicsCount === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />
+        filteredTopicsCount === 0
+        && loadingStatus === RequestStatus.SUCCESSFUL
+        && topicFilter !== ''
+        && <NoResults />
       }
     </div>
   );
