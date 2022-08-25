@@ -57,10 +57,18 @@ function LearnersView({ intl }) {
   };
 
   return (
-    <div className="d-flex flex-column border-right border-light-300 h-100">
-      { !usernameSearch && <LearnerFilterBar /> }
-      { usernameSearch && <SearchInfo text={usernameSearch} count={learners.length} loadingStatus={loadingStatus} onClear={() => dispatch(setUsernameSearch(''))} /> }
-      <div className="list-group list-group-flush learner flex-fill">
+    <div className="d-flex flex-column border-right border-light-400">
+      {!usernameSearch && <LearnerFilterBar /> }
+      <div className="border-bottom border-light-400" />
+      {usernameSearch && (
+        <SearchInfo
+          text={usernameSearch}
+          count={learners.length}
+          loadingStatus={loadingStatus}
+          onClear={() => dispatch(setUsernameSearch(''))}
+        />
+      )}
+      <div className="list-group list-group-flush learner" role="list">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
         <Redirect
           to={{

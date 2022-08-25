@@ -115,7 +115,7 @@ function PostFilterBar({
     <Collapsible.Advanced
       open={isOpen}
       onToggle={() => setOpen(!isOpen)}
-      className="collapsible-card-lg border-right-0"
+      className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
         <span className="text-primary-700 pr-4">

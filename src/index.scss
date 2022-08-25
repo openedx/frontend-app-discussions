@@ -161,3 +161,7 @@ header {
 .pointer-cursor-hover :hover{
   cursor: pointer;
 }
+
+.filter-bar:focus-visible, .filter-bar:focus {
+  outline: none;
+}

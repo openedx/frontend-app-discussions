@@ -80,6 +80,7 @@ function PostsView() {
         searchString && <SearchInfo count={resultsFound} text={searchString} loadingStatus={loadingStatus} onClear={() => dispatch(setSearchQuery(''))} />
       }
       <PostFilterBar filterSelfPosts={showOwnPosts} />
+      <div className="border-bottom border-light-400" />
       <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
         {postsListComponent}
       </div>
