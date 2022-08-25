@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 
-import uniqBy from 'lodash/uniqBy';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -12,6 +13,7 @@ import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import messages from '../messages';
+import { filterPosts } from '../utils';
 import {
   selectThreadFilters, selectThreadNextPage, selectThreadSorting, threadsLoadingStatus,
 } from './data/selectors';
@@ -53,28 +55,26 @@ function PostsList({ posts, topics, intl }) {
   }, [courseId, orderBy, filters, page, JSON.stringify(topics), configStatus]);
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);
+  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
+  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
 
-  let lastPinnedIdx = null;
-  const sortedPosts = uniqBy(posts, 'id').sort((a, b) => b.pinned - a.pinned);
-
-  const postInstances = sortedPosts.map((post, idx) => {
-    if (post.pinned && lastPinnedIdx !== false) {
-      lastPinnedIdx = idx;
-    } else if (lastPinnedIdx != null && lastPinnedIdx !== false) {
-      lastPinnedIdx = false;
-      // Add a spacing after the group of pinned posts
-      return (
-        <React.Fragment key={post.id}>
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} showDivider idx={idx} />
-        </React.Fragment>
-      );
-    }
-    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} idx={idx} />);
-  });
+  const postInstances = useCallback((sortedPosts) => (
+    sortedPosts.map((post, idx) => (
+      <PostLink
+        post={post}
+        key={post.id}
+        isSelected={checkIsSelected}
+        idx={idx}
+        showDivider={(sortedPosts.length - 1) !== idx}
+      />
+    ))
+  ), []);
 
   return (
     <>
-      {postInstances}
+      {postInstances(pinnedPosts)}
+      {pinnedPosts.length > 0 && <div className="pt-1 bg-light-500 border-top border-light-700" />}
+      {postInstances(unpinnedPosts)}
       {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS ? (
         <div className="d-flex justify-content-center p-4">

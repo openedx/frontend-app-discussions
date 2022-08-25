@@ -51,9 +51,12 @@ function PostLink({
 
   return (
     <>
-      {showDivider && <div className="p-1 bg-light-400" />}
       <Link
-        className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
+        className={
+          classNames('discussion-post p-0 text-decoration-none text-gray-900', {
+            'border-bottom border-light-400': showDivider,
+          })
+        }
         to={linkUrl}
         onClick={() => isSelected(post.id)}
         style={{ lineHeight: '21px' }}
@@ -142,7 +145,7 @@ PostLink.propTypes = {
 
 PostLink.defaultProps = {
   learnerTab: false,
-  showDivider: false,
+  showDivider: true,
   idx: -1,
 };
 
