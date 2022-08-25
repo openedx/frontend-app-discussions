@@ -2,11 +2,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import {
-  PostsStatusFilter,
-  RequestStatus,
-  ThreadOrdering,
-  ThreadType,
+  PostsStatusFilter, RequestStatus, ThreadOrdering, ThreadType,
 } from '../../../data/constants';
+
+const mergeThreadsInTopics = (dataFromState, dataFromPayload) => {
+  const mergedArray = [];
+  mergedArray.push(dataFromState);
+  mergedArray.push(dataFromPayload);
+  return mergedArray.reduce((acc, obj) => {
+    const keys = Object.keys(obj);
+    const values = Object.values(obj);
+    keys.forEach((key, index) => {
+      if (!acc[key]) { acc[key] = []; }
+      if (Array.isArray(acc[key])) { acc[key] = acc[key].concat(values[index]); } else { acc[key].push(values[index]); }
+      return acc;
+    });
+    return acc;
+  }, {});
+};
 
 const threadsSlice = createSlice({
   name: 'thread',
@@ -62,7 +75,7 @@ const threadsSlice = createSlice({
       }
       state.status = RequestStatus.SUCCESSFUL;
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
-      state.threadsInTopic = { ...state.threadsInTopic, ...payload.threadsInTopic };
+      state.threadsInTopic = mergeThreadsInTopics(state.threadsInTopic, payload.threadsInTopic);
       state.avatars = { ...state.avatars, ...payload.avatars };
       state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
       state.totalPages = payload.pagination.numPages;
