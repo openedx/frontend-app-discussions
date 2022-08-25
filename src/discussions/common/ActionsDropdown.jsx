@@ -8,11 +8,13 @@ import {
 } from '@edx/paragon';
 import { MoreHoriz } from '@edx/paragon/icons';
 
+import { useSelector } from 'react-redux';
 import { ContentActions } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../messages';
 import { postShape } from '../posts/post/proptypes';
-import { useActions } from '../utils';
+import { inBlackoutDateRange, useActions } from '../utils';
+import { selectBlackoutDate } from '../data/selectors';
 
 function ActionsDropdown({
   intl,
@@ -31,6 +33,11 @@ function ActionsDropdown({
       logError(`Unknown or unimplemented action ${action}`);
     }
   };
+  const blackoutDateRange = useSelector(selectBlackoutDate);
+  // Find and remove edit action if in blackout date range.
+  if (inBlackoutDateRange(blackoutDateRange)) {
+    actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
+  }
   return (
     <>
       <IconButton

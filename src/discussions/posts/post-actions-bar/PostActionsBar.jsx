@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
@@ -10,7 +10,8 @@ import {
 import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
-import { postMessageToParent } from '../../utils';
+import { selectBlackoutDate } from '../../data/selectors';
+import { inBlackoutDateRange, postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
 
@@ -24,6 +25,7 @@ function PostActionsBar({
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
   };
+  const blackoutDateRange = useSelector(selectBlackoutDate);
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">
       {!inContext && (
@@ -37,18 +39,21 @@ function PostActionsBar({
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-
-      <Button
-        variant={inContext ? 'plain' : 'brand'}
-        className="my-0"
-        onClick={() => dispatch(showPostEditor())}
-        size="sm"
-      >
-        {intl.formatMessage(messages.addAPost)}
-      </Button>
+      {
+        !inBlackoutDateRange(blackoutDateRange) && (
+          <Button
+            variant={inContext ? 'plain' : 'brand'}
+            className="my-0"
+            onClick={() => dispatch(showPostEditor())}
+            size="sm"
+          >
+            {intl.formatMessage(messages.addAPost)}
+          </Button>
+        )
+      }
       {inContext && (
         <>
-          <div className="border-right mr-3 ml-4" />
+          <div className="border-right mr-3 ml-4"/>
           <IconButton
             src={Close}
             iconAs={Icon}

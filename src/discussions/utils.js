@@ -229,10 +229,10 @@ export function postMessageToParent(type, payload = {}) {
 export const isPostPreviewAvailable = (htmlNode) => {
   const containsImage = htmlNode.match(/(<img((?:\\.|.)*)>)/);
   const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)/)
-                  || htmlNode.match(/(\[mathjax](.+?))+/)
-                  || htmlNode.match(/(\[mathjaxinline](.+?))+/)
-                  || htmlNode.match(/(\\\[(.+?))+/)
-                  || htmlNode.match(/(\\\((.+?))+/);
+    || htmlNode.match(/(\[mathjax](.+?))+/)
+    || htmlNode.match(/(\[mathjaxinline](.+?))+/)
+    || htmlNode.match(/(\\\[(.+?))+/)
+    || htmlNode.match(/(\\\((.+?))+/);
 
   if (containsImage || isLatex || htmlNode === '') {
     return false;
@@ -253,3 +253,25 @@ export const filterPosts = (posts, filterBy, sortBy = 'createdAt', order = 'desc
     post => (filterBy.startsWith('un') ? !post[filterBy.slice(2)] : post[filterBy]),
   ), [sortBy], [order],
 );
+
+/**
+ * Helper function to make a check if date is in given range
+ * @param {Date} date this date to be checked in range
+ * @param {Date} start start date
+ * @param {Date} end end date
+ */
+export function dateInDateRange(date, start, end) {
+  return date > start && date < end;
+}
+
+/**
+ * Helper function to make a check if date is in given range
+ * @param {array} blackoutDateRanges start date
+ * @return Boolean
+ */
+export function inBlackoutDateRange(blackoutDateRanges) {
+  const now = new Date();
+  return blackoutDateRanges.some(
+    (blackoutDateRange) => dateInDateRange(now, new Date(blackoutDateRange.start), new Date(blackoutDateRange.end)),
+  );
+}

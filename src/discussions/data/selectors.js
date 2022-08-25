@@ -18,6 +18,8 @@ export const selectLearnersTabEnabled = state => state.config.learnersTabEnabled
 
 export const selectDivisionSettings = state => state.config.settings;
 
+export const selectBlackoutDate = state => state.config.blackouts;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,
