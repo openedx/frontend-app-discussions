@@ -4,7 +4,7 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  Delete, Edit, Flag, Pin, QuestionAnswer, VerifiedBadge,
+  Delete, Edit, Pin, QuestionAnswer, Report, VerifiedBadge,
 } from '@edx/paragon/icons';
 
 import { ContentActions, Routes, ThreadType } from '../data/constants';
@@ -147,14 +147,14 @@ export const ACTIONS_LIST = [
   {
     id: 'report',
     action: ContentActions.REPORT,
-    icon: Flag,
+    icon: Report,
     label: messages.reportAction,
     conditions: { abuseFlagged: false },
   },
   {
     id: 'unreport',
     action: ContentActions.REPORT,
-    icon: Flag,
+    icon: Report,
     label: messages.unreportAction,
     conditions: { abuseFlagged: true },
   },
