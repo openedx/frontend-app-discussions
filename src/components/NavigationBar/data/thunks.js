@@ -20,6 +20,9 @@ export function fetchTab(courseId, rootSlug) {
         dispatch(fetchTabSuccess({
           courseId,
           tabs: courseHomeCourseMetadata.tabs,
+          org: courseHomeCourseMetadata.org,
+          courseNumber: courseHomeCourseMetadata.number,
+          courseTitle: courseHomeCourseMetadata.title,
         }));
       }
     } catch (e) {
