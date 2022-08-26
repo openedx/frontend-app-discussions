@@ -50,7 +50,8 @@ function PostFooter({
         src={post.following ? StarFilled : StarOutline}
         iconAs={Icon}
         alt="Follow"
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           dispatch(updateExistingThread(post.id, { following: !post.following }));
           return true;
         }}
