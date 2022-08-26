@@ -132,7 +132,8 @@ function Comment({
                     <Button
                       className="d-flex flex-grow mt-4.5"
                       variant="outline-primary"
-                      onClick={() => setReplying(true)}>
+                      onClick={() => setReplying(true)}
+                    >
                       {intl.formatMessage(messages.addComment)}
                     </Button>
                   )}

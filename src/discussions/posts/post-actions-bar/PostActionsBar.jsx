@@ -53,7 +53,7 @@ function PostActionsBar({
       }
       {inContext && (
         <>
-          <div className="border-right mr-3 ml-4"/>
+          <div className="border-right mr-3 ml-4" />
           <IconButton
             src={Close}
             iconAs={Icon}

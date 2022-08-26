@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { useSelector } from 'react-redux';
+
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
@@ -8,13 +10,12 @@ import {
 } from '@edx/paragon';
 import { MoreHoriz } from '@edx/paragon/icons';
 
-import { useSelector } from 'react-redux';
 import { ContentActions } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
+import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
-import { selectBlackoutDate } from '../data/selectors';
 
 function ActionsDropdown({
   intl,

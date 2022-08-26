@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button } from '@edx/paragon';
 
-import { useSelector } from 'react-redux';
-import messages from '../messages';
-import CommentEditor from './CommentEditor';
 import { selectBlackoutDate } from '../../data/selectors';
 import { inBlackoutDateRange } from '../../utils';
+import messages from '../messages';
+import CommentEditor from './CommentEditor';
 
 function ResponseEditor({
   postId,

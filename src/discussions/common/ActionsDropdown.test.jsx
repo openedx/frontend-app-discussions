@@ -9,13 +9,13 @@ import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@edx/fronte
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { ContentActions } from '../../data/constants';
+import { initializeStore } from '../../store';
 import messages from '../messages';
 import { ACTIONS_LIST } from '../utils';
 import ActionsDropdown from './ActionsDropdown';
 
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
-import { initializeStore } from "../../store";
 
 let store;
 
