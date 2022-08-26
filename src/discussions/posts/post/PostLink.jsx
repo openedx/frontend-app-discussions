@@ -47,7 +47,7 @@ function PostLink({
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
-  const canSeeReportedBadge = (userHasModerationPrivileges || userIsGroupTa);
+  const canSeeReportedBadge = postReported && (userHasModerationPrivileges || userIsGroupTa);
 
   return (
     <>
@@ -94,7 +94,7 @@ function PostLink({
                 </Badge>
                 )}
 
-                {postReported && canSeeReportedBadge && (
+                {canSeeReportedBadge && (
                 <Badge
                   variant="danger"
                   data-testid="reported-post"
@@ -106,7 +106,10 @@ function PostLink({
                 )}
 
                 {post.pinned && (
-                <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
+                <Icon
+                  src={PushPin}
+                  className={`icon-size ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                />
                 )}
               </div>
             </div>
