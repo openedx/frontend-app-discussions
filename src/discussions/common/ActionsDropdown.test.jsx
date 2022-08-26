@@ -15,6 +15,7 @@ import ActionsDropdown from './ActionsDropdown';
 
 import '../comments/data/__factories__';
 import '../posts/data/__factories__';
+import { initializeStore } from "../../store";
 
 let store;
 
@@ -126,6 +127,7 @@ describe('ActionsDropdown', () => {
         roles: [],
       },
     });
+    store = initializeStore();
   });
 
   it.each(buildTestContent())('can open drop down if enabled', async (commentOrPost) => {
