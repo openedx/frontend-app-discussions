@@ -73,7 +73,6 @@ function PostsList({ posts, topics, intl }) {
   return (
     <>
       {postInstances(pinnedPosts)}
-      {pinnedPosts.length > 0 && <div className="pt-1 bg-light-500 border-top border-light-700" />}
       {postInstances(unpinnedPosts)}
       {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS ? (

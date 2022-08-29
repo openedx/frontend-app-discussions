@@ -80,7 +80,6 @@ function LearnerPostsView({ intl }) {
       <div className="bg-light-400 border border-light-300" />
       <div className="list-group list-group-flush">
         {postInstances(pinnedPosts)}
-        {pinnedPosts.length > 0 && <div className="pt-1 bg-light-500 border-top border-light-700" />}
         {postInstances(unpinnedPosts)}
         {loadingStatus !== RequestStatus.IN_PROGRESS && posts?.length === 0 && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (

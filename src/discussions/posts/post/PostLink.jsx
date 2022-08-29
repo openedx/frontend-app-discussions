@@ -132,6 +132,7 @@ function PostLink({
             </div>
           </div>
         </div>
+        {!showDivider && post.pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
       </Link>
     </>
   );
