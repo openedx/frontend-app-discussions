@@ -127,7 +127,11 @@ const threadsSlice = createSlice({
     },
     updateThreadSuccess: (state, { payload }) => {
       state.postStatus = RequestStatus.SUCCESSFUL;
-      state.threadsById[payload.id] = { ...state.threadsById[payload.id], ...payload };
+      state.threadsById[payload.id] = {
+        ...state.threadsById[payload.id],
+        ...payload,
+        abuseFlaggedCount: state.threadsById[payload.id].abuseFlaggedCount || false,
+      };
       state.avatars = { ...state.avatars, ...payload.avatars };
       state.threadDraft = null;
     },
