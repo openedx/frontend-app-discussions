@@ -261,7 +261,7 @@ export const filterPosts = (posts, filterBy, sortBy = 'createdAt', order = 'desc
  * @param {Date} end end date
  */
 export function dateInDateRange(date, start, end) {
-  return date > start && date < end;
+  return date >= start && date <= end;
 }
 
 /**
