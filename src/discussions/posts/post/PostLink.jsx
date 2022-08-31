@@ -47,13 +47,16 @@ function PostLink({
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
-  const canSeeReportedBadge = (userHasModerationPrivileges || userIsGroupTa);
+  const canSeeReportedBadge = postReported && (userHasModerationPrivileges || userIsGroupTa);
 
   return (
     <>
-      {showDivider && <div className="p-1 bg-light-400" />}
       <Link
-        className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900"
+        className={
+          classNames('discussion-post p-0 text-decoration-none text-gray-900', {
+            'border-bottom border-light-400': showDivider,
+          })
+        }
         to={linkUrl}
         onClick={() => isSelected(post.id)}
         style={{ lineHeight: '21px' }}
@@ -91,7 +94,7 @@ function PostLink({
                 </Badge>
                 )}
 
-                {postReported && canSeeReportedBadge && (
+                {canSeeReportedBadge && (
                 <Badge
                   variant="danger"
                   data-testid="reported-post"
@@ -103,7 +106,10 @@ function PostLink({
                 )}
 
                 {post.pinned && (
-                <Icon src={PushPin} className={`icon-size ${postReported || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`} />
+                <Icon
+                  src={PushPin}
+                  className={`icon-size ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                />
                 )}
               </div>
             </div>
@@ -126,6 +132,7 @@ function PostLink({
             </div>
           </div>
         </div>
+        {!showDivider && post.pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
       </Link>
     </>
   );
@@ -142,7 +149,7 @@ PostLink.propTypes = {
 
 PostLink.defaultProps = {
   learnerTab: false,
-  showDivider: false,
+  showDivider: true,
   idx: -1,
 };
 

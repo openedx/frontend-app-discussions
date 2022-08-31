@@ -25,7 +25,7 @@ function LearnerCard({
 
   return (
     <Link
-      className="discussion-post list-group-item list-group-item-action p-0 text-decoration-none text-gray-900 mw-100"
+      className="discussion-post p-0 text-decoration-none text-gray-900 border-bottom border-light-400"
       to={linkUrl}
     >
       <div

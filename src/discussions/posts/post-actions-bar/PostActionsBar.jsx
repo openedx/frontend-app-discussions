@@ -29,6 +29,7 @@ function PostActionsBar({
       {!inContext && (
         <>
           <Search />
+          <div className="border-right border-light-400 mx-3" />
         </>
       )}
       {inContext && (
@@ -39,7 +40,7 @@ function PostActionsBar({
 
       <Button
         variant={inContext ? 'plain' : 'brand'}
-        className="ml-2 my-0"
+        className="my-0"
         onClick={() => dispatch(showPostEditor())}
         size="sm"
       >

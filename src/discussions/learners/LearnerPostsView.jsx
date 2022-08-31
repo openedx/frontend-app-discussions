@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +21,7 @@ import {
 } from '../posts/data/selectors';
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
-import { discussionsPath } from '../utils';
+import { discussionsPath, filterPosts } from '../utils';
 import { fetchUserPosts } from './data/thunks';
 import messages from './messages';
 
@@ -44,22 +46,20 @@ function LearnerPostsView({ intl }) {
   );
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);
+  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
+  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
 
-  let lastPinnedIdx = null;
-  const postInstances = posts?.map((post, idx) => {
-    if (post.pinned && lastPinnedIdx !== false) {
-      lastPinnedIdx = idx;
-    } else if (lastPinnedIdx != null && lastPinnedIdx !== false) {
-      lastPinnedIdx = false;
-      // Add a spacing after the group of pinned posts
-      return (
-        <React.Fragment key={post.id}>
-          <PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab showDivider />
-        </React.Fragment>
-      );
-    }
-    return (<PostLink post={post} key={post.id} isSelected={checkIsSelected} learnerTab />);
-  });
+  const postInstances = useCallback((sortedPosts) => (
+    sortedPosts.map((post, idx) => (
+      <PostLink
+        post={post}
+        key={post.id}
+        isSelected={checkIsSelected}
+        idx={idx}
+        showDivider={(sortedPosts.length - 1) !== idx}
+      />
+    ))
+  ), []);
 
   return (
     <div className="discussion-posts d-flex flex-column">
@@ -79,7 +79,8 @@ function LearnerPostsView({ intl }) {
       </div>
       <div className="bg-light-400 border border-light-300" />
       <div className="list-group list-group-flush">
-        {postInstances}
+        {postInstances(pinnedPosts)}
+        {postInstances(unpinnedPosts)}
         {loadingStatus !== RequestStatus.IN_PROGRESS && posts?.length === 0 && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
