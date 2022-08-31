@@ -8,7 +8,7 @@ import {
 } from 'react-router';
 
 import { RequestStatus, Routes } from '../../data/constants';
-import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
+import { useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab } from '../data/hooks';
 import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../data/selectors';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
@@ -21,7 +21,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const configStatus = useSelector(selectconfigLoadingStatus);
-
+  const redirectToLearnersTab = useShowLearnersTab();
   return (
     <div
       className={classNames('flex-column', {
@@ -39,16 +39,21 @@ export default function DiscussionSidebar({ displaySidebar }) {
           component={PostsView}
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+        {redirectToLearnersTab && (
         <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
+        )}
+        {redirectToLearnersTab && (
         <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
+        )}
+
         {configStatus === RequestStatus.SUCCESSFUL && (
-          <Redirect
-            from={Routes.DISCUSSIONS.PATH}
-            to={{
-              ...location,
-              pathname: (userHasModerationPrivileges || userIsGroupTa) ? Routes.POSTS.ALL_POSTS : Routes.POSTS.MY_POSTS,
-            }}
-          />
+        <Redirect
+          from={Routes.DISCUSSIONS.PATH}
+          to={{
+            ...location,
+            pathname: (userHasModerationPrivileges || userIsGroupTa) ? Routes.POSTS.ALL_POSTS : Routes.POSTS.MY_POSTS,
+          }}
+        />
         )}
       </Switch>
     </div>

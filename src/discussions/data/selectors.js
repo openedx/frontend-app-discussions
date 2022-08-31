@@ -16,6 +16,8 @@ export const selectconfigLoadingStatus = state => state.config.status;
 
 export const selectLearnersTabEnabled = state => state.config.learnersTabEnabled;
 
+export const selectUserRoles = state => state.config.userRoles;
+
 export const selectDivisionSettings = state => state.config.settings;
 
 export const selectModerationSettings = state => ({

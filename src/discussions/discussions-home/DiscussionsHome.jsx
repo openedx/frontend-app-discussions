@@ -13,7 +13,7 @@ import { CourseTabsNavigation } from '../../components/NavigationBar';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
-  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
+  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useShowLearnersTab, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider } from '../data/selectors';
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
@@ -34,6 +34,8 @@ export default function DiscussionsHome() {
 
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
+  const isRedirectToLearners = useShowLearnersTab();
+
   const {
     courseId,
     postId,
@@ -110,7 +112,7 @@ export default function DiscussionsHome() {
               path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
               render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
             />
-            <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />
+            {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
           </Switch>
           )}
         </div>

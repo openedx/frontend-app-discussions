@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -10,7 +9,7 @@ import { Icon } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
-import { selectLearnersTabEnabled } from '../data/selectors';
+import { useShowLearnersTab } from '../data/hooks';
 import messages from '../messages';
 import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
@@ -24,7 +23,6 @@ function AuthorLabel({
 }) {
   const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
-  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   let icon = null;
   let authorLabelMessage = null;
 
@@ -40,6 +38,9 @@ function AuthorLabel({
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
 
   const className = classNames('d-flex align-items-center', labelColor);
+
+  const showUserNameAsLink = useShowLearnersTab()
+      && linkToProfile && author && author !== messages.anonymous;
 
   const labelContents = (
     <div className={className}>
@@ -75,7 +76,7 @@ function AuthorLabel({
     </div>
   );
 
-  return linkToProfile && author && learnersTabEnabled && author !== messages.anonymous
+  return showUserNameAsLink
     ? (
       <Link
         data-testid="learner-posts-link"

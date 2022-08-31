@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useSelector } from 'react-redux';
 import { matchPath, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
@@ -8,13 +7,13 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
-import { selectLearnersTabEnabled } from '../../data/selectors';
+import { useShowLearnersTab } from '../../data/hooks';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
 
 function NavigationBar({ intl }) {
   const { courseId } = useParams();
-  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
+  const showLearnersTab = useShowLearnersTab();
 
   const navLinks = [
     {
@@ -31,7 +30,7 @@ function NavigationBar({ intl }) {
       labelMessage: messages.allTopics,
     },
   ];
-  if (learnersTabEnabled) {
+  if (showLearnersTab) {
     navLinks.push({
       route: Routes.LEARNERS.PATH,
       labelMessage: messages.learners,
