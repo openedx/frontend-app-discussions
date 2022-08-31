@@ -123,6 +123,11 @@ const messages = defineMessages({
     defaultMessage: 'No results found',
     description: 'Title on the discussion sidebar when there are now results after filtering',
   },
+  differentKeywords: {
+    id: 'discussions.sidebar.differentKeywords',
+    defaultMessage: 'Try searching different keywords',
+    description: 'Message shown on discussion sidebar for topics and learners if user searched with keywords.',
+  },
   removeKeywords: {
     id: 'discussions.sidebar.removeKeywords',
     defaultMessage: 'Try searching different keywords or removing some filters',
