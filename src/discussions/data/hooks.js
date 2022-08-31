@@ -15,11 +15,11 @@ import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, postMessageToParent } from '../utils';
 import {
-  selectAreThreadsFiltered,
+  selectAreThreadsFiltered, selectLearnersTabEnabled,
   selectModerationSettings,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
-  selectUserIsGroupTa,
+  selectUserIsGroupTa, selectUserIsStaff, selectUserRoles,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
@@ -166,4 +166,14 @@ export const useAlertBannerVisible = (content) => {
     (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (content.lastEdit?.reason || content.closed))
     || (content.abuseFlagged && canSeeReportedBanner)
   );
+};
+
+export const useShowLearnersTab = () => {
+  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
+  const userRoles = useSelector(selectUserRoles);
+  const isAdmin = useSelector(selectUserIsStaff);
+  const IsGroupTA = useSelector(selectUserIsGroupTa);
+  const privileged = useSelector(selectUserHasModerationPrivileges);
+  const allowedUsers = isAdmin || IsGroupTA || privileged || (userRoles.includes('Student') && userRoles.length > 1);
+  return learnersTabEnabled && allowedUsers;
 };
