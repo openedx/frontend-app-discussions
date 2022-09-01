@@ -145,6 +145,18 @@ const commentsSlice = createSlice({
       state.commentsById[payload.id] = payload;
       state.commentDraft = null;
     },
+    updateCommentsList: (state, { payload }) => {
+      const { id: commentId, threadId, endorsed } = payload;
+      const commentAddListtype = endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
+      const commentRemoveListType = !endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
+
+      state.commentsInThreads[threadId][commentRemoveListType] = (
+          state.commentsInThreads[threadId]?.[commentRemoveListType]?.filter(item => item !== commentId)
+      );
+      state.commentsInThreads[threadId][commentAddListtype] = [
+        ...state.commentsInThreads[threadId][commentAddListtype], payload.id,
+      ];
+    },
     deleteCommentRequest: (state) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
     },
@@ -189,6 +201,7 @@ export const {
   updateCommentFailed,
   updateCommentRequest,
   updateCommentSuccess,
+  updateCommentsList,
   deleteCommentDenied,
   deleteCommentFailed,
   deleteCommentRequest,

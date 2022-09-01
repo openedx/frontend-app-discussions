@@ -63,7 +63,7 @@ function PostLink({
       >
         <div
           className={
-            classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500',
+            classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500 position-relative',
               { 'bg-light-300': post.read })
           }
           style={post.id === postId ? {

@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { orderBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
@@ -66,18 +67,21 @@ function DiscussionCommentsView({
     isLoading,
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
+  const sortedComments = useMemo(() => orderBy(comments, ['endorsed', 'createdAt'],
+    ['desc', 'desc']));
+
   return (
     <>
       <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
         {endorsed === EndorsementStatus.ENDORSED
-          ? intl.formatMessage(messages.endorsedResponseCount, { num: comments.length })
-          : intl.formatMessage(messages.responseCount, { num: comments.length })}
+          ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
+          : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
       </div>
       <div className="mx-4" role="list">
-        {comments.map(comment => (
+        {sortedComments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
         ))}
-        {!!comments.length && !isClosed
+        {!!sortedComments.length && !isClosed
           && <ResponseEditor postId={postId} addWrappingDiv />}
         {hasMorePages && !isLoading && (
           <Button
