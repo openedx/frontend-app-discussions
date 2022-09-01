@@ -24,7 +24,8 @@ function LegacyBreadcrumbMenu() {
 
   const currentTopic = useSelector(selectTopic(currentTopicId));
   const currentCategory = category || currentTopic?.categoryId;
-  const topicsInCategory = useSelector(selectTopicsInCategory(currentCategory));
+  const decodedCurrentCategory = String(currentCategory).replace('%23', '#');
+  const topicsInCategory = useSelector(selectTopicsInCategory(decodedCurrentCategory));
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const categories = useSelector(selectCategories);
   const isNonCoursewareTopic = currentTopic && !currentCategory;
@@ -45,7 +46,7 @@ function LegacyBreadcrumbMenu() {
         />
       ) : (
         <BreadcrumbDropdown
-          currentItem={currentCategory}
+          currentItem={decodedCurrentCategory}
           itemLabelFunc={(catId) => catId}
           itemActiveFunc={(catId) => catId === currentCategory}
           items={categories}
