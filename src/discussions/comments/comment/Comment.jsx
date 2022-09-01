@@ -10,7 +10,9 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
+import { selectBlackoutDate } from '../../data/selectors';
 import { fetchThread } from '../../posts/data/thunks';
+import { inBlackoutDateRange } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -36,6 +38,7 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
+  const blackoutDateRange = useSelector(selectBlackoutDate);
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -124,13 +127,18 @@ function Comment({
               />
             ) : (
               <>
-                {!isClosedPost
+                {(!isClosedPost && !inBlackoutDateRange(blackoutDateRange))
                   && (
-                  <Button className="d-flex flex-grow mt-4.5" variant="outline-primary" onClick={() => setReplying(true)}>
-                    {intl.formatMessage(messages.addComment)}
-                  </Button>
+                    <Button
+                      className="d-flex flex-grow mt-4.5"
+                      variant="outline-primary"
+                      onClick={() => setReplying(true)}
+                    >
+                      {intl.formatMessage(messages.addComment)}
+                    </Button>
                   )}
               </>
+
             )
           )}
         </div>

@@ -9,6 +9,7 @@ import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@edx/fronte
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { ContentActions } from '../../data/constants';
+import { initializeStore } from '../../store';
 import messages from '../messages';
 import { ACTIONS_LIST } from '../utils';
 import ActionsDropdown from './ActionsDropdown';
@@ -126,6 +127,7 @@ describe('ActionsDropdown', () => {
         roles: [],
       },
     });
+    store = initializeStore();
   });
 
   it.each(buildTestContent())('can open drop down if enabled', async (commentOrPost) => {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { useSelector } from 'react-redux';
+
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
@@ -10,9 +12,10 @@ import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
 import { commentShape } from '../comments/comment/proptypes';
+import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { postShape } from '../posts/post/proptypes';
-import { useActions } from '../utils';
+import { inBlackoutDateRange, useActions } from '../utils';
 
 function ActionsDropdown({
   intl,
@@ -31,6 +34,11 @@ function ActionsDropdown({
       logError(`Unknown or unimplemented action ${action}`);
     }
   };
+  const blackoutDateRange = useSelector(selectBlackoutDate);
+  // Find and remove edit action if in blackout date range.
+  if (inBlackoutDateRange(blackoutDateRange)) {
+    actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
+  }
   return (
     <>
       <IconButton
