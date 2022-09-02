@@ -31,7 +31,11 @@ function Reply({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
-    [ContentActions.ENDORSE]: () => dispatch(editComment(reply.id, { endorsed: !reply.endorsed })),
+    [ContentActions.ENDORSE]: () => dispatch(editComment(
+      reply.id,
+      { endorsed: !reply.endorsed },
+      ContentActions.ENDORSE,
+    )),
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
   };

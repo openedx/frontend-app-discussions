@@ -50,7 +50,7 @@ function Comment({
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
-      await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }));
+      await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }, ContentActions.ENDORSE));
       await dispatch(fetchThread(comment.threadId));
     },
     [ContentActions.DELETE]: showDeleteConfirmation,

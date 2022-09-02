@@ -2,7 +2,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { EndorsementStatus } from '../../../data/constants';
+import { ContentActions, EndorsementStatus } from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteComment, getCommentResponses, getThreadComments, postComment, updateComment,
@@ -27,6 +27,7 @@ import {
   updateCommentDenied,
   updateCommentFailed,
   updateCommentRequest,
+  updateCommentsList,
   updateCommentSuccess,
 } from './slices';
 
@@ -116,12 +117,15 @@ export function fetchCommentResponses(commentId, { page = 1 } = {}) {
   };
 }
 
-export function editComment(commentId, comment) {
+export function editComment(commentId, comment, action = null) {
   return async (dispatch) => {
     try {
       dispatch(updateCommentRequest({ commentId }));
       const data = await updateComment(commentId, comment);
       dispatch(updateCommentSuccess(camelCaseObject(data)));
+      if (action === ContentActions.ENDORSE) {
+        dispatch(updateCommentsList(camelCaseObject(data)));
+      }
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(updateCommentDenied());
