@@ -28,6 +28,7 @@ function Post({
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
+  const { courseId } = useSelector((state) => state.courseTabs);
   const topic = useSelector(selectTopic(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
@@ -49,6 +50,7 @@ function Post({
         dispatch(updateExistingThread(post.id, { closed: true }));
       }
     },
+    [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged })),
   };
