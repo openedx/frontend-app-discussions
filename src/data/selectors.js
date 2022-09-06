@@ -2,7 +2,7 @@
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { selectDiscussionProvider } from '../discussions/data/selectors';
+import { selectDiscussionProvider, selectGroupAtSubsection } from '../discussions/data/selectors';
 import { DiscussionProvider } from './constants';
 
 export const selectTopicContext = (topicId) => (state) => state.blocks.topics[topicId];
@@ -12,6 +12,18 @@ export const selectBlocks = (state) => state.blocks.blocks;
 export const selectorForUnitSubsection = createSelector(
   selectBlocks,
   blocks => key => blocks[blocks[key]?.parent],
+);
+
+// If subsection grouping is enabled, and the current selection is a unit, then get the current subsection.
+export const selectCurrentCategoryGrouping = createSelector(
+  selectDiscussionProvider,
+  selectGroupAtSubsection,
+  selectBlocks,
+  (provider, groupAtSubsection, blocks) => blockId => (
+    (provider !== 'openedx' || !groupAtSubsection || blocks[blockId]?.type !== 'vertical')
+      ? blockId
+      : blocks[blockId].parent
+  ),
 );
 
 export const selectChapters = (state) => state.blocks.chapters;

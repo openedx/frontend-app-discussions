@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
 
 import { PushPin } from '../../../components/icons';
@@ -22,11 +22,11 @@ import { postShape } from './proptypes';
 function PostLink({
   post,
   isSelected,
-  intl,
   learnerTab,
   showDivider,
   idx,
 }) {
+  const intl = useIntl();
   const {
     page,
     postId,
@@ -118,7 +118,7 @@ function PostLink({
               author={post.author || intl.formatMessage(messages.anonymous)}
               authorLabel={post.authorLabel}
               labelColor={authorLabelColor && `text-${authorLabelColor}`}
-              linkToProfile={!learnerTab && post.author}
+              linkToProfile={!learnerTab && Boolean(post.author)}
             />
             <div
               className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
@@ -142,7 +142,6 @@ function PostLink({
 PostLink.propTypes = {
   post: postShape.isRequired,
   isSelected: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
   learnerTab: PropTypes.bool,
   showDivider: PropTypes.bool,
   idx: PropTypes.number,
@@ -154,4 +153,4 @@ PostLink.defaultProps = {
   idx: -1,
 };
 
-export default injectIntl(PostLink);
+export default PostLink;

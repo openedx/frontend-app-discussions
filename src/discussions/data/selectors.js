@@ -22,6 +22,8 @@ export const selectDivisionSettings = state => state.config.settings;
 
 export const selectBlackoutDate = state => state.config.blackouts;
 
+export const selectGroupAtSubsection = state => state.config.groupAtSubsection;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,

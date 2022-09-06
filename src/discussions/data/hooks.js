@@ -11,7 +11,9 @@ import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
 import { Routes } from '../../data/constants';
+import { selectTopicsUnderCategory } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
+import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
@@ -157,4 +159,25 @@ export const useShowLearnersTab = () => {
   const privileged = useSelector(selectUserHasModerationPrivileges);
   const allowedUsers = isAdmin || IsGroupTA || privileged || (userRoles.includes('Student') && userRoles.length > 1);
   return learnersTabEnabled && allowedUsers;
+};
+
+/**
+ * React hook that gets the current topic ID from the current topic or category.
+ * The topicId in the DiscussionContext only return the direct topicId from the URL.
+ * If the URL has the current block ID it cannot get the topicID from that. This hook
+ * gets the topic ID from the URL if available, or from the current category otherwise.
+ * It only returns an ID if a single ID is available, if navigating a subsection it
+ * returns null.
+ * @returns {null|string} A topic ID if a single one available in the current context.
+ */
+export const useCurrentDiscussionTopic = () => {
+  const { topicId, category } = useContext(DiscussionContext);
+  const topics = useSelector(selectTopicsUnderCategory)(category);
+  if (topicId) {
+    return topicId;
+  }
+  if (topics?.length === 1) {
+    return topics[0];
+  }
+  return null;
 };

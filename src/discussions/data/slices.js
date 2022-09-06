@@ -11,6 +11,7 @@ const configSlice = createSlice({
     allowAnonymous: false,
     allowAnonymousToPeers: false,
     userRoles: [],
+    groupAtSubsection: false,
     hasModerationPrivileges: false,
     isGroupTa: false,
     isUserAdmin: false,

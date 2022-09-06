@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import {
   Button, Card, Form, Spinner, StatefulButton,
@@ -23,6 +23,7 @@ import PostPreviewPane from '../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
   selectDivisionSettings,
@@ -77,9 +78,9 @@ DiscussionPostType.propTypes = {
 };
 
 function PostEditor({
-  intl,
   editExisting,
 }) {
+  const intl = useIntl();
   const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
   const editorRef = useRef(null);
@@ -89,9 +90,9 @@ function PostEditor({
   const commentsPagePath = useCommentsPagePath();
   const {
     courseId,
-    topicId,
     postId,
   } = useParams();
+  const topicId = useCurrentDiscussionTopic();
 
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(selectNonCoursewareIds);
@@ -439,7 +440,6 @@ function PostEditor({
 }
 
 PostEditor.propTypes = {
-  intl: intlShape.isRequired,
   editExisting: PropTypes.bool,
 };
 
@@ -447,4 +447,4 @@ PostEditor.defaultProps = {
   editExisting: false,
 };
 
-export default injectIntl(PostEditor);
+export default PostEditor;

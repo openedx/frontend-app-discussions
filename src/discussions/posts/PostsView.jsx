@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SearchInfo from '../../components/SearchInfo';
-import { selectTopicsUnderCategory } from '../../data/selectors';
+import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
 import {
   selectAllThreads,
@@ -29,7 +29,10 @@ TopicPostsList.propTypes = {
 };
 
 function CategoryPostsList({ category }) {
-  const topicIds = useSelector(selectTopicsUnderCategory)(category);
+  const { inContext } = useContext(DiscussionContext);
+  const groupedCategory = useSelector(selectCurrentCategoryGrouping)(category);
+  // If grouping at subsection is enabled, only apply it when browsing discussions in context in the learning MFE.
+  const topicIds = useSelector(selectTopicsUnderCategory)(inContext ? groupedCategory : category);
   const posts = useSelector(selectTopicThreads(topicIds));
   return <PostsList posts={posts} topics={topicIds} />;
 }
