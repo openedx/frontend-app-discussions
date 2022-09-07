@@ -4,7 +4,7 @@
   "description": "Discussions Frontend",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/frontend-app-discussions.git"
+    "url": "git+https://github.com/openedx/frontend-app-discussions.git"
   },
   "browserslist": [
     "extends @edx/browserslist-config"
@@ -25,12 +25,12 @@
   },
   "author": "edX",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/edx/frontend-app-discussions#readme",
+  "homepage": "https://github.com/openedx/frontend-app-discussions#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/edx/frontend-app-discussions/issues"
+    "url": "https://github.com/openedx/frontend-app-discussions/issues"
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
