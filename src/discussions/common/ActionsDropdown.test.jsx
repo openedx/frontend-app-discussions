@@ -152,6 +152,36 @@ describe('ActionsDropdown', () => {
     await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup')).not.toBeInTheDocument());
   });
 
+  it('copy link action should be visible on posts', async () => {
+    const commentOrPost = {
+      testFor: 'thread',
+      ...camelCaseObject(Factory.build('thread', { editable_fields: ['copy_link'] }, null)),
+    };
+    renderComponent(commentOrPost, { disabled: false });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    await waitFor(() => expect(screen.queryByText('Copy link')).toBeInTheDocument());
+  });
+
+  it('copy link action should not be visible on a comment', async () => {
+    const commentOrPost = {
+      testFor: 'comments',
+      ...camelCaseObject(Factory.build('comment', {}, null)),
+    };
+    renderComponent(commentOrPost, { disabled: false });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    await waitFor(() => expect(screen.queryByText('Copy link')).not.toBeInTheDocument());
+  });
+
   describe.each(canPerformActionTestData)('Actions', ({
     testFor, action, label, reason, ...commentOrPost
   }) => {

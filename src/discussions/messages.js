@@ -11,6 +11,11 @@ const messages = defineMessages({
     defaultMessage: 'Back',
     description: 'Text on button for back to posts list',
   },
+  copyLink: {
+    id: 'discussions.actions.copylink',
+    defaultMessage: 'Copy link',
+    description: 'Action to copy post link',
+  },
   editAction: {
     id: 'discussions.actions.edit',
     defaultMessage: 'Edit',

@@ -45,6 +45,7 @@ export const ContentActions = {
   PIN: 'pinned',
   ENDORSE: 'endorsed',
   CLOSE: 'closed',
+  COPY_LINK: 'copy_link',
   REPORT: 'abuse_flagged',
   DELETE: 'delete',
   FOLLOWING: 'following',
