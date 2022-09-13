@@ -5,9 +5,10 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  Delete, Edit, InsertLink, Pin, QuestionAnswer, Report, VerifiedBadge,
+  Delete, Edit, Pin, QuestionAnswer, Report, VerifiedBadge,
 } from '@edx/paragon/icons';
 
+import { InsertLink } from '../components/icons';
 import { ContentActions, Routes, ThreadType } from '../data/constants';
 import messages from './messages';
 
