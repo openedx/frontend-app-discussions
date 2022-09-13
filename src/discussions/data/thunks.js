@@ -23,7 +23,7 @@ export function fetchCourseConfig(courseId) {
   return async (dispatch) => {
     try {
       let learnerSort = LearnersOrdering.BY_LAST_ACTIVITY;
-      let postsFilterStatus = PostsStatusFilter.ALL;
+      const postsFilterStatus = PostsStatusFilter.ALL;
       dispatch(fetchConfigRequest());
 
       const config = await getDiscussionsConfig(courseId);
@@ -34,7 +34,6 @@ export function fetchCourseConfig(courseId) {
 
       if ((config.has_moderation_privileges || config.is_group_ta)) {
         learnerSort = LearnersOrdering.BY_FLAG;
-        postsFilterStatus = PostsStatusFilter.REPORTED;
       }
 
       dispatch(fetchConfigSuccess(camelCaseObject(config)));

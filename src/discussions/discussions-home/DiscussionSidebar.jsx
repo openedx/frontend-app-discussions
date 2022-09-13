@@ -9,7 +9,7 @@ import {
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab } from '../data/hooks';
-import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../data/selectors';
+import { selectconfigLoadingStatus } from '../data/selectors';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
@@ -18,8 +18,6 @@ export default function DiscussionSidebar({ displaySidebar }) {
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
-  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
-  const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const configStatus = useSelector(selectconfigLoadingStatus);
   const redirectToLearnersTab = useShowLearnersTab();
   return (
@@ -51,7 +49,7 @@ export default function DiscussionSidebar({ displaySidebar }) {
           from={Routes.DISCUSSIONS.PATH}
           to={{
             ...location,
-            pathname: (userHasModerationPrivileges || userIsGroupTa) ? Routes.POSTS.ALL_POSTS : Routes.POSTS.MY_POSTS,
+            pathname: Routes.POSTS.ALL_POSTS,
           }}
         />
         )}
