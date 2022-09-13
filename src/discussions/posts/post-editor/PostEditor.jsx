@@ -29,6 +29,7 @@ import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
+  selectUserIsStaff,
 } from '../../data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
@@ -102,9 +103,10 @@ function PostEditor({
   const settings = useSelector(selectDivisionSettings);
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+  const userIsStaff = useSelector(selectUserIsStaff);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
-    && (userHasModerationPrivileges || userIsGroupTa) && post?.author !== authenticatedUser.username
+    && (userHasModerationPrivileges || userIsGroupTa || userIsStaff) && post?.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -345,7 +347,7 @@ function PostEditor({
                   name="editReasonCode"
                   className="m-0"
                   as="select"
-                  value={values.editReasonCode}
+                  value={userIsStaff ? 'violates-guidelines' : values.editReasonCode}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   aria-describedby="editReasonCodeInput"
