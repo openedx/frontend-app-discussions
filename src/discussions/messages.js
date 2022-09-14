@@ -173,6 +173,21 @@ const messages = defineMessages({
     defaultMessage: 'anonymous',
     description: 'Author name displayed when a post is anonymous',
   },
+  bannerMessage: {
+    id: 'discussion.banner.welcomeMessage',
+    defaultMessage: '🎉 Welcome to the new and improved discussions experience!',
+    description: 'Author name displayed when a post is anonymous',
+  },
+  learnMoreBannerLink: {
+    id: 'discussion.banner.learnMore',
+    defaultMessage: 'Learn more',
+    description: 'learn more button to redirect users to know more about new discussion experience ',
+  },
+  shareFeedback: {
+    id: 'discussion.banner.shareFeedback',
+    defaultMessage: 'Share feedback',
+    description: 'Share feedback button to open feedback forms',
+  },
 });
 
 export default messages;

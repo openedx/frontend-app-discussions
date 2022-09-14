@@ -22,6 +22,7 @@ import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigati
 import { postMessageToParent } from '../utils';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
+import InformationBanner from './InformationsBanner';
 
 export default function DiscussionsHome() {
   const location = useLocation();
@@ -54,7 +55,6 @@ export default function DiscussionsHome() {
   const { courseNumber, courseTitle, org } = useSelector(
     (state) => state.courseTabs,
   );
-
   if (displayContentArea) {
     // If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
     // However, for smaller screens or embeds, only show the sidebar if the content area isn't displayed.
@@ -85,6 +85,7 @@ export default function DiscussionsHome() {
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden" id="main" tabIndex="-1">
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+
         <div
           className="d-flex flex-row justify-content-between navbar fixed-top"
           style={{ boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}
@@ -93,6 +94,7 @@ export default function DiscussionsHome() {
             <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
           )}
           <PostActionsBar inContext={inContext} />
+          <InformationBanner />
         </div>
         <Route
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
