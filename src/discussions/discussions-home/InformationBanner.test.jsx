@@ -59,11 +59,11 @@ describe('Information Banner learner view', () => {
     expect(element).toHaveTextContent(messages.bannerMessage.defaultMessage);
   });
 
-  test('Test Banner has learn more button', async () => {
-    expect(element).toHaveTextContent(messages.learnMoreBannerLink.defaultMessage);
+  test('Test Banner do not have learn more button', async () => {
+    expect(element).not.toHaveTextContent(messages.learnMoreBannerLink.defaultMessage);
   });
-  test('Test Banner do not have share feedback button', async () => {
-    expect(element).not.toHaveTextContent(messages.shareFeedback.defaultMessage);
+  test('Test Banner has share feedback button', async () => {
+    expect(element).toHaveTextContent(messages.shareFeedback.defaultMessage);
   });
 });
 
@@ -92,12 +92,12 @@ describe('Information Banner moderators/staff/admin view', () => {
   test('Test Banner has learn more button', async () => {
     expect(element).toHaveTextContent(messages.learnMoreBannerLink.defaultMessage);
   });
-  test('Test Banner do not have share feedback button', async () => {
+  test('Test Banner has share feedback button', async () => {
     expect(element).toHaveTextContent(messages.shareFeedback.defaultMessage);
   });
 });
 
-describe('User id redirected according to url according to role', () => {
+describe('User is redirected according to url according to role', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
@@ -115,7 +115,7 @@ describe('User id redirected according to url according to role', () => {
     renderComponent(true);
     expect(screen.getByText(messages.shareFeedback.defaultMessage)
       .closest('a'))
-      .toHaveAttribute('href', 'https://forms.gle/foGYYQjHZfWTzBiR8');
+      .toHaveAttribute('href', process.env.TA_FEEDBACK_FORM);
   });
 
   test('admin/moderators are redirected to moderators feedback form', async () => {
@@ -123,6 +123,6 @@ describe('User id redirected according to url according to role', () => {
     renderComponent(true);
     expect(screen.getByText(messages.shareFeedback.defaultMessage)
       .closest('a'))
-      .toHaveAttribute('href', 'https://forms.gle/APn3k39QHmieLfJaA');
+      .toHaveAttribute('href', process.env.STAFF_FEEDBACK_FORM);
   });
 });
