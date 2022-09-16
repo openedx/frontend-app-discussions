@@ -131,6 +131,7 @@ function PostEditor({
         courseId,
         topicId,
         postId,
+        learnerUsername: post?.author,
       })(location);
       history.push(newLocation);
     }

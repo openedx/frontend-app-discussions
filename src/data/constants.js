@@ -168,6 +168,7 @@ export const Routes = {
       `${BASE_PATH}/topics/:topicId/posts/:postId/edit`,
       `${BASE_PATH}/posts/:postId/edit`,
       `${BASE_PATH}/my-posts/:postId/edit`,
+      `${BASE_PATH}/learners/:learnerUsername/posts/:postId/edit`,
     ],
   },
   COMMENTS: {
