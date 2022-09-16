@@ -15,8 +15,8 @@ function InformationBanner({
   const userRoles = useSelector(selectUserRoles);
   const isAdmin = useSelector(selectUserIsStaff);
   const learnMoreLink = 'https://openedx.atlassian.net/wiki/spaces/COMM/pages/3509551260/Overview+New+discussions+experience';
-  const learnerFeedbackLink = 'https://forms.gle/foGYYQjHZfWTzBiR8';
-  const staffFeedbackLink = 'https://forms.gle/APn3k39QHmieLfJaA';
+  const TAFeedbackLink = process.env.TA_FEEDBACK_FORM || 'https://test-ta-feedback';
+  const staffFeedbackLink = process.env.STAFF_FEEDBACK_FORM || 'https://test-staff-feedback';
   const hideLearnMoreButton = ((userRoles.includes('Student') && userRoles.length === 1) || !userRoles.length) && !isAdmin;
   const showStaffLink = !hideLearnMoreButton && (userRoles.includes('Moderator') || userRoles.includes('Administrator'));
 
@@ -29,28 +29,28 @@ function InformationBanner({
     >
       <div style={{ fontWeight: '500' }}>
         {intl.formatMessage(messages.bannerMessage)}
-        <Hyperlink
-          destination={learnMoreLink}
-          target="_blank"
-          showLaunchIcon={false}
-          className="px-2.5"
-          variant="muted"
-          isInline
-        >
-          {intl.formatMessage(messages.learnMoreBannerLink)}
-        </Hyperlink>
         {!hideLearnMoreButton
             && (
             <Hyperlink
-              destination={showStaffLink ? staffFeedbackLink : learnerFeedbackLink}
+              destination={learnMoreLink}
               target="_blank"
               showLaunchIcon={false}
+              className="px-2.5"
               variant="muted"
               isInline
             >
-              {intl.formatMessage(messages.shareFeedback)}
+              {intl.formatMessage(messages.learnMoreBannerLink)}
             </Hyperlink>
             )}
+        <Hyperlink
+          destination={showStaffLink ? staffFeedbackLink : TAFeedbackLink}
+          target="_blank"
+          showLaunchIcon={false}
+          variant="muted"
+          isInline
+        >
+          {intl.formatMessage(messages.shareFeedback)}
+        </Hyperlink>
       </div>
     </PageBanner>
   );
