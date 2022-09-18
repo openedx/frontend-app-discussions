@@ -45,6 +45,7 @@
   "discussions.learner.sortFilterStatus": "Tutti gli studenti di {sort, select, flagged {attività segnalata} activity {più attività} other {{sort}} }",
   "discussions.actions.button.alt": "Menù Azioni",
   "discussions.actions.back.alt": "Indietro",
+  "discussions.actions.copylink": "Copy link",
   "discussions.actions.unpin": "Sblocca ",
   "discussions.actions.close": "Chiudi",
   "discussions.actions.reopen": "Riaprire",
