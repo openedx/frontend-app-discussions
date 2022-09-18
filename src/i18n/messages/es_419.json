@@ -45,6 +45,7 @@
   "discussions.learner.sortFilterStatus": "Todos los alumnos por {sort, select,\n      flagged {reported activity}\n      activity {most activity}\n      other {{sort}}\n    }",
   "discussions.actions.button.alt": "Menú de acciones",
   "discussions.actions.back.alt": "Volver atrás",
+  "discussions.actions.copylink": "Copiar link",
   "discussions.actions.unpin": "Desmarcar",
   "discussions.actions.close": "Cerrar",
   "discussions.actions.reopen": "Reabrir",
