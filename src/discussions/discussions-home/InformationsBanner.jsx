@@ -18,7 +18,7 @@ function InformationBanner({
   const TAFeedbackLink = process.env.TA_FEEDBACK_FORM || '';
   const staffFeedbackLink = process.env.STAFF_FEEDBACK_FORM || '';
   const hideLearnMoreButton = ((userRoles.includes('Student') && userRoles.length === 1) || !userRoles.length) && !isAdmin;
-  const showStaffLink = !hideLearnMoreButton || userRoles.includes('Moderator') || userRoles.includes('Administrator') ;
+  const showStaffLink = !hideLearnMoreButton || userRoles.includes('Moderator') || userRoles.includes('Administrator');
 
   return (
     <PageBanner
