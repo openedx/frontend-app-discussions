@@ -118,8 +118,16 @@ describe('User is redirected according to url according to role', () => {
       .toHaveAttribute('href', process.env.TA_FEEDBACK_FORM);
   });
 
-  test('admin/moderators are redirected to moderators feedback form', async () => {
-    store.dispatch(fetchConfigSuccess(getConfigData(true, ['Student', 'Moderator'])));
+  test('moderators/administrators are redirected to moderators feedback form', async () => {
+    store.dispatch(fetchConfigSuccess(getConfigData(true, ['Student', 'Moderator', 'Administrator'])));
+    renderComponent(true);
+    expect(screen.getByText(messages.shareFeedback.defaultMessage)
+      .closest('a'))
+      .toHaveAttribute('href', process.env.STAFF_FEEDBACK_FORM);
+  });
+
+  test('user with only isAdmin true are redirected to moderators feedback form', async () => {
+    store.dispatch(fetchConfigSuccess(getConfigData(true, ['Student'])));
     renderComponent(true);
     expect(screen.getByText(messages.shareFeedback.defaultMessage)
       .closest('a'))
