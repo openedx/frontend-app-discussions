@@ -119,7 +119,7 @@ describe('User is redirected according to url according to role', () => {
   });
 
   test('moderators/administrators are redirected to moderators feedback form', async () => {
-    store.dispatch(fetchConfigSuccess(getConfigData(true, ['Student', 'Moderator', 'Administrator'])));
+    store.dispatch(fetchConfigSuccess(getConfigData(false, ['Student', 'Moderator', 'Administrator'])));
     renderComponent(true);
     expect(screen.getByText(messages.shareFeedback.defaultMessage)
       .closest('a'))

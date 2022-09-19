@@ -15,10 +15,10 @@ function InformationBanner({
   const userRoles = useSelector(selectUserRoles);
   const isAdmin = useSelector(selectUserIsStaff);
   const learnMoreLink = 'https://openedx.atlassian.net/wiki/spaces/COMM/pages/3509551260/Overview+New+discussions+experience';
-  const TAFeedbackLink = process.env.TA_FEEDBACK_FORM || '';
-  const staffFeedbackLink = process.env.STAFF_FEEDBACK_FORM || '';
+  const TAFeedbackLink = process.env.TA_FEEDBACK_FORM;
+  const staffFeedbackLink = process.env.STAFF_FEEDBACK_FORM;
   const hideLearnMoreButton = ((userRoles.includes('Student') && userRoles.length === 1) || !userRoles.length) && !isAdmin;
-  const showStaffLink = !hideLearnMoreButton || userRoles.includes('Moderator') || userRoles.includes('Administrator');
+  const showStaffLink = isAdmin || userRoles.includes('Moderator') || userRoles.includes('Administrator');
 
   return (
     <PageBanner
