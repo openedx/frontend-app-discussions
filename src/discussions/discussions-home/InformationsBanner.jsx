@@ -35,7 +35,7 @@ function InformationBanner({
               destination={learnMoreLink}
               target="_blank"
               showLaunchIcon={false}
-              className="px-2.5"
+              className="pl-2.5"
               variant="muted"
               isInline
             >
@@ -47,6 +47,7 @@ function InformationBanner({
           target="_blank"
           showLaunchIcon={false}
           variant="muted"
+          className="pl-2.5"
           isInline
         >
           {intl.formatMessage(messages.shareFeedback)}
