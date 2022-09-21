@@ -31,7 +31,7 @@ function LearnerFooter({
         <Icon src={Edit} className="icon-size mr-2 ml-4" />
         {learner.replies + learner.responses}
       </div>
-      {canSeeLearnerReportedStats && (
+      {Boolean(canSeeLearnerReportedStats) && (
         <OverlayTrigger
           overlay={(
             <Tooltip id={`learner-${learner.username}`}>

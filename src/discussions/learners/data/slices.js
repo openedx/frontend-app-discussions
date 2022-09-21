@@ -40,6 +40,7 @@ const learnersSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     setSortedBy: (state, { payload }) => {
+      state.pages = [];
       state.sortedBy = payload;
     },
     setUsernameSearch: (state, { payload }) => {
