@@ -10,6 +10,7 @@ import {
   APP_INIT_ERROR, APP_READY, initialize, subscribe,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+import { messages as paragonMessages } from '@edx/paragon';
 
 import { DiscussionsHome } from './discussions';
 import appMessages from './i18n';
@@ -37,5 +38,6 @@ initialize({
     headerMessages,
     footerMessages,
     appMessages,
+    paragonMessages,
   ],
 });
