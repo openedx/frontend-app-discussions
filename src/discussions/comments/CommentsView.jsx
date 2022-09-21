@@ -46,12 +46,12 @@ function usePostComments(postId, endorsed = null) {
       page: 1,
     }));
   }, [postId]);
-  return [
+  return {
     comments,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
-  ];
+  };
 }
 
 function DiscussionCommentsView({
@@ -61,19 +61,14 @@ function DiscussionCommentsView({
   endorsed,
   isClosed,
 }) {
-  const [
+  const {
     comments,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
-  ] = usePostComments(postId, endorsed);
-
+  } = usePostComments(postId, endorsed);
   const sortedComments = useMemo(() => orderBy(comments, ['endorsed', 'createdAt'],
     ['desc', 'desc']));
-
-  const [commentList] = usePostComments(postId, EndorsementStatus.UNENDORSED);
-
-  const showAddResponse = endorsed === EndorsementStatus.ENDORSED ? !commentList.length : true;
 
   return (
     <>
@@ -86,7 +81,7 @@ function DiscussionCommentsView({
         {sortedComments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
         ))}
-        {!!sortedComments.length && !isClosed && showAddResponse
+        {!!sortedComments.length && !isClosed
           && <ResponseEditor postId={postId} addWrappingDiv />}
         {hasMorePages && !isLoading && (
           <Button
