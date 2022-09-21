@@ -30,7 +30,7 @@ function InformationBanner({
       <div style={{ fontWeight: '500' }}>
         {intl.formatMessage(messages.bannerMessage)}
         {!hideLearnMoreButton
-            && (
+          && (
             <Hyperlink
               destination={learnMoreLink}
               target="_blank"
@@ -41,7 +41,7 @@ function InformationBanner({
             >
               {intl.formatMessage(messages.learnMoreBannerLink)}
             </Hyperlink>
-            )}
+          )}
         <Hyperlink
           destination={showStaffLink ? staffFeedbackLink : TAFeedbackLink}
           target="_blank"

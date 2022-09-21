@@ -85,15 +85,15 @@ export default function DiscussionsHome() {
       <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden" id="main" tabIndex="-1">
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
-
-        <div
-          className="d-flex flex-row justify-content-between navbar fixed-top"
-          style={{ boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}
-        >
-          {!inContext && (
+        <div style={{ zIndex: 1, boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}>
+          <div
+            className="d-flex flex-row justify-content-between navbar fixed-top"
+          >
+            {!inContext && (
             <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
-          )}
-          <PostActionsBar inContext={inContext} />
+            )}
+            <PostActionsBar inContext={inContext} />
+          </div>
           <InformationBanner />
         </div>
         <Route
