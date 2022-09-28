@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { getIn } from 'formik';
-import { orderBy, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -252,13 +252,9 @@ export const isPostPreviewAvailable = (htmlNode) => {
  * @param {array} posts arrays of posts
  * @param {string} filterBy name of post object attribute. un will use for reverse
  *  condition. like pinned attribute for pinned post and unpinned for non pinned posts.
- * @param {string} sortBy name of post object attribute
- * @param {string} order order of the sorting list
  */
-export const filterPosts = (posts, filterBy, sortBy = 'createdAt', order = 'desc') => orderBy(
-  uniqBy(posts, 'id').filter(
-    post => (filterBy.startsWith('un') ? !post[filterBy.slice(2)] : post[filterBy]),
-  ), [sortBy], [order],
+export const filterPosts = (posts, filterBy) => uniqBy(posts, 'id').filter(
+  post => (filterBy.startsWith('un') ? !post[filterBy.slice(2)] : post[filterBy]),
 );
 
 /**
