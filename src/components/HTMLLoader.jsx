@@ -8,12 +8,14 @@ const baseConfig = {
   tex2jax: {
     inlineMath: [
       ['$', '$'],
+      ['\\\\(', '\\\\)'],
       ['\\(', '\\)'],
       ['[mathjaxinline]', '[/mathjaxinline]'],
     ],
     displayMath: [
       ['[mathjax]', '[/mathjax]'],
       ['$$', '$$'],
+      ['\\\\[', '\\\\]'],
       ['\\[', '\\]'],
     ],
   },
