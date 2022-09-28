@@ -52,7 +52,7 @@ function DiscussionPostType({
     <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-2 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
       <Card
-        className={classNames('border-2', {
+        className={classNames('border-2 shadow-none', {
           'border-primary': selected,
           'border-light-400': !selected,
         })}
