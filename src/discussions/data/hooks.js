@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { useContext, useEffect, useRef } from 'react';
+import {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
@@ -13,7 +15,7 @@ import { fetchCourseBlocks } from '../../data/thunks';
 import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
-import { discussionsPath, postMessageToParent } from '../utils';
+import { discussionsPath } from '../utils';
 import {
   selectAreThreadsFiltered, selectLearnersTabEnabled,
   selectModerationSettings,
@@ -100,57 +102,36 @@ export function useIsOnXLDesktop() {
 }
 
 /**
- * Given an element this attempts to get the height of the entire UI.
- *
- * @param element
- * @returns {number}
- */
-function getOuterHeight(element) {
-  // This is the height of the entire document body.
-  const bodyHeight = document.body.offsetHeight;
-  // This is the height of the container that will scroll.
-  const elementContainerHeight = element.parentNode.clientHeight;
-  // The difference between the body height and the container height is the size of the header footer etc.
-  // Add to that the element's own height and we get the size the UI should be to fit everything.
-  return bodyHeight - elementContainerHeight + element.scrollHeight + 10;
-}
-
-/**
  * This hook posts a resize message to the parent window if running in an iframe
  * @param refContainer reference to the component whose size is to be measured
  */
 export function useContainerSizeForParent(refContainer) {
-  function postResizeMessage(height) {
-    postMessageToParent('plugin.resize', { height });
-  }
-
   const location = useLocation();
-  const enabled = window.parent !== window;
+  const [height, setHeight] = useState();
 
   const resizeObserver = useRef(new ResizeObserver(() => {
     /* istanbul ignore if: ResizeObserver isn't available in the testing env */
     if (refContainer.current) {
-      postResizeMessage(getOuterHeight(refContainer.current));
+      setHeight(refContainer.current.clientHeight);
     }
   }));
 
   useEffect(() => {
     const container = refContainer.current;
     const observer = resizeObserver.current;
-    if (container && observer && enabled) {
+    if (container && observer) {
       observer.observe(container);
-      postResizeMessage(getOuterHeight(container));
+      setHeight(container.clientHeight);
     }
 
     return () => {
-      if (container && observer && enabled) {
+      if (container && observer) {
         observer.unobserve(container);
-        // Send a message to reset the size so that navigating to another
-        // page doesn't cause the size to be retained
-        postResizeMessage(null);
       }
     };
   }, [refContainer, resizeObserver, location]);
+
+  return height;
 }
 
 export const useAlertBannerVisible = (content) => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { useSelector } from 'react-redux';
 import {
@@ -26,6 +26,7 @@ import InformationBanner from './InformationsBanner';
 
 export default function DiscussionsHome() {
   const location = useLocation();
+  const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(
     (state) => state.threads.postEditorVisible,
   );
@@ -82,10 +83,10 @@ export default function DiscussionsHome() {
     }}
     >
       {!inIframe && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
-      <main className="container-fluid d-flex flex-column p-0 h-100 w-100 overflow-hidden" id="main" tabIndex="-1">
+      <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
         {!inIframe
           && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
-        <div style={{ zIndex: 1, boxShadow: '0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%)' }}>
+        <div className="header-action-bar" ref={postActionBarRef}>
           <div
             className="d-flex flex-row justify-content-between navbar fixed-top"
           >
@@ -100,8 +101,8 @@ export default function DiscussionsHome() {
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
           component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
         />
-        <div className="d-flex flex-row overflow-hidden flex-grow-1 h-100">
-          <DiscussionSidebar displaySidebar={displaySidebar} />
+        <div className="d-flex flex-row">
+          <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}
           {!displayContentArea && (
           <Switch>
