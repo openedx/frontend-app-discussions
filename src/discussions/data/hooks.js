@@ -105,20 +105,20 @@ export function useIsOnXLDesktop() {
  * This hook posts a resize message to the parent window if running in an iframe
  * @param refContainer reference to the component whose size is to be measured
  */
-export function useContainerSizeForParent(refContainer) {
+export function useContainerSize(refContainer) {
   const location = useLocation();
   const [height, setHeight] = useState();
 
   const resizeObserver = useRef(new ResizeObserver(() => {
     /* istanbul ignore if: ResizeObserver isn't available in the testing env */
-    if (refContainer.current) {
-      setHeight(refContainer.current.clientHeight);
+    if (refContainer?.current) {
+      setHeight(refContainer?.current?.clientHeight);
     }
   }));
 
   useEffect(() => {
-    const container = refContainer.current;
-    const observer = resizeObserver.current;
+    const container = refContainer?.current;
+    const observer = resizeObserver?.current;
     if (container && observer) {
       observer.observe(container);
       setHeight(container.clientHeight);

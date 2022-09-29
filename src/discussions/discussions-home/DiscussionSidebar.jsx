@@ -9,7 +9,7 @@ import {
 
 import { RequestStatus, Routes } from '../../data/constants';
 import {
-  useContainerSizeForParent, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
+  useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
 import { selectconfigLoadingStatus } from '../data/selectors';
 import { LearnerPostsView, LearnersView } from '../learners';
@@ -23,7 +23,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const configStatus = useSelector(selectconfigLoadingStatus);
   const redirectToLearnersTab = useShowLearnersTab();
   const sidebarRef = useRef(null);
-  const postActionBarHeight = useContainerSizeForParent(postActionBarRef);
+  const postActionBarHeight = useContainerSize(postActionBarRef);
 
   useEffect(() => {
     if (sidebarRef && postActionBarHeight) {

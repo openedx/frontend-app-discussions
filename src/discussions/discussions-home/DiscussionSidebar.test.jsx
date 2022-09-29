@@ -30,7 +30,7 @@ function renderComponent(displaySidebar = true, location = `/${courseId}/`) {
         <AppProvider store={store}>
           <DiscussionContext.Provider value={{ courseId }}>
             <MemoryRouter initialEntries={[location]}>
-              <DiscussionSidebar displaySidebar={displaySidebar} />
+              <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={null} />
             </MemoryRouter>
           </DiscussionContext.Provider>
         </AppProvider>
