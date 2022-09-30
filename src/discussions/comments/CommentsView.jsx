@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { orderBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
@@ -13,6 +12,7 @@ import { useDispatchWithState } from '../../data/hooks';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
+import { filterPosts } from '../utils';
 import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -67,9 +67,8 @@ function DiscussionCommentsView({
     isLoading,
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
-  const sortedComments = useMemo(() => orderBy(comments, ['endorsed', 'createdAt'],
-    ['desc', 'desc']));
-
+  const sortedComments = useMemo(() => [...filterPosts(comments, 'endorsed'),
+    ...filterPosts(comments, 'unendorsed')], [comments]);
   return (
     <>
       <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
