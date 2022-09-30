@@ -30,6 +30,7 @@ function PostFooter({
   post,
   intl,
   preview,
+  showNewCountLabel,
 }) {
   const dispatch = useDispatch();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -74,7 +75,7 @@ function PostFooter({
           {post.commentCount}
         </div>
       )}
-      {preview && post?.unreadCommentCount > 0 && post.commentCount > 1 && (
+      {showNewCountLabel && preview && post?.unreadCommentCount > 0 && post.commentCount > 1 && (
         <Badge variant="light" className="ml-2">
           {intl.formatMessage(messages.newLabel, { count: post.unreadCommentCount })}
         </Badge>
@@ -130,10 +131,12 @@ PostFooter.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
   preview: PropTypes.bool,
+  showNewCountLabel: PropTypes.bool,
 };
 
 PostFooter.defaultProps = {
   preview: false,
+  showNewCountLabel: false,
 };
 
 export default injectIntl(PostFooter);
