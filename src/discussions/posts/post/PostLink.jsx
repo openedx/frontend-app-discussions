@@ -48,7 +48,7 @@ function PostLink({
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const postReported = post.abuseFlagged || post.abuseFlaggedCount;
   const canSeeReportedBadge = postReported && (userHasModerationPrivileges || userIsGroupTa);
-  const neverRead = !post.read && post.commentCount === post.unreadCommentCount;
+  const read = post.read || (!post.read && post.commentCount !== post.unreadCommentCount);
 
   return (
     <>
@@ -68,21 +68,21 @@ function PostLink({
         <div
           className={
             classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500 position-relative',
-              { 'bg-light-300': !neverRead })
+              { 'bg-light-300': read })
           }
           style={post.id === postId ? {
             borderRightWidth: '4px',
             borderRightStyle: 'solid',
           } : null}
         >
-          <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={!neverRead} />
+          <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={read} />
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
                 <div
                   className={
                     classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
-                      { 'font-weight-bolder': neverRead })
+                      { 'font-weight-bolder': !read })
                   }
                 >
                   {post.title}
@@ -129,7 +129,7 @@ function PostLink({
                 : intl.formatMessage(messages.postWithoutPreview)}
             </div>
             <div className="mt-1">
-              <PostFooter post={post} preview intl={intl} />
+              <PostFooter post={post} preview intl={intl} showNewCountLabel={read} />
             </div>
           </div>
         </div>

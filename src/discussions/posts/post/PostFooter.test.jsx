@@ -14,11 +14,11 @@ import PostFooter from './PostFooter';
 
 let store;
 
-function renderComponent(post, preview = false) {
+function renderComponent(post, preview = false, showNewCountLabel = false) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <PostFooter post={post} preview={preview} />
+        <PostFooter post={post} preview={preview} showNewCountLabel={showNewCountLabel} />
       </AppProvider>
     </IntlProvider>,
   );
@@ -64,8 +64,8 @@ describe('PostFooter', () => {
     });
   });
 
-  it("shows 'x new' badge for new comments", () => {
-    renderComponent(mockPost, true);
+  it("shows 'x new' badge for new comments in case of read post only", () => {
+    renderComponent(mockPost, true, true);
     expect(screen.getByText('2 New')).toBeTruthy();
   });
 
