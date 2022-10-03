@@ -92,7 +92,7 @@ export default function TinyMCEEditor(props) {
         browser_spellcheck: true,
         a11y_advanced_options: true,
         autosave_interval: '1s',
-        autosave_restore_when_empty: true,
+        autosave_restore_when_empty: false,
         plugins: 'autosave codesample link lists image imagetools code emoticons charmap',
         toolbar: 'undo redo'
           + ' | formatselect | bold italic underline'
