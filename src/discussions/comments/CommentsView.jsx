@@ -80,14 +80,15 @@ function DiscussionCommentsView({
         {sortedComments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
         ))}
-        {!!sortedComments.length && !isClosed
-          && <ResponseEditor postId={postId} addWrappingDiv />}
         {hasMorePages && !isLoading && (
           <Button
             onClick={handleLoadMoreResponses}
             variant="link"
             block="true"
-            className="card p-4"
+            className="card p-4 mb-4 font-weight-500 font-size-14"
+            style={{
+              lineHeight: '20px',
+            }}
             data-testid="load-more-comments"
           >
             {intl.formatMessage(messages.loadMoreResponses)}
@@ -99,6 +100,8 @@ function DiscussionCommentsView({
             <Spinner animation="border" variant="primary" />
           </div>
         )}
+        {!!sortedComments.length && !isClosed
+          && <ResponseEditor postId={postId} addWrappingDiv />}
       </div>
     </>
 

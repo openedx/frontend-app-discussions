@@ -37,7 +37,14 @@ function ResponseEditor({
     )
     : !inBlackoutDateRange(blackoutDateRange) && (
       <div className={classNames({ 'mb-4': addWrappingDiv }, 'actions d-flex')}>
-        <Button variant="primary" className="px-2.5 py-2" onClick={() => setAddingResponse(true)}>
+        <Button
+          variant="primary"
+          className="px-2.5 py-2 font-size-14"
+          onClick={() => setAddingResponse(true)}
+          style={{
+            lineHeight: '20px',
+          }}
+        >
           {intl.formatMessage(messages.addResponse)}
         </Button>
       </div>
