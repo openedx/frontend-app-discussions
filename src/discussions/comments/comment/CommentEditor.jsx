@@ -50,7 +50,7 @@ function CommentEditor({
   });
 
   const initialValues = {
-    comment: comment?.rawBody || '',
+    comment: comment.rawBody,
     editReasonCode: comment?.lastEdit?.reasonCode || '',
   };
 
