@@ -13,9 +13,9 @@ const messages = defineMessages({
   search: {
     id: 'discussions.posts.actionBar.search',
     defaultMessage: `{page, select,
-      topics {Find a topic}
+      topics {Search topics}
       posts {Search all posts}
-      learners {Search learner}
+      learners {Search learners}
       myPosts {Search all posts}
       other {{page}}
     }`,

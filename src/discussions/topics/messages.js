@@ -21,9 +21,9 @@ const messages = defineMessages({
     defaultMessage: 'Course Structure',
     description: 'Option in dropdown to sort topics by course structure',
   },
-  findATopic: {
+  searchTopics: {
     id: 'discussions.topics.find.label',
-    defaultMessage: 'Find a topic',
+    defaultMessage: 'Search topics',
     description: 'Placeholder text in search bar',
   },
   archivedTopics: {
