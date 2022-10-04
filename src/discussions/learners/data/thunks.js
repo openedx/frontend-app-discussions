@@ -3,6 +3,9 @@ import { camelCaseObject, snakeCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
 import {
+  PostsStatusFilter, ThreadType,
+} from '../../../data/constants';
+import {
   fetchLearnerThreadsRequest,
   fetchThreadsDenied,
   fetchThreadsFailed,
@@ -67,17 +70,48 @@ export function fetchLearners(courseId, {
  * @param page
  * @returns a promise that will update the state with the learner's posts
  */
-export function fetchUserPosts(courseId, params) {
+export function fetchUserPosts(courseId, {
+  orderBy,
+  filters = {},
+  page = 1,
+  author = null,
+  countFlagged,
+} = {}) {
+  const options = {
+    orderBy,
+    page,
+    author,
+    countFlagged,
+  };
+  if (filters.status === PostsStatusFilter.FOLLOWING) {
+    options.following = true;
+  }
+  if (filters.status === PostsStatusFilter.UNREAD) {
+    options.view = 'unread';
+  }
+  if (filters.status === PostsStatusFilter.UNANSWERED) {
+    options.view = 'unanswered';
+  }
+  if (filters.status === PostsStatusFilter.REPORTED) {
+    options.flagged = true;
+  }
+  if (filters.postType !== ThreadType.ALL) {
+    options.threadType = filters.postType;
+  }
+  if (filters.search) {
+    options.textSearch = filters.search;
+  }
+  if (filters.cohort) {
+    options.cohort = filters.cohort;
+  }
   return async (dispatch) => {
     try {
-      dispatch(fetchLearnerThreadsRequest({ courseId, author: params?.username }));
-      const data = await getUserPosts(courseId, params);
+      dispatch(fetchLearnerThreadsRequest({ courseId, author }));
+
+      const data = await getUserPosts(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data));
-      dispatch(fetchThreadsSuccess({
-        ...normalisedData,
-        page: params.page,
-        author: params.username,
-      }));
+
+      dispatch(fetchThreadsSuccess({ ...normalisedData, page, author }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(fetchThreadsDenied());

@@ -72,7 +72,7 @@ function LearnerPostsView({ intl }) {
   }
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, params));
+    dispatch(fetchUserPosts(courseId, { author: username }));
   }, [courseId, username]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ function LearnerPostsView({ intl }) {
 
   const loadMorePosts = () => (
     dispatch(fetchUserPosts(courseId, {
-      ...params,
+      author: username,
       page: nextPage,
     }))
   );
