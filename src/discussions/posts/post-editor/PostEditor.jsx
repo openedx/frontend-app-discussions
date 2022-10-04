@@ -125,7 +125,21 @@ function PostEditor({
     const isCohorting = settings.alwaysDivideInlineDiscussions || settings.dividedInlineDiscussions.includes(tId);
     return isCohorting;
   };
-  const hideEditor = () => {
+
+  const initialValues = {
+    postType: post?.type || 'discussion',
+    topic: post?.topicId || topicId || nonCoursewareTopics?.[0]?.id,
+    title: post?.title || '',
+    comment: post?.rawBody || '',
+    follow: isEmpty(post?.following) ? true : post?.following,
+    anonymous: allowAnonymous ? false : undefined,
+    anonymousToPeers: allowAnonymousToPeers ? false : undefined,
+    editReasonCode: post?.lastEdit?.reasonCode || '',
+    cohort: post?.cohort || 'default',
+  };
+
+  const hideEditor = (resetForm) => {
+    resetForm({ values: initialValues });
     if (editExisting) {
       const newLocation = discussionsPath(commentsPagePath, {
         courseId,
@@ -139,8 +153,7 @@ function PostEditor({
   };
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = (cohort) => (cohort === 'default' ? null : cohort);
-
-  const submitForm = async (values) => {
+  const submitForm = async (values, { resetForm }) => {
     if (editExisting) {
       await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
@@ -168,7 +181,7 @@ function PostEditor({
     if (editorRef.current) {
       editorRef.current.plugins.autosave.removeDraft();
     }
-    hideEditor();
+    hideEditor(resetForm);
   };
 
   useEffect(() => {
@@ -187,18 +200,6 @@ function PostEditor({
       </div>
     );
   }
-
-  const initialValues = {
-    postType: post?.type || 'discussion',
-    topic: post?.topicId || topicId || nonCoursewareTopics?.[0]?.id,
-    title: post?.title || '',
-    comment: post?.rawBody || '',
-    follow: isEmpty(post?.following) ? true : post?.following,
-    anonymous: allowAnonymous ? false : undefined,
-    anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    editReasonCode: post?.lastEdit?.reasonCode || '',
-    cohort: post?.cohort || 'default',
-  };
 
   const validationSchema = Yup.object().shape({
     postType: Yup.mixed()
@@ -239,6 +240,7 @@ function PostEditor({
         handleSubmit,
         handleBlur,
         handleChange,
+        resetForm,
       }) => (
         <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
           <h3 className="mb-3">
@@ -296,23 +298,23 @@ function PostEditor({
               </Form.Control>
             </Form.Group>
             {canSelectCohort(values.topic) && (
-            <Form.Group className="w-100 ml-3 mb-0">
-              <Form.Control
-                className="m-0"
-                name="cohort"
-                as="select"
-                value={values.cohort}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-describedby="cohortAreaInput"
-                floatingLabel={intl.formatMessage(messages.cohortVisibility)}
-              >
-                <option value="default">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
-                {cohorts.map(cohort => (
-                  <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
+              <Form.Group className="w-100 ml-3 mb-0">
+                <Form.Control
+                  className="m-0"
+                  name="cohort"
+                  as="select"
+                  value={values.cohort}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  aria-describedby="cohortAreaInput"
+                  floatingLabel={intl.formatMessage(messages.cohortVisibility)}
+                >
+                  <option value="default">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
+                  {cohorts.map(cohort => (
+                    <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
             )}
           </div>
           <div className="border-bottom border-light-400" />
@@ -396,16 +398,16 @@ function PostEditor({
                   </Form.Checkbox>
                 </Form.Group>
                 {allowAnonymousToPeers && (
-                  <Form.Group>
-                    <Form.Checkbox
-                      name="anonymousToPeers"
-                      checked={values.anonymousToPeers}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    >
-                      {intl.formatMessage(messages.anonymousToPeersPost)}
-                    </Form.Checkbox>
-                  </Form.Group>
+                <Form.Group>
+                  <Form.Checkbox
+                    name="anonymousToPeers"
+                    checked={values.anonymousToPeers}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  >
+                    {intl.formatMessage(messages.anonymousToPeersPost)}
+                  </Form.Checkbox>
+                </Form.Group>
                 )}
               </>
             )}
@@ -414,7 +416,7 @@ function PostEditor({
           <div className="d-flex justify-content-end mt-2.5">
             <Button
               variant="outline-primary"
-              onClick={hideEditor}
+              onClick={() => hideEditor(resetForm)}
             >
               {intl.formatMessage(messages.cancel)}
             </Button>
