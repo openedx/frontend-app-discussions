@@ -42,7 +42,6 @@ function PostsView() {
   const {
     topicId,
     category,
-    page,
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
   const searchString = useSelector(({ threads }) => threads.filters.search);
@@ -50,7 +49,6 @@ function PostsView() {
   const loadingStatus = useSelector(({ threads }) => threads.status);
 
   let postsListComponent;
-  const showOwnPosts = page === 'my-posts';
 
   if (topicId) {
     postsListComponent = <TopicPostsList topicId={topicId} />;
@@ -79,7 +77,7 @@ function PostsView() {
       {
         searchString && <SearchInfo count={resultsFound} text={searchString} loadingStatus={loadingStatus} onClear={() => dispatch(setSearchQuery(''))} />
       }
-      <PostFilterBar filterSelfPosts={showOwnPosts} />
+      <PostFilterBar />
       <div className="border-bottom border-light-400" />
       <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
         {postsListComponent}

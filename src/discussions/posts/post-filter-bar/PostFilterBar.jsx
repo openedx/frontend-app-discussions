@@ -56,7 +56,6 @@ ActionItem.propTypes = {
 };
 
 function PostFilterBar({
-  filterSelfPosts,
   intl,
 }) {
   const dispatch = useDispatch();
@@ -120,7 +119,7 @@ function PostFilterBar({
       <Collapsible.Trigger className="collapsible-trigger border-0">
         <span className="text-primary-700 pr-4">
           {intl.formatMessage(messages.sortFilterStatus, {
-            own: filterSelfPosts,
+            own: false,
             type: currentFilters.postType,
             sort: currentSorting,
             status: currentFilters.status,
@@ -270,12 +269,7 @@ function PostFilterBar({
 }
 
 PostFilterBar.propTypes = {
-  filterSelfPosts: PropTypes.bool,
   intl: intlShape.isRequired,
-};
-
-PostFilterBar.defaultProps = {
-  filterSelfPosts: false,
 };
 
 export default injectIntl(PostFilterBar);
