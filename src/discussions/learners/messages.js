@@ -47,6 +47,16 @@ const messages = defineMessages({
     }`,
     description: 'Text for current selected learners filter',
   },
+  allActivity: {
+    id: 'discussion.learner.allActivity',
+    defaultMessage: 'All activity',
+    description: 'Tooltip text for all activity icon',
+  },
+  posts: {
+    id: 'discussion.learner.posts',
+    defaultMessage: 'Posts',
+    description: 'Tooltip text for all posts icon',
+  },
 });
 
 export default messages;

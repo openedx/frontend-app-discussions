@@ -56,7 +56,7 @@ describe('LearnerFooter', () => {
   it('Always shows threads and replies icons', () => {
     renderComponent(mockLearner);
     expect(screen.getByText(mockLearner.threads)).toBeTruthy();
-    expect(screen.getByText(mockLearner.replies + mockLearner.responses)).toBeTruthy();
+    expect(screen.getByText(mockLearner.replies + mockLearner.responses + mockLearner.threads)).toBeTruthy();
   });
 
   it('shows flags when the learner have ones', () => {
