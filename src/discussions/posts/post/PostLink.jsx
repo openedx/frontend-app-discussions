@@ -63,7 +63,7 @@ function PostLink({
         style={{ lineHeight: '21px' }}
         aria-current={isSelected(post.id) ? 'page' : undefined}
         role="option"
-        tabindex={(isSelected(post.id) || idx === 0) ? 0 : -1}
+        tabIndex={(isSelected(post.id) || idx === 0) ? 0 : -1}
       >
         <div
           className={

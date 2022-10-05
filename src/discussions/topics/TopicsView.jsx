@@ -22,15 +22,19 @@ function CourseWideTopics() {
   const { category } = useParams();
   const filter = useSelector(selectTopicFilter);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
-  return (nonCoursewareTopics && category === undefined) && nonCoursewareTopics.filter(
-    item => (filter
-      ? item.name.toLowerCase()
-        .includes(filter)
-      : true
-    ),
-  )
-    .map(topic => (
-      <Topic topic={topic} key={topic.id} />
+  const filteredNonCoursewareTopics = nonCoursewareTopics.filter(item => (filter
+    ? item.name.toLowerCase().includes(filter)
+    : true
+  ));
+
+  return (nonCoursewareTopics && category === undefined)
+    && filteredNonCoursewareTopics.map((topic, index) => (
+      <Topic
+        topic={topic}
+        key={topic.id}
+        index={index}
+        showDivider={(filteredNonCoursewareTopics.length - 1) !== index}
+      />
     ));
 }
 
@@ -76,6 +80,20 @@ function TopicsView() {
   const { courseId } = useContext(DiscussionContext);
   const dispatch = useDispatch();
 
+  const handleKeyDown = (event) => {
+    const { key } = event;
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
+    const option = event.target;
+
+    let selectedOption;
+    if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
+    if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
+
+    if (selectedOption) {
+      selectedOption.focus();
+    }
+  };
+
   useEffect(() => {
     // Don't load till the provider information is available
     if (provider) {
@@ -89,19 +107,19 @@ function TopicsView() {
   }, [topicFilter]);
 
   return (
-    <div className="d-flex flex-column flex-fill">
-      <div
-        className="discussion-topics card"
-        data-testid="topics-view"
-      >
-        {
-          topicFilter && <SearchInfo text={topicFilter} count={filteredTopicsCount} loadingStatus={loadingStatus} onClear={() => dispatch(setFilter(''))} />
-        }
-        <div className="list-group list-group-flush">
-          <CourseWideTopics />
-          {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
-          {provider === DiscussionProvider.LEGACY && <LegacyCoursewareTopics />}
-        </div>
+    <div className="discussion-topics d-flex flex-column h-100" data-testid="topics-view">
+      {topicFilter && (
+        <SearchInfo
+          text={topicFilter}
+          count={filteredTopicsCount}
+          loadingStatus={loadingStatus}
+          onClear={() => dispatch(setFilter(''))}
+        />
+      )}
+      <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
+        <CourseWideTopics />
+        {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
+        {provider === DiscussionProvider.LEGACY && <LegacyCoursewareTopics />}
       </div>
       {
         filteredTopicsCount === 0
