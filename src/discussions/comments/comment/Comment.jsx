@@ -112,7 +112,7 @@ function Comment({
               lineHeight: '20px',
             }}
           >
-            {intl.formatMessage(messages.loadMoreResponses)}
+            {intl.formatMessage(messages.loadMoreComments)}
           </Button>
           )}
           {!isNested && showFullThread && (
@@ -130,8 +130,11 @@ function Comment({
                 {(!isClosedPost && !inBlackoutDateRange(blackoutDateRange))
                   && (
                     <Button
-                      className="d-flex flex-grow mt-4.5"
+                      className="d-flex flex-grow mt-3 py-2 font-size-14"
                       variant="outline-primary"
+                      style={{
+                        lineHeight: '20px',
+                      }}
                       onClick={() => setReplying(true)}
                     >
                       {intl.formatMessage(messages.addComment)}
