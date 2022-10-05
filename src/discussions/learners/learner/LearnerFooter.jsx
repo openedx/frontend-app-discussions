@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Edit, Report, ReportGmailerrorred } from '@edx/paragon/icons';
+import { Edit, Report } from '@edx/paragon/icons';
 
-import { QuestionAnswerOutline } from '../../../components/icons';
+import { QuestionAnswerOutline, ReportGmailerrorred } from '../../../components/icons';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';
 import { learnerShape } from './proptypes';
