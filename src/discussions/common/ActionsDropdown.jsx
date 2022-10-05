@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
-  Button, Dropdown, Icon, IconButton, ModalPopup,
+  Button, Dropdown, Icon, IconButton, ModalPopup, useToggle,
 } from '@edx/paragon';
 import { MoreHoriz } from '@edx/paragon/icons';
 
@@ -23,8 +23,8 @@ function ActionsDropdown({
   disabled,
   actionHandlers,
 }) {
-  const [isOpen, setOpen] = useState(false);
-  const dropdownIconRef = React.useRef(null);
+  const [isOpen, open, close] = useToggle(false);
+  const [target, setTarget] = useState(null);
   const actions = useActions(commentOrPost);
   const handleActions = (action) => {
     const actionFunction = actionHandlers[action];
@@ -42,17 +42,17 @@ function ActionsDropdown({
   return (
     <>
       <IconButton
-        onClick={() => setOpen(!isOpen)}
+        onClick={open}
         alt={intl.formatMessage(messages.actionsAlt)}
         src={MoreHoriz}
         iconAs={Icon}
         disabled={disabled}
         size="sm"
-        ref={dropdownIconRef}
+        ref={setTarget}
       />
       <ModalPopup
-        onClose={() => setOpen(false)}
-        positionRef={dropdownIconRef}
+        onClose={close}
+        positionRef={target}
         isOpen={isOpen}
         placement="auto-start"
       >
@@ -70,7 +70,7 @@ function ActionsDropdown({
                 variant="tertiary"
                 size="inline"
                 onClick={() => {
-                  setOpen(false);
+                  close();
                   handleActions(action.action);
                 }}
                 className="d-flex justify-content-start py-1.5 mr-4"
