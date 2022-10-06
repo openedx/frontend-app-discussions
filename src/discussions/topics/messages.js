@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: 'Archived',
     description: 'Heading for displaying topics that are archived.',
   },
+  unnamedTopicCategories: {
+    id: 'discussions.topics.unnamed.label',
+    defaultMessage: 'Unnamed Topic',
+    description: 'Text to display in place of topic name if topic name is empty',
+  },
 });
 
 export default messages;
