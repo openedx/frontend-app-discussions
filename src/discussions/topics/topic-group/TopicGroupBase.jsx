@@ -4,10 +4,13 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath } from '../../utils';
 import { selectTopicFilter } from '../data/selectors';
+import messages from '../messages';
 import Topic, { topicShape } from './topic/Topic';
 
 function TopicGroupBase({
@@ -15,6 +18,7 @@ function TopicGroupBase({
   groupTitle,
   linkToGroup,
   topics,
+  intl,
 }) {
   const { courseId } = useContext(DiscussionContext);
   const filter = useSelector(selectTopicFilter);
@@ -42,7 +46,7 @@ function TopicGroupBase({
       data-category-id={groupId}
       data-testid="topic-group"
     >
-      {linkToGroup
+      {linkToGroup && groupId
         ? (
           <Link
             className="list-group-item p-4 text-primary-500"
@@ -55,7 +59,7 @@ function TopicGroupBase({
           </Link>
         ) : (
           <span className="list-group-item p-4 text-primary-500">
-            {groupTitle}
+            {groupTitle || intl.formatMessage(messages.unnamedTopicCategories)}
           </span>
         )}
       {topicElements}
@@ -68,10 +72,11 @@ TopicGroupBase.propTypes = {
   groupTitle: PropTypes.string.isRequired,
   topics: PropTypes.arrayOf(topicShape).isRequired,
   linkToGroup: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 
 TopicGroupBase.defaultProps = {
   linkToGroup: true,
 };
 
-export default TopicGroupBase;
+export default injectIntl(TopicGroupBase);
