@@ -46,7 +46,6 @@ export default function DiscussionsHome() {
     learnerUsername,
   } = params;
   const inContext = new URLSearchParams(location.search).get('inContext') !== null;
-  const inIframe = new URLSearchParams(location.search).get('inIframe')?.toLowerCase() === 'true';
   // Display the content area if we are currently viewing/editing a post or creating one.
   const displayContentArea = postId || postEditorVisible || (learnerUsername && postId);
   let displaySidebar = useSidebarVisible();
@@ -82,10 +81,9 @@ export default function DiscussionsHome() {
       learnerUsername,
     }}
     >
-      {!inIframe && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
+      <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
       <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
-        {!inIframe
-          && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+        <CourseTabsNavigation activeTab="discussion" courseId={courseId} />
         <div className="header-action-bar" ref={postActionBarRef}>
           <div
             className="d-flex flex-row justify-content-between navbar fixed-top"
@@ -120,7 +118,7 @@ export default function DiscussionsHome() {
           )}
         </div>
       </main>
-      {!inIframe && <Footer />}
+      <Footer />
     </DiscussionContext.Provider>
   );
 }
