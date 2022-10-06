@@ -29,7 +29,7 @@ function Topic({
   });
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
-  const { inactiveFlags = 1, activeFlags = 2 } = topic;
+  const { inactiveFlags, activeFlags } = topic;
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
   const isSelected = (id) => window.location.pathname.includes(id);
 
