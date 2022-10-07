@@ -26,6 +26,11 @@ const messages = defineMessages({
     defaultMessage: 'Showing {count} results for "{text}"',
     description: 'Message displayed when user performs a search',
   },
+  searchRewriteInfo: {
+    id: 'discussions.actionBar.searchRewriteInfo',
+    defaultMessage: 'No results found for "{searchString}". Showing {count} results for "{textSearchRewrite}".',
+    description: 'Message displayed when user performs a search and search query is rewritten because matching results are not found',
+  },
   searchInfoSearching: {
     id: 'discussions.actionBar.searchInfoSearching',
     defaultMessage: 'Searching...',

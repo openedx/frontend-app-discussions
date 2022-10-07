@@ -46,6 +46,7 @@ function PostsView() {
   const dispatch = useDispatch();
   const searchString = useSelector(({ threads }) => threads.filters.search);
   const resultsFound = useSelector(({ threads }) => threads.totalThreads);
+  const textSearchRewrite = useSelector(({ threads }) => threads.textSearchRewrite);
   const loadingStatus = useSelector(({ threads }) => threads.status);
 
   let postsListComponent;
@@ -80,6 +81,7 @@ function PostsView() {
           text={searchString}
           loadingStatus={loadingStatus}
           onClear={() => dispatch(setSearchQuery(''))}
+          textSearchRewrite={textSearchRewrite}
         />
       )}
       <PostFilterBar />

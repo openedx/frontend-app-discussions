@@ -138,7 +138,7 @@ export function fetchThreads(courseId, {
       const data = await getThreads(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data), topicIds);
       dispatch(fetchThreadsSuccess({
-        ...normalisedData, page, author,
+        ...normalisedData, page, author, textSearchRewrite: data.text_search_rewrite,
       }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
