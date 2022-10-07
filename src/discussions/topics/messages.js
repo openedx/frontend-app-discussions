@@ -1,6 +1,34 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  discussions: {
+    id: 'discussions.topics.discussions',
+    defaultMessage: `{count, plural,
+      =0 {Discussion}
+      one {# Discussion}
+      other {# Discussions}
+    }`,
+    description: 'Display tooltip text used to indicate how many posts type are discussion',
+  },
+  questions: {
+    id: 'discussions.topics.questions',
+    defaultMessage: `{count, plural,
+      =0 {Question}
+      one {# Question}
+      other {# Questions}
+    }`,
+    description: 'Display tooltip text used to indicate how many posts type are questions',
+  },
+  reported: {
+    id: 'discussions.topics.reported',
+    defaultMessage: '{reported} reported',
+    description: 'Display tooltip text used to indicate how many posts are reported',
+  },
+  previouslyReported: {
+    id: 'discussions.topics.previouslyReported',
+    defaultMessage: '{previouslyReported} previously reported',
+    description: 'Display tooltip text used to indicate how many posts are previously reported',
+  },
   sortedBy: {
     id: 'discussions.topics.sort.message',
     defaultMessage: 'Sorted by {sortBy}',

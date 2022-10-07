@@ -24,45 +24,50 @@ function TopicGroupBase({
   const filter = useSelector(selectTopicFilter);
   const hasTopics = topics.length > 0;
   const matchesFilter = filter
-    ? groupTitle?.toLowerCase()
-      .includes(filter)
+    ? groupTitle?.toLowerCase().includes(filter)
     : true;
-  const topicElements = topics.filter(
-    topic => (
-      filter
-        ? (topic.name.toLowerCase()
-          .includes(filter) || matchesFilter)
-        : true
+
+  const filteredTopicElements = topics.filter(
+    topic => (filter
+      ? (topic.name.toLowerCase().includes(filter) || matchesFilter)
+      : true
     ),
-  )
-    .map(topic => (<Topic topic={topic} key={topic.id} />));
-  const hasFilteredSubtopics = (topicElements.length > 0);
+  );
+
+  const hasFilteredSubtopics = (filteredTopicElements.length > 0);
   if (!hasTopics || (!matchesFilter && !hasFilteredSubtopics)) {
     return null;
   }
   return (
     <div
-      className="discussion-topic-group d-flex flex-column"
+      className="discussion-topic-group d-flex flex-column text-primary-500"
       data-category-id={groupId}
       data-testid="topic-group"
     >
-      {linkToGroup && groupId
-        ? (
-          <Link
-            className="list-group-item p-4 text-primary-500"
-            to={discussionsPath(Routes.TOPICS.CATEGORY, {
-              courseId,
-              category: groupId,
-            })}
-          >
-            {groupTitle}
-          </Link>
-        ) : (
-          <span className="list-group-item p-4 text-primary-500">
-            {groupTitle || intl.formatMessage(messages.unnamedTopicCategories)}
-          </span>
-        )}
-      {topicElements}
+      <div className="pt-2.5 px-4 font-weight-bold">
+        {linkToGroup && groupId
+          ? (
+            <Link
+              className="text-decoration-none text-primary-500"
+              to={discussionsPath(Routes.TOPICS.CATEGORY, {
+                courseId,
+                category: groupId,
+              })}
+            >
+              {groupTitle}
+            </Link>
+          ) : (
+            groupTitle || intl.formatMessage(messages.unnamedTopicCategories)
+          )}
+      </div>
+      {filteredTopicElements.map((topic, index) => (
+        <Topic
+          topic={topic}
+          key={topic.id}
+          index={index}
+          showDivider={(filteredTopicElements.length - 1) !== index}
+        />
+      ))}
     </div>
   );
 }

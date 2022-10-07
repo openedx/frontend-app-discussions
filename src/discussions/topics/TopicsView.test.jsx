@@ -159,7 +159,7 @@ describe('TopicsView', () => {
         renderComponent();
         const archivedTopicGroup = screen.queryAllByTestId('topic-group').pop();
         expect(archivedTopicGroup).toHaveTextContent(/archived/i);
-        const archivedTopicLinks = within(archivedTopicGroup).queryAllByRole('link');
+        const archivedTopicLinks = within(archivedTopicGroup).queryAllByRole('option');
         expect(archivedTopicLinks).toHaveLength(2);
       });
     }

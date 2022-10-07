@@ -44,7 +44,7 @@ function BreadcrumbMenu() {
   });
 
   return (
-    <div className="breadcrumb-menu d-flex flex-row mt-2 mx-3">
+    <div className="breadcrumb-menu d-flex flex-row bg-light-200 box-shadow-down-1 px-2.5 py-1">
       <BreadcrumbDropdown
         currentItem={currentChapter}
         showAllPath={discussionsPath(Routes.TOPICS.ALL, { courseId })}

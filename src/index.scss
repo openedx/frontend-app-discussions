@@ -232,3 +232,11 @@ header {
   position: sticky;
   top: 0;
 }
+
+.breadcrumb-menu {
+  z-index: 1;
+}
+
+.discussion-topic-group:last-of-type .divider{
+  display: none;
+}
