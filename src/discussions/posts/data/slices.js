@@ -40,6 +40,7 @@ const threadsSlice = createSlice({
     nextPage: null,
     totalPages: null,
     totalThreads: null,
+    textSearchRewrite: null,
     postStatus: RequestStatus.SUCCESSFUL,
     filters: {
       status: PostsStatusFilter.ALL,
@@ -80,6 +81,7 @@ const threadsSlice = createSlice({
       state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
       state.totalPages = payload.pagination.numPages;
       state.totalThreads = payload.pagination.count;
+      state.textSearchRewrite = payload.textSearchRewrite;
     },
     fetchThreadsFailed: (state) => {
       state.status = RequestStatus.FAILED;
