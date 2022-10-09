@@ -43,6 +43,8 @@
   "discussions.learner.mostActivity": "La maggior parte delle attività",
   "discussions.learner.reportedActivity": "Attività segnalata",
   "discussions.learner.sortFilterStatus": "Tutti gli studenti di {sort, select, flagged {attività segnalata} activity {più attività} other {{sort}} }",
+  "discussion.learner.allActivity": "All activity",
+  "discussion.learner.posts": "Posts",
   "discussions.actions.button.alt": "Menù Azioni",
   "discussions.actions.back.alt": "Indietro",
   "discussions.actions.copylink": "Copia link",
@@ -85,7 +87,7 @@
   "discussions.navigation.navigationBar.learners": "Utenti",
   "discussions.app.title": "Discussioni",
   "discussions.posts.actionBar.searchAllPosts": "Cerca tutti i messaggi",
-  "discussions.posts.actionBar.search": "{page, select, topics {Find a topic} posts {Search all posts} learners {Search learner} myPosts {Search all posts} other {{page}} }",
+  "discussions.posts.actionBar.search": "{page, select,\n      topics {Search topics}\n      posts {Search all posts}\n      learners {Search learners}\n      myPosts {Search all posts}\n      other {{page}}\n    }",
   "discussions.actionBar.searchInfo": "Visualizzazione di {count} risultati per &quot;{text}&quot;",
   "discussions.actionBar.searchInfoSearching": "Ricerca in corso...",
   "discussions.actionBar.clearSearch": "Risultati chiari",
@@ -160,6 +162,7 @@
   "discussions.topics.sort.lastActivity": "Attività Recente",
   "discussions.topics.sort.commentCount": "La maggior parte delle attività",
   "discussions.topics.sort.courseStructure": "Struttura Corso",
-  "discussions.topics.find.label": "Trova un argomento",
-  "discussions.topics.archived.label": "Archiviati"
+  "discussions.topics.find.label": "Search topics",
+  "discussions.topics.archived.label": "Archiviati",
+  "discussions.topics.unnamed.label": "Unnamed Topic"
 }
