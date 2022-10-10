@@ -142,8 +142,7 @@ export const useAlertBannerVisible = (content) => {
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
-  const isReportedByCurrentUser = getAuthenticatedUser().username === content?.abuseFlaggedBy;
-  const canSeeReportedBanner = (userHasModerationPrivileges || userIsGroupTa || isReportedByCurrentUser);
+  const canSeeReportedBanner = content.abuseFlagged;
 
   return (
     (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (content.lastEdit?.reason || content.closed))
