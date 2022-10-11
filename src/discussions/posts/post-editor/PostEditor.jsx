@@ -106,7 +106,8 @@ function PostEditor({
   const userIsStaff = useSelector(selectUserIsStaff);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
-    && (userHasModerationPrivileges || userIsGroupTa || userIsStaff) && post?.author !== authenticatedUser.username
+    && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
+    && post?.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
