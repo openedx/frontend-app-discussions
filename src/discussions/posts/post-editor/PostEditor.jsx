@@ -134,7 +134,7 @@ function PostEditor({
     follow: isEmpty(post?.following) ? true : post?.following,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    editReasonCode: post?.lastEdit?.reasonCode || '',
+    editReasonCode: post?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
     cohort: post?.cohort || 'default',
   };
 
@@ -350,7 +350,7 @@ function PostEditor({
                   name="editReasonCode"
                   className="m-0"
                   as="select"
-                  value={userIsStaff ? 'violates-guidelines' : values.editReasonCode}
+                  value={values.editReasonCode}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   aria-describedby="editReasonCodeInput"
