@@ -29,7 +29,7 @@ let store;
 let axiosMock;
 
 async function renderComponent({
-  postId, topicId, category, myPosts,
+  postId, topicId, category, myPosts, inContext = false,
 } = { myPosts: false }) {
   let path = generatePath(Routes.POSTS.ALL_POSTS, { courseId });
   let page;
@@ -56,6 +56,7 @@ async function renderComponent({
             topicId,
             category,
             page,
+            inContext,
           }}
           >
             <Switch>
@@ -85,12 +86,6 @@ describe('PostsView', () => {
         roles: [],
       },
     });
-
-    store = initializeStore({
-      blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
-      config: { hasModerationPrivileges: true },
-    });
-    store.dispatch(fetchConfigSuccess({}));
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
@@ -109,8 +104,20 @@ describe('PostsView', () => {
       });
   });
 
+  function setupStore(data = {}) {
+    const storeData = {
+      blocks: { blocks: { 'test-usage-key': { topics: ['some-topic-2', 'some-topic-0'] } } },
+      config: { hasModerationPrivileges: true },
+      ...data,
+    };
+    // console.log(storeData);
+    store = initializeStore(storeData);
+    store.dispatch(fetchConfigSuccess({}));
+  }
+
   describe('Basic', () => {
     test('displays a list of all posts', async () => {
+      setupStore();
       await act(async () => {
         await renderComponent();
       });
@@ -118,6 +125,7 @@ describe('PostsView', () => {
     });
 
     test('displays a list of user posts', async () => {
+      setupStore();
       await act(async () => {
         await renderComponent({ myPosts: true });
       });
@@ -125,20 +133,42 @@ describe('PostsView', () => {
     });
 
     test('displays a list of posts in a topic', async () => {
+      setupStore();
       await act(async () => {
         await renderComponent({ topicId: 'some-topic-1' });
       });
       expect(screen.getAllByText(/this is thread-\d+ in topic some-topic-1/i)).toHaveLength(Math.ceil(threadCount / 3));
     });
 
-    test('displays a list of posts in a category', async () => {
-      await act(async () => {
-        await renderComponent({ category: 'test-usage-key' });
-      });
-      expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-1}/i)).toHaveLength(0);
-      expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-2/i)).toHaveLength(Math.ceil(threadCount / 3));
-      expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-0/i)).toHaveLength(Math.ceil(threadCount / 3));
-    });
+    test.each([true, false])(
+      'displays a list of posts in a category with grouping at subsection = %s',
+      async (grouping) => {
+        setupStore({
+          blocks: {
+            blocks: {
+              'test-usage-key': {
+                type: 'vertical',
+                topics: ['some-topic-2', 'some-topic-0'],
+                parent: 'test-seq-key',
+              },
+              'test-seq-key': { type: 'sequential', topics: ['some-topic-0', 'some-topic-1', 'some-topic-2'] },
+            },
+          },
+          config: { groupAtSubsection: grouping, hasModerationPrivileges: true, provider: 'openedx' },
+        });
+        await act(async () => {
+          await renderComponent({ category: 'test-usage-key', inContext: true, p: true });
+        });
+        const topicThreadCount = Math.ceil(threadCount / 3);
+        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-2/i))
+          .toHaveLength(topicThreadCount);
+        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-0/i))
+          .toHaveLength(topicThreadCount);
+        // When grouping is enabled, topic 1 will be shown, but not otherwise.
+        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-1/i))
+          .toHaveLength(grouping ? topicThreadCount : 0);
+      },
+    );
   });
 
   describe('Filtering', () => {
@@ -150,6 +180,7 @@ describe('PostsView', () => {
     }
 
     beforeEach(async () => {
+      setupStore();
       await act(async () => {
         await renderComponent();
       });
