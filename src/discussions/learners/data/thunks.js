@@ -67,12 +67,12 @@ export function fetchLearners(courseId, {
  * @param page
  * @returns a promise that will update the state with the learner's posts
  */
-export function fetchUserPosts(courseId, username, { page = 1 } = {}) {
+export function fetchUserPosts(courseId, { username, page = 1, countFlagged = false } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchLearnerThreadsRequest({ courseId, author: username }));
 
-      const data = await getUserPosts(courseId, username, { page });
+      const data = await getUserPosts(courseId, { username, page, countFlagged });
       const normalisedData = normaliseThreads(camelCaseObject(data));
 
       dispatch(fetchThreadsSuccess({ ...normalisedData, page, author: username }));

@@ -14,6 +14,7 @@ import { ArrowBack } from '@edx/paragon/icons';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
+import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import {
   selectAllThreads,
   selectThreadNextPage,
@@ -34,14 +35,19 @@ function LearnerPostsView({ intl }) {
   const loadingStatus = useSelector(threadsLoadingStatus());
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userIsStaff = useSelector(selectUserIsStaff);
+  const countFlagged = userHasModerationPrivileges || userIsStaff;
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, username));
+    dispatch(fetchUserPosts(courseId, { username, countFlagged }));
   }, [courseId, username]);
 
   const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, username, {
+    dispatch(fetchUserPosts(courseId, {
+      username,
       page: nextPage,
+      countFlagged,
     }))
   );
 
