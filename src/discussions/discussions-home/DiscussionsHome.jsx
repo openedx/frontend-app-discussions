@@ -7,6 +7,7 @@ import {
 
 import Footer from '@edx/frontend-component-footer';
 import { LearningHeader as Header } from '@edx/frontend-component-header';
+import { getConfig } from '@edx/frontend-platform';
 
 import { PostActionsBar } from '../../components';
 import { CourseTabsNavigation } from '../../components/NavigationBar';
@@ -37,6 +38,7 @@ export default function DiscussionsHome() {
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const isRedirectToLearners = useShowLearnersTab();
+  const isFeedbackBannerVisible = getConfig().DISPLAY_FEEDBACK_BANNER === 'true';
 
   const {
     courseId,
@@ -93,7 +95,7 @@ export default function DiscussionsHome() {
             )}
             <PostActionsBar inContext={inContext} />
           </div>
-          <InformationBanner />
+          {isFeedbackBannerVisible && <InformationBanner />}
         </div>
         <Route
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
