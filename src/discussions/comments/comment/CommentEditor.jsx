@@ -17,6 +17,7 @@ import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
+  selectUserIsStaff,
 } from '../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
 import { addComment, editComment } from '../data/thunks';
@@ -27,16 +28,19 @@ function CommentEditor({
   comment,
   onCloseEditor,
   edit,
+  formClasses,
 }) {
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
+  const userIsStaff = useSelector(selectUserIsStaff);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
 
-  const canDisplayEditReason = (reasonCodesEnabled && (userHasModerationPrivileges || userIsGroupTa)
-    && edit && comment.author !== authenticatedUser.username
+  const canDisplayEditReason = (reasonCodesEnabled && edit
+    && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
+    && comment?.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -51,7 +55,7 @@ function CommentEditor({
 
   const initialValues = {
     comment: comment.rawBody,
-    editReasonCode: comment?.lastEdit?.reasonCode || '',
+    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
   const handleCloseEditor = (resetForm) => {
@@ -94,7 +98,7 @@ function CommentEditor({
         handleChange,
         resetForm,
       }) => (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} className={formClasses}>
           {canDisplayEditReason && (
             <Form.Group
               isInvalid={isFormikFieldInvalid('editReasonCode', {
@@ -104,7 +108,7 @@ function CommentEditor({
             >
               <Form.Control
                 name="editReasonCode"
-                className="mt-2"
+                className="mt-2 mr-0"
                 as="select"
                 value={values.editReasonCode}
                 onChange={handleChange}
@@ -181,10 +185,12 @@ CommentEditor.propTypes = {
   onCloseEditor: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
   edit: PropTypes.bool,
+  formClasses: PropTypes.string,
 };
 
 CommentEditor.defaultProps = {
   edit: true,
+  formClasses: '',
 };
 
 export default injectIntl(CommentEditor);

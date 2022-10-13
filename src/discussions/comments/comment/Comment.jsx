@@ -80,7 +80,7 @@ function Comment({
           <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
           {isEditing
             ? (
-              <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} />
+              <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} formClasses="pt-3" />
             )
             : <HTMLLoader cssClassName="comment-body pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
           <CommentIcons
