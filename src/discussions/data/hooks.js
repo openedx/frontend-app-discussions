@@ -23,7 +23,7 @@ import {
   selectModerationSettings,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
-  selectUserIsGroupTa, selectUserIsStaff, selectUserRoles,
+  selectUserIsGroupTa,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
@@ -150,15 +150,7 @@ export const useAlertBannerVisible = (content) => {
   );
 };
 
-export const useShowLearnersTab = () => {
-  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
-  const userRoles = useSelector(selectUserRoles);
-  const isAdmin = useSelector(selectUserIsStaff);
-  const IsGroupTA = useSelector(selectUserIsGroupTa);
-  const privileged = useSelector(selectUserHasModerationPrivileges);
-  const allowedUsers = isAdmin || IsGroupTA || privileged || (userRoles.includes('Student') && userRoles.length > 1);
-  return learnersTabEnabled && allowedUsers;
-};
+export const useShowLearnersTab = () => useSelector(selectLearnersTabEnabled);
 
 /**
  * React hook that gets the current topic ID from the current topic or category.
