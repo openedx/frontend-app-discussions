@@ -21,6 +21,7 @@ import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
 import messages from '../messages';
 import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { postMessageToParent } from '../utils';
+import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationsBanner';
@@ -96,6 +97,7 @@ export default function DiscussionsHome() {
             <PostActionsBar inContext={inContext} />
           </div>
           {isFeedbackBannerVisible && <InformationBanner />}
+          <BlackoutInformationBanner />
         </div>
         <Route
           path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
