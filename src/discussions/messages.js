@@ -176,7 +176,7 @@ const messages = defineMessages({
   bannerMessage: {
     id: 'discussion.banner.welcomeMessage',
     defaultMessage: '🎉 Welcome to the new and improved discussions experience!',
-    description: 'Author name displayed when a post is anonymous',
+    description: 'Information banner welcome text',
   },
   learnMoreBannerLink: {
     id: 'discussion.banner.learnMore',
@@ -187,6 +187,11 @@ const messages = defineMessages({
     id: 'discussion.banner.shareFeedback',
     defaultMessage: 'Share feedback',
     description: 'Share feedback button to open feedback forms',
+  },
+  blackoutDiscussionInformation: {
+    id: 'discussion.blackoutBanner.information',
+    defaultMessage: 'Blackout dates are currently active. Posting in discussions is unavailable at this time.',
+    description: 'Informative text when discussions blackout is active',
   },
 });
 

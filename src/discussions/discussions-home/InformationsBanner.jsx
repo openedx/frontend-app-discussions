@@ -27,7 +27,7 @@ function InformationBanner({
       dismissible
       onDismiss={() => setShowBanner(false)}
     >
-      <div style={{ fontWeight: '500' }}>
+      <div className="font-weight-500">
         {intl.formatMessage(messages.bannerMessage)}
         {!hideLearnMoreButton
           && (
