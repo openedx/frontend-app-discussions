@@ -7,6 +7,8 @@ import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router';
 
+import { useWindowSize } from '@edx/paragon';
+
 import { RequestStatus, Routes } from '../../data/constants';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
@@ -24,13 +26,14 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const redirectToLearnersTab = useShowLearnersTab();
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
+  const { height: windowHeight } = useWindowSize();
 
   useEffect(() => {
     if (sidebarRef && postActionBarHeight) {
       if (isOnDesktop) {
-        sidebarRef.current.style.maxHeight = `${document.body.offsetHeight - postActionBarHeight}px`;
+        sidebarRef.current.style.maxHeight = `${windowHeight - postActionBarHeight}px`;
       }
-      sidebarRef.current.style.minHeight = `${document.body.offsetHeight - postActionBarHeight}px`;
+      sidebarRef.current.style.minHeight = `${windowHeight - postActionBarHeight}px`;
       sidebarRef.current.style.top = `${postActionBarHeight}px`;
     }
   }, [sidebarRef, postActionBarHeight]);
