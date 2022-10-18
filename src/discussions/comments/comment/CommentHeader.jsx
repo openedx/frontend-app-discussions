@@ -39,7 +39,12 @@ function CommentHeader({
             height: '32px',
           }}
         />
-        <AuthorLabel author={comment.author} authorLabel={comment.authorLabel} labelColor={colorClass && `text-${colorClass}`} linkToProfile />
+        <AuthorLabel
+          author={comment.author}
+          authorLabel={comment.authorLabel}
+          labelColor={colorClass && `text-${colorClass}`}
+          linkToProfile
+        />
       </div>
       <div className="d-flex align-items-center">
         <span className="btn-icon btn-icon-sm mr-1 align-items-center">

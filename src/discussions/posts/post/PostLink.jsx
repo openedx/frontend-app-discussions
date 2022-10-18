@@ -20,7 +20,6 @@ import { postShape } from './proptypes';
 function PostLink({
   post,
   isSelected,
-  learnerTab,
   showDivider,
   idx,
 }) {
@@ -113,7 +112,6 @@ function PostLink({
               author={post.author || intl.formatMessage(messages.anonymous)}
               authorLabel={post.authorLabel}
               labelColor={authorLabelColor && `text-${authorLabelColor}`}
-              linkToProfile={!learnerTab && Boolean(post.author)}
             />
             <div
               className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
@@ -137,13 +135,11 @@ function PostLink({
 PostLink.propTypes = {
   post: postShape.isRequired,
   isSelected: PropTypes.func.isRequired,
-  learnerTab: PropTypes.bool,
   showDivider: PropTypes.bool,
   idx: PropTypes.number,
 };
 
 PostLink.defaultProps = {
-  learnerTab: false,
   showDivider: true,
   idx: -1,
 };
