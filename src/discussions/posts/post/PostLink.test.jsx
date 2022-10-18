@@ -19,12 +19,12 @@ const courseId = 'course-v1:edX+DemoX+Demo_Course';
 let store;
 let axiosMock;
 
-function renderComponent(post, learnerTab = false) {
+function renderComponent(post) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{ courseId }}>
-          <PostLink post={post} key={post.id} isSelected={() => true} learnerTab={learnerTab} />
+          <PostLink post={post} key={post.id} isSelected={() => true} />
         </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
@@ -103,27 +103,10 @@ describe('Post username', () => {
   });
 
   it.each([
-    true,
-    false,
-  ])('is a clickable link %s', async (leanerTab) => {
-    renderComponent(mockPost, leanerTab);
-
-    if (leanerTab) {
-      expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
-    } else {
-      expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
-    }
-  });
-
-  it.each([
-    true,
-    false,
-  ])('is only clickable if user is not anonymous', async (isAnonymous) => {
-    renderComponent({ ...mockPost, author: isAnonymous ? null : 'test-user' });
-    if (isAnonymous) {
-      expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
-    } else {
-      expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
-    }
+    'anonymous',
+    'test-user',
+  ])('is not clickable for %s user', async (user) => {
+    renderComponent({ ...mockPost, author: user });
+    expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
   });
 });
