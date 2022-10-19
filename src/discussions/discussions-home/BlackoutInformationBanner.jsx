@@ -17,7 +17,7 @@ function BlackoutInformationBanner({
 
   return (
     <PageBanner
-      variant="warning"
+      variant="accentB"
       show={isDiscussionsBlackout && showBanner}
       dismissible
       onDismiss={() => setShowBanner(false)}
