@@ -18,7 +18,7 @@ function PostPreviewPane({
       {showPreviewPane && (
         <div
           className={`p-2 bg-light-200 rounded box-shadow-down-1 post-preview ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
-          style={{ maxHeight: '200px', overflow: 'scroll' }}
+          style={{ minHeight: '200px' }}
         >
           <IconButton
             onClick={() => setShowPreviewPane(false)}

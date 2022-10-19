@@ -18,6 +18,7 @@ import 'tinymce/icons/default';
 import 'tinymce/skins/ui/oxide/skin.css';
 // importing the plugin js.
 import 'tinymce/plugins/autolink';
+import 'tinymce/plugins/autoresize';
 import 'tinymce/plugins/autosave';
 import 'tinymce/plugins/codesample';
 import 'tinymce/plugins/image';
@@ -93,7 +94,7 @@ export default function TinyMCEEditor(props) {
         a11y_advanced_options: true,
         autosave_interval: '1s',
         autosave_restore_when_empty: false,
-        plugins: 'autosave codesample link lists image imagetools code emoticons charmap',
+        plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap',
         toolbar: 'undo redo'
           + ' | formatselect | bold italic underline'
           + ' | link blockquote openedx_code image'
