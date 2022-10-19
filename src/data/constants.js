@@ -111,6 +111,7 @@ export const PostsStatusFilter = {
   FOLLOWING: 'statusFollowing',
   REPORTED: 'statusReported',
   UNANSWERED: 'statusUnanswered',
+  UNRESPONDED: 'statusUnresponded',
 };
 
 /**
