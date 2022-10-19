@@ -72,13 +72,20 @@ function DiscussionCommentsView({
   return (
     <>
       {!isLoading
-      && (
-      <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
-        {endorsed === EndorsementStatus.ENDORSED
-          ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
-          : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
-      </div>
-      )}
+        ? (
+          <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
+            {endorsed === EndorsementStatus.ENDORSED
+              ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
+              : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
+          </div>
+        )
+        : (
+          <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
+            {endorsed === EndorsementStatus.ENDORSED
+              ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
+              : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
+          </div>
+        )}
       <div className="mx-4" role="list">
         {sortedComments.map(comment => (
           <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
