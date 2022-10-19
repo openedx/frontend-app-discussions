@@ -86,3 +86,63 @@ Factory.define('learnersProfile')
     }));
     return profiles;
   });
+
+Factory.define('learnerPosts')
+  .option('abuseFlaggedCount', null, null)
+  .option('courseId', null, 'course-v1:edX+TestX+Test_Course')
+  .attr(
+    'results',
+    ['abuseFlaggedCount', 'courseId'],
+    (abuseFlaggedCount, courseId) => {
+      const threads = [];
+      for (let i = 0; i < 2; i++) {
+        threads.push({
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          editable_fields: [
+            'abuse_flagged',
+            'following',
+            'group_id',
+            'raw_body',
+            'closed',
+            'read',
+            'title',
+            'topic_id',
+            'type',
+            'voted',
+            'pinned',
+          ],
+          id: `post_id${i}`,
+          author: 'test_user',
+          author_label: 'Staff',
+          abuse_flagged: false,
+          can_delete: true,
+          voted: false,
+          vote_count: 1,
+          title: `Title ${i}`,
+          raw_body: `<p>body ${i}</p>`,
+          preview_body: `<p>body ${i}</p>`,
+          course_id: courseId,
+          group_id: null,
+          group_name: null,
+          abuse_flagged_count: abuseFlaggedCount,
+          following: false,
+          comment_count: 8,
+          unread_comment_count: 0,
+          endorsed_comment_list_url: null,
+          non_endorsed_comment_list_url: null,
+          read: false,
+          has_endorsed: false,
+          pinned: false,
+          topic_id: 'topic',
+        });
+      }
+      return threads;
+    },
+  )
+  .attr('pagination', [], () => ({
+    next: null,
+    prev: null,
+    count: 2,
+    num_pages: 1,
+  }));

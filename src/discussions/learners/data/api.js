@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { ensureConfig, getConfig } from '@edx/frontend-platform';
+import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 ensureConfig([
@@ -45,10 +45,11 @@ export async function getUserProfiles(usernames) {
  *    pagination: {count, num_pages, next, previous}
  *  }
  */
-export async function getUserPosts(courseId, username, { page }) {
+export async function getUserPosts(courseId, { username, page, countFlagged }) {
   const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
 
+  const params = snakeCaseObject({ username, page, countFlagged });
   const { data } = await getAuthenticatedHttpClient()
-    .get(learnerPostsApiUrl, { params: { username, page } });
+    .get(learnerPostsApiUrl, { params });
   return data;
 }
