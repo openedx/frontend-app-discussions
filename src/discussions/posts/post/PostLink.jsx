@@ -42,7 +42,7 @@ function PostLink({
   });
   const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
-  const canSeeReportedBadge = post.abuseFlagged;
+  const canSeeReportedBadge = post.abuseFlagged || post.abuseFlaggedCount;
   const read = post.read || (!post.read && post.commentCount !== post.unreadCommentCount);
 
   return (
