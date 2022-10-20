@@ -40,7 +40,7 @@ function AuthorLabel({
   const className = classNames('d-flex align-items-center', labelColor);
 
   const showUserNameAsLink = useShowLearnersTab()
-      && linkToProfile && author && author !== 'anonymous';
+      && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
 
   const labelContents = (
     <div className={className}>
