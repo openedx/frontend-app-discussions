@@ -89,6 +89,7 @@
   "discussions.posts.actionBar.searchAllPosts": "Recherche dans les messages",
   "discussions.posts.actionBar.search": "{page, select,\n      topics {Search topics}\n      posts {Search all posts}\n      learners {Search learners}\n      myPosts {Search all posts}\n      other {{page}}\n    }",
   "discussions.actionBar.searchInfo": "Affichage des résultats {count} pour \"{text}\"",
+  "discussions.actionBar.searchRewriteInfo": "Aucun résultat trouvé pour \"searchString}\". Affichage des résultats {count} pour \"{textSearchRewrite}\".",
   "discussions.actionBar.searchInfoSearching": "Recherche...",
   "discussions.actionBar.clearSearch": "Effacer les résultats",
   "discussion.posts.actionBar.add": "Ajouter un message",
@@ -158,11 +159,15 @@
   "discussions.post.editedBy": "Édité par",
   "discussions.post.editReason": "Raison",
   "discussions.post.postWithoutPreview": "Aucun aperçu disponible",
+  "discussions.topics.discussions": "{count, plural,\n      =0 {Discussion}\n      one {# Discussion}\n      other {# Discussions}\n    }",
+  "discussions.topics.questions": "{count, plural,\n      =0 {Question}\n      one {# Question}\n      other {# Questions}\n    }",
+  "discussions.topics.reported": "{reported} signalé",
+  "discussions.topics.previouslyReported": "{previouslyReported} signalé précédemment",
   "discussions.topics.sort.message": "Trié par {sortBy}",
   "discussions.topics.sort.lastActivity": "Activité récente",
   "discussions.topics.sort.commentCount": "La plupart des activités",
   "discussions.topics.sort.courseStructure": "Structure du cours",
   "discussions.topics.find.label": "Rechercher des sujets",
   "discussions.topics.archived.label": "Archivé",
-  "discussions.topics.unnamed.label": "Unnamed Topic"
+  "discussions.topics.unnamed.label": "Sujet sans nom"
 }
