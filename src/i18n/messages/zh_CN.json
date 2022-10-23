@@ -79,6 +79,7 @@
   "discussion.banner.welcomeMessage": "🎉 Welcome to the new and improved discussions experience!",
   "discussion.banner.learnMore": "Learn more",
   "discussion.banner.shareFeedback": "Share feedback",
+  "discussion.blackoutBanner.information": "Blackout dates are currently active. Posting in discussions is unavailable at this time.",
   "discussions.navigation.breadcrumbMenu.allTopics": "Topics",
   "discussions.navigation.breadcrumbMenu.showAll": "Show all",
   "discussions.navigation.navigationBar.allPosts": "All posts",
