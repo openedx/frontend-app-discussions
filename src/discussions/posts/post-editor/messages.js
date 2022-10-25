@@ -116,6 +116,11 @@ const messages = defineMessages({
     defaultMessage: 'Show Preview',
     description: 'show preview button text to allow user to see their post content.',
   },
+  actionsAlt: {
+    id: 'discussions.actions.label',
+    defaultMessage: 'Actions menu',
+    description: 'Button to see actions for a post or comment',
+  },
 });
 
 export default messages;

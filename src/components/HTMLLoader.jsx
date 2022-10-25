@@ -11,12 +11,15 @@ const baseConfig = {
       ['\\\\(', '\\\\)'],
       ['\\(', '\\)'],
       ['[mathjaxinline]', '[/mathjaxinline]'],
+      ['\\begin{math}', '\\end{math}'],
     ],
     displayMath: [
       ['[mathjax]', '[/mathjax]'],
       ['$$', '$$'],
       ['\\\\[', '\\\\]'],
       ['\\[', '\\]'],
+      ['\\begin{displaymath}', '\\end{displaymath}'],
+      ['\\begin{equation}', '\\end{equation}'],
     ],
   },
 
@@ -27,6 +30,9 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/)
                   || htmlNode.match(/(\[mathjax](.+?)\[\/mathjax])+/)
                   || htmlNode.match(/(\[mathjaxinline](.+?)\[\/mathjaxinline])+/)
+                  || htmlNode.match(/(\\begin\{math}(.+?)\\end\{math})+/)
+                  || htmlNode.match(/(\\begin\{displaymath}(.+?)\\end\{displaymath})+/)
+                  || htmlNode.match(/(\\begin\{equation}(.+?)\\end\{equation})+/)
                   || htmlNode.match(/(\\\[(.+?)\\\])+/)
                   || htmlNode.match(/(\\\((.+?)\\\))+/);
 
