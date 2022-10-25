@@ -34,7 +34,7 @@ export const selectCoursewareTopics = createSelector(
       : sequences.map(sequence => ({
         id: sequence.id,
         name: sequence.displayName,
-        topics: sequence.topics.map(topicId => ({ id: topicId, name: topics[topicId].name })),
+        topics: sequence.topics.map(topicId => ({ id: topicId, name: topics[topicId]?.name || 'unnamed' })),
       }))
   ),
 );
