@@ -60,7 +60,7 @@ const messages = defineMessages({
   },
   relatedTo: {
     id: 'discussions.post.relatedTo',
-    defaultMessage: 'Related to',
+    defaultMessage: 'in',
     description: 'Message followed the category and topic of post linking to in-course context',
   },
   deletePostTitle: {
