@@ -95,7 +95,6 @@ function PostHeader({
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(post);
-
   const topic = useSelector(selectTopic(post.topicId));
   const topicContext = useSelector(selectTopicContext(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
@@ -130,14 +129,17 @@ function PostHeader({
               linkToProfile
             />
             {topicContext && topic && (
-            <div className="mr-3 font-size-14 font-style-normal font-family-inter font-weight-500">
-              <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
+            <div className="mr-3 font-size-14 font-style-normal font-family-inter font-weight-400 d-flex">
+              <span className="text-gray-400">{`${intl.formatMessage(messages.relatedTo)} `}</span>
               <Hyperlink
                 destination={topicContext.unitLink}
                 target="_top"
               >
-                {`${getTopicCategoryName(topic)} / ${topic.name}`}
-
+                <div className="mw-md ml-1 d-flex flex-row">
+                  <span className="container-mw-md text-truncate">{getTopicCategoryName(topic)}</span>
+                  <span className="mx-1">/</span>
+                  <span className="container-mw-md text-truncate">{topic.name}</span>
+                </div>
               </Hyperlink>
             </div>
             )}
