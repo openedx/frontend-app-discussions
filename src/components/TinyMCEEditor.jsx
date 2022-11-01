@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Editor } from '@tinymce/tinymce-react';
 import { useParams } from 'react-router';
@@ -6,7 +6,11 @@ import { useParams } from 'react-router';
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
 
+import { useIntl } from '@edx/frontend-platform/i18n';
+import { ActionRow, AlertModal, Button } from '@edx/paragon';
+
 import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
+import messages from '../discussions/messages';
 import { uploadFile } from '../discussions/posts/data/api';
 
 import 'tinymce/plugins/code';
@@ -58,7 +62,8 @@ export default function TinyMCEEditor(props) {
   // loading process and is instead loaded as a string via content_style
 
   const { courseId, postId } = useParams();
-
+  const [showImageWarning, setShowImageWarning] = useState(false);
+  const intl = useIntl();
   const uploadHandler = async (blobInfo, success, failure) => {
     try {
       const blob = blobInfo.blob();
@@ -69,6 +74,11 @@ export default function TinyMCEEditor(props) {
       }
       const filename = blobInfo.filename();
       const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
+      const img = new Image();
+      img.onload = function () {
+        if (img.height > 999 || img.width > 999) { setShowImageWarning(true); }
+      };
+      img.src = location;
       success(location);
     } catch (e) {
       failure(e.toString(), { remove: true });
@@ -84,34 +94,54 @@ export default function TinyMCEEditor(props) {
   }
 
   return (
-    <Editor
-      init={{
-        skin: false,
-        menubar: false,
-        branding: false,
-        contextmenu: false,
-        browser_spellcheck: true,
-        a11y_advanced_options: true,
-        autosave_interval: '1s',
-        autosave_restore_when_empty: false,
-        plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap',
-        toolbar: 'undo redo'
-          + ' | formatselect | bold italic underline'
-          + ' | link blockquote openedx_code image'
-          + ' | bullist numlist outdent indent'
-          + ' | removeformat'
-          + ' | openedx_html'
-          + ' | emoticons'
-          + ' | charmap',
-        content_css: false,
-        content_style: contentStyle,
-        body_class: 'm-2 text-editor',
-        default_link_target: '_blank',
-        target_list: false,
-        images_upload_handler: uploadHandler,
-        setup,
-      }}
-      {...props}
-    />
+    <>
+      <Editor
+        init={{
+          skin: false,
+          menubar: false,
+          branding: false,
+          contextmenu: false,
+          browser_spellcheck: true,
+          a11y_advanced_options: true,
+          autosave_interval: '1s',
+          autosave_restore_when_empty: false,
+          plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap',
+          toolbar: 'undo redo'
+                      + ' | formatselect | bold italic underline'
+                      + ' | link blockquote openedx_code image'
+                      + ' | bullist numlist outdent indent'
+                      + ' | removeformat'
+                      + ' | openedx_html'
+                      + ' | emoticons'
+                      + ' | charmap',
+          content_css: false,
+          content_style: contentStyle,
+          body_class: 'm-2 text-editor',
+          default_link_target: '_blank',
+          target_list: false,
+          images_upload_handler: uploadHandler,
+          setup,
+        }}
+        {...props}
+      />
+      <AlertModal
+        title={intl.formatMessage(messages.imageWarningModalTitle)}
+        isOpen={showImageWarning}
+        onClose={() => setShowImageWarning(false)}
+        isBlocking
+        footerNode={(
+          <ActionRow>
+            <Button variant="danger" onClick={() => setShowImageWarning(false)}>
+              {intl.formatMessage(messages.imageWarningDismissButton)}
+            </Button>
+          </ActionRow>
+                )}
+      >
+        <p>
+          {intl.formatMessage(messages.imageWarningMessage)}
+        </p>
+      </AlertModal>
+    </>
+
   );
 }
