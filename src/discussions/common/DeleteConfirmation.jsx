@@ -15,7 +15,7 @@ function DeleteConfirmation({
   onDelete,
 }) {
   return (
-    <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose}>
+    <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
       <ModalDialog.Header>
         <ModalDialog.Title>
           {title}
