@@ -193,6 +193,21 @@ const messages = defineMessages({
     defaultMessage: 'Blackout dates are currently active. Posting in discussions is unavailable at this time.',
     description: 'Informative text when discussions blackout is active',
   },
+  imageWarningMessage: {
+    id: 'discussions.editor.image.warning.message',
+    defaultMessage: 'Images having width or height greater than 999px will not be visible when the post, response or comment is viewed using in-line course discussions',
+    description: 'Modal message to tell image dimensions compatibility issue with legacy',
+  },
+  imageWarningModalTitle: {
+    id: 'discussions.editor.image.warning.title',
+    defaultMessage: 'Warning!',
+    description: 'Modal message title',
+  },
+  imageWarningDismissButton: {
+    id: 'discussions.editor.image.warning.dismiss',
+    defaultMessage: 'Ok',
+    description: 'Modal dismiss button text',
+  },
 });
 
 export default messages;

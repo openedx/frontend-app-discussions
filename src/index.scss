@@ -241,7 +241,10 @@ header {
   display: none;
 }
 
-.zindex-5000{
+.zindex-5000 {
  z-index: 5000;
 }
 
+#paragon-portal-root .pgn__modal-layer {
+  z-index: 1500 !important;
+}
