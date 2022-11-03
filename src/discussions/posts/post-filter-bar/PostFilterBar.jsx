@@ -25,7 +25,7 @@ import {
 import { selectThreadFilters, selectThreadSorting } from '../data/selectors';
 import messages from './messages';
 
-const ActionItem = ({
+export const ActionItem = ({
   id,
   label,
   value,

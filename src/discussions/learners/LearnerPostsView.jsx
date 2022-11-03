@@ -2,6 +2,7 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
+import snakeCase from 'lodash.snakecase';
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -12,7 +13,12 @@ import {
 } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
-import { RequestStatus, Routes } from '../../data/constants';
+import {
+  PostsStatusFilter,
+  RequestStatus,
+  Routes,
+  ThreadType,
+} from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import {
@@ -20,10 +26,12 @@ import {
   selectThreadNextPage,
   threadsLoadingStatus,
 } from '../posts/data/selectors';
+import { clearPostsPages } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
 import { discussionsPath, filterPosts } from '../utils';
 import { fetchUserPosts } from './data/thunks';
+import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import messages from './messages';
 
 function LearnerPostsView({ intl }) {
@@ -33,21 +41,49 @@ function LearnerPostsView({ intl }) {
 
   const posts = useSelector(selectAllThreads);
   const loadingStatus = useSelector(threadsLoadingStatus());
+  const postFilter = useSelector(state => state.learners.postFilter);
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const countFlagged = userHasModerationPrivileges || userIsStaff;
+  const params = {
+    orderBy: snakeCase(postFilter.orderBy),
+    username,
+    page: 1,
+  };
+  if (postFilter.type !== ThreadType.ALL) {
+    params.threadType = postFilter.type;
+  }
+  if (postFilter.status !== PostsStatusFilter.ALL) {
+    const statusMapping = {
+      statusUnread: 'unread',
+      statusReported: 'flagged',
+      statusUnanswered: 'unanswered',
+      statusUnresponded: 'unresponded',
+    };
+    params.status = statusMapping[postFilter.status];
+  }
+  if (postFilter.cohort !== '') {
+    params.groupId = postFilter.cohort;
+  }
+  if (countFlagged) {
+    params.countFlagged = countFlagged;
+  }
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, { username, countFlagged }));
+    dispatch(fetchUserPosts(courseId, params));
   }, [courseId, username]);
+
+  useEffect(() => {
+    dispatch(clearPostsPages());
+    dispatch(fetchUserPosts(courseId, params));
+  }, [postFilter]);
 
   const loadMorePosts = () => (
     dispatch(fetchUserPosts(courseId, {
-      username,
+      ...params,
       page: nextPage,
-      countFlagged,
     }))
   );
 
@@ -84,6 +120,7 @@ function LearnerPostsView({ intl }) {
         <div style={{ padding: '18px' }} />
       </div>
       <div className="bg-light-400 border border-light-300" />
+      <LearnerPostFilterBar />
       <div className="list-group list-group-flush">
         {postInstances(pinnedPosts)}
         {postInstances(unpinnedPosts)}

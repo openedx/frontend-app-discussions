@@ -46,6 +46,11 @@ const messages = defineMessages({
     defaultMessage: 'Unanswered',
     description: 'Option in dropdown to filter to unanswered posts',
   },
+  filterUnresponded: {
+    id: 'discussions.posts.status.filter.unresponded',
+    defaultMessage: 'Unresponded',
+    description: 'Option in dropdown to filter to unresponded posts',
+  },
   myPosts: {
     id: 'discussions.posts.filter.myPosts',
     defaultMessage: 'My posts',
@@ -93,6 +98,7 @@ const messages = defineMessages({
       statusFollowing {followed}
       statusReported {reported}
       statusUnanswered {unanswered}
+      statusUnresponded {unresponded}
       other {{status}}
     } {type, select,
       discussion {discussions}

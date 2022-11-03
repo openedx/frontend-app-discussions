@@ -3,7 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import {
   LearnersOrdering,
+  PostsStatusFilter,
   RequestStatus,
+  ThreadOrdering,
+  ThreadType,
 } from '../../../data/constants';
 
 const learnersSlice = createSlice({
@@ -16,6 +19,12 @@ const learnersSlice = createSlice({
     totalPages: null,
     totalLearners: null,
     sortedBy: LearnersOrdering.BY_LAST_ACTIVITY,
+    postFilter: {
+      type: ThreadType.ALL,
+      status: PostsStatusFilter.ALL,
+      orderBy: ThreadOrdering.BY_LAST_ACTIVITY,
+      cohort: '',
+    },
     usernameSearch: null,
   },
   reducers: {
@@ -47,6 +56,10 @@ const learnersSlice = createSlice({
       state.usernameSearch = payload;
       state.pages = [];
     },
+    setPostFilter: (state, { payload }) => {
+      state.pages = [];
+      state.postFilter = payload;
+    },
   },
 });
 
@@ -57,6 +70,7 @@ export const {
   fetchLearnersDenied,
   setSortedBy,
   setUsernameSearch,
+  setPostFilter,
 } = learnersSlice.actions;
 
 export const learnersReducer = learnersSlice.reducer;

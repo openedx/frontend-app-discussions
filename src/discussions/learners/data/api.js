@@ -45,11 +45,10 @@ export async function getUserProfiles(usernames) {
  *    pagination: {count, num_pages, next, previous}
  *  }
  */
-export async function getUserPosts(courseId, { username, page, countFlagged }) {
+export async function getUserPosts(courseId, params) {
   const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
-
-  const params = snakeCaseObject({ username, page, countFlagged });
+  const snakeCaseParams = snakeCaseObject(params);
   const { data } = await getAuthenticatedHttpClient()
-    .get(learnerPostsApiUrl, { params });
+    .get(learnerPostsApiUrl, { params: snakeCaseParams });
   return data;
 }

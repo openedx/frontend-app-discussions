@@ -61,6 +61,9 @@ const threadsSlice = createSlice({
       }
       state.status = RequestStatus.IN_PROGRESS;
     },
+    clearPostsPages: (state) => {
+      state.pages = [];
+    },
     fetchThreadsRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
@@ -242,6 +245,7 @@ export const {
   showPostEditor,
   hidePostEditor,
   clearRedirect,
+  clearPostsPages,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;
