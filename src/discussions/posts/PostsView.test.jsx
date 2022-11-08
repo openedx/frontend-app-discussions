@@ -197,7 +197,7 @@ describe('PostsView', () => {
       // 5 status filters: any, unread, following, reported, unanswered
       // 3 sort: activity, comments, likes
       // 2 cohort: all groups, 1 api mock response cohort
-      expect(screen.queryAllByRole('radio')).toHaveLength(13);
+      expect(screen.queryAllByRole('radio')).toHaveLength(14);
     });
 
     test('test that the cohorts filter works', async () => {

@@ -120,6 +120,9 @@ export function fetchThreads(courseId, {
   if (filters.status === PostsStatusFilter.UNANSWERED) {
     options.view = 'unanswered';
   }
+  if (filters.status === PostsStatusFilter.UNRESPONDED) {
+    options.view = 'unresponded';
+  }
   if (filters.status === PostsStatusFilter.REPORTED) {
     options.flagged = true;
   }

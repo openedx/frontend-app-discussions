@@ -95,6 +95,10 @@ function PostFilterBar({
         // You can't filter discussions by unanswered so switch type to questions
         dispatch(setPostsTypeFilter(ThreadType.QUESTION));
       }
+      if (value === PostsStatusFilter.UNRESPONDED && currentType !== ThreadType.DISCUSSION) {
+        // You can't filter questions by not responded so switch type to discussion
+        dispatch(setPostsTypeFilter(ThreadType.DISCUSSION));
+      }
     }
     if (name === 'sort') {
       dispatch(setSortedBy(value));
@@ -198,6 +202,12 @@ function PostFilterBar({
                 id="status-unanswered"
                 label={intl.formatMessage(messages.filterUnanswered)}
                 value={PostsStatusFilter.UNANSWERED}
+                selected={currentFilters.status}
+              />
+              <ActionItem
+                id="status-unresponded"
+                label={intl.formatMessage(messages.filterUnresponded)}
+                value={PostsStatusFilter.UNRESPONDED}
                 selected={currentFilters.status}
               />
             </Form.RadioSet>
