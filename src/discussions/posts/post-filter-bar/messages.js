@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   filterUnresponded: {
     id: 'discussions.posts.status.filter.unresponded',
-    defaultMessage: 'Unresponded',
+    defaultMessage: 'Not responded',
     description: 'Option in dropdown to filter to unresponded posts',
   },
   myPosts: {
