@@ -134,6 +134,7 @@ export const TopicOrdering = {
 export const LearnersOrdering = {
   BY_FLAG: 'flagged',
   BY_LAST_ACTIVITY: 'activity',
+  BY_RECENCY: 'recency',
 };
 
 /**

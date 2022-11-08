@@ -103,6 +103,12 @@ function LearnerFilterBar({
                   selected={currentSorting}
                 />
               )}
+              <ActionItem
+                id="sort-recency"
+                label={intl.formatMessage(messages.recentActivity)}
+                value={LearnersOrdering.BY_RECENCY}
+                selected={currentSorting}
+              />
             </Form.RadioSet>
           </div>
         </Form>

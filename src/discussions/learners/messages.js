@@ -38,6 +38,11 @@ const messages = defineMessages({
     defaultMessage: 'Reported activity',
     description: 'Text for learners sorting by reported activity',
   },
+  recentActivity: {
+    id: 'discussions.learner.recentActivity',
+    defaultMessage: 'Recent activity',
+    description: 'Text for learners sorting by recent activity',
+  },
   sortFilterStatus: {
     id: 'discussions.learner.sortFilterStatus',
     defaultMessage: `All learners by {sort, select,
