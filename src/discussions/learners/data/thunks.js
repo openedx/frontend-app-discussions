@@ -83,17 +83,17 @@ export function fetchUserPosts(courseId, {
     author,
     countFlagged,
   };
-  if (filters.status === PostsStatusFilter.FOLLOWING) {
-    options.following = true;
-  }
   if (filters.status === PostsStatusFilter.UNREAD) {
-    options.view = 'unread';
+    options.status = 'unread';
   }
   if (filters.status === PostsStatusFilter.UNANSWERED) {
-    options.view = 'unanswered';
+    options.status = 'unanswered';
   }
   if (filters.status === PostsStatusFilter.REPORTED) {
-    options.flagged = true;
+    options.status = 'flagged';
+  }
+  if (filters.status === PostsStatusFilter.UNRESPONDED) {
+    options.status = 'unresponded';
   }
   if (filters.postType !== ThreadType.ALL) {
     options.threadType = filters.postType;

@@ -91,16 +91,6 @@ export const ThreadOrdering = {
 };
 
 /**
- * Enum for thread view status filtering.
- * @readonly
- * @enum {string}
- */
-export const ThreadViewStatus = {
-  UNREAD: 'unread',
-  UNANSWERED: 'unanswered',
-};
-
-/**
  * Enum for filtering posts by status.
  * @readonly
  * @enum {string}

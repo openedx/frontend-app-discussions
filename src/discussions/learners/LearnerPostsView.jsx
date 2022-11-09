@@ -23,7 +23,9 @@ import { DiscussionContext } from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import {
   selectAllThreads,
+  selectThreadFilters,
   selectThreadNextPage,
+  selectThreadSorting,
   threadsLoadingStatus,
 } from '../posts/data/selectors';
 import { clearPostsPages } from '../posts/data/slices';
@@ -40,6 +42,8 @@ function LearnerPostsView({ intl }) {
   const dispatch = useDispatch();
 
   const posts = useSelector(selectAllThreads);
+  const orderBy = useSelector(selectThreadSorting());
+  const filters = useSelector(selectThreadFilters());
   const loadingStatus = useSelector(threadsLoadingStatus());
   const postFilter = useSelector(state => state.learners.postFilter);
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
@@ -72,8 +76,12 @@ function LearnerPostsView({ intl }) {
   }
 
   useEffect(() => {
-    dispatch(fetchUserPosts(courseId, { author: username }));
-  }, [courseId, username]);
+    dispatch(fetchUserPosts(courseId, {
+      author: username,
+      orderBy,
+      filters,
+    }));
+  }, [courseId, username, orderBy, filters]);
 
   useEffect(() => {
     dispatch(clearPostsPages());
@@ -84,6 +92,8 @@ function LearnerPostsView({ intl }) {
     dispatch(fetchUserPosts(courseId, {
       author: username,
       page: nextPage,
+      orderBy,
+      filters,
     }))
   );
 
