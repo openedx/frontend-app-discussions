@@ -20,7 +20,7 @@ function LearnerPostFilterBar() {
 
   const filtersToShow = [
     {
-      name: 'type',
+      name: 'postType',
       filters: ['type-all', 'type-discussions', 'type-questions'],
     },
     {
@@ -39,11 +39,11 @@ function LearnerPostFilterBar() {
 
   const handleFilterChange = (event) => {
     const { name, value } = event.currentTarget;
-    if (name === 'type') {
-      if (postFilter.type !== value) {
+    if (name === 'postType') {
+      if (postFilter.postType !== value) {
         dispatch(setPostFilter({
           ...postFilter,
-          type: value,
+          postType: value,
         }));
       }
     } else if (name === 'status') {
