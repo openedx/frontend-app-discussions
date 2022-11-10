@@ -5,7 +5,9 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  Delete, Edit, Pin, QuestionAnswer, Report, VerifiedBadge,
+  CheckCircle,
+  CheckCircleOutline,
+  Delete, Edit, Pin, QuestionAnswer, Report, Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
 import { InsertLink } from '../components/icons';
@@ -101,7 +103,7 @@ export const ACTIONS_LIST = [
   {
     id: 'endorse',
     action: ContentActions.ENDORSE,
-    icon: VerifiedBadge,
+    icon: VerifiedOutline,
     label: messages.endorseAction,
     conditions: {
       endorsed: false,
@@ -111,7 +113,7 @@ export const ACTIONS_LIST = [
   {
     id: 'unendorse',
     action: ContentActions.ENDORSE,
-    icon: VerifiedBadge,
+    icon: Verified,
     label: messages.unendorseAction,
     conditions: {
       endorsed: true,
@@ -121,7 +123,7 @@ export const ACTIONS_LIST = [
   {
     id: 'answer',
     action: ContentActions.ENDORSE,
-    icon: VerifiedBadge,
+    icon: CheckCircleOutline,
     label: messages.markAnsweredAction,
     conditions: {
       endorsed: false,
@@ -131,7 +133,7 @@ export const ACTIONS_LIST = [
   {
     id: 'unanswer',
     action: ContentActions.ENDORSE,
-    icon: VerifiedBadge,
+    icon: CheckCircle,
     label: messages.unmarkAnsweredAction,
     conditions: {
       endorsed: true,
@@ -183,6 +185,7 @@ export function useActions(content) {
         .every(condition => condition === true)
       : true
   );
+
   return ACTIONS_LIST.filter(
     ({
       action,

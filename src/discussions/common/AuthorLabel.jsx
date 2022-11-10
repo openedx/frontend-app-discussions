@@ -46,7 +46,6 @@ function AuthorLabel({
     <div className={className}>
       <span
         className={classNames('mr-1 font-size-14 font-style-normal font-family-inter font-weight-500', {
-          'text-primary-500': !authorLabelMessage && !isRetiredUser,
           'text-gray-700': isRetiredUser,
         })}
         role="heading"

@@ -39,7 +39,7 @@ function EndorsedAlertBanner({
           )}
           </strong>
           <span className="d-flex align-items-center mr-1 flex-wrap">
-            <span className="mr-2">
+            <span className="mr-1">
               {intl.formatMessage(
                 isQuestion
                   ? messages.answeredLabel
