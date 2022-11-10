@@ -121,6 +121,16 @@ const messages = defineMessages({
     defaultMessage: 'Actions menu',
     description: 'Button to see actions for a post or comment',
   },
+  unnamedTopics: {
+    id: 'discussions.topic.noName.label',
+    defaultMessage: 'Unnamed category',
+    description: 'display string for topics with missing names',
+  },
+  unnamedSubTopics: {
+    id: 'discussions.subtopic.noName.label',
+    defaultMessage: 'Unnamed subcategory',
+    description: 'display string for topics with missing names',
+  },
 });
 
 export default messages;

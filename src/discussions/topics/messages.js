@@ -61,7 +61,12 @@ const messages = defineMessages({
   },
   unnamedTopicCategories: {
     id: 'discussions.topics.unnamed.label',
-    defaultMessage: 'Unnamed Topic',
+    defaultMessage: 'Unnamed category',
+    description: 'Text to display in place of topic name if topic name is empty',
+  },
+  unnamedTopicSubCategories: {
+    id: 'discussions.subtopics.unnamed.label',
+    defaultMessage: 'Unnamed subcategory',
     description: 'Text to display in place of topic name if topic name is empty',
   },
 });
