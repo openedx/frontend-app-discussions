@@ -286,13 +286,17 @@ function PostEditor({
                 floatingLabel={intl.formatMessage(messages.topicArea)}
               >
                 {nonCoursewareTopics.map(topic => (
-                  <option key={topic.id} value={topic.id}>{topic.name}</option>
+                  <option
+                    key={topic.id}
+                    value={topic.id}
+                  >{topic.name || intl.formatMessage(messages.unnamedSubTopics)}
+                  </option>
                 ))}
                 {coursewareTopics.map(category => (
-                  <optgroup label={category.name} key={category.id}>
+                  <optgroup label={category.name || intl.formatMessage(messages.unnamedTopics)} key={category.id}>
                     {category.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
-                        {subtopic.name}
+                        {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
                       </option>
                     ))}
                   </optgroup>
