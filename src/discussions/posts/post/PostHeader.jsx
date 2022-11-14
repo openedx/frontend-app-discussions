@@ -5,16 +5,12 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import {
-  Avatar, Badge, Hyperlink, Icon,
-} from '@edx/paragon';
+import { Avatar, Badge, Icon } from '@edx/paragon';
 
 import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
-import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { ActionsDropdown, AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
-import { selectTopic } from '../../topics/data/selectors';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
@@ -95,13 +91,6 @@ function PostHeader({
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(post);
-  const topic = useSelector(selectTopic(post.topicId));
-  const topicContext = useSelector(selectTopicContext(post.topicId));
-  const getTopicSubsection = useSelector(selectorForUnitSubsection);
-
-  const getTopicCategoryName = topicData => (
-    topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
-  );
 
   return (
     <div className={classNames('d-flex flex-fill mw-100', { 'mt-2': hasAnyAlert && !preview })}>
@@ -121,29 +110,12 @@ function PostHeader({
               </div>
             )
             : <h4 className="mb-0" style={{ lineHeight: '28px' }} aria-level="1" tabIndex="-1" accessKey="h">{post.title}</h4>}
-          <div className="align-items-center d-flex flex-row">
-            <AuthorLabel
-              author={post.author || intl.formatMessage(messages.anonymous)}
-              authorLabel={post.authorLabel}
-              labelColor={authorLabelColor && `text-${authorLabelColor}`}
-              linkToProfile
-            />
-            {topicContext && topic && (
-            <div className="mr-3 font-size-14 font-style-normal font-family-inter font-weight-400 d-flex">
-              <span className="text-gray-400">{`${intl.formatMessage(messages.relatedTo)} `}</span>
-              <Hyperlink
-                destination={topicContext.unitLink}
-                target="_top"
-              >
-                <div className="mw-md ml-1 d-flex flex-row">
-                  <span className="container-mw-md text-truncate">{getTopicCategoryName(topic)}</span>
-                  <span className="mx-1">/</span>
-                  <span className="container-mw-md text-truncate">{topic.name}</span>
-                </div>
-              </Hyperlink>
-            </div>
-            )}
-          </div>
+          <AuthorLabel
+            author={post.author || intl.formatMessage(messages.anonymous)}
+            authorLabel={post.authorLabel}
+            labelColor={authorLabelColor && `text-${authorLabelColor}`}
+            linkToProfile
+          />
         </div>
       </div>
       {!preview
