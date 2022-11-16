@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
+import { CheckCircle } from '@edx/paragon/icons';
 
 import { PushPin } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
@@ -54,7 +55,7 @@ function PostLink({
         }
         to={linkUrl}
         onClick={() => isSelected(post.id)}
-        style={{ lineHeight: '21px' }}
+        style={{ lineHeight: '22px' }}
         aria-current={isSelected(post.id) ? 'page' : undefined}
         role="option"
         tabIndex={(isSelected(post.id) || idx === 0) ? 0 : -1}
@@ -82,11 +83,19 @@ function PostLink({
                   {post.title}
                 </div>
 
+                <div
+                  className="text-truncate text-gray-700 font-weight-normal font-size-14 font-style-normal font-family-inter mx-1.5"
+                  style={{ maxHeight: '1.5rem' }}
+                >
+                  {isPostPreviewAvailable(post.previewBody)
+                    ? post.previewBody
+                    : intl.formatMessage(messages.postWithoutPreview)}
+                </div>
+
                 {showAnsweredBadge && (
-                <Badge variant="success" className="font-weight-500 ml-auto badge-padding">
-                  {intl.formatMessage(messages.answered)}
-                  <span className="sr-only">{' '}answered</span>
-                </Badge>
+                  <Icon src={CheckCircle} className="text-success font-weight-500 ml-auto badge-padding" data-testid="check-icon">
+                    <span className="sr-only">{' '}answered</span>
+                  </Icon>
                 )}
 
                 {canSeeReportedBadge && (
@@ -113,17 +122,7 @@ function PostLink({
               authorLabel={post.authorLabel}
               labelColor={authorLabelColor && `text-${authorLabelColor}`}
             />
-            <div
-              className="text-truncate text-primary-500 font-weight-normal font-size-14 font-style-normal font-family-inter"
-              style={{ maxHeight: '1.5rem' }}
-            >
-              {isPostPreviewAvailable(post.previewBody)
-                ? post.previewBody
-                : intl.formatMessage(messages.postWithoutPreview)}
-            </div>
-            <div className="mt-1">
-              <PostFooter post={post} preview intl={intl} showNewCountLabel={read} />
-            </div>
+            <PostFooter post={post} preview intl={intl} showNewCountLabel={read} />
           </div>
         </div>
         {!showDivider && post.pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
