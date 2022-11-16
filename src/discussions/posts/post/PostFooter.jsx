@@ -93,14 +93,14 @@ function PostFooter({
               </span>
             </OverlayTrigger>
             <span
-              className="text-light-700 mx-1.5 font-weight-500"
+              className="text-gray-700 mx-1.5 font-weight-500"
               style={{ fontSize: '16px' }}
             >
               ·
             </span>
           </>
         )}
-        <span title={post.createdAt} className="text-gray-500">
+        <span title={post.createdAt} className="text-gray-700">
           {timeago.format(post.createdAt, 'time-locale')}
         </span>
         {!preview && post.closed
