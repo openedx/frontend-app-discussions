@@ -295,7 +295,7 @@ function PostEditor({
                   </option>
                 ))}
                 {coursewareTopics.map(categoryObj => (
-                  <optgroup label={category.name || intl.formatMessage(messages.unnamedTopics)} key={category.id}>
+                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
                     {categoryObj.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
