@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -31,36 +32,29 @@ function PostActionsBar({
   };
 
   return (
-    <div className="d-flex justify-content-end py-1 flex-grow-1">
-      {!inContext && (
+    <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !inContext })}>
+      {!inContext && <Search />}
+      {inContext && (
+        <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
+          {intl.formatMessage(messages.title)}
+        </h4>
+      )}
+      {(!inBlackoutDateRange(blackoutDateRange) && loadingStatus === RequestStatus.SUCCESSFUL) && (
         <>
-          <Search />
+          {!inContext && <div className="border-right border-light-400 mx-3" />}
+          <Button
+            variant={inContext ? 'plain' : 'brand'}
+            className={classNames('my-0', { 'p-0': inContext })}
+            onClick={() => dispatch(showPostEditor())}
+            size={inContext ? 'md' : 'sm'}
+          >
+            {intl.formatMessage(messages.addAPost)}
+          </Button>
         </>
       )}
       {inContext && (
-      <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
-        {intl.formatMessage(messages.title)}
-      </h4>
-      )}
-      {
-        (!inBlackoutDateRange(blackoutDateRange) && loadingStatus === RequestStatus.SUCCESSFUL) && (
-          <>
-            <div className="border-right border-light-400 mx-3" />
-            <Button
-              variant={inContext ? 'plain' : 'brand'}
-              className="my-0"
-              onClick={() => dispatch(showPostEditor())}
-              size="sm"
-            >
-              {intl.formatMessage(messages.addAPost)}
-            </Button>
-          </>
-
-        )
-      }
-      {inContext && (
         <>
-          <div className="border-right mr-3 ml-4" />
+          <div className="border-right border-light-300 mr-2 ml-3.5 my-2" />
           <IconButton
             src={Close}
             iconAs={Icon}
@@ -69,7 +63,6 @@ function PostActionsBar({
           />
         </>
       )}
-
     </div>
   );
 }

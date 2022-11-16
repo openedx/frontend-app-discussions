@@ -47,11 +47,15 @@ function CommentHeader({
         />
       </div>
       <div className="d-flex align-items-center">
-        <span className="btn-icon btn-icon-sm mr-1 align-items-center">
-          {comment.endorsed && (postType === 'question'
-            ? <Icon src={CheckCircle} className="text-success" data-testid="check-icon" />
-            : <Icon src={Verified} className="text-dark-500" data-testid="verified-icon" />)}
-        </span>
+        {comment.endorsed && (
+          <span className="btn-icon btn-icon-sm mr-1 align-items-center">
+            {
+              postType === 'question'
+                ? <Icon src={CheckCircle} className="text-success" data-testid="check-icon" />
+                : <Icon src={Verified} className="text-dark-500" data-testid="verified-icon" />
+            }
+          </span>
+        )}
         <ActionsDropdown
           commentOrPost={{
             ...comment,

@@ -16,6 +16,11 @@ const messages = defineMessages({
     defaultMessage: 'Content reported for staff to review',
     description: 'Alert banner over comment that has been reported for abuse',
   },
+  backAlt: {
+    id: 'discussions.actions.back.alt',
+    defaultMessage: 'Back to list',
+    description: 'Back to Posts list button text',
+  },
   responseCount: {
     id: 'discussions.comments.comment.responseCount',
     defaultMessage: `{num, plural,

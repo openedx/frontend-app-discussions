@@ -1,18 +1,27 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
+import {
+  Button, Icon, IconButton, Spinner,
+} from '@edx/paragon';
+import { ArrowBack } from '@edx/paragon/icons';
 
-import { EndorsementStatus, ThreadType } from '../../data/constants';
+import {
+  EndorsementStatus, PostsPages, ThreadType,
+} from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
+import { DiscussionContext } from '../common/context';
+import { useIsOnDesktop } from '../data/hooks';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
-import { filterPosts } from '../utils';
+import { discussionsPath, filterPosts } from '../utils';
 import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -127,20 +136,63 @@ function CommentsView({ intl }) {
   const { postId } = useParams();
   const thread = usePost(postId);
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const isOnDesktop = useIsOnDesktop();
+  const {
+    courseId, learnerUsername, category, topicId, page, inContext,
+  } = useContext(DiscussionContext);
+
   if (!thread) {
     dispatch(fetchThread(postId, true));
     return (
       <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );
   }
+
   return (
     <>
-      <div className="discussion-comments d-flex flex-column m-4 p-4.5 card">
+      {!isOnDesktop && (
+        inContext ? (
+          <>
+            <div className="px-4 py-1.5 bg-white">
+              <Button
+                variant="plain"
+                className="px-0 font-weight-light text-primary-500"
+                iconBefore={ArrowBack}
+                onClick={() => history.push(discussionsPath(PostsPages[page], {
+                  courseId, learnerUsername, category, topicId,
+                })(location))}
+                size="sm"
+              >
+                {intl.formatMessage(messages.backAlt)}
+              </Button>
+            </div>
+            <div className="border-bottom border-light-400" />
+          </>
+        ) : (
+          <IconButton
+            src={ArrowBack}
+            iconAs={Icon}
+            style={{ padding: '18px' }}
+            size="inline"
+            className="ml-4 mt-4"
+            onClick={() => history.push(discussionsPath(PostsPages[page], {
+              courseId, learnerUsername, category, topicId,
+            })(location))}
+            alt={intl.formatMessage(messages.backAlt)}
+          />
+        )
+      )}
+      <div className={classNames('discussion-comments d-flex flex-column card', {
+        'm-4 p-4.5': !inContext,
+        'p-4 rounded-0 border-0 mb-4': inContext,
+      })}
+      >
         <Post post={thread} />
         {!thread.closed && <ResponseEditor postId={postId} /> }
       </div>
-      {thread.type === ThreadType.DISCUSSION
-        && (
+      {thread.type === ThreadType.DISCUSSION && (
         <DiscussionCommentsView
           postId={postId}
           intl={intl}
@@ -148,7 +200,7 @@ function CommentsView({ intl }) {
           endorsed={EndorsementStatus.DISCUSSION}
           isClosed={thread.closed}
         />
-        )}
+      )}
       {thread.type === ThreadType.QUESTION && (
         <>
           <DiscussionCommentsView

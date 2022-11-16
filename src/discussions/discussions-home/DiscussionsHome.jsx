@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
   Route, Switch, useLocation, useRouteMatch,
@@ -55,9 +56,7 @@ export default function DiscussionsHome() {
 
   const isOnDesktop = useIsOnDesktop();
 
-  const { courseNumber, courseTitle, org } = useSelector(
-    (state) => state.courseTabs,
-  );
+  const { courseNumber, courseTitle, org } = useSelector((state) => state.courseTabs);
   if (displayContentArea) {
     // If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
     // However, for smaller screens or embeds, only show the sidebar if the content area isn't displayed.
@@ -66,7 +65,7 @@ export default function DiscussionsHome() {
 
   const provider = useSelector(selectDiscussionProvider);
   useCourseDiscussionData(courseId);
-  useRedirectToThread(courseId);
+  useRedirectToThread(courseId, inContext);
   useEffect(() => {
     if (path && path !== 'undefined') {
       postMessageToParent('discussions.navigate', { path });
@@ -84,45 +83,50 @@ export default function DiscussionsHome() {
       learnerUsername,
     }}
     >
-      <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
+      {!inContext && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
       <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
-        <CourseTabsNavigation activeTab="discussion" courseId={courseId} />
-        <div className="header-action-bar" ref={postActionBarRef}>
+        {!inContext && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+        <div
+          className={classNames('header-action-bar', { 'shadow-none border-light-300 border-bottom': inContext })}
+          ref={postActionBarRef}
+        >
           <div
-            className="d-flex flex-row justify-content-between navbar fixed-top"
+            className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
+              'pl-4 pr-2.5 py-1.5': inContext,
+            })}
           >
-            {!inContext && (
-            <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />
-            )}
+            {!inContext && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
             <PostActionsBar inContext={inContext} />
           </div>
           {isFeedbackBannerVisible && <InformationBanner />}
           <BlackoutInformationBanner />
         </div>
-        <Route
-          path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-          component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
-        />
+        {!inContext && (
+          <Route
+            path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
+            component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
+          />
+        )}
         <div className="d-flex flex-row">
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}
           {!displayContentArea && (
-          <Switch>
-            <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
-            <Route
-              path={Routes.POSTS.MY_POSTS}
-              render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
-            />
-            <Route
-              path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
-              render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
-            />
-            {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
-          </Switch>
+            <Switch>
+              <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
+              <Route
+                path={Routes.POSTS.MY_POSTS}
+                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
+              />
+              <Route
+                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
+                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
+              />
+              {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
+            </Switch>
           )}
         </div>
       </main>
-      <Footer />
+      {!inContext && <Footer />}
     </DiscussionContext.Provider>
   );
 }

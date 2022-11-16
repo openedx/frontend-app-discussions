@@ -72,7 +72,7 @@ export function useCourseDiscussionData(courseId) {
   }, [courseId]);
 }
 
-export function useRedirectToThread(courseId) {
+export function useRedirectToThread(courseId, inContext) {
   const dispatch = useDispatch();
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
@@ -85,9 +85,10 @@ export function useRedirectToThread(courseId) {
     // stored in redirectToThread
     if (redirectToThread) {
       dispatch(clearRedirect());
-      const newLocation = discussionsPath(Routes.COMMENTS.PAGES['my-posts'], {
+      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[inContext ? 'topics' : 'my-posts'], {
         courseId,
         postId: redirectToThread.threadId,
+        topicId: redirectToThread.topicId,
       })(location);
       history.push(newLocation);
     }
@@ -95,7 +96,8 @@ export function useRedirectToThread(courseId) {
 }
 
 export function useIsOnDesktop() {
-  return window.outerWidth >= breakpoints.large.minWidth;
+  const windowSize = useWindowSize();
+  return windowSize.width >= breakpoints.large.minWidth;
 }
 
 export function useIsOnXLDesktop() {

@@ -248,3 +248,9 @@ header {
 #paragon-portal-root .pgn__modal-layer {
   z-index: 1500 !important;
 }
+
+@media only screen and (max-width: 767px) {
+  body:not(.tox-force-desktop) .tox .tox-dialog {
+    align-self: flex-end;
+  }
+}

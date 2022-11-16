@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button } from '@edx/paragon';
 
+import { DiscussionContext } from '../../common/context';
 import { selectBlackoutDate } from '../../data/selectors';
 import { inBlackoutDateRange } from '../../utils';
 import messages from '../messages';
@@ -17,6 +18,7 @@ function ResponseEditor({
   intl,
   addWrappingDiv,
 }) {
+  const { inContext } = useContext(DiscussionContext);
   const [addingResponse, setAddingResponse] = useState(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ function ResponseEditor({
       <div className={classNames({ 'mb-4': addWrappingDiv }, 'actions d-flex')}>
         <Button
           variant="primary"
-          className="px-2.5 py-2 font-size-14"
+          className={classNames('px-2.5 py-2 font-size-14', { 'w-100': inContext })}
           onClick={() => setAddingResponse(true)}
           style={{
             lineHeight: '20px',
