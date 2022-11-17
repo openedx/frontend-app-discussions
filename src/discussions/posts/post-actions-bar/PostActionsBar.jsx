@@ -10,7 +10,8 @@ import {
 import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
-import { selectBlackoutDate } from '../../data/selectors';
+import { RequestStatus } from '../../../data/constants';
+import { selectBlackoutDate, selectconfigLoadingStatus } from '../../data/selectors';
 import { inBlackoutDateRange, postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
@@ -22,33 +23,39 @@ function PostActionsBar({
   inContext,
 }) {
   const dispatch = useDispatch();
+  const loadingStatus = useSelector(selectconfigLoadingStatus);
+  const blackoutDateRange = useSelector(selectBlackoutDate);
+
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
   };
-  const blackoutDateRange = useSelector(selectBlackoutDate);
+
   return (
     <div className="d-flex justify-content-end py-1 flex-grow-1">
       {!inContext && (
         <>
           <Search />
-          <div className="border-right border-light-400 mx-3" />
         </>
       )}
       {inContext && (
-        <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
-          {intl.formatMessage(messages.title)}
-        </h4>
+      <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
+        {intl.formatMessage(messages.title)}
+      </h4>
       )}
       {
-        !inBlackoutDateRange(blackoutDateRange) && (
-          <Button
-            variant={inContext ? 'plain' : 'brand'}
-            className="my-0"
-            onClick={() => dispatch(showPostEditor())}
-            size="sm"
-          >
-            {intl.formatMessage(messages.addAPost)}
-          </Button>
+        (!inBlackoutDateRange(blackoutDateRange) && loadingStatus === RequestStatus.SUCCESSFUL) && (
+          <>
+            <div className="border-right border-light-400 mx-3" />
+            <Button
+              variant={inContext ? 'plain' : 'brand'}
+              className="my-0"
+              onClick={() => dispatch(showPostEditor())}
+              size="sm"
+            >
+              {intl.formatMessage(messages.addAPost)}
+            </Button>
+          </>
+
         )
       }
       {inContext && (
