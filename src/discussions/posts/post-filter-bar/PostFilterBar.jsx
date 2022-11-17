@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -18,6 +20,7 @@ import {
 } from '../../../data/constants';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import { DiscussionContext } from '../../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import {
   setCohortFilter, setPostsTypeFilter, setSortedBy, setStatusFilter,
@@ -60,6 +63,7 @@ function PostFilterBar({
 }) {
   const dispatch = useDispatch();
   const { courseId } = useParams();
+  const { page } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const currentSorting = useSelector(selectThreadSorting());
@@ -184,12 +188,14 @@ function PostFilterBar({
                 value={PostsStatusFilter.UNREAD}
                 selected={currentFilters.status}
               />
-              <ActionItem
-                id="status-following"
-                label={intl.formatMessage(messages.filterFollowing)}
-                value={PostsStatusFilter.FOLLOWING}
-                selected={currentFilters.status}
-              />
+              {page !== 'my-posts' && (
+                <ActionItem
+                  id="status-following"
+                  label={intl.formatMessage(messages.filterFollowing)}
+                  value={PostsStatusFilter.FOLLOWING}
+                  selected={currentFilters.status}
+                />
+              )}
               {(userHasModerationPrivileges || userIsGroupTa) && (
                 <ActionItem
                   id="status-reported"
