@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -10,6 +10,7 @@ import {
 import { useWindowSize } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
+import { DiscussionContext } from '../common/context';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
@@ -27,26 +28,28 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
   const { height: windowHeight } = useWindowSize();
+  const { inContext } = useContext(DiscussionContext);
 
   useEffect(() => {
-    if (sidebarRef && postActionBarHeight) {
+    if (sidebarRef && postActionBarHeight && !inContext) {
       if (isOnDesktop) {
         sidebarRef.current.style.maxHeight = `${windowHeight - postActionBarHeight}px`;
       }
       sidebarRef.current.style.minHeight = `${windowHeight - postActionBarHeight}px`;
       sidebarRef.current.style.top = `${postActionBarHeight}px`;
     }
-  }, [sidebarRef, postActionBarHeight]);
+  }, [sidebarRef, postActionBarHeight, inContext]);
 
   return (
     <div
       ref={sidebarRef}
-      className={classNames('flex-column min-content-height position-sticky', {
+      className={classNames('flex-column  position-sticky', {
         'd-none': !displaySidebar,
         'd-flex overflow-auto': displaySidebar,
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
+        'min-content-height': !inContext,
       })}
       data-testid="sidebar"
     >
@@ -57,12 +60,11 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />
         {redirectToLearnersTab && (
-        <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
+          <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
         )}
         {redirectToLearnersTab && (
-        <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
+          <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
-
         {configStatus === RequestStatus.SUCCESSFUL && (
         <Redirect
           from={Routes.DISCUSSIONS.PATH}

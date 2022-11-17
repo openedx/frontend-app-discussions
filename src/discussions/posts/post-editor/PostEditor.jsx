@@ -23,6 +23,7 @@ import PostPreviewPane from '../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import { DiscussionContext } from '../../common/context';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
@@ -93,7 +94,6 @@ function PostEditor({
     postId,
   } = useParams();
   const topicId = useCurrentDiscussionTopic();
-
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(selectNonCoursewareIds);
   const coursewareTopics = useSelector(selectCoursewareTopics);
@@ -105,6 +105,7 @@ function PostEditor({
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
+  const { category } = useContext(DiscussionContext);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -148,6 +149,7 @@ function PostEditor({
         topicId,
         postId,
         learnerUsername: post?.author,
+        category,
       })(location);
       history.push(newLocation);
     }
@@ -292,9 +294,9 @@ function PostEditor({
                   >{topic.name || intl.formatMessage(messages.unnamedSubTopics)}
                   </option>
                 ))}
-                {coursewareTopics.map(category => (
-                  <optgroup label={category.name || intl.formatMessage(messages.unnamedTopics)} key={category.id}>
-                    {category.topics.map(subtopic => (
+                {coursewareTopics.map(categoryObj => (
+                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
+                    {categoryObj.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
                       </option>

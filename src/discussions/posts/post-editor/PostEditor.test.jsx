@@ -16,6 +16,7 @@ import { API_BASE_URL, Routes } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { getCohortsApiUrl } from '../../cohorts/data/api';
+import { DiscussionContext } from '../../common/context';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { threadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
@@ -36,11 +37,15 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
   await render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[location]}>
-          <Route path={path}>
-            <PostEditor editExisting={editExisting} />
-          </Route>
-        </MemoryRouter>
+        <DiscussionContext.Provider
+          value={{ courseId, category: null }}
+        >
+          <MemoryRouter initialEntries={[location]}>
+            <Route path={path}>
+              <PostEditor editExisting={editExisting} />
+            </Route>
+          </MemoryRouter>
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
