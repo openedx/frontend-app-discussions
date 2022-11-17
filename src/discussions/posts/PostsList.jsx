@@ -12,6 +12,7 @@ import { Button, Spinner } from '@edx/paragon';
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
+import { fetchUserPosts } from '../learners/data/thunks';
 import messages from '../messages';
 import { filterPosts } from '../utils';
 import {
@@ -37,16 +38,22 @@ function PostsList({ posts, topics, intl }) {
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
 
-  const loadThreads = (topicIds, pageNum = undefined) => (
-    dispatch(fetchThreads(courseId, {
-      topicIds,
+  const loadThreads = (topicIds, pageNum = undefined) => {
+    const params = {
       orderBy,
       filters,
       page: pageNum,
       author: showOwnPosts ? authenticatedUser.username : null,
       countFlagged: userHasModerationPrivileges || userIsStaff,
-    }))
-  );
+      topicIds,
+    };
+
+    if (showOwnPosts) {
+      dispatch(fetchUserPosts(courseId, params));
+    } else {
+      dispatch(fetchThreads(courseId, params));
+    }
+  };
 
   useEffect(() => {
     if (topics !== undefined && configStatus === RequestStatus.SUCCESSFUL) {

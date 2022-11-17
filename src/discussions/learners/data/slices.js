@@ -20,7 +20,7 @@ const learnersSlice = createSlice({
     totalLearners: null,
     sortedBy: LearnersOrdering.BY_LAST_ACTIVITY,
     postFilter: {
-      type: ThreadType.ALL,
+      postType: ThreadType.ALL,
       status: PostsStatusFilter.ALL,
       orderBy: ThreadOrdering.BY_LAST_ACTIVITY,
       cohort: '',

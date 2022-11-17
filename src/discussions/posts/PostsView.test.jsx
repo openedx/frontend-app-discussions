@@ -18,6 +18,7 @@ import { initializeStore } from '../../store';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
+import { coursesApiUrl } from '../learners/data/api';
 import { threadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
@@ -27,6 +28,7 @@ import '../cohorts/data/__factories__';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
 let axiosMock;
+const username = 'abc123';
 
 async function renderComponent({
   postId, topicId, category, myPosts, inContext = false,
@@ -81,7 +83,7 @@ describe('PostsView', () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
-        username: 'abc123',
+        username,
         administrator: true,
         roles: [],
       },
@@ -126,9 +128,21 @@ describe('PostsView', () => {
 
     test('displays a list of user posts', async () => {
       setupStore();
+      axiosMock.onGet(`${coursesApiUrl}${courseId}/learner/`, { username, count_flagged: true })
+        .reply(() => {
+          const threadAttrs = { previewBody: 'thread preview body', author: username };
+          return [200, Factory.build('threadsResult', {}, {
+            topicId: undefined,
+            count: threadCount,
+            threadAttrs,
+            pageSize: 6,
+          })];
+        });
+
       await act(async () => {
         await renderComponent({ myPosts: true });
       });
+
       expect(screen.getAllByText('abc123')).toHaveLength(threadCount);
     });
 

@@ -2,7 +2,6 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
-import snakeCase from 'lodash.snakecase';
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -14,10 +13,8 @@ import {
 import { ArrowBack } from '@edx/paragon/icons';
 
 import {
-  PostsStatusFilter,
   RequestStatus,
   Routes,
-  ThreadType,
 } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
@@ -46,46 +43,23 @@ function LearnerPostsView({ intl }) {
   const nextPage = useSelector(selectThreadNextPage());
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const countFlagged = userHasModerationPrivileges || userIsStaff;
-  const params = {
-    orderBy: snakeCase(postFilter.orderBy),
-    username,
-    page: 1,
-  };
-  if (postFilter.type !== ThreadType.ALL) {
-    params.threadType = postFilter.type;
-  }
-  if (postFilter.status !== PostsStatusFilter.ALL) {
-    const statusMapping = {
-      statusUnread: 'unread',
-      statusReported: 'flagged',
-      statusUnanswered: 'unanswered',
-      statusUnresponded: 'unresponded',
-    };
-    params.status = statusMapping[postFilter.status];
-  }
-  if (postFilter.cohort !== '') {
-    params.groupId = postFilter.cohort;
-  }
-  if (countFlagged) {
-    params.countFlagged = countFlagged;
-  }
 
-  useEffect(() => {
+  const loadMorePosts = (pageNum = undefined) => {
+    const params = {
+      author: username,
+      page: pageNum,
+      filters: postFilter,
+      orderBy: postFilter.orderBy,
+      countFlagged: userHasModerationPrivileges || userIsStaff,
+    };
+
     dispatch(fetchUserPosts(courseId, params));
-  }, [courseId, username]);
+  };
 
   useEffect(() => {
     dispatch(clearPostsPages());
-    dispatch(fetchUserPosts(courseId, params));
-  }, [postFilter]);
-
-  const loadMorePosts = () => (
-    dispatch(fetchUserPosts(courseId, {
-      ...params,
-      page: nextPage,
-    }))
-  );
+    loadMorePosts();
+  }, [courseId, postFilter, username]);
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);
   const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
@@ -121,6 +95,7 @@ function LearnerPostsView({ intl }) {
       </div>
       <div className="bg-light-400 border border-light-300" />
       <LearnerPostFilterBar />
+      <div className="border-bottom border-light-400" />
       <div className="list-group list-group-flush">
         {postInstances(pinnedPosts)}
         {postInstances(unpinnedPosts)}
@@ -131,7 +106,7 @@ function LearnerPostsView({ intl }) {
           </div>
         ) : (
           nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
-            <Button onClick={() => loadMorePosts()} variant="primary" size="md">
+            <Button onClick={() => loadMorePosts(nextPage)} variant="primary" size="md">
               {intl.formatMessage(messages.loadMore)}
             </Button>
           )
