@@ -46,7 +46,12 @@ function EndorsedAlertBanner({
                   : messages.endorsedLabel,
               )}
             </span>
-            <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} linkToProfile />
+            <AuthorLabel
+              author={content.endorsedBy}
+              authorLabel={content.endorsedByLabel}
+              linkToProfile
+              alert={content.endorsed}
+            />
             {intl.formatMessage(messages.time, { time: timeago.format(content.endorsedAt, 'time-locale') })}
           </span>
         </div>

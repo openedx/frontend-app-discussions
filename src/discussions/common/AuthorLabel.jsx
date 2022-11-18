@@ -20,6 +20,7 @@ function AuthorLabel({
   authorLabel,
   linkToProfile,
   labelColor,
+  alert,
 }) {
   const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
@@ -47,6 +48,7 @@ function AuthorLabel({
       <span
         className={classNames('mr-1 font-size-14 font-style-normal font-family-inter font-weight-500', {
           'text-gray-700': isRetiredUser,
+          'text-primary-500': !authorLabelMessage && !isRetiredUser && !alert,
         })}
         role="heading"
         aria-level="2"
@@ -65,7 +67,8 @@ function AuthorLabel({
       {authorLabelMessage && (
         <span
           className={classNames('mr-1 font-size-14 font-style-normal font-family-inter font-weight-500', {
-            'text-primary-500': !authorLabelMessage,
+            'text-primary-500': !authorLabelMessage && !isRetiredUser && !alert,
+            'text-gray-700': isRetiredUser,
           })}
           style={{ marginLeft: '2px' }}
         >
@@ -96,12 +99,14 @@ AuthorLabel.propTypes = {
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
   labelColor: PropTypes.string,
+  alert: PropTypes.bool,
 };
 
 AuthorLabel.defaultProps = {
   linkToProfile: false,
   authorLabel: null,
   labelColor: '',
+  alert: false,
 };
 
 export default injectIntl(AuthorLabel);
