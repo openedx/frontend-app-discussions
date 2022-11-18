@@ -50,8 +50,7 @@ function ClosePostReasonModal({
       isOpen={isOpen}
       onClose={onCancel}
       hasCloseButton={false}
-      isFullscreenOnMobile
-      isFullscreenScroll
+      zIndex={5000}
     >
       <ModalDialog.Header>
         <ModalDialog.Title>

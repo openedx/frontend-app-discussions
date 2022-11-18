@@ -105,7 +105,7 @@ function PostEditor({
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const { category } = useContext(DiscussionContext);
+  const { category, inContext } = useContext(DiscussionContext);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -286,6 +286,7 @@ function PostEditor({
                 onBlur={handleBlur}
                 aria-describedby="topicAreaInput"
                 floatingLabel={intl.formatMessage(messages.topicArea)}
+                disabled={inContext}
               >
                 {nonCoursewareTopics.map(topic => (
                   <option

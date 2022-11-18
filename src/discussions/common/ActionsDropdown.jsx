@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
+import { DiscussionContext } from './context';
 
 function ActionsDropdown({
   intl,
@@ -26,6 +27,7 @@ function ActionsDropdown({
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
   const actions = useActions(commentOrPost);
+  const { inContext } = useContext(DiscussionContext);
   const handleActions = (action) => {
     const actionFunction = actionHandlers[action];
     if (actionFunction) {
@@ -54,7 +56,7 @@ function ActionsDropdown({
         onClose={close}
         positionRef={target}
         isOpen={isOpen}
-        placement="auto-start"
+        placement={inContext ? 'left' : 'auto-start'}
       >
         <div
           className="bg-white p-1 shadow d-flex flex-column"
