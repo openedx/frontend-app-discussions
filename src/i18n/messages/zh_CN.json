@@ -4,6 +4,7 @@
   "discussions.comments.comment.addResponse": "Add a response",
   "discussions.comments.comment.addComment": "Add a comment",
   "discussions.comments.comment.abuseFlaggedMessage": "Content reported for staff to review",
+  "discussions.actions.back.alt": "Back to list",
   "discussions.comments.comment.responseCount": "{num, plural,\n      =0 {No responses}\n      one {Showing # response}\n      other {Showing # responses}\n    }",
   "discussions.comments.comment.endorsedResponseCount": "{num, plural,\n      =0 {No endorsed responses}\n      one {Showing # endorsed response}\n      other {Showing # endorsed responses}\n    }",
   "discussions.comments.comment.loadMoreComments": "Load more comments",
@@ -47,7 +48,6 @@
   "discussion.learner.allActivity": "All activity",
   "discussion.learner.posts": "Posts",
   "discussions.actions.button.alt": "Actions menu",
-  "discussions.actions.back.alt": "Back",
   "discussions.actions.copylink": "Copy link",
   "discussions.actions.unpin": "Unpin",
   "discussions.actions.close": "Close",
@@ -123,6 +123,8 @@
   "discussions.post.editor.anonymousToPeersPost": "Post anonymously to peers",
   "discussions.editor.posts.editReasonCode": "Reason for editing",
   "discussions.editor.posts.showPreview.button": "Show Preview",
+  "discussions.topic.noName.label": "Unnamed category",
+  "discussions.subtopic.noName.label": "Unnamed subcategory",
   "discussions.posts.filter.showALl": "Show all",
   "discussions.posts.filter.discussions": "Discussions",
   "discussions.posts.filter.questions": "Questions",
@@ -132,7 +134,7 @@
   "discussions.posts.status.filter.following": "Following",
   "discussions.posts.status.filter.reported": "Reported",
   "discussions.posts.status.filter.unanswered": "Unanswered",
-  "discussions.posts.status.filter.unresponded": "Unresponded",
+  "discussions.posts.status.filter.unresponded": "Not responded",
   "discussions.posts.filter.myPosts": "My posts",
   "discussions.posts.filter.myDiscussions": "My discussions",
   "discussions.posts.filter.myQuestions": "My questions",
@@ -175,5 +177,6 @@
   "discussions.topics.sort.courseStructure": "Course Structure",
   "discussions.topics.find.label": "Search topics",
   "discussions.topics.archived.label": "Archived",
-  "discussions.topics.unnamed.label": "Unnamed Topic"
+  "discussions.topics.unnamed.label": "Unnamed category",
+  "discussions.subtopics.unnamed.label": "Unnamed subcategory"
 }

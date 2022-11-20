@@ -4,6 +4,7 @@
   "discussions.comments.comment.addResponse": "Bir cevap ekle",
   "discussions.comments.comment.addComment": "Bir yorum ekle",
   "discussions.comments.comment.abuseFlaggedMessage": "Personelin incelemesi için bildirilen içerik",
+  "discussions.actions.back.alt": "Back to list",
   "discussions.comments.comment.responseCount": "{num, plural,\n      =0 {No responses}\n      one {Showing # response}\n      other {Showing # responses}\n    }",
   "discussions.comments.comment.endorsedResponseCount": "{num, plural,\n      =0 {No endorsed responses}\n      one {Showing # endorsed response}\n      other {Showing # endorsed responses}\n    }",
   "discussions.comments.comment.loadMoreComments": "Daha fazla yorum yükle",
@@ -47,7 +48,6 @@
   "discussion.learner.allActivity": "All activity",
   "discussion.learner.posts": "Gönderiler",
   "discussions.actions.button.alt": "Eylemler menüsü",
-  "discussions.actions.back.alt": "Geri",
   "discussions.actions.copylink": "Copy link",
   "discussions.actions.unpin": "İşareti kaldır",
   "discussions.actions.close": "Kapat",
@@ -123,6 +123,8 @@
   "discussions.post.editor.anonymousToPeersPost": "Akranlarına anonim olarak gönder",
   "discussions.editor.posts.editReasonCode": "Düzenleme nedeni",
   "discussions.editor.posts.showPreview.button": "Önizlemeyi Göster",
+  "discussions.topic.noName.label": "Unnamed category",
+  "discussions.subtopic.noName.label": "Unnamed subcategory",
   "discussions.posts.filter.showALl": "Tümünü göster",
   "discussions.posts.filter.discussions": "Forumlar",
   "discussions.posts.filter.questions": "Sorular",
@@ -132,7 +134,7 @@
   "discussions.posts.status.filter.following": "Takip ediliyor",
   "discussions.posts.status.filter.reported": "Rapor edildi",
   "discussions.posts.status.filter.unanswered": "Cevaplanmamış",
-  "discussions.posts.status.filter.unresponded": "Unresponded",
+  "discussions.posts.status.filter.unresponded": "Not responded",
   "discussions.posts.filter.myPosts": "Gönderilerim",
   "discussions.posts.filter.myDiscussions": "Tartışmalarım",
   "discussions.posts.filter.myQuestions": "Sorularım",
@@ -175,5 +177,6 @@
   "discussions.topics.sort.courseStructure": "Ders Yapısı",
   "discussions.topics.find.label": "Search topics",
   "discussions.topics.archived.label": "Arşivlenmiş",
-  "discussions.topics.unnamed.label": "Unnamed Topic"
+  "discussions.topics.unnamed.label": "Unnamed category",
+  "discussions.subtopics.unnamed.label": "Unnamed subcategory"
 }
