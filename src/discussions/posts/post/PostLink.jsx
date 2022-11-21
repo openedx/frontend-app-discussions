@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
@@ -5,7 +6,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Badge, Icon } from '@edx/paragon';
+import { Badge, Icon, Truncate } from '@edx/paragon';
 import { CheckCircle } from '@edx/paragon/icons';
 
 import { PushPin } from '../../../components/icons';
@@ -74,24 +75,24 @@ function PostLink({
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-                <div
-                  className={
-                    classNames('text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
-                      { 'font-weight-bolder': !read })
-                  }
-                >
-                  {post.title}
-                </div>
-
-                <div
-                  className="text-truncate text-gray-700 font-weight-normal font-size-14 font-style-normal font-family-inter mx-1.5"
-                  style={{ maxHeight: '1.5rem' }}
-                >
-                  {isPostPreviewAvailable(post.previewBody)
-                    ? post.previewBody
-                    : intl.formatMessage(messages.postWithoutPreview)}
-                </div>
-
+                <Truncate lines={1} className="mr-1.5" whiteSpace>
+                  <span
+                    class={
+                        classNames('font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter',
+                          { 'font-weight-bolder': !read })
+                      }
+                  >
+                    {post.title}
+                  </span>
+                  <span> </span>
+                  <span
+                    class="text-gray-700 font-weight-normal font-size-14 font-style-normal font-family-inter"
+                  >
+                    {isPostPreviewAvailable(post.previewBody)
+                      ? post.previewBody
+                      : intl.formatMessage(messages.postWithoutPreview)}
+                  </span>
+                </Truncate>
                 {showAnsweredBadge && (
                   <Icon src={CheckCircle} className="text-success font-weight-500 ml-auto badge-padding" data-testid="check-icon">
                     <span className="sr-only">{' '}answered</span>
