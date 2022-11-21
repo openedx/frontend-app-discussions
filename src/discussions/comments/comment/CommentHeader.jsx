@@ -5,14 +5,17 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { injectIntl } from '@edx/frontend-platform/i18n';
-import { Avatar, Icon } from '@edx/paragon';
-import { CheckCircle, Verified } from '@edx/paragon/icons';
+import { logError } from '@edx/frontend-platform/logging';
+import {
+  Avatar, Icon,
+} from '@edx/paragon';
 
-import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
+import { AvatarOutlineAndLabelColors, EndorsementStatus, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import ActionsDropdown from '../../common/ActionsDropdown';
 import { useAlertBannerVisible } from '../../data/hooks';
 import { selectAuthorAvatars } from '../../posts/data/selectors';
+import { useActions } from '../../utils';
 import { commentShape } from './proptypes';
 
 function CommentHeader({
@@ -24,6 +27,20 @@ function CommentHeader({
   const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(comment);
 
+  const actions = useActions({
+    ...comment,
+    postType,
+  });
+  const actionIcons = actions.find(({ action }) => action === EndorsementStatus.ENDORSED);
+
+  const handleIcons = (action) => {
+    const actionFunction = actionHandlers[action];
+    if (actionFunction) {
+      actionFunction();
+    } else {
+      logError(`Unknown or unimplemented action ${action}`);
+    }
+  };
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
       'mt-2': hasAnyAlert,
@@ -47,15 +64,23 @@ function CommentHeader({
         />
       </div>
       <div className="d-flex align-items-center">
-        {comment.endorsed && (
-          <span className="btn-icon btn-icon-sm mr-1 align-items-center">
-            {
-              postType === 'question'
-                ? <Icon src={CheckCircle} className="text-success" data-testid="check-icon" />
-                : <Icon src={Verified} className="text-dark-500" data-testid="verified-icon" />
-            }
-          </span>
+
+        {actionIcons && (
+        <span className="btn-icon btn-icon-sm mr-1 align-items-center">
+          <Icon
+            data-testid="check-icon"
+            onClick={
+                () => {
+                  handleIcons(actionIcons.action);
+                }
+              }
+            src={actionIcons.icon}
+            className={['endorse', 'unendorse'].includes(actionIcons.id) ? 'text-dark-500' : 'text-success-500'}
+            size="sm"
+          />
+        </span>
         )}
+
         <ActionsDropdown
           commentOrPost={{
             ...comment,

@@ -63,7 +63,7 @@ const messages = defineMessages({
   },
   markAnsweredAction: {
     id: 'discussions.actions.markAnswered',
-    defaultMessage: 'Mark as Answered',
+    defaultMessage: 'Mark as answered',
     description: 'Action to mark a comment as answering a post',
   },
   unmarkAnsweredAction: {

@@ -39,14 +39,19 @@ function EndorsedAlertBanner({
           )}
           </strong>
           <span className="d-flex align-items-center mr-1 flex-wrap">
-            <span className="mr-2">
+            <span className="mr-1">
               {intl.formatMessage(
                 isQuestion
                   ? messages.answeredLabel
                   : messages.endorsedLabel,
               )}
             </span>
-            <AuthorLabel author={content.endorsedBy} authorLabel={content.endorsedByLabel} linkToProfile />
+            <AuthorLabel
+              author={content.endorsedBy}
+              authorLabel={content.endorsedByLabel}
+              linkToProfile
+              alert={content.endorsed}
+            />
             {intl.formatMessage(messages.time, { time: timeago.format(content.endorsedAt, 'time-locale') })}
           </span>
         </div>

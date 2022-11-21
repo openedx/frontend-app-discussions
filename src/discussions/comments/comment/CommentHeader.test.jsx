@@ -30,7 +30,7 @@ const mockComment = {
   author: 'abc123',
   authorLabel: 'ABC 123',
   endorsed: true,
-  editableFields: [],
+  editableFields: ['endorsed'],
 };
 
 describe('Comment Header', () => {
@@ -48,7 +48,7 @@ describe('Comment Header', () => {
 
   it('should render verified icon for endorsed discussion posts', () => {
     renderComponent(mockComment, 'discussion', {});
-    expect(screen.queryAllByTestId('verified-icon')).toHaveLength(1);
+    expect(screen.queryAllByTestId('check-icon')).toHaveLength(1);
   });
   it('should render check icon for endorsed question posts', () => {
     renderComponent(mockComment, 'question', {});
