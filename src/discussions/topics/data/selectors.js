@@ -45,6 +45,7 @@ export const selectNonCoursewareTopics = state => state.topics.nonCoursewareIds.
 
 export const selectTopic = topicId => state => state.topics.topics[topicId];
 
-export const selectTopicsById = topicIds => state => topicIds.map(topicId => state.topics.topics[topicId]);
+export const selectTopicsById = topicIds => state => topicIds.map(topicId => state.topics.topics[topicId])
+  .filter(Boolean);
 
 export const topicsLoadingStatus = state => state.topics.status;
