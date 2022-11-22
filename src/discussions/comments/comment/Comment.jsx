@@ -9,7 +9,7 @@ import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
-import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
+import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../common';
 import { selectBlackoutDate } from '../../data/selectors';
 import { fetchThread } from '../../posts/data/thunks';
 import { inBlackoutDateRange } from '../../utils';
@@ -35,6 +35,7 @@ function Comment({
   const inlineReplies = useSelector(selectCommentResponses(comment.id));
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
@@ -54,7 +55,13 @@ function Comment({
       await dispatch(fetchThread(comment.threadId));
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
+    [ContentActions.REPORT]: () => {
+      if (comment.abuseFlagged) {
+        dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+      } else {
+        showReportConfirmation();
+      }
+    },
   };
 
   const handleLoadMoreComments = () => (
@@ -64,7 +71,7 @@ function Comment({
   return (
     <div className={classNames({ 'py-2 my-3': showFullThread })}>
       <div className="d-flex flex-column card" data-testid={`comment-${comment.id}`} role="listitem">
-        <DeleteConfirmation
+        <Confirmation
           isOpen={isDeleting}
           title={intl.formatMessage(messages.deleteResponseTitle)}
           description={intl.formatMessage(messages.deleteResponseDescription)}
@@ -74,6 +81,18 @@ function Comment({
             hideDeleteConfirmation();
           }}
         />
+        {!comment.abuseFlagged && (
+          <Confirmation
+            isOpen={isReporting}
+            title={intl.formatMessage(messages.reportResponseTitle)}
+            description={intl.formatMessage(messages.reportResponseDescription)}
+            onClose={hideReportConfirmation}
+            onReport={() => {
+              dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+              hideReportConfirmation();
+            }}
+          />
+        )}
         <EndorsedAlertBanner postType={postType} content={comment} />
         <div className="d-flex flex-column p-4.5">
           <AlertBanner content={comment} />

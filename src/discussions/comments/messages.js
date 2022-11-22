@@ -148,6 +148,26 @@ const messages = defineMessages({
     defaultMessage: 'Are you sure you want to permanently delete this comment?',
     description: 'Text displayed in confirmation dialog when deleting a comment',
   },
+  reportResponseTitle: {
+    id: 'discussions.editor.response.response.title',
+    defaultMessage: 'Report inappropriate content?',
+    description: 'Title of confirmation dialog shown when reporting a response',
+  },
+  reportResponseDescription: {
+    id: 'discussions.editor.delete.response.description',
+    defaultMessage: 'The discussion moderation team will review this content and take appropriate action.',
+    description: 'Text displayed in confirmation dialog when deleting a response',
+  },
+  reportCommentTitle: {
+    id: 'discussions.editor.report.comment.title',
+    defaultMessage: 'Report inappropriate content?',
+    description: 'Title of confirmation dialog shown when reporting a comment',
+  },
+  reportCommentDescription: {
+    id: 'discussions.editor.report.comment.description',
+    defaultMessage: 'The discussion moderation team will review this content and take appropriate action.',
+    description: 'Text displayed in confirmation dialog when deleting a response',
+  },
   editReasonCode: {
     id: 'discussions.editor.comments.editReasonCode',
     defaultMessage: 'Reason for editing',

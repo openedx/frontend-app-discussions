@@ -64,7 +64,7 @@ function ActionsDropdown({
         >
           {actions.map(action => (
             <React.Fragment key={action.id}>
-              {action.action === ContentActions.DELETE
+              {(action.action === ContentActions.DELETE || action.action === ContentActions.REPORT)
               && <Dropdown.Divider />}
 
               <Dropdown.Item

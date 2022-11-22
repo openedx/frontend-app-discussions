@@ -81,6 +81,11 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
     description: 'Delete button shown on delete confirmation dialog',
   },
+  reportConfirmationConfirm: {
+    id: 'discussions.report.confirmation.button.confirm',
+    defaultMessage: 'Confirm',
+    description: 'Confirm button shown on report confirmation dialog',
+  },
   emptyAllTopics: {
     id: 'discussions.empty.allTopics',
     defaultMessage:

@@ -242,11 +242,11 @@ header {
 }
 
 .zindex-5000 {
- z-index: 5000;
+ z-index: 5000 ;
 }
 
 #paragon-portal-root .pgn__modal-layer {
-  z-index: 1500 !important;
+  z-index: 5000 !important;
 }
 
 @media only screen and (max-width: 767px) {

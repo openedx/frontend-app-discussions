@@ -10,7 +10,7 @@ import { Hyperlink, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
-import { AlertBanner, DeleteConfirmation } from '../../common';
+import { AlertBanner, Confirmation } from '../../common';
 import { selectModerationSettings } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
@@ -34,6 +34,7 @@ function Post({
   const topicContext = useSelector(selectTopicContext(post.topicId));
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
@@ -52,7 +53,13 @@ function Post({
     },
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
-    [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged })),
+    [ContentActions.REPORT]: () => {
+      if (post.abuseFlagged) {
+        dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
+      } else {
+        showReportConfirmation();
+      }
+    },
   };
 
   const getTopicCategoryName = topicData => (
@@ -61,7 +68,7 @@ function Post({
 
   return (
     <div className="d-flex flex-column w-100 mw-100" data-testid={`post-${post.id}`}>
-      <DeleteConfirmation
+      <Confirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deletePostTitle)}
         description={intl.formatMessage(messages.deletePostDescription)}
@@ -72,6 +79,18 @@ function Post({
           hideDeleteConfirmation();
         }}
       />
+      {!post.abuseFlagged && (
+        <Confirmation
+          isOpen={isReporting}
+          title={intl.formatMessage(messages.reportPostTitle)}
+          description={intl.formatMessage(messages.reportPostDescription)}
+          onClose={hideReportConfirmation}
+          onReport={() => {
+            dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
+            hideReportConfirmation();
+          }}
+        />
+      )}
       <AlertBanner content={post} />
       <PostHeader post={post} actionHandlers={actionHandlers} />
       <div className="d-flex mt-4 mb-2 text-break font-style-normal text-primary-500">

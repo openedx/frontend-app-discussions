@@ -6,13 +6,14 @@ import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
 import messages from '../messages';
 
-function DeleteConfirmation({
+function Confirmation({
   intl,
   isOpen,
   title,
   description,
   onClose,
   onDelete,
+  onReport,
 }) {
   return (
     <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
@@ -26,11 +27,13 @@ function DeleteConfirmation({
       </ModalDialog.Body>
       <ModalDialog.Footer>
         <ActionRow>
-          <ModalDialog.CloseButton variant="tertiary">
+          <ModalDialog.CloseButton variant={onDelete ? 'tertiary' : 'default'}>
             {intl.formatMessage(messages.deleteConfirmationCancel)}
           </ModalDialog.CloseButton>
-          <Button variant="primary" onClick={onDelete}>
-            {intl.formatMessage(messages.deleteConfirmationDelete)}
+          <Button variant={onDelete ? 'primary' : 'danger'} onClick={onDelete || onReport}>
+            {onDelete
+              ? intl.formatMessage(messages.deleteConfirmationDelete)
+              : intl.formatMessage(messages.reportConfirmationConfirm) }
           </Button>
         </ActionRow>
       </ModalDialog.Footer>
@@ -38,13 +41,18 @@ function DeleteConfirmation({
   );
 }
 
-DeleteConfirmation.propTypes = {
+Confirmation.propTypes = {
   intl: intlShape.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
+  onReport: PropTypes.func,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
 };
+Confirmation.defaultProps = {
+  onDelete: undefined,
+  onReport: undefined,
+};
 
-export default injectIntl(DeleteConfirmation);
+export default injectIntl(Confirmation);
