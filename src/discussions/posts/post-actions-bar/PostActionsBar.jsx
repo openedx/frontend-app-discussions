@@ -12,8 +12,13 @@ import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { selectBlackoutDate, selectconfigLoadingStatus } from '../../data/selectors';
-import { inBlackoutDateRange, postMessageToParent } from '../../utils';
+import {
+  selectBlackoutDate, selectconfigLoadingStatus,
+  selectIsCourseAdmin, selectIsCourseStaff,
+  selectUserHasModerationPrivileges, selectUserIsGroupTa,
+  selectUserIsStaff,
+} from '../../data/selectors';
+import { handleAddPostForRoles, inBlackoutDateRange, postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
 
@@ -26,9 +31,27 @@ function PostActionsBar({
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const blackoutDateRange = useSelector(selectBlackoutDate);
+  const isUserAdmin = useSelector(selectUserIsStaff);
+  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
+  const isUserGroupTA = useSelector(selectUserIsGroupTa);
+  const isCourseAdmin = useSelector(selectIsCourseAdmin);
+  const isCourseStaff = useSelector(selectIsCourseStaff);
 
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
+  };
+
+  const hasPrivilege = handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
+    isUserGroupTA, isCourseAdmin, isCourseStaff);
+
+  const handleAddPost = () => {
+    if (loadingStatus === RequestStatus.SUCCESSFUL && (!(inBlackoutDateRange(blackoutDateRange)))) {
+      return true;
+    }
+    if (hasPrivilege) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -39,7 +62,8 @@ function PostActionsBar({
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-      {(!inBlackoutDateRange(blackoutDateRange) && loadingStatus === RequestStatus.SUCCESSFUL) && (
+      {handleAddPost()
+      && (
         <>
           {!inContext && <div className="border-right border-light-400 mx-3" />}
           <Button

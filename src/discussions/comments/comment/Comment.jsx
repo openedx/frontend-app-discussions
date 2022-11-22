@@ -10,9 +10,12 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
-import { selectBlackoutDate } from '../../data/selectors';
+import {
+  selectBlackoutDate, selectIsCourseAdmin,
+  selectIsCourseStaff, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
+} from '../../data/selectors';
 import { fetchThread } from '../../posts/data/thunks';
-import { inBlackoutDateRange } from '../../utils';
+import { handleAddPostForRoles, inBlackoutDateRange } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -39,6 +42,24 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const blackoutDateRange = useSelector(selectBlackoutDate);
+  const isUserAdmin = useSelector(selectUserIsStaff);
+  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
+  const isUserGroupTA = useSelector(selectUserIsGroupTa);
+  const isCourseAdmin = useSelector(selectIsCourseAdmin);
+  const isCourseStaff = useSelector(selectIsCourseStaff);
+
+  const hasPrivilege = handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
+    isUserGroupTA, isCourseAdmin, isCourseStaff);
+
+  const handleAddComment = () => {
+    if ((!(inBlackoutDateRange(blackoutDateRange)))) {
+      return true;
+    }
+    if (hasPrivilege) {
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -127,7 +148,7 @@ function Comment({
               />
             ) : (
               <>
-                {(!isClosedPost && !inBlackoutDateRange(blackoutDateRange))
+                {(!isClosedPost && handleAddComment())
                   && (
                     <Button
                       className="d-flex flex-grow mt-3 py-2 font-size-14"

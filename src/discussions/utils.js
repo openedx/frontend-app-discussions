@@ -281,3 +281,11 @@ export function inBlackoutDateRange(blackoutDateRanges) {
     (blackoutDateRange) => dateInDateRange(now, new Date(blackoutDateRange.start), new Date(blackoutDateRange.end)),
   );
 }
+
+export function handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages, isUserGroupTA,
+  isCourseAdmin, isCourseStaff) {
+  if (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff) {
+    return true;
+  }
+  return false;
+}
