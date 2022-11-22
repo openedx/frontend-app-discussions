@@ -109,7 +109,7 @@ const messages = defineMessages({
         all {}
         group {in {cohort}}
         other {{cohortType}}
-    } by {sort, select,
+    } sorted by {sort, select,
       lastActivityAt {recent activity}
       commentCount {most activity}
       voteCount {most likes}
