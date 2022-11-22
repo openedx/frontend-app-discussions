@@ -199,7 +199,7 @@ describe('PostsView', () => {
         await renderComponent();
       });
       dropDownButton = screen.getByRole('button', {
-        name: /all posts by recent activity/i,
+        name: /all posts sorted by recent activity/i,
       });
       await act(async () => {
         fireEvent.click(dropDownButton);
@@ -220,7 +220,7 @@ describe('PostsView', () => {
       });
 
       dropDownButton = screen.getByRole('button', {
-        name: /All posts in Cohort 1 by recent activity/i,
+        name: /All posts in Cohort 1 sorted by recent activity/i,
       });
 
       expect(dropDownButton).toBeInTheDocument();
