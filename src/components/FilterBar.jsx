@@ -101,7 +101,7 @@ function FilterBar({
         <span className="text-primary-700 pr-4">
           {intl.formatMessage(messages.sortFilterStatus, {
             own: false,
-            type: selectedFilters.type,
+            type: selectedFilters.postType,
             sort: selectedFilters.orderBy,
             status: selectedFilters.status,
             cohortType: selectedCohort?.name ? 'group' : 'all',

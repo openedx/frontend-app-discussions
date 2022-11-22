@@ -112,7 +112,7 @@ const messages = defineMessages({
     } by {sort, select,
       lastActivityAt {recent activity}
       commentCount {most activity}
-      voteCount {most votes}
+      voteCount {most likes}
       other {{sort}}
     }`,
     description: 'Status message showing current sorting and filtering status',
