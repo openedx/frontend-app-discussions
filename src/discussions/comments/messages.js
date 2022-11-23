@@ -154,7 +154,7 @@ const messages = defineMessages({
     description: 'Title of confirmation dialog shown when reporting a response',
   },
   reportResponseDescription: {
-    id: 'discussions.editor.delete.response.description',
+    id: 'discussions.editor.response.description',
     defaultMessage: 'The discussion moderation team will review this content and take appropriate action.',
     description: 'Text displayed in confirmation dialog when deleting a response',
   },
