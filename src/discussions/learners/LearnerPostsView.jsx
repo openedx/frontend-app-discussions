@@ -50,7 +50,7 @@ function LearnerPostsView({ intl }) {
       page: pageNum,
       filters: postFilter,
       orderBy: postFilter.orderBy,
-      countFlagged: userHasModerationPrivileges || userIsStaff,
+      countFlagged: (userHasModerationPrivileges || userIsStaff) || undefined,
     };
 
     dispatch(fetchUserPosts(courseId, params));
