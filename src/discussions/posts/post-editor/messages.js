@@ -131,6 +131,11 @@ const messages = defineMessages({
     defaultMessage: 'Unnamed subcategory',
     description: 'display string for topics with missing names',
   },
+  noThreadFound: {
+    id: 'discussion.thread.notFound',
+    defaultMessage: 'Thread not found',
+    description: 'message to show on screen if the request thread is not found in course',
+  },
 });
 
 export default messages;
