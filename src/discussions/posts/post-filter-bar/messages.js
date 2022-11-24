@@ -109,10 +109,10 @@ const messages = defineMessages({
         all {}
         group {in {cohort}}
         other {{cohortType}}
-    } by {sort, select,
+    } sorted by {sort, select,
       lastActivityAt {recent activity}
       commentCount {most activity}
-      voteCount {most votes}
+      voteCount {most likes}
       other {{sort}}
     }`,
     description: 'Status message showing current sorting and filtering status',
