@@ -71,8 +71,8 @@ export async function getThreads(
  * @param {string} threadId
  * @returns {Promise<{}>}
  */
-export async function getThread(threadId) {
-  const params = { requested_fields: 'profile_image' };
+export async function getThread(threadId, courseId) {
+  const params = { requested_fields: 'profile_image', course_id: courseId };
   const url = `${threadsApiUrl}${threadId}/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
