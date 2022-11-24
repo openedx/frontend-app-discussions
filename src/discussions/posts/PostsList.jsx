@@ -44,7 +44,7 @@ function PostsList({ posts, topics, intl }) {
       filters,
       page: pageNum,
       author: showOwnPosts ? authenticatedUser.username : null,
-      countFlagged: userHasModerationPrivileges || userIsStaff,
+      countFlagged: (userHasModerationPrivileges || userIsStaff) || undefined,
       topicIds,
     };
 
