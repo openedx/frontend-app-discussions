@@ -120,7 +120,7 @@ function PostHeader({
       </div>
       {!preview
         && (
-          <div className="ml-auto d-flex align-items-center">
+          <div className="ml-auto d-flex">
             <ActionsDropdown commentOrPost={post} actionHandlers={actionHandlers} />
           </div>
         )}
