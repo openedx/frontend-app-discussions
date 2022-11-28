@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
-import { ReportConfirmation } from '../../data/constants';
 import messages from '../messages';
 
 function Confirmation({
@@ -14,9 +13,10 @@ function Confirmation({
   description,
   onClose,
   comfirmAction,
+  closeButtonVaraint,
+  confirmButtonVariant,
+  confirmButtonText,
 }) {
-  const ifDeleteConfirmation = title === ReportConfirmation.Report || false;
-
   return (
     <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
       <ModalDialog.Header>
@@ -29,13 +29,11 @@ function Confirmation({
       </ModalDialog.Body>
       <ModalDialog.Footer>
         <ActionRow>
-          <ModalDialog.CloseButton variant={!ifDeleteConfirmation ? 'tertiary' : 'default'}>
-            {intl.formatMessage(messages.deleteConfirmationCancel)}
+          <ModalDialog.CloseButton variant={closeButtonVaraint}>
+            {intl.formatMessage(messages.confirmationCancel)}
           </ModalDialog.CloseButton>
-          <Button variant={!ifDeleteConfirmation ? 'primary' : 'danger'} onClick={comfirmAction}>
-            {!ifDeleteConfirmation
-              ? intl.formatMessage(messages.deleteConfirmationDelete)
-              : intl.formatMessage(messages.reportConfirmationConfirm) }
+          <Button variant={confirmButtonVariant} onClick={comfirmAction}>
+            { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
           </Button>
         </ActionRow>
       </ModalDialog.Footer>
@@ -50,6 +48,15 @@ Confirmation.propTypes = {
   comfirmAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  closeButtonVaraint: PropTypes.string,
+  confirmButtonVariant: PropTypes.string,
+  confirmButtonText: PropTypes.string,
+};
+
+Confirmation.defaultProps = {
+  closeButtonVaraint: 'default',
+  confirmButtonVariant: 'primary',
+  confirmButtonText: '',
 };
 
 export default injectIntl(Confirmation);

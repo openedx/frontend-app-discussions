@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
     description: 'Action to delete a post or comment',
   },
+  confirmationConfirm: {
+    id: 'discussions.confirmation.button.confirm',
+    defaultMessage: 'Confirm',
+    description: 'Confirm button shown on confirmation dialog',
+  },
   closeAction: {
     id: 'discussions.actions.close',
     defaultMessage: 'Close',
@@ -71,20 +76,10 @@ const messages = defineMessages({
     defaultMessage: 'Unmark as answered',
     description: 'Action to unmark a comment as answering a post',
   },
-  deleteConfirmationCancel: {
-    id: 'discussions.delete.confirmation.button.cancel',
+  confirmationCancel: {
+    id: 'discussions.modal.confirmation.button.cancel',
     defaultMessage: 'Cancel',
     description: 'Cancel button shown on delete confirmation dialog',
-  },
-  deleteConfirmationDelete: {
-    id: 'discussions.delete.confirmation.button.delete',
-    defaultMessage: 'Delete',
-    description: 'Delete button shown on delete confirmation dialog',
-  },
-  reportConfirmationConfirm: {
-    id: 'discussions.report.confirmation.button.confirm',
-    defaultMessage: 'Confirm',
-    description: 'Confirm button shown on report confirmation dialog',
   },
   emptyAllTopics: {
     id: 'discussions.empty.allTopics',

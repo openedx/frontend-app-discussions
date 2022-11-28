@@ -48,6 +48,14 @@ function Comment({
     }
   }, [comment.id]);
 
+  const handleAbusedFlag = () => {
+    if (comment.abuseFlagged) {
+      dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
@@ -55,13 +63,7 @@ function Comment({
       await dispatch(fetchThread(comment.threadId));
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => {
-      if (comment.abuseFlagged) {
-        dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
-      } else {
-        showReportConfirmation();
-      }
-    },
+    [ContentActions.REPORT]: () => handleAbusedFlag(),
   };
 
   const handleLoadMoreComments = () => (
@@ -80,6 +82,8 @@ function Comment({
             dispatch(removeComment(comment.id));
             hideDeleteConfirmation();
           }}
+          closeButtonVaraint="tertiary"
+          confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
         />
         {!comment.abuseFlagged && (
           <Confirmation
@@ -91,6 +95,7 @@ function Comment({
               dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
               hideReportConfirmation();
             }}
+            confirmButtonVariant="danger"
           />
         )}
         <EndorsedAlertBanner postType={postType} content={comment} />

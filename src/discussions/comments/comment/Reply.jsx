@@ -30,6 +30,15 @@ function Reply({
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
+
+  const handleAbusedFlag = () => {
+    if (reply.abuseFlagged) {
+      dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(
@@ -38,13 +47,7 @@ function Reply({
       ContentActions.ENDORSE,
     )),
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => {
-      if (reply.abuseFlagged) {
-        dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
-      } else {
-        showReportConfirmation();
-      }
-    },
+    [ContentActions.REPORT]: () => handleAbusedFlag(),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
@@ -61,6 +64,8 @@ function Reply({
           dispatch(removeComment(reply.id));
           hideDeleteConfirmation();
         }}
+        closeButtonVaraint="tertiary"
+        confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
       {!reply.abuseFlagged && (
         <Confirmation
@@ -72,6 +77,7 @@ function Reply({
             dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
             hideReportConfirmation();
           }}
+          confirmButtonVariant="danger"
         />
       )}
       {hasAnyAlert && (

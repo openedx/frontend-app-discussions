@@ -71,6 +71,11 @@ const messages = defineMessages({
     id: 'discussions.editor.delete.post.description',
     defaultMessage: 'Are you sure you want to permanently delete this post?',
   },
+  deleteConfirmationDelete: {
+    id: 'discussions.post.delete.confirmation.button.delete',
+    defaultMessage: 'Delete',
+    description: 'Delete button shown on delete confirmation dialog',
+  },
   reportPostTitle: {
     id: 'discussions.editor.report.post.title',
     defaultMessage: 'Report inappropriate content?',

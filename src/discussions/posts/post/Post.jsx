@@ -36,6 +36,15 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
+
+  const handleAbusedFlag = () => {
+    if (post.abuseFlagged) {
+      dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -53,13 +62,7 @@ function Post({
     },
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
-    [ContentActions.REPORT]: () => {
-      if (post.abuseFlagged) {
-        dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
-      } else {
-        showReportConfirmation();
-      }
-    },
+    [ContentActions.REPORT]: () => handleAbusedFlag(),
   };
 
   const getTopicCategoryName = topicData => (
@@ -78,6 +81,8 @@ function Post({
           history.push('.');
           hideDeleteConfirmation();
         }}
+        closeButtonVaraint="tertiary"
+        confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
       {!post.abuseFlagged && (
         <Confirmation
@@ -89,6 +94,7 @@ function Post({
             dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
             hideReportConfirmation();
           }}
+          confirmButtonVariant="danger"
         />
       )}
       <AlertBanner content={post} />
