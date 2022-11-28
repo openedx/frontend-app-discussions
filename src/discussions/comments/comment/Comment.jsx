@@ -10,10 +10,8 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
-import { useUserPrivilage } from '../../data/hooks';
-import { selectBlackoutDate } from '../../data/selectors';
+import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
-import { inBlackoutDateRange } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -39,18 +37,7 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
-  const blackoutDateRange = useSelector(selectBlackoutDate);
-  const hasPrivilege = useUserPrivilage();
-
-  const handleAddComment = () => {
-    if ((!(inBlackoutDateRange(blackoutDateRange)))) {
-      return true;
-    }
-    if (hasPrivilege) {
-      return true;
-    }
-    return false;
-  };
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -139,18 +126,18 @@ function Comment({
               />
             ) : (
               <>
-                {(!isClosedPost && handleAddComment())
+                {!isClosedPost && userCanAddThreadInBlackoutDate
                   && (
-                    <Button
-                      className="d-flex flex-grow mt-3 py-2 font-size-14"
-                      variant="outline-primary"
-                      style={{
-                        lineHeight: '20px',
-                      }}
-                      onClick={() => setReplying(true)}
-                    >
-                      {intl.formatMessage(messages.addComment)}
-                    </Button>
+                  <Button
+                    className="d-flex flex-grow mt-3 py-2 font-size-14"
+                    variant="outline-primary"
+                    style={{
+                      lineHeight: '20px',
+                    }}
+                    onClick={() => setReplying(true)}
+                  >
+                    {intl.formatMessage(messages.addComment)}
+                  </Button>
                   )}
               </>
 

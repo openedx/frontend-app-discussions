@@ -2,15 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button } from '@edx/paragon';
 
 import { DiscussionContext } from '../../common/context';
-import { useUserPrivilage } from '../../data/hooks';
-import { selectBlackoutDate } from '../../data/selectors';
-import { inBlackoutDateRange } from '../../utils';
+import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import messages from '../messages';
 import CommentEditor from './CommentEditor';
 
@@ -21,22 +18,11 @@ function ResponseEditor({
 }) {
   const { inContext } = useContext(DiscussionContext);
   const [addingResponse, setAddingResponse] = useState(false);
-  const blackoutDateRange = useSelector(selectBlackoutDate);
-  const hasPrivilege = useUserPrivilage();
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   useEffect(() => {
     setAddingResponse(false);
   }, [postId]);
-
-  const handleAddResponse = () => {
-    if ((!(inBlackoutDateRange(blackoutDateRange)))) {
-      return true;
-    }
-    if (hasPrivilege) {
-      return true;
-    }
-    return false;
-  };
 
   return addingResponse
     ? (
@@ -48,7 +34,7 @@ function ResponseEditor({
         />
       </div>
     )
-    : handleAddResponse() && (
+    : userCanAddThreadInBlackoutDate && (
       <div className={classNames({ 'mb-4': addWrappingDiv }, 'actions d-flex')}>
         <Button
           variant="primary"

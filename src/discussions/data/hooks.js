@@ -17,9 +17,10 @@ import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
-import { discussionsPath, handleAddPostForRoles } from '../utils';
+import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
+  selectBlackoutDate,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectLearnersTabEnabled,
@@ -179,15 +180,16 @@ export const useCurrentDiscussionTopic = () => {
   return null;
 };
 
-export const useUserPrivilage = () => {
+export const useUserCanAddThreadInBlackoutDate = () => {
+  const blackoutDateRange = useSelector(selectBlackoutDate);
   const isUserAdmin = useSelector(selectUserIsStaff);
   const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
+  const ifInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
 
-  return (
-    handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
-      isUserGroupTA, isCourseAdmin, isCourseStaff)
+  return (((ifInBlackoutDateRange && (isUserAdmin || userHasModerationPrivilages
+     || isUserGroupTA || isCourseAdmin || isCourseStaff)) || !ifInBlackoutDateRange)
   );
 };
