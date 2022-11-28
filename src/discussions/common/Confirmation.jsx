@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
+import { ReportConfirmation } from '../../data/constants';
 import messages from '../messages';
 
 function Confirmation({
@@ -12,9 +13,10 @@ function Confirmation({
   title,
   description,
   onClose,
-  onDelete,
-  onReport,
+  comfirmAction,
 }) {
+  const ifDeleteConfirmation = title === ReportConfirmation.Report || false;
+
   return (
     <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
       <ModalDialog.Header>
@@ -27,11 +29,11 @@ function Confirmation({
       </ModalDialog.Body>
       <ModalDialog.Footer>
         <ActionRow>
-          <ModalDialog.CloseButton variant={onDelete ? 'tertiary' : 'default'}>
+          <ModalDialog.CloseButton variant={!ifDeleteConfirmation ? 'tertiary' : 'default'}>
             {intl.formatMessage(messages.deleteConfirmationCancel)}
           </ModalDialog.CloseButton>
-          <Button variant={onDelete ? 'primary' : 'danger'} onClick={onDelete || onReport}>
-            {onDelete
+          <Button variant={!ifDeleteConfirmation ? 'primary' : 'danger'} onClick={comfirmAction}>
+            {!ifDeleteConfirmation
               ? intl.formatMessage(messages.deleteConfirmationDelete)
               : intl.formatMessage(messages.reportConfirmationConfirm) }
           </Button>
@@ -45,14 +47,9 @@ Confirmation.propTypes = {
   intl: intlShape.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onDelete: PropTypes.func,
-  onReport: PropTypes.func,
+  comfirmAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-};
-Confirmation.defaultProps = {
-  onDelete: undefined,
-  onReport: undefined,
 };
 
 export default injectIntl(Confirmation);

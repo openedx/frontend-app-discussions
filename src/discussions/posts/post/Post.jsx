@@ -73,7 +73,7 @@ function Post({
         title={intl.formatMessage(messages.deletePostTitle)}
         description={intl.formatMessage(messages.deletePostDescription)}
         onClose={hideDeleteConfirmation}
-        onDelete={() => {
+        comfirmAction={() => {
           dispatch(removeThread(post.id));
           history.push('.');
           hideDeleteConfirmation();
@@ -85,7 +85,7 @@ function Post({
           title={intl.formatMessage(messages.reportPostTitle)}
           description={intl.formatMessage(messages.reportPostDescription)}
           onClose={hideReportConfirmation}
-          onReport={() => {
+          comfirmAction={() => {
             dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
             hideReportConfirmation();
           }}

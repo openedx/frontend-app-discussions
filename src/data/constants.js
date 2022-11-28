@@ -14,6 +14,15 @@ export const ThreadType = {
 };
 
 /**
+ * Enum for report Confirmation.
+ * @readonly
+ * @enum {string}
+ */
+export const ReportConfirmation = {
+  Report: 'Report inappropriate content?',
+};
+
+/**
  * Enum to map between endorsement status and friendly name.
  * @readonly
  * @enum

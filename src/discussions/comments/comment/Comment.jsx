@@ -76,7 +76,7 @@ function Comment({
           title={intl.formatMessage(messages.deleteResponseTitle)}
           description={intl.formatMessage(messages.deleteResponseDescription)}
           onClose={hideDeleteConfirmation}
-          onDelete={() => {
+          comfirmAction={() => {
             dispatch(removeComment(comment.id));
             hideDeleteConfirmation();
           }}
@@ -87,7 +87,7 @@ function Comment({
             title={intl.formatMessage(messages.reportResponseTitle)}
             description={intl.formatMessage(messages.reportResponseDescription)}
             onClose={hideReportConfirmation}
-            onReport={() => {
+            comfirmAction={() => {
               dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
               hideReportConfirmation();
             }}
