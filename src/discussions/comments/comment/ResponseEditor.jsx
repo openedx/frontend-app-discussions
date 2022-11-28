@@ -8,11 +8,9 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button } from '@edx/paragon';
 
 import { DiscussionContext } from '../../common/context';
-import {
-  selectBlackoutDate, selectIsCourseAdmin,
-  selectIsCourseStaff, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
-} from '../../data/selectors';
-import { handleAddPostForRoles, inBlackoutDateRange } from '../../utils';
+import { useUserPrivilage } from '../../data/hooks';
+import { selectBlackoutDate } from '../../data/selectors';
+import { inBlackoutDateRange } from '../../utils';
 import messages from '../messages';
 import CommentEditor from './CommentEditor';
 
@@ -24,18 +22,11 @@ function ResponseEditor({
   const { inContext } = useContext(DiscussionContext);
   const [addingResponse, setAddingResponse] = useState(false);
   const blackoutDateRange = useSelector(selectBlackoutDate);
-  const isUserAdmin = useSelector(selectUserIsStaff);
-  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
-  const isUserGroupTA = useSelector(selectUserIsGroupTa);
-  const isCourseAdmin = useSelector(selectIsCourseAdmin);
-  const isCourseStaff = useSelector(selectIsCourseStaff);
+  const hasPrivilege = useUserPrivilage();
 
   useEffect(() => {
     setAddingResponse(false);
   }, [postId]);
-
-  const hasPrivilege = handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
-    isUserGroupTA, isCourseAdmin, isCourseStaff);
 
   const handleAddResponse = () => {
     if ((!(inBlackoutDateRange(blackoutDateRange)))) {

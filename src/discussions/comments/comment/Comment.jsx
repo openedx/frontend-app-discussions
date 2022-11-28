@@ -10,12 +10,10 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
-import {
-  selectBlackoutDate, selectIsCourseAdmin,
-  selectIsCourseStaff, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
-} from '../../data/selectors';
+import { useUserPrivilage } from '../../data/hooks';
+import { selectBlackoutDate } from '../../data/selectors';
 import { fetchThread } from '../../posts/data/thunks';
-import { handleAddPostForRoles, inBlackoutDateRange } from '../../utils';
+import { inBlackoutDateRange } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -42,14 +40,7 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const blackoutDateRange = useSelector(selectBlackoutDate);
-  const isUserAdmin = useSelector(selectUserIsStaff);
-  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
-  const isUserGroupTA = useSelector(selectUserIsGroupTa);
-  const isCourseAdmin = useSelector(selectIsCourseAdmin);
-  const isCourseStaff = useSelector(selectIsCourseStaff);
-
-  const hasPrivilege = handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
-    isUserGroupTA, isCourseAdmin, isCourseStaff);
+  const hasPrivilege = useUserPrivilage();
 
   const handleAddComment = () => {
     if ((!(inBlackoutDateRange(blackoutDateRange)))) {

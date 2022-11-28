@@ -17,13 +17,17 @@ import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
-import { discussionsPath } from '../utils';
+import { discussionsPath, handleAddPostForRoles } from '../utils';
 import {
-  selectAreThreadsFiltered, selectLearnersTabEnabled,
+  selectAreThreadsFiltered,
+  selectIsCourseAdmin,
+  selectIsCourseStaff,
+  selectLearnersTabEnabled,
   selectModerationSettings,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
+  selectUserIsStaff,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
 
@@ -173,4 +177,17 @@ export const useCurrentDiscussionTopic = () => {
     return topics[0];
   }
   return null;
+};
+
+export const useUserPrivilage = () => {
+  const isUserAdmin = useSelector(selectUserIsStaff);
+  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
+  const isUserGroupTA = useSelector(selectUserIsGroupTa);
+  const isCourseAdmin = useSelector(selectIsCourseAdmin);
+  const isCourseStaff = useSelector(selectIsCourseStaff);
+
+  return (
+    handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
+      isUserGroupTA, isCourseAdmin, isCourseStaff)
+  );
 };

@@ -12,13 +12,9 @@ import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import {
-  selectBlackoutDate, selectconfigLoadingStatus,
-  selectIsCourseAdmin, selectIsCourseStaff,
-  selectUserHasModerationPrivileges, selectUserIsGroupTa,
-  selectUserIsStaff,
-} from '../../data/selectors';
-import { handleAddPostForRoles, inBlackoutDateRange, postMessageToParent } from '../../utils';
+import { useUserPrivilage } from '../../data/hooks';
+import { selectBlackoutDate, selectconfigLoadingStatus } from '../../data/selectors';
+import { inBlackoutDateRange, postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
 
@@ -31,18 +27,11 @@ function PostActionsBar({
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const blackoutDateRange = useSelector(selectBlackoutDate);
-  const isUserAdmin = useSelector(selectUserIsStaff);
-  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
-  const isUserGroupTA = useSelector(selectUserIsGroupTa);
-  const isCourseAdmin = useSelector(selectIsCourseAdmin);
-  const isCourseStaff = useSelector(selectIsCourseStaff);
+  const hasPrivilege = useUserPrivilage();
 
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
   };
-
-  const hasPrivilege = handleAddPostForRoles(isUserAdmin, userHasModerationPrivilages,
-    isUserGroupTA, isCourseAdmin, isCourseStaff);
 
   const handleAddPost = () => {
     if (loadingStatus === RequestStatus.SUCCESSFUL && (!(inBlackoutDateRange(blackoutDateRange)))) {
