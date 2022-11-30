@@ -45,6 +45,17 @@ function Post({
     }
   };
 
+  const handleDeleteConfirmation = () => {
+    dispatch(removeThread(post.id));
+    history.push('.');
+    hideDeleteConfirmation();
+  };
+
+  const handleReportConfirmation = () => {
+    dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
+    hideReportConfirmation();
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -76,11 +87,7 @@ function Post({
         title={intl.formatMessage(messages.deletePostTitle)}
         description={intl.formatMessage(messages.deletePostDescription)}
         onClose={hideDeleteConfirmation}
-        comfirmAction={() => {
-          dispatch(removeThread(post.id));
-          history.push('.');
-          hideDeleteConfirmation();
-        }}
+        comfirmAction={handleDeleteConfirmation}
         closeButtonVaraint="tertiary"
         confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
@@ -90,10 +97,7 @@ function Post({
           title={intl.formatMessage(messages.reportPostTitle)}
           description={intl.formatMessage(messages.reportPostDescription)}
           onClose={hideReportConfirmation}
-          comfirmAction={() => {
-            dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
-            hideReportConfirmation();
-          }}
+          comfirmAction={handleReportConfirmation}
           confirmButtonVariant="danger"
         />
       )}

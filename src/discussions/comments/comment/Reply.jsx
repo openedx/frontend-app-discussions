@@ -39,6 +39,16 @@ function Reply({
     }
   };
 
+  const handleDeleteConfirmation = () => {
+    dispatch(removeComment(reply.id));
+    hideDeleteConfirmation();
+  };
+
+  const handleReportConfirmation = () => {
+    dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
+    hideReportConfirmation();
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(
@@ -60,10 +70,7 @@ function Reply({
         title={intl.formatMessage(messages.deleteCommentTitle)}
         description={intl.formatMessage(messages.deleteCommentDescription)}
         onClose={hideDeleteConfirmation}
-        comfirmAction={() => {
-          dispatch(removeComment(reply.id));
-          hideDeleteConfirmation();
-        }}
+        comfirmAction={handleDeleteConfirmation}
         closeButtonVaraint="tertiary"
         confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
@@ -73,10 +80,7 @@ function Reply({
           title={intl.formatMessage(messages.reportCommentTitle)}
           description={intl.formatMessage(messages.reportCommentDescription)}
           onClose={hideReportConfirmation}
-          comfirmAction={() => {
-            dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
-            hideReportConfirmation();
-          }}
+          comfirmAction={handleReportConfirmation}
           confirmButtonVariant="danger"
         />
       )}
