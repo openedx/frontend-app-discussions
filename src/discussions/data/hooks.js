@@ -187,9 +187,8 @@ export const useUserCanAddThreadInBlackoutDate = () => {
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
-  const ifInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
+  const isInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
 
-  return (((ifInBlackoutDateRange && (isUserAdmin || userHasModerationPrivilages
-     || isUserGroupTA || isCourseAdmin || isCourseStaff)) || !ifInBlackoutDateRange)
-  );
+  return (!(isInBlackoutDateRange)
+          || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
 };
