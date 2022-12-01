@@ -21,7 +21,6 @@ import {
 import { fetchThreads } from './data/thunks';
 import NoResults from './NoResults';
 import { PostLink } from './post';
-import { selectTopicFilter } from '../topics/data/selectors';
 
 function PostsList({
   posts, topics, intl, isTopicTab,
