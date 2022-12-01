@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
-import { Error } from '@edx/paragon/icons';
+import { Report } from '@edx/paragon/icons';
 
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../comments/messages';
@@ -28,7 +28,7 @@ function AlertBanner({
   return (
     <>
       {canSeeReportedBanner && (
-        <Alert icon={Error} variant="danger" className="px-3 mb-2 py-10px shadow-none flex-fill">
+        <Alert icon={Report} variant="danger" className="px-3 mb-2 py-10px shadow-none flex-fill">
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
