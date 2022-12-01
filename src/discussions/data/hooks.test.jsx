@@ -6,9 +6,10 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { DiscussionContext } from '../common/context';
-import { useCurrentDiscussionTopic } from './hooks';
+import { useCurrentDiscussionTopic, useUserCanAddThreadInBlackoutDate } from './hooks';
 
 let store;
+
 initializeMockApp();
 describe('Hooks', () => {
   describe('useCurrentDiscussionTopic', () => {
@@ -80,6 +81,103 @@ describe('Hooks', () => {
     test('when the category has no topics', () => {
       const { queryByText } = renderComponent({ category: 'empty-key' });
       expect(queryByText('null')).toBeInTheDocument();
+    });
+  });
+
+  describe('useUserCanAddThreadInBlackoutDate', () => {
+    function ComponentWithHook() {
+      const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+      return (
+        <div>
+          {String(userCanAddThreadInBlackoutDate)}
+        </div>
+      );
+    }
+
+    function renderComponent() {
+      return render(
+        <IntlProvider locale="en">
+          <AppProvider store={store}>
+            <ComponentWithHook />
+          </AppProvider>
+        </IntlProvider>,
+      );
+    }
+    describe('blackout dates are not active', () => {
+      beforeEach(async () => {
+        store = initializeStore({
+          config: {
+            blackouts: [],
+            hasModerationPrivileges: false,
+            isGroupTa: false,
+            isCourseAdmin: false,
+            isCourseStaff: false,
+            isUserAdmin: false,
+          },
+        });
+      });
+      test('return true when blackout dates are not active and Role is Learner', () => {
+        const { queryByText } = renderComponent();
+        expect(queryByText('true')).toBeInTheDocument();
+      });
+    });
+
+    describe('blackout dates are active', () => {
+      beforeEach(async () => {
+        store = initializeStore({
+          config: {
+            blackouts: [{ start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }],
+            hasModerationPrivileges: false,
+            isGroupTa: false,
+            isCourseAdmin: false,
+            isCourseStaff: false,
+            isUserAdmin: false,
+          },
+        });
+      });
+
+      test('return false when blackout dates are active and Role is Learner', async () => {
+        const { queryByText } = renderComponent();
+        expect(queryByText('false')).toBeInTheDocument();
+      });
+    });
+    describe('blackout dates are active And role is other than Leaner', () => {
+      beforeEach(async () => {
+        store = initializeStore({
+          config: {
+            blackouts: [{ start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }],
+            hasModerationPrivileges: false,
+            isGroupTa: false,
+            isCourseAdmin: true,
+            isCourseStaff: false,
+            isUserAdmin: false,
+          },
+        });
+      });
+
+      test('return true when blackout dates are active and Role is not Learner', async () => {
+        const { queryByText } = renderComponent();
+        expect(queryByText('true')).toBeInTheDocument();
+      });
+    });
+    describe('blackout dates are not active And role is other than Leaner', () => {
+      beforeEach(async () => {
+        store = initializeStore({
+          config: {
+            blackouts: [],
+            hasModerationPrivileges: false,
+            isGroupTa: false,
+            isCourseAdmin: true,
+            isCourseStaff: false,
+            isUserAdmin: false,
+          },
+        });
+      });
+
+      test('return true when blackout dates are not active and Role is not Learner', async () => {
+        const { queryByText } = renderComponent();
+        expect(queryByText('true')).toBeInTheDocument();
+      });
     });
   });
 });
