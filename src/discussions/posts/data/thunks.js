@@ -154,18 +154,18 @@ export function fetchThreads(courseId, {
   };
 }
 
-export function fetchThread(threadId, isDirectLinkPost = false) {
+export function fetchThread(threadId, courseId, isDirectLinkPost = false) {
   return async (dispatch) => {
     try {
       dispatch(fetchThreadRequest({ threadId }));
-      const data = await getThread(threadId);
+      const data = await getThread(threadId, courseId);
       if (isDirectLinkPost) {
         dispatch(fetchThreadByDirectLinkSuccess({ ...normaliseThreads(camelCaseObject(data)), page: 1 }));
       } else {
         dispatch(fetchThreadSuccess(normaliseThreads(camelCaseObject(data))));
       }
     } catch (error) {
-      if (getHttpErrorStatus(error) === 403) {
+      if (getHttpErrorStatus(error) === 403 || getHttpErrorStatus(error) === 404) {
         dispatch(fetchThreadDenied());
       } else {
         dispatch(fetchThreadFailed());

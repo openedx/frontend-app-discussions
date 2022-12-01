@@ -18,6 +18,7 @@ import {
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
+import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
@@ -133,9 +134,9 @@ DiscussionCommentsView.propTypes = {
 };
 
 function CommentsView({ intl }) {
+  const [isLoading, submitDispatch] = useDispatchWithState();
   const { postId } = useParams();
   const thread = usePost(postId);
-  const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
@@ -143,8 +144,16 @@ function CommentsView({ intl }) {
     courseId, learnerUsername, category, topicId, page, inContext,
   } = useContext(DiscussionContext);
 
+  useEffect(() => {
+    if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
+  }, [postId]);
+
   if (!thread) {
-    dispatch(fetchThread(postId, true));
+    if (!isLoading) {
+      return (
+        <EmptyPage title={intl.formatMessage(messages.noThreadFound)} />
+      );
+    }
     return (
       <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );

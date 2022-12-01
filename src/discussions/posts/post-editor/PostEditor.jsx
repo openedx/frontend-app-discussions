@@ -33,6 +33,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
+import { EmptyPage } from '../../empty-posts';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
@@ -193,16 +194,25 @@ function PostEditor({
       dispatch(fetchCourseCohorts(courseId));
     }
     if (editExisting) {
-      dispatch(fetchThread(postId));
+      dispatchSubmit(fetchThread(postId, courseId));
     }
   }, [courseId, editExisting]);
 
   if (editExisting && !post) {
-    return (
-      <div className="m-4 card p-4 align-items-center">
-        <Spinner animation="border" variant="primary" />
-      </div>
-    );
+    if (submitting) {
+      return (
+        <div className="m-4 card p-4 align-items-center">
+          <Spinner animation="border" variant="primary" />
+        </div>
+      );
+    }
+    if (!submitting) {
+      return (
+        <EmptyPage
+          title={intl.formatMessage(messages.noThreadFound)}
+        />
+      );
+    }
   }
 
   const validationSchema = Yup.object().shape({

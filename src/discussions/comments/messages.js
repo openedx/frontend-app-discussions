@@ -207,6 +207,11 @@ const messages = defineMessages({
     defaultMessage: '{time} ago',
     description: 'Time text for endorse banner',
   },
+  noThreadFound: {
+    id: 'discussion.thread.notFound',
+    defaultMessage: 'Thread not found',
+    description: 'message to show on screen if the request thread is not found in course',
+  },
 });
 
 export default messages;

@@ -102,7 +102,7 @@ function renderComponent(postId) {
 }
 
 describe('CommentsView', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
@@ -147,7 +147,7 @@ describe('CommentsView', () => {
         )];
       });
 
-    await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
+    executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     mockAxiosReturnPagedComments();
     mockAxiosReturnPagedCommentsResponses();
   });
@@ -477,9 +477,9 @@ describe('CommentsView', () => {
   describe('for discussion thread', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
-    it('shown spinner when post isn\'t loaded', async () => {
+    it('shown post not found when post id does not belong to course', async () => {
       renderComponent('unloaded-id');
-      expect(await screen.findByTestId('loading-indicator'))
+      expect(await screen.findByText('Thread not found', { exact: true }))
         .toBeInTheDocument();
     });
 
