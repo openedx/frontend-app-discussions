@@ -55,7 +55,7 @@ export const useSidebarVisible = () => {
     return true;
   }
 
-  if (isViewingTopics || isViewingLearners) {
+  if ((isViewingTopics || isViewingLearners) && totalThreads > 0) {
     return true;
   }
 
