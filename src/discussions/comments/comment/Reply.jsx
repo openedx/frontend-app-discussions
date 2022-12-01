@@ -10,7 +10,7 @@ import { Avatar, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { AvatarOutlineAndLabelColors, ContentActions } from '../../../data/constants';
 import {
-  ActionsDropdown, AlertBanner, AuthorLabel, DeleteConfirmation,
+  ActionsDropdown, AlertBanner, AuthorLabel, Confirmation,
 } from '../../common';
 import timeLocale from '../../common/time-locale';
 import { useAlertBannerVisible } from '../../data/hooks';
@@ -29,6 +29,26 @@ function Reply({
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
+
+  const handleAbusedFlag = () => {
+    if (reply.abuseFlagged) {
+      dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  };
+
+  const handleDeleteConfirmation = () => {
+    dispatch(removeComment(reply.id));
+    hideDeleteConfirmation();
+  };
+
+  const handleReportConfirmation = () => {
+    dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
+    hideReportConfirmation();
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(
@@ -37,7 +57,7 @@ function Reply({
       ContentActions.ENDORSE,
     )),
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
+    [ContentActions.REPORT]: () => handleAbusedFlag(),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
@@ -45,17 +65,25 @@ function Reply({
 
   return (
     <div className="d-flex flex-column mt-4.5" data-testid={`reply-${reply.id}`} role="listitem">
-      <DeleteConfirmation
+      <Confirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteCommentTitle)}
         description={intl.formatMessage(messages.deleteCommentDescription)}
         onClose={hideDeleteConfirmation}
-        onDelete={() => {
-          dispatch(removeComment(reply.id));
-          hideDeleteConfirmation();
-        }}
+        comfirmAction={handleDeleteConfirmation}
+        closeButtonVaraint="tertiary"
+        confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
-
+      {!reply.abuseFlagged && (
+        <Confirmation
+          isOpen={isReporting}
+          title={intl.formatMessage(messages.reportCommentTitle)}
+          description={intl.formatMessage(messages.reportCommentDescription)}
+          onClose={hideReportConfirmation}
+          comfirmAction={handleReportConfirmation}
+          confirmButtonVariant="danger"
+        />
+      )}
       {hasAnyAlert && (
         <div className="d-flex">
           <div className="d-flex invisible">

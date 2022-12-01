@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -9,7 +9,8 @@ import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
-import { AlertBanner, DeleteConfirmation, EndorsedAlertBanner } from '../../common';
+import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../common';
+import { DiscussionContext } from '../../common/context';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
 import CommentIcons from '../comment-icons/CommentIcons';
@@ -34,11 +35,14 @@ function Comment({
   const inlineReplies = useSelector(selectCommentResponses(comment.id));
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-
+  const {
+    courseId,
+  } = useContext(DiscussionContext);
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
     if (hasChildren && !currentPage && showFullThread) {
@@ -46,14 +50,32 @@ function Comment({
     }
   }, [comment.id]);
 
+  const handleAbusedFlag = () => {
+    if (comment.abuseFlagged) {
+      dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  };
+
+  const handleDeleteConfirmation = () => {
+    dispatch(removeComment(comment.id));
+    hideDeleteConfirmation();
+  };
+
+  const handleReportConfirmation = () => {
+    dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+    hideReportConfirmation();
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
       await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }, ContentActions.ENDORSE));
-      await dispatch(fetchThread(comment.threadId));
+      await dispatch(fetchThread(comment.threadId, courseId));
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
+    [ContentActions.REPORT]: () => handleAbusedFlag(),
   };
 
   const handleLoadMoreComments = () => (
@@ -63,16 +85,25 @@ function Comment({
   return (
     <div className={classNames({ 'py-2 my-3': showFullThread })}>
       <div className="d-flex flex-column card" data-testid={`comment-${comment.id}`} role="listitem">
-        <DeleteConfirmation
+        <Confirmation
           isOpen={isDeleting}
           title={intl.formatMessage(messages.deleteResponseTitle)}
           description={intl.formatMessage(messages.deleteResponseDescription)}
           onClose={hideDeleteConfirmation}
-          onDelete={() => {
-            dispatch(removeComment(comment.id));
-            hideDeleteConfirmation();
-          }}
+          comfirmAction={handleDeleteConfirmation}
+          closeButtonVaraint="tertiary"
+          confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
         />
+        {!comment.abuseFlagged && (
+          <Confirmation
+            isOpen={isReporting}
+            title={intl.formatMessage(messages.reportResponseTitle)}
+            description={intl.formatMessage(messages.reportResponseDescription)}
+            onClose={hideReportConfirmation}
+            comfirmAction={handleReportConfirmation}
+            confirmButtonVariant="danger"
+          />
+        )}
         <EndorsedAlertBanner postType={postType} content={comment} />
         <div className="d-flex flex-column p-4.5">
           <AlertBanner content={comment} />
