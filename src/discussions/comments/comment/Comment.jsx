@@ -10,6 +10,7 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../common';
+import { DiscussionContext } from '../../common/context';
 import { selectBlackoutDate } from '../../data/selectors';
 import { fetchThread } from '../../posts/data/thunks';
 import { inBlackoutDateRange } from '../../utils';
