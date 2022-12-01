@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
+import { DiscussionContext } from '../../common/context';
 import { selectModerationSettings } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
@@ -56,6 +58,7 @@ function Post({
     hideReportConfirmation();
   };
 
+  const { inContext } = useContext(DiscussionContext);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -107,13 +110,25 @@ function Post({
         <HTMLLoader htmlNode={post.renderedBody} id="post" />
       </div>
       {topicContext && topic && (
-        <div className="border px-3 rounded mb-4 border-light-400 align-self-start py-2.5">
+        <div className={classNames('border px-3 rounded mb-4 border-light-400 align-self-start py-2.5',
+          { 'w-100': inContext })}
+        >
           <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
             destination={topicContext.unitLink}
             target="_top"
           >
-            {`${getTopicCategoryName(topic)} / ${topic.name}`}
+            {inContext
+              ? (
+                <>
+                  <span className="w-auto">{topicContext.chapterName}</span>
+                  <span className="mx-1">/</span>
+                  <span className="w-auto">{topicContext.verticalName}</span>
+                  <span className="mx-1">/</span>
+                  <span className="w-auto">{topicContext.unitName}</span>
+                </>
+              )
+              : `${getTopicCategoryName(topic)} / ${topic.name}`}
           </Hyperlink>
         </div>
       )}
