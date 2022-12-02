@@ -11,9 +11,8 @@ import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../common';
 import { DiscussionContext } from '../../common/context';
-import { selectBlackoutDate } from '../../data/selectors';
+import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
-import { inBlackoutDateRange } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -40,7 +39,7 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
-  const blackoutDateRange = useSelector(selectBlackoutDate);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
     courseId,
   } = useContext(DiscussionContext);
@@ -158,18 +157,18 @@ function Comment({
               />
             ) : (
               <>
-                {(!isClosedPost && !inBlackoutDateRange(blackoutDateRange))
+                {!isClosedPost && userCanAddThreadInBlackoutDate
                   && (
-                    <Button
-                      className="d-flex flex-grow mt-3 py-2 font-size-14"
-                      variant="outline-primary"
-                      style={{
-                        lineHeight: '20px',
-                      }}
-                      onClick={() => setReplying(true)}
-                    >
-                      {intl.formatMessage(messages.addComment)}
-                    </Button>
+                  <Button
+                    className="d-flex flex-grow mt-3 py-2 font-size-14"
+                    variant="outline-primary"
+                    style={{
+                      lineHeight: '20px',
+                    }}
+                    onClick={() => setReplying(true)}
+                  >
+                    {intl.formatMessage(messages.addComment)}
+                  </Button>
                   )}
               </>
 

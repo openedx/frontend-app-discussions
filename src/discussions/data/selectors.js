@@ -24,6 +24,10 @@ export const selectBlackoutDate = state => state.config.blackouts;
 
 export const selectGroupAtSubsection = state => state.config.groupAtSubsection;
 
+export const selectIsCourseAdmin = state => state.config.isCourseAdmin;
+
+export const selectIsCourseStaff = state => state.config.isCourseStaff;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,

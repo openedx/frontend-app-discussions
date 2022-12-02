@@ -12,8 +12,9 @@ import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { selectBlackoutDate, selectconfigLoadingStatus } from '../../data/selectors';
-import { inBlackoutDateRange, postMessageToParent } from '../../utils';
+import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
+import { selectconfigLoadingStatus } from '../../data/selectors';
+import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
 
@@ -25,7 +26,7 @@ function PostActionsBar({
 }) {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
-  const blackoutDateRange = useSelector(selectBlackoutDate);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
@@ -39,7 +40,8 @@ function PostActionsBar({
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-      {(!inBlackoutDateRange(blackoutDateRange) && loadingStatus === RequestStatus.SUCCESSFUL) && (
+      {loadingStatus === RequestStatus.SUCCESSFUL && userCanAddThreadInBlackoutDate
+      && (
         <>
           {!inContext && <div className="border-right border-light-400 mx-3" />}
           <Button

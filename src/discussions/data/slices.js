@@ -14,6 +14,8 @@ const configSlice = createSlice({
     groupAtSubsection: false,
     hasModerationPrivileges: false,
     isGroupTa: false,
+    isCourseAdmin: false,
+    isCourseStaff: false,
     isUserAdmin: false,
     learnersTabEnabled: false,
     settings: {
