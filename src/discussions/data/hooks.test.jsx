@@ -1,16 +1,32 @@
 import { render } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
+import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
+import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
+import { courseConfigApiUrl } from './api';
 import { useCurrentDiscussionTopic, useUserCanAddThreadInBlackoutDate } from './hooks';
+import { fetchCourseConfig } from './thunks';
 
+const courseId = 'course-v1:edX+TestX+Test_Course';
 let store;
+let axiosMock;
 
-initializeMockApp();
+const generateApiResponse = (blackouts = [], isCourseAdmin = false) => ({
+  blackouts,
+  hasModerationPrivileges: false,
+  isGroupTa: false,
+  isCourseAdmin,
+  isCourseStaff: false,
+  isUserAdmin: false,
+});
+
 describe('Hooks', () => {
   describe('useCurrentDiscussionTopic', () => {
     function ComponentWithHook() {
@@ -40,6 +56,7 @@ describe('Hooks', () => {
     }
 
     beforeEach(() => {
+      initializeMockApp();
       store = initializeStore({
         blocks: {
           blocks: {
@@ -103,78 +120,52 @@ describe('Hooks', () => {
         </IntlProvider>,
       );
     }
-    describe('blackout dates are not active', () => {
-      beforeEach(async () => {
-        store = initializeStore({
-          config: {
-            blackouts: [],
-            hasModerationPrivileges: false,
-            isGroupTa: false,
-            isCourseAdmin: false,
-            isCourseStaff: false,
-            isUserAdmin: false,
+    describe('User can add Thread in blackoutdates ', () => {
+      beforeEach(() => {
+        initializeMockApp({
+          authenticatedUser: {
+            userId: 3,
+            username: 'abc123',
+            administrator: true,
+            roles: [],
           },
         });
+        axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+        Factory.resetAll();
+        store = initializeStore();
       });
-      test('return true when blackout dates are not active and Role is Learner', () => {
+
+      test('when blackoutdates are not active and Role is Learner return true', async () => {
+        axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
+          .reply(200, generateApiResponse([], false));
+        await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });
-    });
 
-    describe('blackout dates are active', () => {
-      beforeEach(async () => {
-        store = initializeStore({
-          config: {
-            blackouts: [{ start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }],
-            hasModerationPrivileges: false,
-            isGroupTa: false,
-            isCourseAdmin: false,
-            isCourseStaff: false,
-            isUserAdmin: false,
-          },
-        });
+      test('when blackoutdates are not active and Role is not Learner return true', async () => {
+        axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
+          .reply(200, generateApiResponse([], true));
+        await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+        const { queryByText } = renderComponent();
+        expect(queryByText('true')).toBeInTheDocument();
       });
 
-      test('return false when blackout dates are active and Role is Learner', async () => {
+      test('when blackoutdates are active and Role is Learner return false', async () => {
+        axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
+          .reply(200, generateApiResponse([{
+            start: '2022-11-25T00:00:00Z',
+            end: '2050-11-25T23:59:00Z',
+          }], false));
+        await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('false')).toBeInTheDocument();
       });
-    });
-    describe('blackout dates are active And role is other than Leaner', () => {
-      beforeEach(async () => {
-        store = initializeStore({
-          config: {
-            blackouts: [{ start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }],
-            hasModerationPrivileges: false,
-            isGroupTa: false,
-            isCourseAdmin: true,
-            isCourseStaff: false,
-            isUserAdmin: false,
-          },
-        });
-      });
 
-      test('return true when blackout dates are active and Role is not Learner', async () => {
-        const { queryByText } = renderComponent();
-        expect(queryByText('true')).toBeInTheDocument();
-      });
-    });
-    describe('blackout dates are not active And role is other than Leaner', () => {
-      beforeEach(async () => {
-        store = initializeStore({
-          config: {
-            blackouts: [],
-            hasModerationPrivileges: false,
-            isGroupTa: false,
-            isCourseAdmin: true,
-            isCourseStaff: false,
-            isUserAdmin: false,
-          },
-        });
-      });
-
-      test('return true when blackout dates are not active and Role is not Learner', async () => {
+      test('when blackoutdates are active and Role is not Learner return true', async () => {
+        axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
+          .reply(200, generateApiResponse([
+            { start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }], true));
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });
