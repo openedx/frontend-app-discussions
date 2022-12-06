@@ -62,7 +62,3 @@ export function selectTopicThreadCount(topicId) {
 export function selectPostThreadCount(state) {
   return state.threads.totalThreads;
 }
-
-export function selectEnableInContext(state) {
-  return state.config.enableInContext;
-}

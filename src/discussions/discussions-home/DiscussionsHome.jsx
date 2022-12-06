@@ -17,7 +17,7 @@ import { DiscussionContext } from '../common/context';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useShowLearnersTab, useSidebarVisible,
 } from '../data/hooks';
-import { selectDiscussionProvider, selectEnableInContext } from '../data/selectors';
+import { selectDiscussionProvider } from '../data/selectors';
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
 import messages from '../messages';
 import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
@@ -33,7 +33,7 @@ export default function DiscussionsHome() {
   const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
   const { courseNumber, courseTitle, org } = useSelector((state) => state.courseTabs);
   const provider = useSelector(selectDiscussionProvider);
-  const enableInContext = useSelector(selectEnableInContext) && (provider === DiscussionProvider.OPEN_EDX);
+  const enableInContext = (provider === DiscussionProvider.OPEN_EDX);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
