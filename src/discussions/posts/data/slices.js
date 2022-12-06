@@ -79,7 +79,13 @@ const threadsSlice = createSlice({
       }
       state.status = RequestStatus.SUCCESSFUL;
       state.threadsById = { ...state.threadsById, ...payload.threadsById };
-      state.threadsInTopic = mergeThreadsInTopics(state.threadsInTopic, payload.threadsInTopic);
+      // filter
+      if (payload.isFilterChanged) {
+        state.threadsInTopic = { ...payload.threadsInTopic };
+      } else {
+        state.threadsInTopic = mergeThreadsInTopics(state.threadsInTopic, payload.threadsInTopic);
+      }
+
       state.avatars = { ...state.avatars, ...payload.avatars };
       state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
       state.totalPages = payload.pagination.numPages;

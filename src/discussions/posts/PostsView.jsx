@@ -21,7 +21,7 @@ function AllPostsList() {
 
 function TopicPostsList({ topicId }) {
   const posts = useSelector(selectTopicThreads([topicId]));
-  return <PostsList posts={posts} topics={[topicId]} />;
+  return <PostsList posts={posts} topics={[topicId]} isTopicTab />;
 }
 
 TopicPostsList.propTypes = {

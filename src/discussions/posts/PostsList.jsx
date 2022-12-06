@@ -22,7 +22,9 @@ import { fetchThreads } from './data/thunks';
 import NoResults from './NoResults';
 import { PostLink } from './post';
 
-function PostsList({ posts, topics, intl }) {
+function PostsList({
+  posts, topics, intl, isTopicTab,
+}) {
   const dispatch = useDispatch();
   const {
     courseId,
@@ -38,7 +40,7 @@ function PostsList({ posts, topics, intl }) {
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
 
-  const loadThreads = (topicIds, pageNum = undefined) => {
+  const loadThreads = (topicIds, pageNum = undefined, isFilterChanged = false) => {
     const params = {
       orderBy,
       filters,
@@ -46,6 +48,7 @@ function PostsList({ posts, topics, intl }) {
       author: showOwnPosts ? authenticatedUser.username : null,
       countFlagged: (userHasModerationPrivileges || userIsStaff) || undefined,
       topicIds,
+      isFilterChanged,
     };
 
     if (showOwnPosts) {
@@ -59,7 +62,11 @@ function PostsList({ posts, topics, intl }) {
     if (topics !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
       loadThreads(topics);
     }
-  }, [courseId, orderBy, filters, page, JSON.stringify(topics), configStatus]);
+  }, [courseId, filters, orderBy, page, JSON.stringify(topics), configStatus]);
+
+  useEffect(() => {
+    if (isTopicTab) { loadThreads(topics, 1, true); }
+  }, [filters]);
 
   const checkIsSelected = (id) => window.location.pathname.includes(id);
   const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
@@ -103,12 +110,14 @@ PostsList.propTypes = {
     id: PropTypes.string.isRequired,
   })),
   topics: PropTypes.arrayOf(PropTypes.string),
+  isTopicTab: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 
 PostsList.defaultProps = {
   posts: [],
   topics: undefined,
+  isTopicTab: false,
 };
 
 export default injectIntl(PostsList);
