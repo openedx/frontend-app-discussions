@@ -28,17 +28,17 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
   const { height: windowHeight } = useWindowSize();
-  const { inContext } = useContext(DiscussionContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
 
   useEffect(() => {
-    if (sidebarRef && postActionBarHeight && !inContext) {
+    if (sidebarRef && postActionBarHeight && !enableInContextSidebar) {
       if (isOnDesktop) {
         sidebarRef.current.style.maxHeight = `${windowHeight - postActionBarHeight}px`;
       }
       sidebarRef.current.style.minHeight = `${windowHeight - postActionBarHeight}px`;
       sidebarRef.current.style.top = `${postActionBarHeight}px`;
     }
-  }, [sidebarRef, postActionBarHeight, inContext]);
+  }, [sidebarRef, postActionBarHeight, enableInContextSidebar]);
 
   return (
     <div
@@ -49,7 +49,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
-        'min-content-height': !inContext,
+        'min-content-height': !enableInContextSidebar,
       })}
       data-testid="sidebar"
     >

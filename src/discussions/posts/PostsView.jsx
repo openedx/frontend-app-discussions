@@ -29,10 +29,10 @@ TopicPostsList.propTypes = {
 };
 
 function CategoryPostsList({ category }) {
-  const { inContext } = useContext(DiscussionContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const groupedCategory = useSelector(selectCurrentCategoryGrouping)(category);
   // If grouping at subsection is enabled, only apply it when browsing discussions in context in the learning MFE.
-  const topicIds = useSelector(selectTopicsUnderCategory)(inContext ? groupedCategory : category);
+  const topicIds = useSelector(selectTopicsUnderCategory)(enableInContextSidebar ? groupedCategory : category);
   const posts = useSelector(selectTopicThreads(topicIds));
   return <PostsList posts={posts} topics={topicIds} />;
 }

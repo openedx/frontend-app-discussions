@@ -91,8 +91,9 @@ export function useCourseDiscussionData(courseId) {
   }, [courseId]);
 }
 
-export function useRedirectToThread(courseId, inContext) {
+export function useRedirectToThread(courseId) {
   const dispatch = useDispatch();
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
   );
@@ -104,7 +105,7 @@ export function useRedirectToThread(courseId, inContext) {
     // stored in redirectToThread
     if (redirectToThread) {
       dispatch(clearRedirect());
-      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[inContext ? 'topics' : 'my-posts'], {
+      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[enableInContextSidebar ? 'topics' : 'my-posts'], {
         courseId,
         postId: redirectToThread.threadId,
         topicId: redirectToThread.topicId,

@@ -29,12 +29,12 @@ function PostLink({
   const {
     page,
     postId,
-    inContext,
+    enableInContextSidebar,
     category,
     learnerUsername,
   } = useContext(DiscussionContext);
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
-    0: inContext ? 'in-context' : undefined,
+    0: enableInContextSidebar ? 'in-context' : undefined,
     courseId: post.courseId,
     topicId: post.topicId,
     postId: post.id,

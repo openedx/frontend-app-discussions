@@ -63,7 +63,7 @@ describe('DiscussionsHome', () => {
   });
 
   test('in-context view should show close button', async () => {
-    renderComponent(`/${courseId}/topics?inContext`);
+    renderComponent(`/${courseId}/topics?inContextSidbar`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .not
@@ -76,7 +76,7 @@ describe('DiscussionsHome', () => {
     const { parent } = window;
     delete window.parent;
     window.parent = { ...window, postMessage: jest.fn() };
-    renderComponent(`/${courseId}/topics?inContext`);
+    renderComponent(`/${courseId}/topics?inContextSidebar`);
 
     const closeButton = screen.queryByRole('button', { name: 'Close' });
 

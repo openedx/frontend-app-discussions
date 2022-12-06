@@ -58,7 +58,7 @@ function Post({
     hideReportConfirmation();
   };
 
-  const { inContext } = useContext(DiscussionContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -111,14 +111,14 @@ function Post({
       </div>
       {topicContext && topic && (
         <div className={classNames('border px-3 rounded mb-4 border-light-400 align-self-start py-2.5',
-          { 'w-100': inContext })}
+          { 'w-100': enableInContextSidebar })}
         >
           <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
             destination={topicContext.unitLink}
             target="_top"
           >
-            {inContext
+            {enableInContextSidebar
               ? (
                 <>
                   <span className="w-auto">{topicContext.chapterName}</span>

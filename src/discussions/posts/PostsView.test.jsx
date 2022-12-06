@@ -33,7 +33,7 @@ let axiosMock;
 const username = 'abc123';
 
 async function renderComponent({
-  postId, topicId, category, myPosts, inContext = false,
+  postId, topicId, category, myPosts, enableInContextSidebar = false,
 } = { myPosts: false }) {
   let path = generatePath(Routes.POSTS.ALL_POSTS, { courseId });
   let page;
@@ -60,7 +60,7 @@ async function renderComponent({
             topicId,
             category,
             page,
-            inContext,
+            enableInContextSidebar,
           }}
           >
             <Switch>
@@ -172,7 +172,7 @@ describe('PostsView', () => {
           config: { groupAtSubsection: grouping, hasModerationPrivileges: true, provider: 'openedx' },
         });
         await act(async () => {
-          await renderComponent({ category: 'test-usage-key', inContext: true, p: true });
+          await renderComponent({ category: 'test-usage-key', enableInContextSidebar: true, p: true });
         });
         const topicThreadCount = Math.ceil(threadCount / 3);
         expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-2/i))
