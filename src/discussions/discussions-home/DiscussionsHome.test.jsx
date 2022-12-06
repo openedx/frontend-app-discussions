@@ -69,7 +69,10 @@ describe('DiscussionsHome', () => {
   });
 
   test('in-context view should show close button', async () => {
-    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { enable_in_context: true });
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+      enable_in_context: true,
+      provider: 'openedx',
+    });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     renderComponent(`/${courseId}/topics?inContextSidebar`);
 
@@ -81,7 +84,10 @@ describe('DiscussionsHome', () => {
   });
 
   test('the close button should post a message', async () => {
-    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { enable_in_context: true });
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+      enable_in_context: true,
+      provider: 'openedx',
+    });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     const { parent } = window;
     delete window.parent;

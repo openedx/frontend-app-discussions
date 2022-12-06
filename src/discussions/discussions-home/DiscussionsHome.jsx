@@ -32,8 +32,8 @@ export default function DiscussionsHome() {
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
   const { courseNumber, courseTitle, org } = useSelector((state) => state.courseTabs);
-  const enableInContext = useSelector(selectEnableInContext);
   const provider = useSelector(selectDiscussionProvider);
+  const enableInContext = useSelector(selectEnableInContext) && (provider === DiscussionProvider.OPEN_EDX);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
