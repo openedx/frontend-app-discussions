@@ -102,6 +102,7 @@ export function fetchThreads(courseId, {
   author = null,
   filters = {},
   page = 1,
+  isFilterChanged,
   countFlagged,
 } = {}) {
   const options = {
@@ -141,7 +142,7 @@ export function fetchThreads(courseId, {
       const data = await getThreads(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data), topicIds);
       dispatch(fetchThreadsSuccess({
-        ...normalisedData, page, author, textSearchRewrite: data.text_search_rewrite,
+        ...normalisedData, page, author, textSearchRewrite: data.text_search_rewrite, isFilterChanged,
       }));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
