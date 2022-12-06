@@ -25,12 +25,13 @@ import {
   selectIsCourseStaff,
   selectLearnersTabEnabled,
   selectModerationSettings,
-  selectPostThreadCount,
+  selectPostThreadCount, selectThreadCallStatus,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
+import { selectLearnerPages } from '../learners/data/selectors';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
@@ -51,11 +52,15 @@ export const useSidebarVisible = () => {
   const isViewingTopics = useRouteMatch(Routes.TOPICS.PATH);
   const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
 
+  if (isViewingTopics && totalThreads < 1) {
+    return false;
+  }
+
   if (isFiltered) {
     return true;
   }
 
-  if ((isViewingTopics || isViewingLearners) && totalThreads > 0) {
+  if (isViewingTopics || isViewingLearners) {
     return true;
   }
 
