@@ -10,7 +10,7 @@ export default function countFilteredTopics(topicsSelector, provider) {
     ? item.name.toLowerCase().includes(query)
     : true
   ));
-  count += nonCoursewareTopicsList.length;
+  count += nonCoursewareTopicsList?.length;
   // Counting legacy topics
   if (provider === DiscussionProvider.LEGACY) {
     const categories = topicsSelector?.categoryIds;

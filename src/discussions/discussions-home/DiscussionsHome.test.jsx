@@ -1,18 +1,24 @@
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
+import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
 import { initializeMockApp } from '@edx/frontend-platform';
+import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { executeThunk } from '../../test-utils';
+import { courseConfigApiUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 import navigationBarMessages from '../navigation/navigation-bar/messages';
 import DiscussionsHome from './DiscussionsHome';
 
+let axiosMock;
 let store;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
@@ -40,7 +46,7 @@ describe('DiscussionsHome', () => {
         roles: [],
       },
     });
-
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     store = initializeStore();
   });
 
@@ -63,7 +69,9 @@ describe('DiscussionsHome', () => {
   });
 
   test('in-context view should show close button', async () => {
-    renderComponent(`/${courseId}/topics?inContextSidbar`);
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { enable_in_context: true });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+    renderComponent(`/${courseId}/topics?inContextSidebar`);
 
     expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
       .not
@@ -73,6 +81,8 @@ describe('DiscussionsHome', () => {
   });
 
   test('the close button should post a message', async () => {
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { enable_in_context: true });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     const { parent } = window;
     delete window.parent;
     window.parent = { ...window, postMessage: jest.fn() };
@@ -88,7 +98,7 @@ describe('DiscussionsHome', () => {
     window.parent = parent;
   });
 
-  test('header, course navigation bar and footer are visible', async () => {
+  test('header, course navigation bar and footer are only visible in Discussions MFE', async () => {
     renderComponent();
     expect(screen.queryByRole('banner')).toBeInTheDocument();
     expect(document.getElementById('courseTabsNavigation')).toBeInTheDocument();

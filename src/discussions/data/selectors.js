@@ -51,7 +51,7 @@ export function selectAreThreadsFiltered(state) {
 
 export function selectTopicThreadCount(topicId) {
   return state => {
-    const topic = state.topics.topics[topicId];
+    const topic = topicId && state.topics?.topics[topicId];
     if (!topic) {
       return 0;
     }
