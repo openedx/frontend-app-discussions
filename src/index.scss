@@ -118,7 +118,7 @@ $fa-font-path: "~font-awesome/fonts";
 
 header {
   .user-dropdown {
-    z-index: 2005;
+    z-index: 1;
   }
   .logo {
     margin-right: 1rem;
@@ -227,7 +227,7 @@ header {
 
 .header-action-bar {
   background-color: #fff;
-  z-index: 2002;
+  z-index: 1;
   box-shadow: 0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%);
   position: sticky;
   top: 0;
@@ -235,6 +235,10 @@ header {
 
 .breadcrumb-menu {
   z-index: 1;
+}
+
+.actions-dropdown {
+  z-index: 0;
 }
 
 .discussion-topic-group:last-of-type .divider{
@@ -247,6 +251,10 @@ header {
 
 #paragon-portal-root .pgn__modal-layer {
   z-index: 5000 !important;
+}
+
+#iconbutton-tooltip-top {
+  z-index: 0;
 }
 
 @media only screen and (max-width: 767px) {
