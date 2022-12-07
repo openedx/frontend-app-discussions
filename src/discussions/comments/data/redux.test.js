@@ -7,13 +7,14 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { EndorsementStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
-import { commentsApiUrl } from './api';
+import { getCommentsApiUrl } from './api';
 import {
   addComment, editComment, fetchCommentResponses, fetchThreadComments, removeComment,
 } from './thunks';
 
 import './__factories__';
 
+const commentsApiUrl = getCommentsApiUrl();
 let axiosMock;
 let store;
 

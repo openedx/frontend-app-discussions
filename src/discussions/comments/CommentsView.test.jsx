@@ -13,16 +13,19 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
-import { courseConfigApiUrl } from '../data/api';
+import { getCourseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
-import { threadsApiUrl } from '../posts/data/api';
+import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
-import { commentsApiUrl } from './data/api';
+import { getCommentsApiUrl } from './data/api';
 
 import '../posts/data/__factories__';
 import './data/__factories__';
 
+const courseConfigApiUrl = getCourseConfigApiUrl();
+const commentsApiUrl = getCommentsApiUrl();
+const threadsApiUrl = getThreadsApiUrl();
 const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
