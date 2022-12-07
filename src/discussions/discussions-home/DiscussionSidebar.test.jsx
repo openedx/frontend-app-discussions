@@ -13,7 +13,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
-import { threadsApiUrl } from '../posts/data/api';
+import { getThreadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';
 
 import '../posts/data/__factories__';
@@ -21,6 +21,7 @@ import '../posts/data/__factories__';
 let store;
 let container;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
+const threadsApiUrl = getThreadsApiUrl();
 let axiosMock;
 
 function renderComponent(displaySidebar = true, location = `/${courseId}/`) {

@@ -8,10 +8,8 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Posts API service');
 
-const apiBaseUrl = getConfig().LMS_BASE_URL;
-
-export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
-export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
+export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
+export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/v1/accounts`;
 
 /**
  * Fetches all the learners in the given course.
@@ -20,7 +18,7 @@ export const userProfileApiUrl = `${apiBaseUrl}/api/user/v1/accounts`;
  * @returns {Promise<{}>}
  */
 export async function getLearners(courseId, params) {
-  const url = `${coursesApiUrl}${courseId}/activity_stats/`;
+  const url = `${getCoursesApiUrl()}${courseId}/activity_stats/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
 }
@@ -30,7 +28,7 @@ export async function getLearners(courseId, params) {
  * @param {string} usernames
  */
 export async function getUserProfiles(usernames) {
-  const url = `${userProfileApiUrl}?username=${usernames.join()}`;
+  const url = `${getUserProfileApiUrl()}?username=${usernames.join()}`;
   const { data } = await getAuthenticatedHttpClient().get(url);
   return data;
 }
@@ -67,7 +65,7 @@ export async function getUserPosts(courseId, {
   countFlagged,
   cohort,
 } = {}) {
-  const learnerPostsApiUrl = `${coursesApiUrl}${courseId}/learner/`;
+  const learnerPostsApiUrl = `${getCoursesApiUrl()}${courseId}/learner/`;
 
   const params = snakeCaseObject({
     page,
