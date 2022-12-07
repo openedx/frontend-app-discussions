@@ -13,9 +13,9 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
-import { courseConfigApiUrl } from '../data/api';
+import { getCourseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
-import { coursesApiUrl, userProfileApiUrl } from './data/api';
+import { getCoursesApiUrl, getUserProfileApiUrl } from './data/api';
 import { fetchLearners } from './data/thunks';
 import LearnersView from './LearnersView';
 
@@ -23,6 +23,9 @@ import './data/__factories__';
 
 let store;
 let axiosMock;
+const coursesApiUrl = getCoursesApiUrl();
+const courseConfigApiUrl = getCourseConfigApiUrl();
+const userProfileApiUrl = getUserProfileApiUrl();
 const courseId = 'course-v1:edX+TestX+Test_Course';
 
 function renderComponent() {

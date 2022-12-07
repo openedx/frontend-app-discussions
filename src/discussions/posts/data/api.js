@@ -8,10 +8,8 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Posts API service');
 
-const apiBaseUrl = getConfig().LMS_BASE_URL;
-
-export const threadsApiUrl = `${apiBaseUrl}/api/discussion/v1/threads/`;
-export const coursesApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
+export const getThreadsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/threads/`;
+export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
 
 /**
  * Fetches all the threads in the given course and topic.
@@ -62,7 +60,7 @@ export async function getThreads(
     countFlagged,
     groupId: cohort,
   });
-  const { data } = await getAuthenticatedHttpClient().get(threadsApiUrl, { params });
+  const { data } = await getAuthenticatedHttpClient().get(getThreadsApiUrl(), { params });
   return data;
 }
 
@@ -73,7 +71,7 @@ export async function getThreads(
  */
 export async function getThread(threadId, courseId) {
   const params = { requested_fields: 'profile_image', course_id: courseId };
-  const url = `${threadsApiUrl}${threadId}/`;
+  const url = `${getThreadsApiUrl()}${threadId}/`;
   const { data } = await getAuthenticatedHttpClient().get(url, { params });
   return data;
 }
@@ -117,7 +115,7 @@ export async function postThread(
   });
 
   const { data } = await getAuthenticatedHttpClient()
-    .post(threadsApiUrl, postData);
+    .post(getThreadsApiUrl(), postData);
   return data;
 }
 
@@ -152,7 +150,7 @@ export async function updateThread(threadId, {
   editReasonCode,
   closeReasonCode,
 } = {}) {
-  const url = `${threadsApiUrl}${threadId}/`;
+  const url = `${getThreadsApiUrl()}${threadId}/`;
   const patchData = snakeCaseObject({
     topicId,
     abuse_flagged: flagged,
@@ -177,7 +175,7 @@ export async function updateThread(threadId, {
  * @param {string} threadId
  */
 export async function deleteThread(threadId) {
-  const url = `${threadsApiUrl}${threadId}/`;
+  const url = `${getThreadsApiUrl()}${threadId}/`;
   await getAuthenticatedHttpClient()
     .delete(url);
 }
@@ -191,7 +189,7 @@ export async function deleteThread(threadId) {
  * @returns {Promise<{ location: string }>}
  */
 export async function uploadFile(blob, filename, courseId, threadKey) {
-  const uploadUrl = `${coursesApiUrl}${courseId}/upload`;
+  const uploadUrl = `${getCoursesApiUrl()}${courseId}/upload`;
   const formData = new FormData();
   formData.append('thread_key', threadKey);
   formData.append('uploaded_file', blob, filename);
