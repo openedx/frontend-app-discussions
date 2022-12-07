@@ -1,6 +1,6 @@
 import { getConfig } from '@edx/frontend-platform';
 
-export const API_BASE_URL = getConfig().LMS_BASE_URL;
+export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
 
 /**
  * Enum for thread types.

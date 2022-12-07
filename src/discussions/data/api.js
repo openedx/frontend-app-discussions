@@ -7,16 +7,14 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Posts API service');
 
-const apiBaseUrl = getConfig().LMS_BASE_URL;
-
-export const courseConfigApiUrl = `${apiBaseUrl}/api/discussion/v1/courses/`;
+export const getCourseConfigApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
 
 /**
  * Get discussions course config
  * @param {string} courseId
  */
 export async function getDiscussionsConfig(courseId) {
-  const url = `${courseConfigApiUrl}${courseId}/`;
+  const url = `${getCourseConfigApiUrl()}${courseId}/`;
   const { data } = await getAuthenticatedHttpClient().get(url);
   return data;
 }
@@ -26,7 +24,7 @@ export async function getDiscussionsConfig(courseId) {
  * @param {string} courseId
  */
 export async function getDiscussionsSettings(courseId) {
-  const url = `${courseConfigApiUrl}${courseId}/settings`;
+  const url = `${getCourseConfigApiUrl()}${courseId}/settings`;
   const { data } = await getAuthenticatedHttpClient().get(url);
   return data;
 }

@@ -6,7 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
-import { threadsApiUrl } from './api';
+import { getThreadsApiUrl } from './api';
 import {
   createNewThread, fetchThread, fetchThreads, removeThread, updateExistingThread,
 } from './thunks';
@@ -14,6 +14,7 @@ import {
 import './__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const threadsApiUrl = getThreadsApiUrl();
 
 let axiosMock;
 let store;
