@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
 import {
   LearnersOrdering,
   PostsStatusFilter,
@@ -9,6 +11,14 @@ import {
   ThreadType,
 } from '../../../data/constants';
 
+function trackUserSortEvent(payload) {
+  sendTrackEvent(
+    'edx.forum.sort.user',
+    {
+      sort: payload,
+    },
+  );
+}
 const learnersSlice = createSlice({
   name: 'learner',
   initialState: {
@@ -51,6 +61,7 @@ const learnersSlice = createSlice({
     setSortedBy: (state, { payload }) => {
       state.pages = [];
       state.sortedBy = payload;
+      trackUserSortEvent(payload);
     },
     setUsernameSearch: (state, { payload }) => {
       state.usernameSearch = payload;
