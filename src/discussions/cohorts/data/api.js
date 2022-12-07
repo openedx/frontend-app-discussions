@@ -6,9 +6,7 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Comments API service');
 
-const apiBaseUrl = getConfig().LMS_BASE_URL;
-
-export const getCohortsApiUrl = courseId => `${apiBaseUrl}/api/cohorts/v1/courses/${courseId}/cohorts/`;
+export const getCohortsApiUrl = courseId => `${getConfig().LMS_BASE_URL}/api/cohorts/v1/courses/${courseId}/cohorts/`;
 
 export async function getCourseCohorts(courseId) {
   const params = snakeCaseObject({ courseId });
