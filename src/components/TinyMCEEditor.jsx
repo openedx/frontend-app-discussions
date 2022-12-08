@@ -32,6 +32,7 @@ import 'tinymce/plugins/lists';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis';
 import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/paste';
 /* eslint import/no-webpack-loader-syntax: off */
 // eslint-disable-next-line import/no-unresolved
 import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
@@ -100,12 +101,13 @@ export default function TinyMCEEditor(props) {
           skin: false,
           menubar: false,
           branding: false,
+          paste_data_images: false,
           contextmenu: false,
           browser_spellcheck: true,
           a11y_advanced_options: true,
           autosave_interval: '1s',
           autosave_restore_when_empty: false,
-          plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap',
+          plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap paste',
           toolbar: 'undo redo'
                       + ' | formatselect | bold italic underline'
                       + ' | link blockquote openedx_code image'
