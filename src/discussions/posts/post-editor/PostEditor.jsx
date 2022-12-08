@@ -21,6 +21,7 @@ import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import PostPreviewPane from '../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../data/hooks';
+import { selectArchivedTopics } from '../../../data/selectors';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { DiscussionContext } from '../../common/context';
@@ -98,6 +99,7 @@ function PostEditor({
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(selectNonCoursewareIds);
   const coursewareTopics = useSelector(selectCoursewareTopics);
+  const archivedTopics = useSelector(selectArchivedTopics);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -306,7 +308,7 @@ function PostEditor({
                   </option>
                 ))}
                 {coursewareTopics.map(categoryObj => (
-                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
+                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} >
                     {categoryObj.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
@@ -314,6 +316,16 @@ function PostEditor({
                     ))}
                   </optgroup>
                 ))}
+                { ((userIsStaff || userIsGroupTa || userHasModerationPrivileges) && inContext) && (
+                  <optgroup label={intl.formatMessage(messages.archivedTopics)} key={11}>
+                    {archivedTopics.map(topics => (
+                      <option key={topics.id} value={topics.id}>
+                        {topics.name || intl.formatMessage(messages.unnamedSubTopics)}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+
               </Form.Control>
             </Form.Group>
             {canSelectCohort(values.topic) && (
