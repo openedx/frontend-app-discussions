@@ -308,7 +308,7 @@ function PostEditor({
                   </option>
                 ))}
                 {coursewareTopics.map(categoryObj => (
-                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} >
+                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
                     {categoryObj.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
@@ -317,7 +317,7 @@ function PostEditor({
                   </optgroup>
                 ))}
                 { ((userIsStaff || userIsGroupTa || userHasModerationPrivileges) && inContext) && (
-                  <optgroup label={intl.formatMessage(messages.archivedTopics)} key={11}>
+                  <optgroup label={intl.formatMessage(messages.archivedTopics)}>
                     {archivedTopics.map(topics => (
                       <option key={topics.id} value={topics.id}>
                         {topics.name || intl.formatMessage(messages.unnamedSubTopics)}
