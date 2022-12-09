@@ -12,13 +12,13 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { API_BASE_URL, Routes } from '../../../data/constants';
+import { getApiBaseUrl, Routes } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { getCohortsApiUrl } from '../../cohorts/data/api';
 import { DiscussionContext } from '../../common/context';
 import { fetchCourseTopics } from '../../topics/data/thunks';
-import { threadsApiUrl } from '../data/api';
+import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
 import { PostEditor } from '../index';
 
@@ -28,7 +28,8 @@ import '../../topics/data/__factories__';
 import '../data/__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const topicsApiUrl = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
+const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
+const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
 

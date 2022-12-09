@@ -18,14 +18,16 @@ import { initializeStore } from '../../store';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
-import { coursesApiUrl } from '../learners/data/api';
-import { threadsApiUrl } from './data/api';
+import { getCoursesApiUrl } from '../learners/data/api';
+import { getThreadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
 import './data/__factories__';
 import '../cohorts/data/__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const coursesApiUrl = getCoursesApiUrl();
+const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
 const username = 'abc123';

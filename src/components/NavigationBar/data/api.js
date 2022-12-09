@@ -2,7 +2,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-import { API_BASE_URL } from '../../../data/constants';
+import { getApiBaseUrl } from '../../../data/constants';
 
 function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
   const data = camelCaseObject(metadata);
@@ -21,7 +21,7 @@ function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
 }
 
 export async function getCourseHomeCourseMetadata(courseId, rootSlug) {
-  const url = `${API_BASE_URL}/api/course_home/course_metadata/${courseId}`;
+  const url = `${getApiBaseUrl()}/api/course_home/course_metadata/${courseId}`;
   // don't know the context of adding timezone in url. hence omitting it
   // url = appendBrowserTimezoneToUrl(url);
   const { data } = await getAuthenticatedHttpClient().get(url);
