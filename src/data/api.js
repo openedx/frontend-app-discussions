@@ -1,9 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-import { API_BASE_URL } from './constants';
+import { getApiBaseUrl } from './constants';
 
-export const blocksAPIURL = `${API_BASE_URL}/api/courses/v1/blocks/`;
+export const getBlocksAPIURL = () => `${getApiBaseUrl()}/api/courses/v1/blocks/`;
 export async function getCourseBlocks(courseId, username) {
   const params = {
     course_id: courseId,
@@ -14,6 +14,6 @@ export async function getCourseBlocks(courseId, username) {
     student_view_data: 'discussion',
   };
   const { data } = await getAuthenticatedHttpClient()
-    .get(blocksAPIURL, { params });
+    .get(getBlocksAPIURL(), { params });
   return data;
 }

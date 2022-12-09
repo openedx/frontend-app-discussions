@@ -9,7 +9,7 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { API_BASE_URL } from '../../data/constants';
+import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import messages from '../messages';
@@ -20,7 +20,7 @@ import '../topics/data/__factories__';
 
 let store;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const topicsApiUrl = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
+const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
 
 function renderComponent(location = `/${courseId}/topics/`) {
   return render(
