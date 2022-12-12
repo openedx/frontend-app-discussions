@@ -77,19 +77,28 @@ function DiscussionCommentsView({
     isLoading,
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
-  const sortedComments = useMemo(() => [...filterPosts(comments, 'endorsed'),
-    ...filterPosts(comments, 'unendorsed')], [comments]);
+
+  const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
+  const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
+  const sortedComments = endorsedComments.concat(unEndorsedComments);
 
   return (
     <>
       {((hasMorePages && isLoading) || !isLoading)
-      && (
-      <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
-        {endorsed === EndorsementStatus.ENDORSED
-          ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
-          : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
-      </div>
-      )}
+        && (
+          <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
+            {endorsedComments.length > 0
+              && (
+                <>
+                  {intl.formatMessage(messages.endorsedResponseCount, { num: endorsedComments.length })}
+                  <br />
+                </>
+              )}
+
+            {endorsed !== EndorsementStatus.ENDORSED
+              && intl.formatMessage(messages.responseCount, { num: unEndorsedComments.length })}
+          </div>
+        )}
 
       <div className="mx-4" role="list">
         {sortedComments.map(comment => (
@@ -110,11 +119,11 @@ function DiscussionCommentsView({
           </Button>
         )}
         {isLoading
-        && (
-          <div className="card my-4 p-4 d-flex align-items-center">
-            <Spinner animation="border" variant="primary" />
-          </div>
-        )}
+          && (
+            <div className="card my-4 p-4 d-flex align-items-center">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          )}
         {!!sortedComments.length && !isClosed
           && <ResponseEditor postId={postId} addWrappingDiv />}
       </div>
@@ -199,16 +208,18 @@ function CommentsView({ intl }) {
       })}
       >
         <Post post={thread} />
-        {!thread.closed && <ResponseEditor postId={postId} /> }
+        {!thread.closed && <ResponseEditor postId={postId} />}
       </div>
       {thread.type === ThreadType.DISCUSSION && (
-        <DiscussionCommentsView
-          postId={postId}
-          intl={intl}
-          postType={thread.type}
-          endorsed={EndorsementStatus.DISCUSSION}
-          isClosed={thread.closed}
-        />
+        <>
+          <DiscussionCommentsView
+            postId={postId}
+            intl={intl}
+            postType={thread.type}
+            endorsed={EndorsementStatus.DISCUSSION}
+            isClosed={thread.closed}
+          />
+        </>
       )}
       {thread.type === ThreadType.QUESTION && (
         <>
