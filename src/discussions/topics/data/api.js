@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-import { getApiBaseUrl } from '../../../data/constants';
+import { API_BASE_URL } from '../../../data/constants';
 
 export async function getCourseTopics(courseId, topicIds) {
-  const url = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
+  const url = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
   const params = {};
   if (topicIds) {
     params.topic_id = topicIds.join(',');
@@ -15,7 +15,7 @@ export async function getCourseTopics(courseId, topicIds) {
 }
 
 export async function getCourseTopicsV2(courseId, topicIds) {
-  const url = `${getApiBaseUrl()}/api/discussion/v2/course_topics/${courseId}`;
+  const url = `${API_BASE_URL}/api/discussion/v2/course_topics/${courseId}`;
   const params = {};
   if (topicIds) {
     params.topic_id = topicIds.join(',');

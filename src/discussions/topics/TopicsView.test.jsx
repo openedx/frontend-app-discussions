@@ -11,8 +11,8 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getBlocksAPIResponse } from '../../data/__factories__';
-import { getBlocksAPIURL } from '../../data/api';
-import { DiscussionProvider, getApiBaseUrl } from '../../data/constants';
+import { blocksAPIURL } from '../../data/api';
+import { API_BASE_URL, DiscussionProvider } from '../../data/constants';
 import { selectSequences } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { initializeStore } from '../../store';
@@ -26,8 +26,8 @@ import './data/__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
-const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
-const topicsv2ApiUrl = `${getApiBaseUrl()}/api/discussion/v2/course_topics/${courseId}`;
+const topicsApiUrl = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
+const topicsv2ApiUrl = `${API_BASE_URL}/api/discussion/v2/course_topics/${courseId}`;
 let store;
 let axiosMock;
 let lastLocation;
@@ -113,7 +113,7 @@ describe('TopicsView', () => {
         axiosMock
           .onGet(topicsv2ApiUrl)
           .reply(200, data);
-        axiosMock.onGet(getBlocksAPIURL())
+        axiosMock.onGet(blocksAPIURL)
           .reply(200, getBlocksAPIResponse(true));
         axiosMock.onAny().networkError();
         await executeThunk(fetchCourseBlocks(courseId, 'abc123'), store.dispatch, store.getState);

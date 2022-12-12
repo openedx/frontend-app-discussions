@@ -11,12 +11,11 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { DiscussionContext } from '../../common/context';
-import { getCourseConfigApiUrl } from '../../data/api';
+import { courseConfigApiUrl } from '../../data/api';
 import { fetchCourseConfig } from '../../data/thunks';
 import PostLink from './PostLink';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const courseConfigApiUrl = getCourseConfigApiUrl();
 let store;
 let axiosMock;
 

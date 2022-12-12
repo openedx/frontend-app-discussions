@@ -12,7 +12,7 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { getApiBaseUrl, Routes } from '../../../data/constants';
+import { API_BASE_URL, Routes } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { fetchCourseTopics } from '../../topics/data/thunks';
@@ -21,7 +21,7 @@ import { LegacyBreadcrumbMenu } from '../index';
 import '../../topics/data/__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
-const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
+const topicsApiUrl = `${API_BASE_URL}/api/discussion/v1/course_topics/${courseId}`;
 let store;
 let axiosMock;
 

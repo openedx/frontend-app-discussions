@@ -13,8 +13,8 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getBlocksAPIResponse } from '../../../data/__factories__';
-import { getBlocksAPIURL } from '../../../data/api';
-import { getApiBaseUrl, Routes } from '../../../data/constants';
+import { blocksAPIURL } from '../../../data/api';
+import { API_BASE_URL, Routes } from '../../../data/constants';
 import { fetchCourseBlocks } from '../../../data/thunks';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
@@ -25,7 +25,7 @@ import { BreadcrumbMenu } from '../index';
 import '../../topics/data/__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v2/course_topics/${courseId}`;
+const topicsApiUrl = `${API_BASE_URL}/api/discussion/v2/course_topics/${courseId}`;
 let store;
 let axiosMock;
 
@@ -78,7 +78,7 @@ describe('BreadcrumbMenu', () => {
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     blocksAPIResponse = getBlocksAPIResponse();
-    axiosMock.onGet(getBlocksAPIURL())
+    axiosMock.onGet(blocksAPIURL)
       .reply(200, blocksAPIResponse);
     await executeThunk(fetchCourseBlocks(courseId, 'test-user'), store.dispatch, store.getState);
     const data = [

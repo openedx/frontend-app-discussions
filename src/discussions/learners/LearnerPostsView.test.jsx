@@ -14,17 +14,15 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
-import { getCourseConfigApiUrl } from '../data/api';
+import { courseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
-import { getCoursesApiUrl } from './data/api';
+import { coursesApiUrl } from './data/api';
 import LearnerPostsView from './LearnerPostsView';
 
 import './data/__factories__';
 
 let store;
 let axiosMock;
-const coursesApiUrl = getCoursesApiUrl();
-const courseConfigApiUrl = getCourseConfigApiUrl();
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const username = 'abc123';
 
