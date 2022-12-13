@@ -3,10 +3,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
-import { getCoursesApiUrl, uploadFile } from './api';
+import { coursesApiUrl, uploadFile } from './api';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
-const coursesApiUrl = getCoursesApiUrl();
 
 let axiosMock = null;
 

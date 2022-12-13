@@ -10,12 +10,11 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
-import { getCourseConfigApiUrl } from './api';
+import { courseConfigApiUrl } from './api';
 import { useCurrentDiscussionTopic, useUserCanAddThreadInBlackoutDate } from './hooks';
 import { fetchCourseConfig } from './thunks';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
-const courseConfigApiUrl = getCourseConfigApiUrl();
 let store;
 let axiosMock;
 

@@ -12,7 +12,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import messages from '../messages';
-import { getThreadsApiUrl } from '../posts/data/api';
+import { threadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import EmptyPosts from './EmptyPosts';
 
@@ -20,7 +20,6 @@ import '../posts/data/__factories__';
 
 let store;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const threadsApiUrl = getThreadsApiUrl();
 
 function renderComponent(location = `/${courseId}/`) {
   return render(

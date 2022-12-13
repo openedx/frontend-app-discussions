@@ -8,7 +8,9 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Comments API service');
 
-export const getCommentsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/comments/`;
+const apiBaseUrl = getConfig().LMS_BASE_URL;
+
+export const commentsApiUrl = `${apiBaseUrl}/api/discussion/v1/comments/`;
 
 /**
  * Returns all the comments for the specified thread.
@@ -34,7 +36,7 @@ export async function getThreadComments(
   });
 
   const { data } = await getAuthenticatedHttpClient()
-    .get(getCommentsApiUrl(), { params });
+    .get(commentsApiUrl, { params });
   return data;
 }
 
@@ -51,7 +53,7 @@ export async function getCommentResponses(
     pageSize,
   } = {},
 ) {
-  const url = `${getCommentsApiUrl()}${commentId}/`;
+  const url = `${commentsApiUrl}${commentId}/`;
   const params = snakeCaseObject({
     page,
     pageSize,
@@ -71,7 +73,7 @@ export async function getCommentResponses(
  */
 export async function postComment(comment, threadId, parentId = null) {
   const { data } = await getAuthenticatedHttpClient()
-    .post(getCommentsApiUrl(), snakeCaseObject({ threadId, raw_body: comment, parentId }));
+    .post(commentsApiUrl, snakeCaseObject({ threadId, raw_body: comment, parentId }));
   return data;
 }
 
@@ -92,7 +94,7 @@ export async function updateComment(commentId, {
   endorsed,
   editReasonCode,
 }) {
-  const url = `${getCommentsApiUrl()}${commentId}/`;
+  const url = `${commentsApiUrl}${commentId}/`;
   const postData = snakeCaseObject({
     raw_body: comment,
     voted,
@@ -111,7 +113,7 @@ export async function updateComment(commentId, {
  * @param {string} commentId ID of comment to delete
  */
 export async function deleteComment(commentId) {
-  const url = `${getCommentsApiUrl()}${commentId}/`;
+  const url = `${commentsApiUrl}${commentId}/`;
   await getAuthenticatedHttpClient()
     .delete(url);
 }
