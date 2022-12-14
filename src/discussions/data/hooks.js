@@ -10,12 +10,12 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
-import { Routes } from '../../data/constants';
+import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
-import { selectTopics } from '../topics/data/selectors';
+import { selectTopics, topicsLoadingStatus } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
@@ -31,6 +31,7 @@ import {
   selectUserIsStaff,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
+import { threadsLoadingStatus } from '../posts/data/selectors';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
@@ -48,10 +49,19 @@ export function useTotalTopicThreadCount() {
 export const useSidebarVisible = () => {
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
-  const isViewingTopics = useRouteMatch(Routes.TOPICS.PATH);
+  const threadsCallStatus = useSelector(threadsLoadingStatus);
+  const isViewingSpecificTopic = useRouteMatch(Routes.TOPICS.TOPIC);
+  const isViewingTopics = useRouteMatch(Routes.TOPICS.ALL);
   const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
+  const topicsLoading = useSelector(topicsLoadingStatus);
 
-  if (isViewingTopics && totalThreads < 1) {
+  if (
+    isViewingSpecificTopic
+    && isViewingSpecificTopic.isExact
+    && totalThreads > 0
+    && topicsLoading === RequestStatus.SUCCESSFUL
+    && threadsCallStatus === RequestStatus.SUCCESSFUL
+  ) {
     return false;
   }
 
@@ -59,7 +69,7 @@ export const useSidebarVisible = () => {
     return true;
   }
 
-  if (isViewingTopics || isViewingLearners) {
+  if ((isViewingTopics && isViewingTopics.isExact) || isViewingLearners) {
     return true;
   }
 
