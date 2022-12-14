@@ -25,13 +25,12 @@ import {
   selectIsCourseStaff,
   selectLearnersTabEnabled,
   selectModerationSettings,
-  selectPostThreadCount, selectThreadCallStatus,
+  selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
-import { selectLearnerPages } from '../learners/data/selectors';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
