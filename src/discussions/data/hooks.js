@@ -15,6 +15,7 @@ import { selectTopicsUnderCategory } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
+import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics, topicsLoadingStatus } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
@@ -31,7 +32,6 @@ import {
   selectUserIsStaff,
 } from './selectors';
 import { fetchCourseConfig } from './thunks';
-import { threadsLoadingStatus } from '../posts/data/selectors';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
