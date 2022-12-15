@@ -89,7 +89,7 @@ function PostFilterBar({
       statusFilter: currentStatus,
       threadTypeFilter: currentType,
       sortFilter: currentSorting,
-      cohortFilter: cohorts,
+      cohortFilter: selectedCohort,
       triggeredBy: name,
     };
     if (name === 'type') {
