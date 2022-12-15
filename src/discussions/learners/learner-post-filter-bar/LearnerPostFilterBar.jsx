@@ -4,6 +4,8 @@ import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
 import FilterBar from '../../../components/FilterBar';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
@@ -39,12 +41,20 @@ function LearnerPostFilterBar() {
 
   const handleFilterChange = (event) => {
     const { name, value } = event.currentTarget;
+    const filterContentEventProperties = {
+      statusFilter: postFilter.status,
+      threadTypeFilter: postFilter.postType,
+      sortFilter: postFilter.orderBy,
+      cohortFilter: postFilter.cohort,
+      triggeredBy: name,
+    };
     if (name === 'postType') {
       if (postFilter.postType !== value) {
         dispatch(setPostFilter({
           ...postFilter,
           postType: value,
         }));
+        filterContentEventProperties.threadTypeFilter = value;
       }
     } else if (name === 'status') {
       if (postFilter.status !== value) {
@@ -52,6 +62,7 @@ function LearnerPostFilterBar() {
           ...postFilter,
           status: value,
         }));
+        filterContentEventProperties.statusFilter = value;
       }
     } else if (name === 'orderBy') {
       if (postFilter.orderBy !== value) {
@@ -59,6 +70,7 @@ function LearnerPostFilterBar() {
           ...postFilter,
           orderBy: value,
         }));
+        filterContentEventProperties.sortFilter = value;
       }
     } else if (name === 'cohort') {
       if (postFilter.cohort !== value) {
@@ -66,8 +78,10 @@ function LearnerPostFilterBar() {
           ...postFilter,
           cohort: value,
         }));
+        filterContentEventProperties.cohortFilter = value;
       }
     }
+    sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
   };
 
   useEffect(() => {

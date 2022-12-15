@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-
 import {
   PostsStatusFilter, RequestStatus, ThreadOrdering, ThreadType,
 } from '../../../data/constants';
@@ -22,19 +20,6 @@ const mergeThreadsInTopics = (dataFromState, dataFromPayload) => {
     return acc;
   }, {});
 };
-
-function trackFilterContentEvent(filters, sort, eventTrigger) {
-  sendTrackEvent(
-    'edx.forum.filter.content',
-    {
-      statusFilter: filters.status,
-      threadTypeFilter: filters.postType,
-      sort,
-      cohortFilter: filters.cohortFilter,
-      triggeredBy: eventTrigger,
-    },
-  );
-}
 
 const threadsSlice = createSlice({
   name: 'thread',
@@ -203,17 +188,14 @@ const threadsSlice = createSlice({
     },
     setStatusFilter: (state, { payload }) => {
       state.filters.status = payload;
-      trackFilterContentEvent(state.filters, state.sortedBy, 'Status Filter');
       state.pages = [];
     },
     setPostsTypeFilter: (state, { payload }) => {
       state.filters.postType = payload;
-      trackFilterContentEvent(state.filters, state.sortedBy, 'Type Filter');
       state.pages = [];
     },
     setCohortFilter: (state, { payload }) => {
       state.filters.cohort = payload;
-      trackFilterContentEvent(state.filters, state.sortedBy, 'Cohort Filter');
       state.pages = [];
     },
     setSearchQuery: (state, { payload }) => {
