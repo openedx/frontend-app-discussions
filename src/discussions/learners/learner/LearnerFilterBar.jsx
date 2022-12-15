@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Collapsible, Form, Icon } from '@edx/paragon';
 import { Check, Tune } from '@edx/paragon/icons';
@@ -58,6 +59,12 @@ function LearnerFilterBar({
 
     if (name === 'sort') {
       dispatch(setSortedBy(value));
+      sendTrackEvent(
+        'edx.forum.sort.user',
+        {
+          sort: value,
+        },
+      );
     }
   };
 

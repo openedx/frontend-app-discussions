@@ -8,6 +8,7 @@ import { capitalize, isEmpty, toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Collapsible, Form, Icon, Spinner,
@@ -84,6 +85,13 @@ function PostFilterBar({
       name,
       value,
     } = event.currentTarget;
+    const filterContentEventProperties = {
+      statusFilter: currentStatus,
+      threadTypeFilter: currentType,
+      sortFilter: currentSorting,
+      cohortFilter: cohorts,
+      triggeredBy: name,
+    };
     if (name === 'type') {
       dispatch(setPostsTypeFilter(value));
       if (
@@ -92,6 +100,7 @@ function PostFilterBar({
         // You can't filter discussions by unanswered
         dispatch(setStatusFilter(PostsStatusFilter.ALL));
       }
+      filterContentEventProperties.threadTypeFilter = value;
     }
     if (name === 'status') {
       dispatch(setStatusFilter(value));
@@ -103,13 +112,17 @@ function PostFilterBar({
         // You can't filter questions by not responded so switch type to discussion
         dispatch(setPostsTypeFilter(ThreadType.DISCUSSION));
       }
+      filterContentEventProperties.statusFilter = value;
     }
     if (name === 'sort') {
       dispatch(setSortedBy(value));
+      filterContentEventProperties.sortFilter = value;
     }
     if (name === 'cohort') {
       dispatch(setCohortFilter(value));
+      filterContentEventProperties.cohortFilter = value;
     }
+    sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
   };
 
   useEffect(() => {

@@ -112,7 +112,6 @@ describe('PostsView', () => {
       config: { hasModerationPrivileges: true },
       ...data,
     };
-    // console.log(storeData);
     store = initializeStore(storeData);
     store.dispatch(fetchConfigSuccess({}));
   }
