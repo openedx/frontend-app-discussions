@@ -52,37 +52,39 @@ function ActionsDropdown({
         size="sm"
         ref={setTarget}
       />
-      <ModalPopup
-        onClose={close}
-        positionRef={target}
-        isOpen={isOpen}
-        placement={inContext ? 'left' : 'auto-start'}
-      >
-        <div
-          className="bg-white p-1 shadow d-flex flex-column"
-          data-testid="actions-dropdown-modal-popup"
+      <div className="actions-dropdown">
+        <ModalPopup
+          onClose={close}
+          positionRef={target}
+          isOpen={isOpen}
+          placement={inContext ? 'left' : 'auto-start'}
         >
-          {actions.map(action => (
-            <React.Fragment key={action.id}>
-              {(action.action === ContentActions.DELETE)
+          <div
+            className="bg-white p-1 shadow d-flex flex-column"
+            data-testid="actions-dropdown-modal-popup"
+          >
+            {actions.map(action => (
+              <React.Fragment key={action.id}>
+                {(action.action === ContentActions.DELETE)
               && <Dropdown.Divider />}
 
-              <Dropdown.Item
-                as={Button}
-                variant="tertiary"
-                size="inline"
-                onClick={() => {
-                  close();
-                  handleActions(action.action);
-                }}
-                className="d-flex justify-content-start py-1.5 mr-4"
-              >
-                <Icon src={action.icon} className="mr-1" /> {intl.formatMessage(action.label)}
-              </Dropdown.Item>
-            </React.Fragment>
-          ))}
-        </div>
-      </ModalPopup>
+                <Dropdown.Item
+                  as={Button}
+                  variant="tertiary"
+                  size="inline"
+                  onClick={() => {
+                    close();
+                    handleActions(action.action);
+                  }}
+                  className="d-flex justify-content-start py-1.5 mr-4"
+                >
+                  <Icon src={action.icon} className="mr-1" /> {intl.formatMessage(action.label)}
+                </Dropdown.Item>
+              </React.Fragment>
+            ))}
+          </div>
+        </ModalPopup>
+      </div>
     </>
   );
 }
