@@ -138,7 +138,7 @@ function PostEditor({
     follow: isEmpty(post?.following) ? true : post?.following,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    editReasonCode: post?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
+    editReasonCode: post?.lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
     cohort: post?.cohort || 'default',
   };
 
