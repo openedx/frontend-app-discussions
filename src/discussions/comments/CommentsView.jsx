@@ -87,10 +87,10 @@ function DiscussionCommentsView({
     </div>
   );
 
-  const handleComments = (postComments, post, isClosedPost, showAddResponse = false) => (
+  const handleComments = (postComments, showAddResponse = false) => (
     <div className="mx-4" role="list">
       {postComments.map(comment => (
-        <Comment comment={comment} key={comment.id} postType={post} isClosedPost={isClosedPost} />
+        <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
       ))}
       {hasMorePages && !isLoading && (
         <Button
@@ -118,25 +118,22 @@ function DiscussionCommentsView({
   );
   return (
     <>
-      {((hasMorePages && isLoading) || !isLoading)
-        && (
-          <>
-            {endorsedComments.length > 0
-              && (
-                <>
-                  {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
-                  {handleComments(endorsedComments, postType, isClosed)}
-                </>
-              )}
-            {endorsed !== EndorsementStatus.ENDORSED
-              && (
-                <>
-                  {handleDefinition(messages.responseCount, unEndorsedComments.length)}
-                  {handleComments(unEndorsedComments, postType, isClosed, true)}
-                </>
-              )}
-          </>
-        )}
+      {((hasMorePages && isLoading) || !isLoading) && (
+        <>
+          {endorsedComments.length > 0 && (
+            <>
+              {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
+              {handleComments(endorsedComments)}
+            </>
+          )}
+          {endorsed !== EndorsementStatus.ENDORSED && (
+            <>
+              {handleDefinition(messages.responseCount, unEndorsedComments.length)}
+              {handleComments(unEndorsedComments, true)}
+            </>
+          )}
+        </>
+      )}
     </>
 
   );
