@@ -77,47 +77,63 @@ function DiscussionCommentsView({
     isLoading,
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
-  const sortedComments = useMemo(() => [...filterPosts(comments, 'endorsed'),
-    ...filterPosts(comments, 'unendorsed')], [comments]);
 
-  return (
-    <>
-      {((hasMorePages && isLoading) || !isLoading)
-      && (
-      <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
-        {endorsed === EndorsementStatus.ENDORSED
-          ? intl.formatMessage(messages.endorsedResponseCount, { num: sortedComments.length })
-          : intl.formatMessage(messages.responseCount, { num: sortedComments.length })}
-      </div>
+  const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
+  const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
+
+  const handleDefinition = (message, commentsLength) => (
+    <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
+      {intl.formatMessage(message, { num: commentsLength })}
+    </div>
+  );
+
+  const handleComments = (postComments, showAddResponse = false) => (
+    <div className="mx-4" role="list">
+      {postComments.map(comment => (
+        <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
+      ))}
+      {hasMorePages && !isLoading && (
+        <Button
+          onClick={handleLoadMoreResponses}
+          variant="link"
+          block="true"
+          className="card p-4 mb-4 font-weight-500 font-size-14"
+          style={{
+            lineHeight: '20px',
+          }}
+          data-testid="load-more-comments"
+        >
+          {intl.formatMessage(messages.loadMoreResponses)}
+        </Button>
       )}
-
-      <div className="mx-4" role="list">
-        {sortedComments.map(comment => (
-          <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
-        ))}
-        {hasMorePages && !isLoading && (
-          <Button
-            onClick={handleLoadMoreResponses}
-            variant="link"
-            block="true"
-            className="card p-4 mb-4 font-weight-500 font-size-14"
-            style={{
-              lineHeight: '20px',
-            }}
-            data-testid="load-more-comments"
-          >
-            {intl.formatMessage(messages.loadMoreResponses)}
-          </Button>
-        )}
-        {isLoading
+      {isLoading
         && (
           <div className="card my-4 p-4 d-flex align-items-center">
             <Spinner animation="border" variant="primary" />
           </div>
         )}
-        {!!sortedComments.length && !isClosed
-          && <ResponseEditor postId={postId} addWrappingDiv />}
-      </div>
+      {!!(endorsedComments.length + unEndorsedComments.length) && !isClosed && showAddResponse
+        && <ResponseEditor postId={postId} addWrappingDiv />}
+    </div>
+  );
+  return (
+    <>
+      {((hasMorePages && isLoading) || !isLoading) && (
+        <>
+          {endorsedComments.length > 0 && (
+            <>
+              {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
+              {handleComments(endorsedComments)}
+            </>
+          )}
+          {endorsed !== EndorsementStatus.ENDORSED && (
+            <>
+              {handleDefinition(messages.responseCount, unEndorsedComments.length)}
+              {handleComments(unEndorsedComments, true)}
+            </>
+          )}
+        </>
+      )}
     </>
 
   );
@@ -199,7 +215,7 @@ function CommentsView({ intl }) {
       })}
       >
         <Post post={thread} />
-        {!thread.closed && <ResponseEditor postId={postId} /> }
+        {!thread.closed && <ResponseEditor postId={postId} />}
       </div>
       {thread.type === ThreadType.DISCUSSION && (
         <DiscussionCommentsView
