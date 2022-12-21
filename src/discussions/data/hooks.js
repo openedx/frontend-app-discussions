@@ -17,7 +17,6 @@ import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics, topicsLoadingStatus } from '../topics/data/selectors';
-import { fetchCourseTopics } from '../topics/data/thunks';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
@@ -83,7 +82,6 @@ export function useCourseDiscussionData(courseId) {
   useEffect(() => {
     async function fetchBaseData() {
       await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseTopics(courseId));
       await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
     }
 

@@ -15,6 +15,7 @@ import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
 import { selectconfigLoadingStatus } from '../data/selectors';
+import { TopicPostsView, TopicsView as InContextTopicsView } from '../in-context-topics';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
@@ -28,7 +29,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
   const { height: windowHeight } = useWindowSize();
-  const { enableInContextSidebar } = useContext(DiscussionContext);
+  const { enableInContext, enableInContextSidebar } = useContext(DiscussionContext);
 
   useEffect(() => {
     if (sidebarRef && postActionBarHeight && !enableInContextSidebar) {
@@ -40,10 +41,11 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, enableInContextSidebar]);
 
+  console.log('displaySidebar', (enableInContext && !enableInContextSidebar));
   return (
     <div
       ref={sidebarRef}
-      className={classNames('flex-column  position-sticky', {
+      className={classNames('flex-column position-sticky', {
         'd-none': !displaySidebar,
         'd-flex overflow-auto': displaySidebar,
         'w-100': !isOnDesktop,
@@ -54,8 +56,22 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
       data-testid="sidebar"
     >
       <Switch>
+        {enableInContext && !enableInContextSidebar && (
+          <>
+            <Route
+              path={Routes.TOPICS.ALL}
+              component={InContextTopicsView}
+              exact
+            />
+            <Route
+              path={[Routes.TOPICS.TOPIC, Routes.TOPICS.CATEGORY, Routes.TOPICS.TOPIC_POST]}
+              component={TopicPostsView}
+              exact
+            />
+          </>
+        )}
         <Route
-          path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY, Routes.POSTS.MY_POSTS]}
+          path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
           component={PostsView}
         />
         <Route path={Routes.TOPICS.PATH} component={TopicsView} />
@@ -66,13 +82,13 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
         {configStatus === RequestStatus.SUCCESSFUL && (
-        <Redirect
-          from={Routes.DISCUSSIONS.PATH}
-          to={{
-            ...location,
-            pathname: Routes.POSTS.ALL_POSTS,
-          }}
-        />
+          <Redirect
+            from={Routes.DISCUSSIONS.PATH}
+            to={{
+              ...location,
+              pathname: Routes.POSTS.ALL_POSTS,
+            }}
+          />
         )}
       </Switch>
     </div>

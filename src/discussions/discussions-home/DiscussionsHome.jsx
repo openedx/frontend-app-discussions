@@ -19,8 +19,9 @@ import {
 } from '../data/hooks';
 import { selectDiscussionProvider } from '../data/selectors';
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
+import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
 import messages from '../messages';
-import { BreadcrumbMenu, LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
+import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
@@ -60,6 +61,8 @@ export default function DiscussionsHome() {
       postMessageToParent('discussions.navigate', { path });
     }
   }, [path]);
+  console.log('enableInContextSidebar', enableInContextSidebar);
+  console.log('enableInContext', enableInContext);
 
   return (
     <DiscussionContext.Provider value={{
@@ -67,6 +70,7 @@ export default function DiscussionsHome() {
       courseId,
       postId,
       topicId,
+      enableInContext,
       enableInContextSidebar,
       category,
       learnerUsername,
@@ -92,10 +96,10 @@ export default function DiscussionsHome() {
           {isFeedbackBannerVisible && <InformationBanner />}
           <BlackoutInformationBanner />
         </div>
-        {!enableInContextSidebar && (
+        {provider === DiscussionProvider.LEGACY && (
           <Route
             path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-            component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
+            component={LegacyBreadcrumbMenu}
           />
         )}
         <div className="d-flex flex-row">
@@ -103,7 +107,10 @@ export default function DiscussionsHome() {
           {displayContentArea && <DiscussionContent />}
           {!displayContentArea && (
             <Switch>
-              <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
+              <Route
+                path={Routes.TOPICS.PATH}
+                component={(enableInContext && !enableInContextSidebar) ? InContextEmptyTopics : EmptyTopics}
+              />
               <Route
                 path={Routes.POSTS.MY_POSTS}
                 render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SearchInfo from '../../components/SearchInfo';
 import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
+import { handleKeyDown } from '../utils';
 import {
   selectAllThreads,
   selectTopicThreads,
@@ -61,21 +62,7 @@ function PostsView() {
   } else {
     postsListComponent = <AllPostsList />;
   }
-
-  const handleKeyDown = (event) => {
-    const { key } = event;
-    if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
-    const option = event.target;
-
-    let selectedOption;
-    if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
-    if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
-
-    if (selectedOption) {
-      selectedOption.focus();
-    }
-  };
-
+  console.log('PostsView');
   return (
     <div className="discussion-posts d-flex flex-column h-100">
       {searchString && (

@@ -190,6 +190,7 @@ export const Routes = {
     CATEGORY: `${BASE_PATH}/category/:category`,
     CATEGORY_POST: `${BASE_PATH}/category/:category/posts/:postId`,
     TOPIC: `${BASE_PATH}/topics/:topicId`,
+    TOPIC_POST: `${BASE_PATH}/topics/:topicId/posts/:postId`,
   },
 };
 

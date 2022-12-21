@@ -14,6 +14,7 @@ import { RequestStatus } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { selectconfigLoadingStatus } from '../../data/selectors';
+import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
 import messages from './messages';
@@ -26,7 +27,7 @@ function PostActionsBar({
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const { enableInContextSidebar } = useContext(DiscussionContext);
+  const { enableInContextSidebar, enableInContext, page } = useContext(DiscussionContext);
 
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
@@ -34,7 +35,9 @@ function PostActionsBar({
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
-      {!enableInContextSidebar && <Search />}
+      {(!enableInContextSidebar && enableInContext && ['topics', 'category'].includes(page))
+        ? <IncontextSearch />
+        : <Search />}
       {enableInContextSidebar && (
         <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
           {intl.formatMessage(messages.title)}

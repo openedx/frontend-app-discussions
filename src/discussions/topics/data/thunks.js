@@ -2,7 +2,6 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { DiscussionProvider } from '../../../data/constants';
 import { getCourseTopics, getCourseTopicsV2 } from './api';
 import { fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess } from './slices';
 
@@ -44,16 +43,11 @@ function normaliseTopicsV2(data) {
 }
 
 export function fetchCourseTopics(courseId) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     try {
-      const { config } = getState();
       dispatch(fetchCourseTopicsRequest({ courseId }));
-      let data = {};
-      if (config.provider === DiscussionProvider.LEGACY) {
-        data = normaliseTopics(camelCaseObject(await getCourseTopics(courseId)));
-      } else if (config.provider === DiscussionProvider.OPEN_EDX) {
-        data = normaliseTopicsV2(camelCaseObject(await getCourseTopicsV2(courseId)));
-      }
+
+      const data = normaliseTopics(camelCaseObject(await getCourseTopics(courseId)));
       dispatch(fetchCourseTopicsSuccess(data));
     } catch (error) {
       dispatch(fetchCourseTopicsFailed());
