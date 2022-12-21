@@ -66,19 +66,15 @@ function CommentHeader({
       <div className="d-flex align-items-center">
 
         {actionIcons && (
-        <span className="btn-icon btn-icon-sm mr-1 align-items-center">
-          <Icon
-            data-testid="check-icon"
-            onClick={
-                () => {
-                  handleIcons(actionIcons.action);
-                }
-              }
-            src={actionIcons.icon}
-            className={['endorse', 'unendorse'].includes(actionIcons.id) ? 'text-dark-500' : 'text-success-500'}
-            size="sm"
-          />
-        </span>
+          <span className="btn-icon btn-icon-sm mr-1 align-items-center pointer-cursor-hover">
+            <Icon
+              data-testid="check-icon"
+              onClick={() => handleIcons(actionIcons.action)}
+              src={actionIcons.icon}
+              className={['endorse', 'unendorse'].includes(actionIcons.id) ? 'text-dark-500' : 'text-success-500'}
+              size="sm"
+            />
+          </span>
         )}
 
         <ActionsDropdown
