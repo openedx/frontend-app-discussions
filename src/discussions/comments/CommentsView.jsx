@@ -87,12 +87,12 @@ function DiscussionCommentsView({
     </div>
   );
 
-  const handleComments = (postComments, showAddResponse = false) => (
+  const handleComments = (postComments, showAddResponse = false, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
       {postComments.map(comment => (
         <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
       ))}
-      {hasMorePages && !isLoading && (
+      {hasMorePages && !isLoading && !showLoadMoreResponses && (
         <Button
           onClick={handleLoadMoreResponses}
           variant="link"
@@ -106,13 +106,12 @@ function DiscussionCommentsView({
           {intl.formatMessage(messages.loadMoreResponses)}
         </Button>
       )}
-      {isLoading
-        && (
-          <div className="card my-4 p-4 d-flex align-items-center">
-            <Spinner animation="border" variant="primary" />
-          </div>
-        )}
-      {!!(endorsedComments.length + unEndorsedComments.length) && !isClosed && showAddResponse
+      {isLoading && !showLoadMoreResponses && (
+        <div className="card my-4 p-4 d-flex align-items-center">
+          <Spinner animation="border" variant="primary" />
+        </div>
+      )}
+      {!!postComments.length && !isClosed && showAddResponse
         && <ResponseEditor postId={postId} addWrappingDiv />}
     </div>
   );
@@ -123,12 +122,15 @@ function DiscussionCommentsView({
           {endorsedComments.length > 0 && (
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
-              {handleComments(endorsedComments)}
+              {endorsed === EndorsementStatus.DISCUSSION
+                ? handleComments(endorsedComments, false, true)
+                : handleComments(endorsedComments)}
             </>
           )}
           {endorsed !== EndorsementStatus.ENDORSED && (
             <>
               {handleDefinition(messages.responseCount, unEndorsedComments.length)}
+              {unEndorsedComments.length === 0 && <br />}
               {handleComments(unEndorsedComments, true)}
             </>
           )}
