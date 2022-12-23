@@ -117,9 +117,6 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 header {
-  .user-dropdown {
-    z-index: 1;
-  }
   .logo {
     margin-right: 1rem;
     img {
@@ -261,4 +258,7 @@ header {
   body:not(.tox-force-desktop) .tox .tox-dialog {
     align-self: center;
   }
+}
+.tox .tox-editor-header {
+  z-index: 0 !important;
 }
