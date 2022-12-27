@@ -57,7 +57,6 @@ const threadsSlice = createSlice({
       if (state.author !== payload.author) {
         state.pages = [];
         state.author = payload.author;
-        state.totalThreads = null;
       }
       state.status = RequestStatus.IN_PROGRESS;
     },
@@ -161,9 +160,11 @@ const threadsSlice = createSlice({
     },
     updateThreadFailed: (state) => {
       state.postStatus = RequestStatus.FAILED;
+      state.totalThreads = 0;
     },
     updateThreadDenied: (state) => {
       state.postStatus = RequestStatus.DENIED;
+      state.totalThreads = 0;
     },
     deleteThreadRequest: (state) => {
       state.postStatus = RequestStatus.IN_PROGRESS;
