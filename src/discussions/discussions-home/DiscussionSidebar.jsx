@@ -41,7 +41,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, enableInContextSidebar]);
 
-  console.log('displaySidebar', (enableInContext && !enableInContextSidebar));
+  console.log('displaySidebar', (enableInContext && !enableInContextSidebar), displaySidebar);
   return (
     <div
       ref={sidebarRef}
@@ -64,7 +64,12 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
               exact
             />
             <Route
-              path={[Routes.TOPICS.TOPIC, Routes.TOPICS.CATEGORY, Routes.TOPICS.TOPIC_POST]}
+              path={[
+                Routes.TOPICS.TOPIC,
+                Routes.TOPICS.CATEGORY,
+                Routes.TOPICS.TOPIC_POST,
+                Routes.TOPICS.TOPIC_POST_EDIT,
+              ]}
               component={TopicPostsView}
               exact
             />

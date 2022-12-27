@@ -1,14 +1,19 @@
 import React, { useContext, useEffect } from 'react';
 
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
+import { selectDiscussionProvider } from '../data/selectors';
 import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
 import {
-  inContextTopicsLoadingStatus, selectCoursewareTopics, selectFilteredTopics,
+  selectCoursewareTopics,
+  selectFilteredTopics, selectLoadingStatus,
   selectNonCoursewareTopics, selectTopicFilter,
 } from './data/selectors';
 import { setFilter } from './data/slices';
@@ -16,6 +21,7 @@ import { fetchCourseTopicsV3 } from './data/thunks';
 import { SectionBaseGroup, Topic } from './topic';
 
 function TopicsList() {
+  const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   console.log('TopicsList');
@@ -38,6 +44,11 @@ function TopicsList() {
           showDivider={(coursewareTopics.length - 1) !== index}
         />
       ))}
+      {loadingStatus === RequestStatus.IN_PROGRESS && (
+        <div className="d-flex justify-content-center p-4">
+          <Spinner animation="border" variant="primary" size="lg" />
+        </div>
+      )}
     </>
   );
 }
@@ -45,13 +56,16 @@ function TopicsList() {
 function TopicsView() {
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
+  const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
   const filteredTopics = useSelector(selectFilteredTopics);
-  const loadingStatus = useSelector(inContextTopicsLoadingStatus);
+  const loadingStatus = useSelector(selectLoadingStatus);
 
   useEffect(() => {
-    dispatch(fetchCourseTopicsV3(courseId));
-  }, []);
+    if (provider) {
+      dispatch(fetchCourseTopicsV3(courseId));
+    }
+  }, [provider]);
   console.log('TopicsView');
 
   return (
@@ -68,7 +82,9 @@ function TopicsView() {
         </>
       )}
       <div
-        className="list-group list-group-flush flex-fill"
+        className={classNames('list-group list-group-flush flex-fill', {
+          'justify-content-center': loadingStatus === RequestStatus.IN_PROGRESS,
+        })}
         role="list"
         onKeyDown={e => handleKeyDown(e)}
       >

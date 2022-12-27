@@ -35,9 +35,11 @@ function PostActionsBar({
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
-      {(!enableInContextSidebar && enableInContext && ['topics', 'category'].includes(page))
-        ? <IncontextSearch />
-        : <Search />}
+      {!enableInContextSidebar && (
+        (enableInContext && ['topics', 'category'].includes(page))
+          ? <IncontextSearch />
+          : <Search />
+      )}
       {enableInContextSidebar && (
         <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
           {intl.formatMessage(messages.title)}

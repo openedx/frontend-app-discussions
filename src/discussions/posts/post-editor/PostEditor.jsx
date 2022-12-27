@@ -34,6 +34,11 @@ import {
   selectUserIsStaff,
 } from '../../data/selectors';
 import { EmptyPage } from '../../empty-posts';
+import {
+  selectCoursewareTopics as inContextCourseware,
+  selectNonCoursewareIds as inContextCoursewareIds,
+  selectNonCoursewareTopics as inContextNonCourseware,
+} from '../../in-context-topics/data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
@@ -94,10 +99,11 @@ function PostEditor({
     courseId,
     postId,
   } = useParams();
+  const { category, enableInContextSidebar, enableInContext } = useContext(DiscussionContext);
   const topicId = useCurrentDiscussionTopic();
-  const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
-  const nonCoursewareIds = useSelector(selectNonCoursewareIds);
-  const coursewareTopics = useSelector(selectCoursewareTopics);
+  const nonCoursewareTopics = useSelector(enableInContext ? inContextNonCourseware : selectNonCoursewareTopics);
+  const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
+  const coursewareTopics = useSelector(enableInContext ? inContextCourseware : selectCoursewareTopics);
   const cohorts = useSelector(selectCourseCohorts);
   const post = useSelector(selectThread(postId));
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -106,7 +112,10 @@ function PostEditor({
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const { category, enableInContextSidebar } = useContext(DiscussionContext);
+
+  console.log('nonCoursewareTopics', nonCoursewareTopics);
+  console.log('nonCoursewareIds', nonCoursewareIds);
+  console.log('coursewareTopics', coursewareTopics);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -305,15 +314,37 @@ function PostEditor({
                   >{topic.name || intl.formatMessage(messages.unnamedSubTopics)}
                   </option>
                 ))}
-                {coursewareTopics.map(categoryObj => (
-                  <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
-                    {categoryObj.topics.map(subtopic => (
-                      <option key={subtopic.id} value={subtopic.id}>
-                        {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
+                {enableInContext ? (
+                  coursewareTopics?.map(section => (
+                      section?.children?.map(subsection => (
+                        <optgroup
+                          label={`${section.displayName} / ${subsection.displayName}`
+                            || intl.formatMessage(messages.unnamedTopics)
+                          }
+                          key={subsection.id}
+                        >
+                          {subsection?.children?.map(unit => (
+                            <option key={unit.id} value={unit.id}>
+                              {unit.name || intl.formatMessage(messages.unnamedSubTopics)}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))
+                  ))
+                ) : (
+                  coursewareTopics.map(categoryObj => (
+                    <optgroup
+                      label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)}
+                      key={categoryObj.id}
+                    >
+                      {categoryObj.topics.map(subtopic => (
+                        <option key={subtopic.id} value={subtopic.id}>
+                          {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))
+                )}
               </Form.Control>
             </Form.Group>
             {canSelectCohort(values.topic) && (

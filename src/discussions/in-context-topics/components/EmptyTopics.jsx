@@ -49,7 +49,7 @@ function EmptyTopics({ intl }) {
     }
   } else if (match.params.category) {
     if (courseWareThreadsCount > 0) {
-      title = messages.noPostSelected;
+      title = messages.noTopicSelected;
     } else {
       action = addPost;
       actionText = postMessages.addAPost;
@@ -59,9 +59,6 @@ function EmptyTopics({ intl }) {
   } else if (hasGlobalThreads) {
     title = messages.noTopicSelected;
   } else {
-    action = addPost;
-    actionText = postMessages.addAPost;
-    subTitle = messages.emptyAllTopics;
     fullWidth = true;
   }
 

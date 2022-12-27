@@ -10,13 +10,15 @@ export const selectCoursewareTopics = state => state.inContextTopics.coursewareT
 
 export const selectNonCoursewareTopics = state => state.inContextTopics.nonCoursewareTopics;
 
+export const selectNonCoursewareIds = state => state.inContextTopics.nonCoursewareIds;
+
 export const selectUnits = state => state.inContextTopics.units;
 
 export const selectSubsectionUnits = subsectionId => state => state.inContextTopics.units?.filter(
   unit => unit.parentId === subsectionId,
 );
 
-export const inContextTopicsLoadingStatus = state => state.inContextTopics.status;
+export const selectLoadingStatus = state => state.inContextTopics.status;
 
 export const selectFilteredTopics = createSelector(
   selectUnits,

@@ -40,7 +40,7 @@ export default function DiscussionsHome() {
   const { params } = useRouteMatch(ALL_ROUTES);
   const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();
-  let displaySidebar = useSidebarVisible();
+  let displaySidebar = useSidebarVisible(enableInContext);
   const isFeedbackBannerVisible = getConfig().DISPLAY_FEEDBACK_BANNER === 'true';
   const {
     courseId, postId, topicId, category, learnerUsername,
@@ -48,7 +48,7 @@ export default function DiscussionsHome() {
   const enableInContextSidebar = ((new URLSearchParams(location.search).get('inContextSidebar')
     !== null) && enableInContext);
   useCourseDiscussionData(courseId);
-  useRedirectToThread(courseId);
+  useRedirectToThread(courseId, enableInContextSidebar);
 
   /*  Display the content area if we are currently viewing/editing a post or creating one.
   If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
@@ -61,6 +61,8 @@ export default function DiscussionsHome() {
       postMessageToParent('discussions.navigate', { path });
     }
   }, [path]);
+
+  console.log('useSidebarVisible', displaySidebar);
   console.log('enableInContextSidebar', enableInContextSidebar);
   console.log('enableInContext', enableInContext);
 

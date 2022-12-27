@@ -120,28 +120,27 @@ function FilterBar({
           <div className="d-flex flex-row py-2 justify-content-between">
             {filters.map((value) => (
               <Form.RadioSet
+                key={value.name}
                 name={value.name}
                 className="d-flex flex-column list-group list-group-flush"
                 value={selectedFilters[value.name]}
                 onChange={onFilterChange}
               >
-                {
-                  value.filters.map(filterName => {
-                    const element = allFilters.find(obj => obj.id === filterName);
-                    if (element) {
-                      return (
-                        <ActionItem
-                          id={element.id}
-                          label={element.label}
-                          value={element.value}
-                          selected={selectedFilters[value.name]}
-                        />
-                      );
-                    }
-                    return false;
-                  })
-                }
-
+                {value.filters.map(filterName => {
+                  const element = allFilters.find(obj => obj.id === filterName);
+                  if (element) {
+                    return (
+                      <ActionItem
+                        key={element.id}
+                        id={element.id}
+                        label={element.label}
+                        value={element.value}
+                        selected={selectedFilters[value.name]}
+                      />
+                    );
+                  }
+                  return false;
+                })}
               </Form.RadioSet>
             ))}
           </div>

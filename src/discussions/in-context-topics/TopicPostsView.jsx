@@ -5,13 +5,17 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Spinner } from '@edx/paragon';
 
-import { Routes } from '../../data/constants';
+import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
-import { selectTopicThreads } from '../posts/data/selectors';
+import { selectTopicThreads, threadsLoadingStatus } from '../posts/data/selectors';
+import NoResults from '../posts/NoResults';
 import PostsList from '../posts/PostsList';
 import { discussionsPath, handleKeyDown } from '../utils';
-import { selectNonCoursewareTopics, selectSubsectionUnits, selectUnits } from './data/selectors';
+import {
+  selectLoadingStatus, selectNonCoursewareTopics, selectSubsectionUnits, selectUnits,
+} from './data/selectors';
 import { BackButton } from './components';
 import messages from './messages';
 import { Topic } from './topic';
@@ -19,11 +23,18 @@ import { Topic } from './topic';
 function TopicPostsView({ intl }) {
   const location = useLocation();
   const { courseId, topicId, category } = useContext(DiscussionContext);
+  const postsLoadingStatus = useSelector(threadsLoadingStatus);
+  const topicsLoadingStatus = useSelector(selectLoadingStatus);
   const posts = useSelector(selectTopicThreads([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
+  console.log('selectedSubsectionUnits', selectedSubsectionUnits);
+
   console.log('TopicPostsView');
+  console.log('loading state',
+    (topicId && posts.length === 0 && postsLoadingStatus === RequestStatus.SUCCESSFUL),
+    (category && selectedSubsectionUnits.length === 0 && topicsLoadingStatus === RequestStatus.SUCCESSFUL));
 
   return (
     <div className="discussion-posts d-flex flex-column h-100">
@@ -59,6 +70,16 @@ function TopicPostsView({ intl }) {
             />
           ))
         )}
+        {/* {((topicId && posts.length === 0 && postsLoadingStatus === RequestStatus.SUCCESSFUL)
+          || (category && selectedSubsectionUnits.length === 0 && topicsLoadingStatus === RequestStatus.SUCCESSFUL)
+        ) && <NoResults />}
+        {((topicId && postsLoadingStatus === RequestStatus.IN_PROGRESS)
+          || (category && topicsLoadingStatus === RequestStatus.SUCCESSFUL)
+        ) && (
+          <div className="d-flex justify-content-center p-4">
+            <Spinner animation="border" variant="primary" size="lg" />
+          </div>
+        )} */}
       </div>
     </div>
   );

@@ -54,6 +54,21 @@ const messages = defineMessages({
     defaultMessage: 'Unnamed Topic',
     description: 'Text to display in place of topic name if topic name is empty',
   },
+  noTopicExists: {
+    id: 'discussions.topics.title',
+    defaultMessage: 'No topic exists',
+    description: 'Text to display in place of topic list if topic does not exist',
+  },
+  createTopic: {
+    id: 'discussions.topics.createTopic',
+    defaultMessage: 'Please contact you admin to create a topic',
+    description: 'Helping Text to display in place of topic list if topic does not exist',
+  },
+  nothingHere: {
+    id: 'discussions.topics.nothing',
+    defaultMessage: 'Nothing here yet',
+    description: 'Helping Text to display if nothing here yet',
+  },
 });
 
 export default messages;

@@ -29,14 +29,16 @@ function normalizeTopicsV3(topics) {
     return arrayOfUnits;
   }, []);
 
-  const coursewareTopics = topics.filter((chapter) => chapter.courseware);
-  const nonCoursewareTopics = topics.filter((chapter) => !chapter.courseware);
+  const coursewareTopics = topics.filter((topic) => topic.courseware);
+  const nonCoursewareTopics = topics.filter((topic) => !topic.courseware);
+  const nonCoursewareIds = nonCoursewareTopics?.map((topic) => topic.id);
 
   return {
     topics,
     units: coursewareUnits,
     coursewareTopics,
     nonCoursewareTopics,
+    nonCoursewareIds,
   };
 }
 

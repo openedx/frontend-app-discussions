@@ -16,7 +16,7 @@ import { fetchCourseBlocks } from '../../data/thunks';
 import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
-import { selectTopics, topicsLoadingStatus } from '../topics/data/selectors';
+import { selectTopics } from '../topics/data/selectors';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
@@ -45,34 +45,21 @@ export function useTotalTopicThreadCount() {
   }, 0);
 }
 
-export const useSidebarVisible = () => {
-  const isFiltered = useSelector(selectAreThreadsFiltered);
-  const totalThreads = useSelector(selectPostThreadCount);
-  const threadsCallStatus = useSelector(threadsLoadingStatus);
-  const isViewingSpecificTopic = useRouteMatch(Routes.TOPICS.TOPIC);
+export const useSidebarVisible = (enableInContext) => {
   const isViewingTopics = useRouteMatch(Routes.TOPICS.ALL);
   const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
-  const topicsLoading = useSelector(topicsLoadingStatus);
+  const isFiltered = useSelector(selectAreThreadsFiltered);
+  const totalThreads = useSelector(selectPostThreadCount);
+  const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
+  const isIncontextTopicsView = Boolean(useRouteMatch(Routes.TOPICS.PATH) && enableInContext);
 
-  if (
-    isViewingSpecificTopic
-    && isViewingSpecificTopic.isExact
-    && totalThreads > 0
-    && topicsLoading === RequestStatus.SUCCESSFUL
-    && threadsCallStatus === RequestStatus.SUCCESSFUL
-  ) {
+  if (isIncontextTopicsView) {
+    return true;
+  } if ((isThreadsEmpty && !isFiltered && !(isViewingTopics?.isExact || isViewingLearners))) {
     return false;
   }
 
-  if (isFiltered) {
-    return true;
-  }
-
-  if ((isViewingTopics && isViewingTopics.isExact) || isViewingLearners) {
-    return true;
-  }
-
-  return totalThreads > 0;
+  return true;
 };
 
 export function useCourseDiscussionData(courseId) {
@@ -89,9 +76,8 @@ export function useCourseDiscussionData(courseId) {
   }, [courseId]);
 }
 
-export function useRedirectToThread(courseId) {
+export function useRedirectToThread(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
-  const { enableInContextSidebar } = useContext(DiscussionContext);
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
   );

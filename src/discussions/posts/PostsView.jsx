@@ -1,11 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SearchInfo from '../../components/SearchInfo';
 import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
+import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
+import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
+import { selectTopics } from '../topics/data/selectors';
+import { fetchCourseTopics } from '../topics/data/thunks';
 import { handleKeyDown } from '../utils';
 import {
   selectAllThreads,
@@ -46,12 +51,21 @@ function PostsView() {
   const {
     topicId,
     category,
+    courseId,
+    enableInContext,
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
   const searchString = useSelector(({ threads }) => threads.filters.search);
   const resultsFound = useSelector(({ threads }) => threads.totalThreads);
   const textSearchRewrite = useSelector(({ threads }) => threads.textSearchRewrite);
   const loadingStatus = useSelector(({ threads }) => threads.status);
+  const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
+
+  useEffect(() => {
+    if (isEmpty(topics)) {
+      dispatch(enableInContext ? fetchCourseTopicsV3(courseId) : fetchCourseTopics(courseId));
+    }
+  }, []);
 
   let postsListComponent;
 
