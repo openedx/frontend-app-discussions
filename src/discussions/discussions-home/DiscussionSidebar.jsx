@@ -57,23 +57,23 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     >
       <Switch>
         {enableInContext && !enableInContextSidebar && (
-          <>
-            <Route
-              path={Routes.TOPICS.ALL}
-              component={InContextTopicsView}
-              exact
-            />
-            <Route
-              path={[
-                Routes.TOPICS.TOPIC,
-                Routes.TOPICS.CATEGORY,
-                Routes.TOPICS.TOPIC_POST,
-                Routes.TOPICS.TOPIC_POST_EDIT,
-              ]}
-              component={TopicPostsView}
-              exact
-            />
-          </>
+          <Route
+            path={Routes.TOPICS.ALL}
+            component={InContextTopicsView}
+            exact
+          />
+        )}
+        {enableInContext && !enableInContextSidebar && (
+          <Route
+            path={[
+              Routes.TOPICS.TOPIC,
+              Routes.TOPICS.CATEGORY,
+              Routes.TOPICS.TOPIC_POST,
+              Routes.TOPICS.TOPIC_POST_EDIT,
+            ]}
+            component={TopicPostsView}
+            exact
+          />
         )}
         <Route
           path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
