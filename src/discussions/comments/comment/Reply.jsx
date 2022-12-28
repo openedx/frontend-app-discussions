@@ -113,13 +113,15 @@ function Reply({
         >
           <div className="d-flex flex-row justify-content-between align-items-center mb-0.5">
             <AuthorLabel author={reply.author} authorLabel={reply.authorLabel} labelColor={colorClass && `text-${colorClass}`} linkToProfile />
-            <ActionsDropdown
-              commentOrPost={{
-                ...reply,
-                postType,
-              }}
-              actionHandlers={actionHandlers}
-            />
+            <div className="ml-auto d-flex">
+              <ActionsDropdown
+                commentOrPost={{
+                  ...reply,
+                  postType,
+                }}
+                actionHandlers={actionHandlers}
+              />
+            </div>
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
