@@ -28,6 +28,8 @@ export const selectIsCourseAdmin = state => state.config.isCourseAdmin;
 
 export const selectIsCourseStaff = state => state.config.isCourseStaff;
 
+export const selectEnableInContext = state => state.config.enableInContext;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,

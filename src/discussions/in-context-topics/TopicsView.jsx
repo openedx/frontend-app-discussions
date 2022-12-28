@@ -62,6 +62,7 @@ function TopicsView() {
   const loadingStatus = useSelector(selectLoadingStatus);
 
   useEffect(() => {
+    debugger;
     if (provider) {
       dispatch(fetchCourseTopicsV3(courseId));
     }

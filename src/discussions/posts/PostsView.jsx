@@ -53,6 +53,7 @@ function PostsView() {
     category,
     courseId,
     enableInContext,
+    enableInContextSidebar,
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
   const searchString = useSelector(({ threads }) => threads.filters.search);
@@ -62,10 +63,13 @@ function PostsView() {
   const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
 
   useEffect(() => {
+    debugger;
     if (isEmpty(topics)) {
-      dispatch(enableInContext ? fetchCourseTopicsV3(courseId) : fetchCourseTopics(courseId));
+      dispatch((enableInContext || enableInContextSidebar)
+        ? fetchCourseTopicsV3(courseId)
+        : fetchCourseTopics(courseId));
     }
-  }, []);
+  }, [topics]);
 
   let postsListComponent;
 

@@ -12,16 +12,18 @@ import { getConfig } from '@edx/frontend-platform';
 
 import { PostActionsBar } from '../../components';
 import { CourseTabsNavigation } from '../../components/NavigationBar';
+import { selectCourseTabs } from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useShowLearnersTab, useSidebarVisible,
 } from '../data/hooks';
-import { selectDiscussionProvider } from '../data/selectors';
+import { selectDiscussionProvider, selectEnableInContext } from '../data/selectors';
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
 import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
 import messages from '../messages';
 import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
+import { selectPostEditorVisible } from '../posts/data/selectors';
 import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
@@ -31,22 +33,22 @@ import InformationBanner from './InformationsBanner';
 export default function DiscussionsHome() {
   const location = useLocation();
   const postActionBarRef = useRef(null);
-  const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
-  const { courseNumber, courseTitle, org } = useSelector((state) => state.courseTabs);
+  const postEditorVisible = useSelector(selectPostEditorVisible);
   const provider = useSelector(selectDiscussionProvider);
-  const enableInContext = (provider === DiscussionProvider.OPEN_EDX);
+  const enableInContext = useSelector(selectEnableInContext);
+  const { courseNumber, courseTitle, org } = useSelector(selectCourseTabs);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
   const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();
-  let displaySidebar = useSidebarVisible(enableInContext);
+  let displaySidebar = useSidebarVisible();
+  const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
   const isFeedbackBannerVisible = getConfig().DISPLAY_FEEDBACK_BANNER === 'true';
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
-  const enableInContextSidebar = ((new URLSearchParams(location.search).get('inContextSidebar')
-    !== null) && enableInContext);
+
   useCourseDiscussionData(courseId);
   useRedirectToThread(courseId, enableInContextSidebar);
 
@@ -111,7 +113,7 @@ export default function DiscussionsHome() {
             <Switch>
               <Route
                 path={Routes.TOPICS.PATH}
-                component={(enableInContext && !enableInContextSidebar) ? InContextEmptyTopics : EmptyTopics}
+                component={(enableInContext || enableInContextSidebar) ? InContextEmptyTopics : EmptyTopics}
               />
               <Route
                 path={Routes.POSTS.MY_POSTS}

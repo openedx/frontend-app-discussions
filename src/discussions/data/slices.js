@@ -27,6 +27,7 @@ const configSlice = createSlice({
     reasonCodesEnabled: false,
     editReasons: [],
     postCloseReasons: [],
+    enableInContext: false,
   },
   reducers: {
     fetchConfigRequest: (state) => {

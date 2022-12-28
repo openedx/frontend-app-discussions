@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
@@ -6,6 +6,7 @@ import { useRouteMatch } from 'react-router';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { ALL_ROUTES } from '../../../data/constants';
+import { DiscussionContext } from '../../common/context';
 import { useIsOnDesktop } from '../../data/hooks';
 import { selectPostThreadCount } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
@@ -16,7 +17,7 @@ import { selectCourseWareThreadsCount, selectTotalTopicsThreadsCount } from '../
 function EmptyTopics({ intl }) {
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
-
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
   const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(match.params.category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
@@ -48,7 +49,9 @@ function EmptyTopics({ intl }) {
       fullWidth = true;
     }
   } else if (match.params.category) {
-    if (courseWareThreadsCount > 0) {
+    if (enableInContextSidebar && topicThreadsCount > 0) {
+      title = messages.noPostSelected;
+    } else if (courseWareThreadsCount > 0) {
       title = messages.noTopicSelected;
     } else {
       action = addPost;

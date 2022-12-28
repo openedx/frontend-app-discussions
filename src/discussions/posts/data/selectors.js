@@ -6,6 +6,8 @@ const selectThreads = state => state.threads.threadsById;
 
 const mapIdsToThreads = (ids, threads) => ids.map(id => threads?.[id]);
 
+export const selectPostEditorVisible = state => state.threads.postEditorVisible;
+
 export const selectTopicThreads = topicIds => createSelector(
   [
     state => (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || []),

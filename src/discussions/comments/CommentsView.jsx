@@ -176,6 +176,9 @@ function CommentsView({ intl }) {
       <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
     );
   }
+  console.log('back button', discussionsPath(PostsPages[page], {
+    courseId, learnerUsername, category, topicId,
+  })(location));
 
   return (
     <>

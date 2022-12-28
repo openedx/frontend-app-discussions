@@ -21,6 +21,7 @@ import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
   selectBlackoutDate,
+  selectEnableInContext,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectLearnersTabEnabled,
@@ -45,7 +46,8 @@ export function useTotalTopicThreadCount() {
   }, 0);
 }
 
-export const useSidebarVisible = (enableInContext) => {
+export const useSidebarVisible = () => {
+  const enableInContext = useSelector(selectEnableInContext);
   const isViewingTopics = useRouteMatch(Routes.TOPICS.ALL);
   const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
   const isFiltered = useSelector(selectAreThreadsFiltered);
