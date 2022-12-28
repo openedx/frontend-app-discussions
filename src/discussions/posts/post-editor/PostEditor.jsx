@@ -32,6 +32,7 @@ import {
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
+  selectEnableInContext,
 } from '../../data/selectors';
 import { EmptyPage } from '../../empty-posts';
 import {
@@ -99,8 +100,9 @@ function PostEditor({
     courseId,
     postId,
   } = useParams();
-  const { category, enableInContextSidebar, enableInContext } = useContext(DiscussionContext);
+  const { category, enableInContextSidebar } = useContext(DiscussionContext);
   const topicId = useCurrentDiscussionTopic();
+  const enableInContext = useSelector(selectEnableInContext);
   const nonCoursewareTopics = useSelector(enableInContext ? inContextNonCourseware : selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
   const coursewareTopics = useSelector(enableInContext ? inContextCourseware : selectCoursewareTopics);

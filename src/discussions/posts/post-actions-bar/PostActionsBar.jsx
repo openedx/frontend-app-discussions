@@ -13,7 +13,7 @@ import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
-import { selectconfigLoadingStatus } from '../../data/selectors';
+import { selectconfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
@@ -26,8 +26,9 @@ function PostActionsBar({
 }) {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
+  const enableInContext = useSelector(selectEnableInContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const { enableInContextSidebar, enableInContext, page } = useContext(DiscussionContext);
+  const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
   const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');

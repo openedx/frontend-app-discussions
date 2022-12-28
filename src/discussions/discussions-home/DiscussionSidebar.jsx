@@ -14,7 +14,7 @@ import { DiscussionContext } from '../common/context';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
-import { selectconfigLoadingStatus } from '../data/selectors';
+import { selectconfigLoadingStatus, selectEnableInContext } from '../data/selectors';
 import { TopicPostsView, TopicsView as InContextTopicsView } from '../in-context-topics';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
@@ -24,12 +24,13 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
+  const { enableInContextSidebar } = useContext(DiscussionContext);
+  const enableInContext = useSelector(selectEnableInContext);
   const configStatus = useSelector(selectconfigLoadingStatus);
   const redirectToLearnersTab = useShowLearnersTab();
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
   const { height: windowHeight } = useWindowSize();
-  const { enableInContext, enableInContextSidebar } = useContext(DiscussionContext);
 
   useEffect(() => {
     if (sidebarRef && postActionBarHeight && !enableInContextSidebar) {

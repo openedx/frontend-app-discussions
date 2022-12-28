@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SearchInfo from '../../components/SearchInfo';
 import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
 import { DiscussionContext } from '../common/context';
+import { selectEnableInContext } from '../data/selectors';
 import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
 import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
 import { selectTopics } from '../topics/data/selectors';
@@ -52,10 +53,10 @@ function PostsView() {
     topicId,
     category,
     courseId,
-    enableInContext,
     enableInContextSidebar,
   } = useContext(DiscussionContext);
   const dispatch = useDispatch();
+  const enableInContext = useSelector(selectEnableInContext);
   const searchString = useSelector(({ threads }) => threads.filters.search);
   const resultsFound = useSelector(({ threads }) => threads.totalThreads);
   const textSearchRewrite = useSelector(({ threads }) => threads.textSearchRewrite);
@@ -63,7 +64,6 @@ function PostsView() {
   const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
 
   useEffect(() => {
-    debugger;
     if (isEmpty(topics)) {
       dispatch((enableInContext || enableInContextSidebar)
         ? fetchCourseTopicsV3(courseId)

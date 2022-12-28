@@ -28,7 +28,7 @@ import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
-import InformationBanner from './InformationsBanner';
+import InformationBanner from './InformationBanner';
 
 export default function DiscussionsHome() {
   const location = useLocation();
@@ -74,7 +74,6 @@ export default function DiscussionsHome() {
       courseId,
       postId,
       topicId,
-      enableInContext,
       enableInContextSidebar,
       category,
       learnerUsername,
