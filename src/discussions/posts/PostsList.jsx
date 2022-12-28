@@ -90,7 +90,7 @@ function PostsList({
       {postInstances(unpinnedPosts)}
       {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS ? (
-        <div className="d-flex justify-content-center p-4">
+        <div className="d-flex justify-content-center p-4 mx-auto my-auto">
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
       ) : (
