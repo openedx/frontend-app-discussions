@@ -13,21 +13,25 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { Routes, ThreadType } from '../../data/constants';
+import { getApiBaseUrl, Routes, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
+import { executeThunk } from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import { getCoursesApiUrl } from '../learners/data/api';
+import { fetchCourseTopics } from '../topics/data/thunks';
 import { getThreadsApiUrl } from './data/api';
 import { PostsView } from './index';
 
 import './data/__factories__';
 import '../cohorts/data/__factories__';
+import '../topics/data/__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const coursesApiUrl = getCoursesApiUrl();
 const threadsApiUrl = getThreadsApiUrl();
+const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
 let store;
 let axiosMock;
 const username = 'abc123';
@@ -105,6 +109,12 @@ describe('PostsView', () => {
           threadAttrs,
           pageSize: 6,
         })];
+      });
+    axiosMock
+      .onGet(topicsApiUrl)
+      .reply(200, {
+        courseware_topics: Factory.buildList('category', 2),
+        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw' }),
       });
   });
 
@@ -196,6 +206,8 @@ describe('PostsView', () => {
 
     beforeEach(async () => {
       setupStore();
+      await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+
       await act(async () => {
         await renderComponent();
       });
