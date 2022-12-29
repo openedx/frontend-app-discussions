@@ -2,7 +2,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { getCourseTopics, getCourseTopicsV2 } from './api';
+import { getCourseTopics } from './api';
 import { fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess } from './slices';
 
 function normaliseTopics(data) {
@@ -25,23 +25,6 @@ function normaliseTopics(data) {
   };
 }
 
-function normaliseTopicsV2(data) {
-  const nonCoursewareIds = [];
-  const topics = {};
-  const archivedIds = [];
-  data.forEach(topic => {
-    if (!topic.enabledInContext) {
-      archivedIds.push(topic.id);
-    } else if (topic.usageKey === null) {
-      nonCoursewareIds.push(topic.id);
-    }
-    topics[topic.id] = topic;
-  });
-  return {
-    topics, nonCoursewareIds, archivedIds,
-  };
-}
-
 export function fetchCourseTopics(courseId) {
   return async (dispatch) => {
     try {
@@ -49,19 +32,6 @@ export function fetchCourseTopics(courseId) {
 
       const data = normaliseTopics(camelCaseObject(await getCourseTopics(courseId)));
       dispatch(fetchCourseTopicsSuccess(data));
-    } catch (error) {
-      dispatch(fetchCourseTopicsFailed());
-      logError(error);
-    }
-  };
-}
-
-export function fetchCourseTopicsV2(courseId) {
-  return async (dispatch) => {
-    try {
-      dispatch(fetchCourseTopicsRequest({ courseId }));
-      const data = await getCourseTopicsV2(courseId);
-      dispatch(fetchCourseTopicsSuccess(normaliseTopicsV2(camelCaseObject(data))));
     } catch (error) {
       dispatch(fetchCourseTopicsFailed());
       logError(error);

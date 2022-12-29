@@ -4,17 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import SearchInfo from '../../components/SearchInfo';
-import { DiscussionProvider, RequestStatus } from '../../data/constants';
-import { selectSequences } from '../../data/selectors';
+import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import NoResults from '../posts/NoResults';
+import { handleKeyDown } from '../utils';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
 import { setFilter, setTopicsCount } from './data/slices';
 import { fetchCourseTopics } from './data/thunks';
-import ArchivedTopicGroup from './topic-group/ArchivedTopicGroup';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
-import SequenceTopicGroup from './topic-group/SequenceTopicGroup';
 import Topic from './topic-group/topic/Topic';
 import countFilteredTopics from './utils';
 
@@ -36,24 +34,6 @@ function CourseWideTopics() {
         showDivider={(filteredNonCoursewareTopics.length - 1) !== index}
       />
     ));
-}
-
-function CoursewareTopics() {
-  const sequences = useSelector(selectSequences);
-
-  return (
-    <>
-      { sequences?.map(
-        sequence => (
-          <SequenceTopicGroup
-            sequence={sequence}
-            key={sequence.id}
-          />
-        ),
-      )}
-      <ArchivedTopicGroup />
-    </>
-  );
 }
 
 function LegacyCoursewareTopics() {
@@ -81,20 +61,6 @@ function TopicsView() {
   const { courseId } = useContext(DiscussionContext);
   const dispatch = useDispatch();
 
-  const handleKeyDown = (event) => {
-    const { key } = event;
-    if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
-    const option = event.target;
-
-    let selectedOption;
-    if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
-    if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
-
-    if (selectedOption) {
-      selectedOption.focus();
-    }
-  };
-
   useEffect(() => {
     // Don't load till the provider information is available
     if (provider) {
@@ -119,8 +85,7 @@ function TopicsView() {
       )}
       <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
         <CourseWideTopics />
-        {provider === DiscussionProvider.OPEN_EDX && <CoursewareTopics />}
-        {provider === DiscussionProvider.LEGACY && <LegacyCoursewareTopics />}
+        <LegacyCoursewareTopics />
       </div>
       {
         filteredTopicsCount === 0

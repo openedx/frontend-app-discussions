@@ -11,8 +11,6 @@ const topicsSlice = createSlice({
     categoryIds: [],
     // List of all non-courseware topics
     nonCoursewareIds: [],
-    // Topics that have been archived
-    archivedIds: [],
     // Mapping of all topics in each category
     topicsInCategory: {},
     // Map of topics ids to topic data
@@ -32,7 +30,6 @@ const topicsSlice = createSlice({
       state.topics = payload.topics;
       state.nonCoursewareIds = payload.nonCoursewareIds;
       state.categoryIds = payload.categoryIds;
-      state.archivedIds = payload.archivedIds;
       state.topicsInCategory = payload.topicsInCategory;
     },
     fetchCourseTopicsFailed: (state) => {
