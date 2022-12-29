@@ -24,7 +24,6 @@ function TopicsList() {
   const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
-  console.log('TopicsList');
 
   return (
     <>
@@ -66,7 +65,6 @@ function TopicsView() {
       dispatch(fetchCourseTopicsV3(courseId));
     }
   }, [provider]);
-  console.log('TopicsView');
 
   return (
     <div className="d-flex flex-column h-100" data-testid="inContext-topics-view">

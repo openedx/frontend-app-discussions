@@ -32,7 +32,6 @@ function TopicSearchBar({ intl }) {
   };
 
   useEffect(() => onClear(), [page]);
-  console.log('TopicSearchBar');
 
   return (
     <>

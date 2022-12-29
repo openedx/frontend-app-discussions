@@ -32,7 +32,6 @@ function Topic({
     courseId,
     topicId: topic.id,
   });
-  console.log('topic', topic);
 
   return (
     <>

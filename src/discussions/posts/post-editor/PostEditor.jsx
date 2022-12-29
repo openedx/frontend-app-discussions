@@ -115,10 +115,6 @@ function PostEditor({
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
 
-  console.log('nonCoursewareTopics', nonCoursewareTopics);
-  console.log('nonCoursewareIds', nonCoursewareIds);
-  console.log('coursewareTopics', coursewareTopics);
-
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
     && post?.author !== authenticatedUser.username

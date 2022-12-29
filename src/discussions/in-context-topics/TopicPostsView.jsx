@@ -28,9 +28,6 @@ function TopicPostsView({ intl }) {
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
 
-  console.log('selectedSubsectionUnits', selectedSubsectionUnits);
-  console.log('TopicPostsView', topicId, category);
-
   return (
     <div className="discussion-posts d-flex flex-column h-100">
       {topicId ? (

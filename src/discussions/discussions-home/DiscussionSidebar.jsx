@@ -42,7 +42,6 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, enableInContextSidebar]);
 
-  console.log('displaySidebar', (enableInContext && !enableInContextSidebar), displaySidebar);
   return (
     <div
       ref={sidebarRef}

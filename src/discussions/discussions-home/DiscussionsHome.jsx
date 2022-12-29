@@ -64,10 +64,6 @@ export default function DiscussionsHome() {
     }
   }, [path]);
 
-  console.log('useSidebarVisible', displaySidebar);
-  console.log('enableInContextSidebar', enableInContextSidebar);
-  console.log('enableInContext', enableInContext);
-
   return (
     <DiscussionContext.Provider value={{
       page,

@@ -10,7 +10,6 @@ import messages from '../messages';
 
 function TopicSearchResultBar({ intl }) {
   const dispatch = useDispatch();
-  console.log('TopicSearchResultBar', TopicSearchResultBar);
 
   return (
     <div className="d-flex flex-row p-1 align-items-center">

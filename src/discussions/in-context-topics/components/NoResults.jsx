@@ -13,7 +13,6 @@ function NoResults({ intl }) {
   if (topics.length === 0) {
     title = messages.noTopicExists;
   }
-  console.log('NoResults', topics);
 
   return (
     <div className="h-100 mt-5 align-self-center mx-auto w-50 d-flex flex-column justify-content-center text-center">

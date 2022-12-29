@@ -22,7 +22,6 @@ function EmptyTopics({ intl }) {
   const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(match.params.category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
 
-  console.log('topicThreadCount', topicThreadsCount);
   function addPost() {
     return dispatch(showPostEditor());
   }

@@ -80,7 +80,7 @@ function PostsView() {
   } else {
     postsListComponent = <AllPostsList />;
   }
-  console.log('PostsView');
+
   return (
     <div className="discussion-posts d-flex flex-column h-100">
       {searchString && (

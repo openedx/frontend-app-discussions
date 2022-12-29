@@ -52,7 +52,6 @@ function LegacyCoursewareTopics() {
 }
 
 function TopicsView() {
-  console.log('legacy TopicsView');
   const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
   const topicsSelector = useSelector(({ topics }) => topics);

@@ -25,7 +25,6 @@ function SectionBaseGroup({
     courseId,
     category: id,
   });
-  console.log('section', section);
 
   return (
     <div
