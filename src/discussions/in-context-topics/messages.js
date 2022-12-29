@@ -40,17 +40,17 @@ const messages = defineMessages({
     description: 'Placeholder text in search bar',
   },
   unnamedSection: {
-    id: 'discussions.topics.unnamed.label',
+    id: 'discussions.topics.unnamed.section.label',
     defaultMessage: 'Unnamed Section',
     description: 'Text to display in place of section name if section name is empty',
   },
   unnamedSubsection: {
-    id: 'discussions.topics.unnamed.label',
+    id: 'discussions.topics.unnamed.subsection.label',
     defaultMessage: 'Unnamed Subsection',
     description: 'Text to display in place of subsection name if subsection name is empty',
   },
   unnamedTopic: {
-    id: 'discussions.subtopics.unnamed.label',
+    id: 'discussions.subtopics.unnamed.topic.label',
     defaultMessage: 'Unnamed Topic',
     description: 'Text to display in place of topic name if topic name is empty',
   },
