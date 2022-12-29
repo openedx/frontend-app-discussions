@@ -28,11 +28,11 @@ import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
   selectDivisionSettings,
+  selectEnableInContext,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
-  selectEnableInContext,
 } from '../../data/selectors';
 import { EmptyPage } from '../../empty-posts';
 import {
@@ -247,6 +247,10 @@ function PostEditor({
 
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
 
+  const handleInContextSelectLabel = (section, subsection) => (
+    `${section.displayName} / ${subsection.displayName}` || intl.formatMessage(messages.unnamedTopics)
+  );
+
   return (
     <Formik
       enableReinitialize
@@ -316,9 +320,7 @@ function PostEditor({
                   coursewareTopics?.map(section => (
                       section?.children?.map(subsection => (
                         <optgroup
-                          label={`${section.displayName} / ${subsection.displayName}`
-                            || intl.formatMessage(messages.unnamedTopics)
-                          }
+                          label={handleInContextSelectLabel(section, subsection)}
                           key={subsection.id}
                         >
                           {subsection?.children?.map(unit => (
