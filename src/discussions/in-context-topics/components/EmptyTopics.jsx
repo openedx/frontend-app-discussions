@@ -18,9 +18,10 @@ function EmptyTopics({ intl }) {
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
   const { enableInContextSidebar } = useContext(DiscussionContext);
-  const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
   const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(match.params.category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
+  // hasGlobalThreads is used to determine if there are any post available in courseware and non-courseware topics
+  const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
 
   function addPost() {
     return dispatch(showPostEditor());
@@ -67,9 +68,9 @@ function EmptyTopics({ intl }) {
   return (
     <EmptyPage
       title={intl.formatMessage(title)}
-      subTitle={subTitle ? intl.formatMessage(subTitle) : null}
+      subTitle={subTitle && intl.formatMessage(subTitle)}
       action={action}
-      actionText={actionText ? intl.formatMessage(actionText) : null}
+      actionText={actionText && intl.formatMessage(actionText)}
       fullWidth={fullWidth}
     />
   );

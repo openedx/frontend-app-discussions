@@ -28,18 +28,18 @@ function TopicPostsView({ intl }) {
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
 
+  const backButtonPath = () => {
+    const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
+    const params = selectedUnit ? { courseId, category: selectedUnit?.parentId } : { courseId };
+    return discussionsPath(path, params)(location);
+  };
+
   return (
     <div className="discussion-posts d-flex flex-column h-100">
       {topicId ? (
         <BackButton
-          path={discussionsPath(
-            selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL,
-            selectedUnit ? { courseId, category: selectedUnit?.parentId } : { courseId },
-          )(location)}
-          title={
-            selectedUnit?.name || selectedNonCoursewareTopic?.name
-            || intl.formatMessage(messages.unnamedTopic)
-          }
+          path={backButtonPath()}
+          title={selectedUnit?.name || selectedNonCoursewareTopic?.name || intl.formatMessage(messages.unnamedTopic)}
         />
       ) : (
         <BackButton

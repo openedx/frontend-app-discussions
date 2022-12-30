@@ -18,7 +18,7 @@ import { selectconfigLoadingStatus, selectEnableInContext } from '../data/select
 import { TopicPostsView, TopicsView as InContextTopicsView } from '../in-context-topics';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
-import { TopicsView } from '../topics';
+import { TopicsView as LegacyTopicsView } from '../topics';
 
 export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
   const location = useLocation();
@@ -79,7 +79,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
           path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
           component={PostsView}
         />
-        <Route path={Routes.TOPICS.PATH} component={TopicsView} />
+        <Route path={Routes.TOPICS.PATH} component={LegacyTopicsView} />
         {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
         )}

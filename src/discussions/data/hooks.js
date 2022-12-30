@@ -54,14 +54,13 @@ export const useSidebarVisible = () => {
   const totalThreads = useSelector(selectPostThreadCount);
   const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
   const isIncontextTopicsView = Boolean(useRouteMatch(Routes.TOPICS.PATH) && enableInContext);
+  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics?.isExact || isViewingLearners));
 
   if (isIncontextTopicsView) {
     return true;
-  } if ((isThreadsEmpty && !isFiltered && !(isViewingTopics?.isExact || isViewingLearners))) {
-    return false;
   }
 
-  return true;
+  return !hideSidebar;
 };
 
 export function useCourseDiscussionData(courseId) {
