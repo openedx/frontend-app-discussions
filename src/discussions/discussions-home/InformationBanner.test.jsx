@@ -8,7 +8,7 @@ import { initializeStore } from '../../store';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import messages from '../messages';
-import InformationBanner from './InformationsBanner';
+import InformationBanner from './InformationBanner';
 
 import '../posts/data/__factories__';
 

@@ -159,7 +159,7 @@ function CommentsView({ intl }) {
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const {
-    courseId, learnerUsername, category, topicId, page, inContext,
+    courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
 
   useEffect(() => {
@@ -180,7 +180,7 @@ function CommentsView({ intl }) {
   return (
     <>
       {!isOnDesktop && (
-        inContext ? (
+        enableInContextSidebar ? (
           <>
             <div className="px-4 py-1.5 bg-white">
               <Button
@@ -212,8 +212,8 @@ function CommentsView({ intl }) {
         )
       )}
       <div className={classNames('discussion-comments d-flex flex-column card', {
-        'm-4 p-4.5': !inContext,
-        'p-4 rounded-0 border-0 mb-4': inContext,
+        'm-4 p-4.5': !enableInContextSidebar,
+        'p-4 rounded-0 border-0 mb-4': enableInContextSidebar,
       })}
       >
         <Post post={thread} />

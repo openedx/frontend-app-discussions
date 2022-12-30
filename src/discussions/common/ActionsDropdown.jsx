@@ -27,7 +27,7 @@ function ActionsDropdown({
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
   const actions = useActions(commentOrPost);
-  const { inContext } = useContext(DiscussionContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const handleActions = (action) => {
     const actionFunction = actionHandlers[action];
     if (actionFunction) {
@@ -57,7 +57,7 @@ function ActionsDropdown({
           onClose={close}
           positionRef={target}
           isOpen={isOpen}
-          placement={inContext ? 'left' : 'auto-start'}
+          placement={enableInContextSidebar ? 'left' : 'auto-start'}
         >
           <div
             className="bg-white p-1 shadow d-flex flex-column"

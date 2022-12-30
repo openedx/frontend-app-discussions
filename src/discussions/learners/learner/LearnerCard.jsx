@@ -16,9 +16,9 @@ function LearnerCard({
   learner,
   courseId,
 }) {
-  const { inContext, learnerUsername } = useContext(DiscussionContext);
+  const { enableInContextSidebar, learnerUsername } = useContext(DiscussionContext);
   const linkUrl = discussionsPath(Routes.LEARNERS.POSTS, {
-    0: inContext ? 'in-context' : undefined,
+    0: enableInContextSidebar ? 'in-context' : undefined,
     learnerUsername: learner.username,
     courseId,
   });

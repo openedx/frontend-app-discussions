@@ -281,3 +281,17 @@ export function inBlackoutDateRange(blackoutDateRanges) {
     (blackoutDateRange) => dateInDateRange(now, new Date(blackoutDateRange.start), new Date(blackoutDateRange.end)),
   );
 }
+
+export function handleKeyDown(event) {
+  const { key } = event;
+  if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
+  const option = event.target;
+
+  let selectedOption;
+  if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
+  if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
+
+  if (selectedOption) {
+    selectedOption.focus();
+  }
+}

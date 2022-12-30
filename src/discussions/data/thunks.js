@@ -3,7 +3,7 @@ import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
 import {
-  LearnersOrdering,
+  DiscussionProvider, LearnersOrdering,
   PostsStatusFilter,
 } from '../../data/constants';
 import { setSortedBy } from '../learners/data';
@@ -36,7 +36,10 @@ export function fetchCourseConfig(courseId) {
         learnerSort = LearnersOrdering.BY_FLAG;
       }
 
-      dispatch(fetchConfigSuccess(camelCaseObject(config)));
+      dispatch(fetchConfigSuccess(camelCaseObject({
+        ...config,
+        enable_in_context: config.provider === DiscussionProvider.OPEN_EDX,
+      })));
       dispatch(setSortedBy(learnerSort));
       dispatch(setStatusFilter(postsFilterStatus));
     } catch (error) {

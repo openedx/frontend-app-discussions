@@ -52,7 +52,11 @@ function EmptyPosts({ intl, subTitleMessage }) {
 }
 
 EmptyPosts.propTypes = {
-  subTitleMessage: propTypes.string.isRequired,
+  subTitleMessage: propTypes.shape({
+    id: propTypes.string,
+    defaultMessage: propTypes.string,
+    description: propTypes.string,
+  }).isRequired,
   intl: intlShape.isRequired,
 };
 

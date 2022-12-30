@@ -16,7 +16,7 @@ function ResponseEditor({
   intl,
   addWrappingDiv,
 }) {
-  const { inContext } = useContext(DiscussionContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const [addingResponse, setAddingResponse] = useState(false);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
@@ -38,7 +38,7 @@ function ResponseEditor({
       <div className={classNames({ 'mb-4': addWrappingDiv }, 'actions d-flex')}>
         <Button
           variant="primary"
-          className={classNames('px-2.5 py-2 font-size-14', { 'w-100': inContext })}
+          className={classNames('px-2.5 py-2 font-size-14', { 'w-100': enableInContextSidebar })}
           onClick={() => setAddingResponse(true)}
           style={{
             lineHeight: '20px',

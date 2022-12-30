@@ -1,25 +1,18 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { RequestStatus, TopicOrdering } from '../../../data/constants';
+import { RequestStatus } from '../../../data/constants';
 
 const topicsSlice = createSlice({
-  name: 'courseTopics',
+  name: 'inContextTopics',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    // List of all category ids
-    categoryIds: [],
-    // List of all non-courseware topics
+    topics: [],
+    coursewareTopics: [],
+    nonCoursewareTopics: [],
     nonCoursewareIds: [],
-    // Mapping of all topics in each category
-    topicsInCategory: {},
-    // Map of topics ids to topic data
-    topics: {},
+    units: [],
     filter: '',
-    sortBy: TopicOrdering.BY_COURSE_STRUCTURE,
-    results: {
-      count: 0,
-    },
   },
   reducers: {
     fetchCourseTopicsRequest: (state) => {
@@ -28,9 +21,10 @@ const topicsSlice = createSlice({
     fetchCourseTopicsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.topics = payload.topics;
+      state.coursewareTopics = payload.coursewareTopics;
+      state.nonCoursewareTopics = payload.nonCoursewareTopics;
       state.nonCoursewareIds = payload.nonCoursewareIds;
-      state.categoryIds = payload.categoryIds;
-      state.topicsInCategory = payload.topicsInCategory;
+      state.units = payload.units;
     },
     fetchCourseTopicsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -41,12 +35,6 @@ const topicsSlice = createSlice({
     setFilter: (state, { payload }) => {
       state.filter = payload;
     },
-    setSortBy: (state, { payload }) => {
-      state.sortBy = payload;
-    },
-    setTopicsCount: (state, { payload }) => {
-      state.results.count = payload;
-    },
   },
 });
 
@@ -56,7 +44,6 @@ export const {
   fetchCourseTopicsFailed,
   setFilter,
   setSortBy,
-  setTopicsCount,
 } = topicsSlice.actions;
 
-export const topicsReducer = topicsSlice.reducer;
+export const inContextTopicsReducer = topicsSlice.reducer;

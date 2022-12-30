@@ -16,12 +16,12 @@ import { fetchCourseBlocks } from '../../data/thunks';
 import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
-import { selectTopics, topicsLoadingStatus } from '../topics/data/selectors';
-import { fetchCourseTopics } from '../topics/data/thunks';
+import { selectTopics } from '../topics/data/selectors';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
   selectBlackoutDate,
+  selectEnableInContext,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectLearnersTabEnabled,
@@ -47,33 +47,20 @@ export function useTotalTopicThreadCount() {
 }
 
 export const useSidebarVisible = () => {
-  const isFiltered = useSelector(selectAreThreadsFiltered);
-  const totalThreads = useSelector(selectPostThreadCount);
-  const threadsCallStatus = useSelector(threadsLoadingStatus);
-  const isViewingSpecificTopic = useRouteMatch(Routes.TOPICS.TOPIC);
+  const enableInContext = useSelector(selectEnableInContext);
   const isViewingTopics = useRouteMatch(Routes.TOPICS.ALL);
   const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
-  const topicsLoading = useSelector(topicsLoadingStatus);
+  const isFiltered = useSelector(selectAreThreadsFiltered);
+  const totalThreads = useSelector(selectPostThreadCount);
+  const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
+  const isIncontextTopicsView = Boolean(useRouteMatch(Routes.TOPICS.PATH) && enableInContext);
+  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics?.isExact || isViewingLearners));
 
-  if (
-    isViewingSpecificTopic
-    && isViewingSpecificTopic.isExact
-    && totalThreads > 0
-    && topicsLoading === RequestStatus.SUCCESSFUL
-    && threadsCallStatus === RequestStatus.SUCCESSFUL
-  ) {
-    return false;
-  }
-
-  if (isFiltered) {
+  if (isIncontextTopicsView) {
     return true;
   }
 
-  if ((isViewingTopics && isViewingTopics.isExact) || isViewingLearners) {
-    return true;
-  }
-
-  return totalThreads > 0;
+  return !hideSidebar;
 };
 
 export function useCourseDiscussionData(courseId) {
@@ -83,7 +70,6 @@ export function useCourseDiscussionData(courseId) {
   useEffect(() => {
     async function fetchBaseData() {
       await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseTopics(courseId));
       await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
     }
 
@@ -91,7 +77,7 @@ export function useCourseDiscussionData(courseId) {
   }, [courseId]);
 }
 
-export function useRedirectToThread(courseId, inContext) {
+export function useRedirectToThread(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
@@ -104,7 +90,7 @@ export function useRedirectToThread(courseId, inContext) {
     // stored in redirectToThread
     if (redirectToThread) {
       dispatch(clearRedirect());
-      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[inContext ? 'topics' : 'my-posts'], {
+      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[enableInContextSidebar ? 'topics' : 'my-posts'], {
         courseId,
         postId: redirectToThread.threadId,
         topicId: redirectToThread.topicId,

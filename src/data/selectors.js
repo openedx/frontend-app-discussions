@@ -38,12 +38,6 @@ export const selectTopicsUnderCategory = createSelector(
   ),
 );
 
-export const selectSequences = createSelector(
-  selectChapters,
-  selectBlocks,
-  (chapterIds, blocks) => chapterIds?.flatMap(cId => blocks[cId].children.map(seqId => blocks[seqId])) || [],
-);
-
 export const selectArchivedTopics = createSelector(
   state => state.topics.topics,
   state => state.topics.archivedIds || [],
