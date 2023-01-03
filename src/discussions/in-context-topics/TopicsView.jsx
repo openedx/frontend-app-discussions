@@ -9,7 +9,8 @@ import { Spinner } from '@edx/paragon';
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
-import { selectDiscussionProvider } from '../data/selectors';
+import { selectAreThreadsFiltered, selectDiscussionProvider } from '../data/selectors';
+import { clearFilter, clearSort } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
 import {
@@ -66,12 +67,20 @@ function TopicsView() {
   const topicFilter = useSelector(selectTopicFilter);
   const filteredTopics = useSelector(selectFilteredTopics);
   const loadingStatus = useSelector(selectLoadingStatus);
+  const isPostsFiltered = useSelector(selectAreThreadsFiltered);
 
   useEffect(() => {
     if (provider) {
       dispatch(fetchCourseTopicsV3(courseId));
     }
   }, [provider]);
+
+  useEffect(() => {
+    if (isPostsFiltered) {
+      dispatch(clearFilter());
+      dispatch(clearSort());
+    }
+  }, [isPostsFiltered]);
 
   return (
     <div className="d-flex flex-column h-100" data-testid="inContext-topics-view">

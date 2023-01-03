@@ -217,6 +217,19 @@ const threadsSlice = createSlice({
     clearRedirect: (state) => {
       state.redirectToThread = null;
     },
+    clearFilter: (state) => {
+      state.filters = {
+        status: PostsStatusFilter.ALL,
+        postType: ThreadType.ALL,
+        cohort: '',
+        search: '',
+      };
+      state.pages = [];
+    },
+    clearSort: (state) => {
+      state.sortedBy = ThreadOrdering.BY_LAST_ACTIVITY;
+      state.pages = [];
+    },
   },
 });
 
@@ -253,6 +266,8 @@ export const {
   hidePostEditor,
   clearRedirect,
   clearPostsPages,
+  clearFilter,
+  clearSort,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;
