@@ -25,6 +25,15 @@ export const selectSubsection = category => createSelector(
   ),
 );
 
+export const selectArchivedTopics = state => state.inContextTopics.archivedTopics;
+
+export const selectArchivedTopic = topic => createSelector(
+  selectArchivedTopics,
+  (archivedTopics) => (
+    archivedTopics?.find((archivedTopic) => archivedTopic.id === topic)
+  ),
+);
+
 export const selectLoadingStatus = state => state.inContextTopics.status;
 
 export const selectFilteredTopics = createSelector(

@@ -12,7 +12,8 @@ import { selectTopicThreads } from '../posts/data/selectors';
 import PostsList from '../posts/PostsList';
 import { discussionsPath, handleKeyDown } from '../utils';
 import {
-  selectLoadingStatus, selectNonCoursewareTopics, selectSubsection, selectSubsectionUnits, selectUnits,
+  selectArchivedTopic, selectLoadingStatus, selectNonCoursewareTopics,
+  selectSubsection, selectSubsectionUnits, selectUnits,
 } from './data/selectors';
 import { BackButton, NoResults } from './components';
 import messages from './messages';
@@ -27,6 +28,7 @@ function TopicPostsView({ intl }) {
   const selectedSubsection = useSelector(selectSubsection(category));
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
+  const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
 
   const backButtonPath = () => {
     const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
@@ -39,7 +41,8 @@ function TopicPostsView({ intl }) {
       {topicId ? (
         <BackButton
           path={backButtonPath()}
-          title={selectedUnit?.name || selectedNonCoursewareTopic?.name || intl.formatMessage(messages.unnamedTopic)}
+          title={selectedUnit?.name || selectedNonCoursewareTopic?.name || selectedArchivedTopic?.name
+            || intl.formatMessage(messages.unnamedTopic)}
         />
       ) : (
         <BackButton
