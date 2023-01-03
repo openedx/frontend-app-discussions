@@ -47,7 +47,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
       ref={sidebarRef}
       className={classNames('flex-column position-sticky', {
         'd-none': !displaySidebar,
-        'd-flex overflow-auto': displaySidebar,
+        'd-flex overflow-auto box-shadow-centered-1': displaySidebar,
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,

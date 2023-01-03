@@ -15,8 +15,8 @@ import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import messages from './messages';
-import PostFooter from './PostFooter';
 import { PostAvatar } from './PostHeader';
+import PostSummaryFooter from './PostSummaryFooter';
 import { postShape } from './proptypes';
 
 function PostLink({
@@ -56,20 +56,17 @@ function PostLink({
         }
         to={linkUrl}
         onClick={() => isSelected(post.id)}
-        style={{ lineHeight: '22px' }}
         aria-current={isSelected(post.id) ? 'page' : undefined}
         role="option"
         tabIndex={(isSelected(post.id) || idx === 0) ? 0 : -1}
       >
         <div
           className={
-            classNames('d-flex flex-row pt-2.5 pb-2 px-4 border-primary-500 position-relative',
-              { 'bg-light-300': read })
+            classNames('d-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
+              { 'bg-light-300': read },
+              { 'post-summary-card-selected': post.id === postId })
           }
-          style={post.id === postId ? {
-            borderRightWidth: '4px',
-            borderRightStyle: 'solid',
-          } : null}
+          style={{ height: '87px' }}
         >
           <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={read} />
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
@@ -100,20 +97,20 @@ function PostLink({
                 )}
 
                 {canSeeReportedBadge && (
-                <Badge
-                  variant="danger"
-                  data-testid="reported-post"
-                  className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-                >
-                  {intl.formatMessage(messages.contentReported)}
-                  <span className="sr-only">{' '}reported</span>
-                </Badge>
+                  <Badge
+                    variant="danger"
+                    data-testid="reported-post"
+                    className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                  >
+                    {intl.formatMessage(messages.contentReported)}
+                    <span className="sr-only">{' '}reported</span>
+                  </Badge>
                 )}
 
                 {post.pinned && (
                 <Icon
                   src={PushPin}
-                  className={`icon-size ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                  className={`post-summary-icons-dimensions text-gray-700 ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
                 />
                 )}
               </div>
@@ -123,7 +120,7 @@ function PostLink({
               authorLabel={post.authorLabel}
               labelColor={authorLabelColor && `text-${authorLabelColor}`}
             />
-            <PostFooter post={post} preview intl={intl} showNewCountLabel={read} />
+            <PostSummaryFooter post={post} preview showNewCountLabel={read} />
           </div>
         </div>
         {!showDivider && post.pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}

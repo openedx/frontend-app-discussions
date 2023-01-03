@@ -131,6 +131,16 @@ const messages = defineMessages({
     defaultMessage: 'No preview available',
     description: 'No preview available',
   },
+  srOnlyFollowDescription: {
+    id: 'discussions.post.follow.description',
+    defaultMessage: 'you are following this post',
+    description: 'tell screen readers if user is following a post',
+  },
+  srOnlyUnFollowDescription: {
+    id: 'discussions.post.unfollow.description',
+    defaultMessage: 'you are not following this post',
+    description: 'tell screen readers if user is not following a post',
+  },
 });
 
 export default messages;
