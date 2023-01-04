@@ -185,8 +185,8 @@ const messages = defineMessages({
   },
   blackoutDiscussionInformation: {
     id: 'discussion.blackoutBanner.information',
-    defaultMessage: 'Blackout dates are currently active. Posting in discussions is unavailable at this time.',
-    description: 'Informative text when discussions blackout is active',
+    defaultMessage: 'Posting in discussions is temporarily disabled by the course team',
+    description: 'Informative text when discussion posting is disabled',
   },
   imageWarningMessage: {
     id: 'discussions.editor.image.warning.message',
