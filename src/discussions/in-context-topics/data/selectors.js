@@ -18,6 +18,22 @@ export const selectSubsectionUnits = subsectionId => state => state.inContextTop
   unit => unit.parentId === subsectionId,
 );
 
+export const selectSubsection = category => createSelector(
+  selectCoursewareTopics,
+  (coursewareTopics) => (
+    coursewareTopics?.map((topic) => topic?.children)?.flat()?.find((topic) => topic.id === category)
+  ),
+);
+
+export const selectArchivedTopics = state => state.inContextTopics.archivedTopics;
+
+export const selectArchivedTopic = topic => createSelector(
+  selectArchivedTopics,
+  (archivedTopics) => (
+    archivedTopics?.find((archivedTopic) => archivedTopic.id === topic)
+  ),
+);
+
 export const selectLoadingStatus = state => state.inContextTopics.status;
 
 export const selectFilteredTopics = createSelector(

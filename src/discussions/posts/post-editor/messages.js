@@ -136,6 +136,11 @@ const messages = defineMessages({
     defaultMessage: 'Thread not found',
     description: 'message to show on screen if the request thread is not found in course',
   },
+  archivedTopics: {
+    id: 'discussions.topics.archived.label',
+    defaultMessage: 'Archived',
+    description: 'Heading for displaying topics that are archived.',
+  },
 });
 
 export default messages;

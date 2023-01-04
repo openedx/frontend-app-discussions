@@ -69,6 +69,11 @@ const messages = defineMessages({
     defaultMessage: 'Nothing here yet',
     description: 'Helping Text to display if nothing here yet',
   },
+  archivedTopics: {
+    id: 'discussions.topics.archived.label',
+    defaultMessage: 'Archived',
+    description: 'Heading for displaying topics that are archived.',
+  },
 });
 
 export default messages;

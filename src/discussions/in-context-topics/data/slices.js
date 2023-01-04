@@ -12,6 +12,7 @@ const topicsSlice = createSlice({
     nonCoursewareTopics: [],
     nonCoursewareIds: [],
     units: [],
+    archivedTopics: [],
     filter: '',
   },
   reducers: {
@@ -25,6 +26,7 @@ const topicsSlice = createSlice({
       state.nonCoursewareTopics = payload.nonCoursewareTopics;
       state.nonCoursewareIds = payload.nonCoursewareIds;
       state.units = payload.units;
+      state.archivedTopics = payload.archivedTopics;
     },
     fetchCourseTopicsFailed: (state) => {
       state.status = RequestStatus.FAILED;

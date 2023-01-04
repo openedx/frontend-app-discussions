@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 
 import classNames from 'classnames';
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Spinner } from '@edx/paragon';
@@ -8,22 +9,23 @@ import { Spinner } from '@edx/paragon';
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
-import { selectDiscussionProvider } from '../data/selectors';
+import { selectAreThreadsFiltered, selectDiscussionProvider } from '../data/selectors';
+import { clearFilter, clearSort } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
 import {
-  selectCoursewareTopics,
-  selectFilteredTopics, selectLoadingStatus,
+  selectArchivedTopics, selectCoursewareTopics, selectFilteredTopics, selectLoadingStatus,
   selectNonCoursewareTopics, selectTopicFilter,
 } from './data/selectors';
 import { setFilter } from './data/slices';
 import { fetchCourseTopicsV3 } from './data/thunks';
-import { SectionBaseGroup, Topic } from './topic';
+import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
 function TopicsList() {
   const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
+  const archivedTopics = useSelector(selectArchivedTopics);
 
   return (
     <>
@@ -43,6 +45,12 @@ function TopicsList() {
           showDivider={(coursewareTopics.length - 1) !== index}
         />
       ))}
+      {!isEmpty(archivedTopics) && (
+        <ArchivedBaseGroup
+          archivedTopics={archivedTopics}
+          showDivider={(!isEmpty(nonCoursewareTopics) || !isEmpty(coursewareTopics))}
+        />
+      )}
       {loadingStatus === RequestStatus.IN_PROGRESS && (
         <div className="d-flex justify-content-center p-4">
           <Spinner animation="border" variant="primary" size="lg" />
@@ -59,12 +67,20 @@ function TopicsView() {
   const topicFilter = useSelector(selectTopicFilter);
   const filteredTopics = useSelector(selectFilteredTopics);
   const loadingStatus = useSelector(selectLoadingStatus);
+  const isPostsFiltered = useSelector(selectAreThreadsFiltered);
 
   useEffect(() => {
     if (provider) {
       dispatch(fetchCourseTopicsV3(courseId));
     }
   }, [provider]);
+
+  useEffect(() => {
+    if (isPostsFiltered) {
+      dispatch(clearFilter());
+      dispatch(clearSort());
+    }
+  }, [isPostsFiltered]);
 
   return (
     <div className="d-flex flex-column h-100" data-testid="inContext-topics-view">

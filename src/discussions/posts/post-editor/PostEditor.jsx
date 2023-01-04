@@ -36,6 +36,7 @@ import {
 } from '../../data/selectors';
 import { EmptyPage } from '../../empty-posts';
 import {
+  selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,
   selectNonCoursewareIds as inContextCoursewareIds,
   selectNonCoursewareTopics as inContextNonCourseware,
@@ -114,6 +115,7 @@ function PostEditor({
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
   const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
+  const archivedTopics = useSelector(selectArchivedTopics);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -317,7 +319,8 @@ function PostEditor({
                   </option>
                 ))}
                 {enableInContext ? (
-                  coursewareTopics?.map(section => (
+                  <>
+                    {coursewareTopics?.map(section => (
                       section?.children?.map(subsection => (
                         <optgroup
                           label={handleInContextSelectLabel(section, subsection)}
@@ -330,7 +333,17 @@ function PostEditor({
                           ))}
                         </optgroup>
                       ))
-                  ))
+                    ))}
+                    {(userIsStaff || userIsGroupTa || userHasModerationPrivileges) && (
+                      <optgroup label={intl.formatMessage(messages.archivedTopics)}>
+                        {archivedTopics.map(topic => (
+                          <option key={topic.id} value={topic.id}>
+                            {topic.name || intl.formatMessage(messages.unnamedSubTopics)}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                  </>
                 ) : (
                   coursewareTopics.map(categoryObj => (
                     <optgroup

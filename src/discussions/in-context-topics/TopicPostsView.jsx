@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 
-import first from 'lodash/first';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
@@ -13,7 +12,8 @@ import { selectTopicThreads } from '../posts/data/selectors';
 import PostsList from '../posts/PostsList';
 import { discussionsPath, handleKeyDown } from '../utils';
 import {
-  selectLoadingStatus, selectNonCoursewareTopics, selectSubsectionUnits, selectUnits,
+  selectArchivedTopic, selectLoadingStatus, selectNonCoursewareTopics,
+  selectSubsection, selectSubsectionUnits, selectUnits,
 } from './data/selectors';
 import { BackButton, NoResults } from './components';
 import messages from './messages';
@@ -25,8 +25,10 @@ function TopicPostsView({ intl }) {
   const topicsLoadingStatus = useSelector(selectLoadingStatus);
   const posts = useSelector(selectTopicThreads([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
+  const selectedSubsection = useSelector(selectSubsection(category));
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
+  const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
 
   const backButtonPath = () => {
     const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
@@ -39,12 +41,13 @@ function TopicPostsView({ intl }) {
       {topicId ? (
         <BackButton
           path={backButtonPath()}
-          title={selectedUnit?.name || selectedNonCoursewareTopic?.name || intl.formatMessage(messages.unnamedTopic)}
+          title={selectedUnit?.name || selectedNonCoursewareTopic?.name || selectedArchivedTopic?.name
+            || intl.formatMessage(messages.unnamedTopic)}
         />
       ) : (
         <BackButton
           path={discussionsPath(Routes.TOPICS.ALL, { courseId })(location)}
-          title={first(selectedSubsectionUnits)?.parentTitle || intl.formatMessage(messages.unnamedSubsection)}
+          title={selectedSubsection?.displayName || intl.formatMessage(messages.unnamedSubsection)}
         />
       )}
       <div className="border-bottom border-light-400" />
