@@ -15,7 +15,7 @@ import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
 import {
   selectArchivedTopics, selectCoursewareTopics, selectFilteredTopics, selectLoadingStatus,
-  selectNonCoursewareTopics, selectTopicFilter,
+  selectNonCoursewareTopics, selectTopicFilter, selectTopics,
 } from './data/selectors';
 import { setFilter } from './data/slices';
 import { fetchCourseTopicsV3 } from './data/thunks';
@@ -68,6 +68,7 @@ function TopicsView() {
   const filteredTopics = useSelector(selectFilteredTopics);
   const loadingStatus = useSelector(selectLoadingStatus);
   const isPostsFiltered = useSelector(selectAreThreadsFiltered);
+  const topics = useSelector(selectTopics);
 
   useEffect(() => {
     if (provider) {
@@ -97,7 +98,7 @@ function TopicsView() {
       )}
       <div
         className={classNames('list-group list-group-flush flex-fill', {
-          'justify-content-center': loadingStatus === RequestStatus.IN_PROGRESS,
+          'justify-content-center': loadingStatus === RequestStatus.IN_PROGRESS && isEmpty(topics),
         })}
         role="list"
         onKeyDown={e => handleKeyDown(e)}
