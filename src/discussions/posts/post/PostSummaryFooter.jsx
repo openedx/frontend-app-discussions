@@ -39,12 +39,12 @@ function PostSummaryFooter({
         <OverlayTrigger
           overlay={(
             <Tooltip id={`liked-${post.id}-tooltip`}>
-              {intl.formatMessage(post.voted ? messages.removeLike : messages.like)}
+              {intl.formatMessage(post.voted ? messages.likedPost : messages.postLikes)}
             </Tooltip>
-                )}
+          )}
         >
           <Icon src={post.voted ? ThumbUpFilled : ThumbUpOutline} className="post-summary-icons-dimensions mr-0.5">
-            <span className="sr-only">{' '}{intl.formatMessage(post.voted ? messages.removeLike : messages.like)}</span>
+            <span className="sr-only">{' '}{intl.formatMessage(post.voted ? messages.likedPost : messages.postLikes)}</span>
           </Icon>
         </OverlayTrigger>
         <div className="font-family-inter font-style-normal">
@@ -55,9 +55,9 @@ function PostSummaryFooter({
       <OverlayTrigger
         overlay={(
           <Tooltip id={`follow-${post.id}-tooltip`}>
-            {intl.formatMessage(post.following ? messages.unFollow : messages.follow)}
+            {intl.formatMessage(post.following ? messages.followed : messages.notFollowed)}
           </Tooltip>
-            )}
+        )}
       >
         <Icon src={post.following ? StarFilled : StarOutline} className="post-summary-icons-dimensions mr-0.5">
           <span className="sr-only">{' '}{ intl.formatMessage(post.following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}</span>
@@ -69,12 +69,12 @@ function PostSummaryFooter({
           <OverlayTrigger
             overlay={(
               <Tooltip id={`follow-${post.id}-tooltip`}>
-                {intl.formatMessage(messages.viewActivity)}
+                {intl.formatMessage(messages.activity)}
               </Tooltip>
-                )}
+            )}
           >
             <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="post-summary-icons-dimensions mr-0.5">
-              <span className="sr-only">{' '} {intl.formatMessage(messages.viewActivity)}</span>
+              <span className="sr-only">{' '} {intl.formatMessage(messages.activity)}</span>
             </Icon>
           </OverlayTrigger>
           {post.commentCount}

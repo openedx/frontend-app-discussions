@@ -28,6 +28,16 @@ const messages = defineMessages({
     defaultMessage: 'Follow',
     description: 'Tooltip/alttext for button to follow a discussion post',
   },
+  followed: {
+    id: 'discussions.post.followed',
+    defaultMessage: 'Followed',
+    description: 'Tooltip/alttext for follow icon showing user followed a post',
+  },
+  notFollowed: {
+    id: 'discussions.post.notFollowed',
+    defaultMessage: 'Not Followed',
+    description: 'Tooltip/alttext for follow icon showing user not following a post',
+  },
   answered: {
     id: 'discussions.post.answered',
     defaultMessage: 'Answered',
@@ -48,10 +58,25 @@ const messages = defineMessages({
     defaultMessage: 'Unlike',
     description: 'Tooltip/alttext for button to remove the like applied to a discussion post',
   },
+  likedPost: {
+    id: 'discussions.post.liked',
+    defaultMessage: 'liked',
+    description: 'Tooltip/alttext for like icon to tell user this post is liked by user',
+  },
+  postLikes: {
+    id: 'discussions.post.likes',
+    defaultMessage: 'likes',
+    description: 'Tooltip/alttext for like icon to tell user about like on the post',
+  },
   viewActivity: {
     id: 'discussions.post.viewActivity',
     defaultMessage: 'View activity',
     description: 'Tooltip/alttext for button to view the activity of a discussion post',
+  },
+  activity: {
+    id: 'discussions.post.activity',
+    defaultMessage: 'Activity',
+    description: 'Tooltip/alttext for icon for showing icon represents activity on a post',
   },
   postClosed: {
     id: 'discussions.post.closed',
