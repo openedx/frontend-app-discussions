@@ -38,7 +38,7 @@ function AuthorLabel({
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
 
-  const className = classNames('d-flex align-items-center', labelColor);
+  const className = classNames('d-flex align-items-center mb-0.5', labelColor);
 
   const showUserNameAsLink = useShowLearnersTab()
       && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);

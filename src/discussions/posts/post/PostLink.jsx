@@ -66,11 +66,10 @@ function PostLink({
               { 'bg-light-300': read },
               { 'post-summary-card-selected': post.id === postId })
           }
-          style={{ height: '87px' }}
         >
           <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={read} />
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
-            <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
+            <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
                 <Truncate lines={1} className="mr-1.5" whiteSpace>
                   <span

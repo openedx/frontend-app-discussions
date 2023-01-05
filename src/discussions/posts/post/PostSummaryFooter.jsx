@@ -34,7 +34,7 @@ function PostSummaryFooter({
   timeago.register('time-locale', timeLocale);
 
   return (
-    <div className="d-flex align-items-center text-gray-700" style={{ lineHeight: '20px' }}>
+    <div className="d-flex align-items-center text-gray-700">
       <div className="d-flex align-items-center mr-4.5">
         <OverlayTrigger
           overlay={(

@@ -22,11 +22,11 @@ export function PostAvatar({
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
   const avatarSize = useMemo(() => {
-    let size = '1.75rem';
+    let size = '2rem';
     if (post.type === ThreadType.DISCUSSION && !fromPostLink) {
       size = '2.375rem';
     } else if (post.type === ThreadType.QUESTION) {
-      size = '1.375rem';
+      size = '1.5rem';
     }
     return size;
   }, [post.type]);
