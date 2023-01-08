@@ -41,6 +41,19 @@
   "discussion.comment.repliesHeading": "{count, plural, =0 {لم يضف أي رد} one {أضيف رد واحد} two {أضيف ردان} few {أضيفت # ردود} many {أضيف # ردًا} other {أضيفت # ردود} على الرد",
   "discussion.comment.time": "منذ {time}",
   "discussion.thread.notFound": "المناقشة غير موجودة",
+  "discussions.topics.backAlt": "Back to topics list",
+  "discussions.topics.discussions": "{count، plural, =0 {لا مناقشات} one {مناقشة واحدة} two {مناقشتان} few {# مناقشات} many {# مناقشة} other {# مناقشات}",
+  "discussions.topics.questions": "{count، plural, =0 {لا مناقشات} one {سؤال واحد} two {سؤالان} few {# اسئلة} many {# سؤالًا} other {# أسئلة}",
+  "discussions.topics.reported": "تم الإبلاغ عن {reported}",
+  "discussions.topics.previouslyReported": "تم الإبلاغ عن {previouslyReported} من قبل",
+  "discussions.topics.find.label": "البحث في المواضيع",
+  "discussions.topics.unnamed.section.label": "Unnamed Section",
+  "discussions.topics.unnamed.subsection.label": "Unnamed Subsection",
+  "discussions.subtopics.unnamed.topic.label": "Unnamed Topic",
+  "discussions.topics.title": "No topic exists",
+  "discussions.topics.createTopic": "Please contact you admin to create a topic",
+  "discussions.topics.nothing": "Nothing here yet",
+  "discussions.topics.archived.label": "مؤرشف",
   "discussions.learner.reported": "تم الإبلاغ عن {reported}",
   "discussions.learner.previouslyReported": "تم الإبلاغ عن {previouslyReported} من قبل",
   "discussions.learner.lastLogin": "آخر نشاط {lastActiveTime}",
@@ -86,7 +99,7 @@
   "discussion.banner.welcomeMessage": "🎉 مرحبًا بك في تجربة المناقشات الجديدة والمحسّنة!",
   "discussion.banner.learnMore": "معرفة المزيد",
   "discussion.banner.shareFeedback": "شاركنا رأيك",
-  "discussion.blackoutBanner.information": "تواريخ الحجب نشطة حاليا. النشر في المناقشات غير متوفر في هذا الوقت.",
+  "discussion.blackoutBanner.information": "Posting in discussions is temporarily disabled by the course team",
   "discussions.editor.image.warning.message": "لن تظهر الصور التي يزيد عرضها أو ارتفاعها عن 999 بكسل عند عرض المنشور أو الرد او التعليق باستخدام مناقشات المساق المضمّنة",
   "discussions.editor.image.warning.title": "تحذير!",
   "discussions.editor.image.warning.dismiss": "حسنًا",
@@ -155,11 +168,16 @@
   "discussions.post.contentReported": "تم الإبلاغ",
   "discussions.post.following": "جاري المتابعة",
   "discussions.post.follow": "متابعة",
+  "discussions.post.followed": "Followed",
+  "discussions.post.notFollowed": "Not Followed",
   "discussions.post.answered": "تمّت الإجابة",
   "discussions.post.unFollow": "إلغاء المتابعة",
   "discussions.post.like": "أعجبني",
   "discussions.post.removeLike": "إلغاء الإغجاب",
+  "discussions.post.liked": "liked",
+  "discussions.post.likes": "likes",
   "discussions.post.viewActivity": "عرض النشاط",
+  "discussions.post.activity": "Activity",
   "discussions.post.closed": "منشور مقفل أمام الردود والتعليقات",
   "discussions.post.relatedTo": "متعلق بـ",
   "discussions.editor.delete.post.title": "حذف المنشور",
@@ -176,16 +194,12 @@
   "discussions.post.editedBy": "عدّله",
   "discussions.post.editReason": "السبب",
   "discussions.post.postWithoutPreview": "المعاينة غير متاحة",
-  "discussions.topics.discussions": "{count، plural, =0 {لا مناقشات} one {مناقشة واحدة} two {مناقشتان} few {# مناقشات} many {# مناقشة} other {# مناقشات}",
-  "discussions.topics.questions": "{count، plural, =0 {لا مناقشات} one {سؤال واحد} two {سؤالان} few {# اسئلة} many {# سؤالًا} other {# أسئلة}",
-  "discussions.topics.reported": "تم الإبلاغ عن {reported}",
-  "discussions.topics.previouslyReported": "تم الإبلاغ عن {previouslyReported} من قبل",
+  "discussions.post.follow.description": "you are following this post",
+  "discussions.post.unfollow.description": "you are not following this post",
   "discussions.topics.sort.message": "مرتبة حسب {sortBy}",
   "discussions.topics.sort.lastActivity": "الأحدث نشاطًا",
   "discussions.topics.sort.commentCount": "الاكثر نشاطًا",
   "discussions.topics.sort.courseStructure": "هيكل المساق",
-  "discussions.topics.find.label": "البحث في المواضيع",
-  "discussions.topics.archived.label": "مؤرشف",
   "discussions.topics.unnamed.label": "فئة بدون اسم",
   "discussions.subtopics.unnamed.label": "فئة فرعية بدون اسم"
 }
