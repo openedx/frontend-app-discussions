@@ -48,8 +48,8 @@ function Post({
     }
   };
 
-  const handleDeleteConfirmation = () => {
-    dispatch(removeThread(post.id));
+  const handleDeleteConfirmation = async () => {
+    await dispatch(removeThread(post.id));
     history.push({
       pathname: '.',
       search: enableInContextSidebar && '?inContextSidebar',
