@@ -59,7 +59,7 @@ function DiscussionPostType({
 }) {
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
-    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-2 mr-3">
+    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
       <Card
         className={classNames('border-2 shadow-none', {
@@ -270,11 +270,11 @@ function PostEditor({
         resetForm,
       }) => (
         <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
-          <h3 className="mb-3">
+          <h4 className="mb-4" style={{ lineHeight: '16px' }}>
             {editExisting
               ? intl.formatMessage(messages.editPostHeading)
               : intl.formatMessage(messages.addPostHeading)}
-          </h3>
+          </h4>
           <Form.RadioSet
             name="postType"
             className="d-flex flex-row flex-wrap"
@@ -288,14 +288,12 @@ function PostEditor({
               selected={values.postType === 'discussion'}
               type={intl.formatMessage(messages.discussionType)}
               icon={<Post />}
-              description={intl.formatMessage(messages.discussionDescription)}
             />
             <DiscussionPostType
               value="question"
               selected={values.postType === 'question'}
               type={intl.formatMessage(messages.questionType)}
               icon={<Help />}
-              description={intl.formatMessage(messages.questionDescription)}
             />
           </Form.RadioSet>
           <div className="d-flex flex-row my-4.5 justify-content-between">
@@ -380,8 +378,8 @@ function PostEditor({
               </Form.Group>
             )}
           </div>
-          <div className="border-bottom border-light-400" />
-          <div className="d-flex flex-row my-4.5 justify-content-between">
+
+          <div className="d-flex flex-row mb-4.5 justify-content-between">
             <Form.Group
               className="w-100 m-0"
               isInvalid={isFormikFieldInvalid('title', {
@@ -403,7 +401,7 @@ function PostEditor({
             </Form.Group>
             {canDisplayEditReason && (
               <Form.Group
-                className="w-100 ml-3 mb-0"
+                className="w-100 ml-4 mb-0"
                 isInvalid={isFormikFieldInvalid('editReasonCode', {
                   errors,
                   touched,
@@ -428,7 +426,7 @@ function PostEditor({
               </Form.Group>
             )}
           </div>
-          <div className="mb-2">
+          <div className="mb-3">
             <TinyMCEEditor
               onInit={
                 /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
@@ -446,7 +444,7 @@ function PostEditor({
 
           <PostPreviewPane htmlNode={values.comment} isPost editExisting={editExisting} />
 
-          <div className="d-flex flex-row mt-n4.5 w-75 text-primary">
+          <div className="d-flex flex-row mt-n4 w-75 text-primary">
             {!editExisting && (
               <>
                 <Form.Group>
@@ -457,7 +455,9 @@ function PostEditor({
                     onBlur={handleBlur}
                     className="mr-4.5"
                   >
-                    {intl.formatMessage(messages.followPost)}
+                    <span className="font-size-14">
+                      {intl.formatMessage(messages.followPost)}
+                    </span>
                   </Form.Checkbox>
                 </Form.Group>
                 {allowAnonymousToPeers && (
@@ -468,7 +468,9 @@ function PostEditor({
                     onChange={handleChange}
                     onBlur={handleBlur}
                   >
-                    {intl.formatMessage(messages.anonymousToPeersPost)}
+                    <span className="font-size-14">
+                      {intl.formatMessage(messages.anonymousToPeersPost)}
+                    </span>
                   </Form.Checkbox>
                 </Form.Group>
                 )}
@@ -476,7 +478,7 @@ function PostEditor({
             )}
           </div>
 
-          <div className="d-flex justify-content-end mt-2.5">
+          <div className="d-flex justify-content-end">
             <Button
               variant="outline-primary"
               onClick={() => hideEditor(resetForm)}
