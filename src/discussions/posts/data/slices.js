@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
+import omitBy from 'lodash/omitBy';
 
 import {
   PostsStatusFilter, RequestStatus, ThreadOrdering, ThreadType,
@@ -175,7 +176,7 @@ const threadsSlice = createSlice({
       state.postStatus = RequestStatus.SUCCESSFUL;
       state.threadsInTopic[topicId] = state.threadsInTopic[topicId].filter(item => item !== threadId);
       state.pages = state.pages.map(page => page?.filter(item => item !== threadId));
-      delete state.threadsById[threadId];
+      state.threadsById = omitBy(state.threadsById, (thread) => thread.id === threadId);
     },
     deleteThreadFailed: (state) => {
       state.postStatus = RequestStatus.FAILED;

@@ -30,6 +30,7 @@ function Post({
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const { courseId } = useSelector((state) => state.courseTabs);
   const topic = useSelector(selectTopic(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
@@ -49,7 +50,10 @@ function Post({
 
   const handleDeleteConfirmation = () => {
     dispatch(removeThread(post.id));
-    history.push('.');
+    history.push({
+      pathname: '.',
+      search: enableInContextSidebar && '?inContextSidebar',
+    });
     hideDeleteConfirmation();
   };
 
@@ -58,7 +62,6 @@ function Post({
     hideReportConfirmation();
   };
 
-  const { enableInContextSidebar } = useContext(DiscussionContext);
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
