@@ -29,6 +29,7 @@ import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationBanner';
+import NotRespondedFilter from '../tours/NotRespondedFilter';
 
 export default function DiscussionsHome() {
   const location = useLocation();
@@ -101,6 +102,8 @@ export default function DiscussionsHome() {
             component={LegacyBreadcrumbMenu}
           />
         )}
+        <NotRespondedFilter />
+
         <div className="d-flex flex-row">
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}

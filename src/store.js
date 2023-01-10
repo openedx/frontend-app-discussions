@@ -9,6 +9,7 @@ import { inContextTopicsReducer } from './discussions/in-context-topics/data';
 import { learnersReducer } from './discussions/learners/data';
 import { threadsReducer } from './discussions/posts/data';
 import { topicsReducer } from './discussions/topics/data';
+import { toursReducer } from './discussions/tours/data/slices';
 
 export function initializeStore(preloadedState = undefined) {
   return configureStore({
@@ -22,6 +23,7 @@ export function initializeStore(preloadedState = undefined) {
       blocks: blocksReducer,
       learners: learnersReducer,
       courseTabs: courseTabsReducer,
+      tours: toursReducer,
     },
     preloadedState,
   });

@@ -1,0 +1,48 @@
+import { camelCaseObject } from '@edx/frontend-platform';
+import { logError } from '@edx/frontend-platform/logging';
+
+import { getDiscssionTours, updateDiscussionTour } from './api';
+import {
+  fetchUserDiscussionsToursError,
+  fetchUserDiscussionsToursRequest,
+  fetchUserDiscussionsToursSuccess,
+  updateUserDiscussionsTourError,
+  updateUserDiscussionsTourRequest,
+  updateUserDiscussionsTourSuccess,
+} from './slices';
+
+/**
+ * Action thunk to fetch the list of discussion tours for the current user.
+ * @returns {function} - Thunk that dispatches the request, success, and error actions.
+ */
+export function fetchDiscussionTours() {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchUserDiscussionsToursRequest());
+      const data = await getDiscssionTours();
+      dispatch(fetchUserDiscussionsToursSuccess(camelCaseObject(data)));
+    } catch (error) {
+      dispatch(fetchUserDiscussionsToursError());
+      logError(error);
+    }
+  };
+}
+
+/**
+ * Action thunk to update the show_tour field for a specific discussion tour for the current user.
+ * @param {number} tourId - The ID of the tour to update.
+ * @returns {function} - Thunk that dispatches the request, success, and error actions.
+ */
+
+export function updateTourShowStatus(tourId) {
+  return async (dispatch) => {
+    try {
+      dispatch(updateUserDiscussionsTourRequest());
+      const data = await updateDiscussionTour(tourId);
+      dispatch(updateUserDiscussionsTourSuccess(camelCaseObject(data)));
+    } catch (error) {
+      dispatch(updateUserDiscussionsTourError());
+      logError(error);
+    }
+  };
+}
