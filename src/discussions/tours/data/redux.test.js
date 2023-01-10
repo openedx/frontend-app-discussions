@@ -5,16 +5,21 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
 import { getDiscussionTourUrl } from './api';
+import { notRespondedFilterTour } from './selectors';
 import {
   fetchUserDiscussionsToursError,
   fetchUserDiscussionsToursRequest,
   fetchUserDiscussionsToursSuccess,
-  toursReducer, updateUserDiscussionsTourError, updateUserDiscussionsTourRequest, updateUserDiscussionsTourSuccess
+  toursReducer,
+  updateUserDiscussionsTourError,
+  updateUserDiscussionsTourRequest,
+  updateUserDiscussionsTourSuccess,
 } from './slices';
 import { fetchDiscussionTours, updateTourShowStatus } from './thunks';
 import discussionTourFactory from './tours.factory';
 
 let mockAxios;
+// eslint-disable-next-line no-unused-vars
 let store;
 const url = getDiscussionTourUrl();
 describe('DiscussionToursThunk', () => {
@@ -216,8 +221,6 @@ describe('toursReducer', () => {
   });
 });
 
-import { notRespondedFilterTour } from './selectors';
-
 describe('notRespondedFilterTour', () => {
   it('filters the tours list by the "not_responded_filter" tour name', () => {
     const state = {
@@ -228,8 +231,7 @@ describe('notRespondedFilterTour', () => {
         ],
       },
     };
-    const expectedResult = { id: 1, tourName: 'not_responded_filter' }
-    ;
+    const expectedResult = { id: 1, tourName: 'not_responded_filter' };
     expect(notRespondedFilterTour(state)).toEqual(expectedResult);
   });
 

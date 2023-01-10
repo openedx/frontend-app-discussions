@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ProductTour } from '@edx/paragon';
 
-import { fetchDiscussionTours, updateTourShowStatus } from './data/thunks';
 import { notRespondedFilterTour } from './data/selectors';
+import { fetchDiscussionTours, updateTourShowStatus } from './data/thunks';
 
 export default () => {
   const dispatch = useDispatch();

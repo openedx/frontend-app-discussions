@@ -24,12 +24,12 @@ import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/compone
 import messages from '../messages';
 import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { selectPostEditorVisible } from '../posts/data/selectors';
+import NotRespondedFilter from '../tours/NotRespondedFilter';
 import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationBanner';
-import NotRespondedFilter from '../tours/NotRespondedFilter';
 
 export default function DiscussionsHome() {
   const location = useLocation();
