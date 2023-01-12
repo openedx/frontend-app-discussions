@@ -37,3 +37,5 @@ export const selectCommentCurrentPage = commentId => (
 );
 
 export const commentsStatus = state => state.comments.status;
+
+export const selectCommentSortedBy = state => state.comments.sortedBy;

@@ -11,7 +11,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, Spinner,
 } from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
+import { ArrowBack, ExpandLess, ExpandMore } from '@edx/paragon/icons';
 
 import { EndorsementStatus, PostsPages, ThreadType } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
@@ -22,7 +22,10 @@ import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
 import { discussionsPath, filterPosts, isLastElementOfList } from '../utils';
-import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
+import {
+  selectCommentSortedBy, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
+} from './data/selectors';
+import { setCommentSortedBy } from './data/slices';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
 import messages from './messages';
@@ -70,6 +73,8 @@ function DiscussionCommentsView({
   endorsed,
   isClosed,
 }) {
+  const dispatch = useDispatch();
+  const commentSortedBy = useSelector(selectCommentSortedBy);
   const {
     comments,
     hasMorePages,
@@ -82,13 +87,24 @@ function DiscussionCommentsView({
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const [addingResponse, setAddingResponse] = useState(false);
 
+  const handleCommentsSort = (sort) => {
+    dispatch(setCommentSortedBy(sort));
+  };
+
   const handleDefinition = (message, commentsLength) => (
     <div
       className="mx-4 my-14px text-gray-700 font-style"
       role="heading"
       aria-level="2"
     >
-      {intl.formatMessage(message, { num: commentsLength })}
+      <span>
+        {intl.formatMessage(message, { num: commentsLength })}
+      </span>
+      <span>
+        <Button variant="tertiary" size="sm" iconAfter={ExpandLess} className="mb-2 mb-sm-0">
+          {intl.formatMessage(messages.oldestFirst)}
+        </Button>
+      </span>
     </div>
   );
 

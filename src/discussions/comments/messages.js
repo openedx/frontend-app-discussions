@@ -212,6 +212,16 @@ const messages = defineMessages({
     defaultMessage: 'Thread not found',
     description: 'message to show on screen if the request thread is not found in course',
   },
+  oldestFirst: {
+    id: 'discussion.comment.oldestFirst',
+    defaultMessage: 'Oldest first',
+    description: 'Text for oldest first button',
+  },
+  newestFirst: {
+    id: 'discussion.comment.newestFirst',
+    defaultMessage: 'Newest first',
+    description: 'Text for newest first button',
+  },
 });
 
 export default messages;

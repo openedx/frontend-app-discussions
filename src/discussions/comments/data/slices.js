@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { EndorsementStatus, RequestStatus } from '../../../data/constants';
+import { CommentOrdering, EndorsementStatus, RequestStatus } from '../../../data/constants';
 
 const commentsSlice = createSlice({
   name: 'comments',
@@ -22,6 +22,7 @@ const commentsSlice = createSlice({
     postStatus: RequestStatus.SUCCESSFUL,
     pagination: {},
     responsesPagination: {},
+    sortedBy: CommentOrdering.BY_LAST_ACTIVITY,
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -181,6 +182,9 @@ const commentsSlice = createSlice({
       }
       delete state.commentsById[commentId];
     },
+    setCommentSortedBy: (state, { payload }) => {
+      state.sortedBy = payload;
+    },
   },
 });
 
@@ -206,6 +210,7 @@ export const {
   deleteCommentFailed,
   deleteCommentRequest,
   deleteCommentSuccess,
+  setCommentSortedBy,
 } = commentsSlice.actions;
 
 export const commentsReducer = commentsSlice.reducer;
