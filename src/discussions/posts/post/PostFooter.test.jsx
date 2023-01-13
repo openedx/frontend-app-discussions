@@ -89,18 +89,24 @@ describe('PostFooter', () => {
     expect(screen.getByTestId('cohort-icon')).toBeTruthy();
   });
 
-  // it.each([[true, /unfollow/i], [false, /follow/i]])('test follow button when following=%s', async (following, message) => {
-  //   renderComponent({ ...mockPost, following });
-  //   const followButton = screen.getByRole('button', { name: /follow/i });
-  //   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-  //   await act(async () => {
-  //     fireEvent.mouseEnter(followButton);
-  //   });
-  //   expect(screen.getByRole('tooltip')).toHaveTextContent(message);
-  //   await act(async () => {
-  //     fireEvent.click(followButton);
-  //   });
-  //   // clicking on the button triggers thread update.
-  //   expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
-  // });
+  it('test follow button when following=true', async () => {
+    renderComponent({ ...mockPost, following: true });
+    const followButton = screen.getByRole('button', { name: /follow/i });
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    await act(async () => {
+      fireEvent.mouseEnter(followButton);
+    });
+
+    expect(screen.getByRole('tooltip')).toHaveTextContent(/unfollow/i);
+    await act(async () => {
+      fireEvent.click(followButton);
+    });
+    // clicking on the button triggers thread update.
+    expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
+  });
+
+  it('test follow button when following=false', async () => {
+    renderComponent({ ...mockPost, following: false });
+    expect(screen.queryByRole('button', { name: /follow/i })).not.toBeInTheDocument();
+  });
 });

@@ -46,21 +46,21 @@ describe.each([
     type: 'comment',
     postType: ThreadType.QUESTION,
     props: { endorsed: true, endorsedBy: 'test-user', endorsedByLabel: 'Staff' },
-    expectText: [messages.answer.defaultMessage, messages.answeredLabel.defaultMessage, 'test-user', 'Staff'],
+    expectText: [messages.answer.defaultMessage, 'Staff'],
   },
   {
     label: 'TA endorsed comment in a question thread',
     type: 'comment',
     postType: ThreadType.QUESTION,
     props: { endorsed: true, endorsedBy: 'test-user', endorsedByLabel: 'Community TA' },
-    expectText: [messages.answer.defaultMessage, messages.answeredLabel.defaultMessage, 'test-user', 'TA'],
+    expectText: [messages.answer.defaultMessage, 'TA'],
   },
   {
     label: 'endorsed comment in a discussion thread',
     type: 'comment',
     postType: ThreadType.DISCUSSION,
     props: { endorsed: true, endorsedBy: 'test-user' },
-    expectText: [messages.endorsed.defaultMessage, messages.endorsedLabel.defaultMessage, 'test-user'],
+    expectText: [messages.endorsed.defaultMessage],
   },
 ])('EndorsedAlertBanner', ({
   label, type, postType, props, expectText,
@@ -84,9 +84,9 @@ describe.each([
     renderComponent(content, postType);
   });
 
-  // it(`should show correct banner for a ${label}`, async () => {
-  //   expectText.forEach(message => {
-  //     expect(screen.queryAllByText(message, { exact: false }).length).toBeGreaterThan(0);
-  //   });
-  // });
+  it(`should show correct banner for a ${label}`, async () => {
+    expectText.forEach(message => {
+      expect(screen.queryAllByText(message, { exact: false }).length).toBeGreaterThan(0);
+    });
+  });
 });

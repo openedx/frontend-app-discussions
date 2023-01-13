@@ -32,7 +32,10 @@ function HoverCard({
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   return (
-    <div className="d-flex flex-row flex-fill justify-content-end align-items-center hover-card mr-n3 position-absolute">
+    <div
+      className="d-flex flex-row flex-fill justify-content-end align-items-center hover-card mr-n3 position-absolute"
+      data-testid="hover-card"
+    >
       {userCanAddThreadInBlackoutDate && (
         <div className="actions d-flex">
           <Button
