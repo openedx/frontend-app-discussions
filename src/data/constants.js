@@ -85,9 +85,8 @@ export const AvatarOutlineAndLabelColors = {
  * @enum {string}
  */
 export const CommentOrdering = {
-  BY_LAST_ACTIVITY: 'lastActivityAt',
-  BY_COMMENT_COUNT: 'commentCount',
-  BY_VOTE_COUNT: 'voteCount',
+  BY_ASC: 'asc',
+  BY_DESC: 'desc',
 };
 
 /**
