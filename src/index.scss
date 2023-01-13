@@ -400,3 +400,7 @@ header {
 .disable-div {
   pointer-events: none;
 }
+
+[role=listitem]:focus {
+  border: 2px solid black;
+}
