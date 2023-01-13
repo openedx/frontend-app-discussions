@@ -3,11 +3,9 @@ import { logError } from '@edx/frontend-platform/logging';
 
 import { getDiscssionTours, updateDiscussionTour } from './api';
 import {
-  fetchUserDiscussionsToursError,
-  fetchUserDiscussionsToursRequest,
+  discussionsTourRequest,
+  discussionsToursRequestError,
   fetchUserDiscussionsToursSuccess,
-  updateUserDiscussionsTourError,
-  updateUserDiscussionsTourRequest,
   updateUserDiscussionsTourSuccess,
 } from './slices';
 
@@ -18,11 +16,11 @@ import {
 export function fetchDiscussionTours() {
   return async (dispatch) => {
     try {
-      dispatch(fetchUserDiscussionsToursRequest());
+      dispatch(discussionsTourRequest());
       const data = await getDiscssionTours();
       dispatch(fetchUserDiscussionsToursSuccess(camelCaseObject(data)));
     } catch (error) {
-      dispatch(fetchUserDiscussionsToursError());
+      dispatch(discussionsToursRequestError());
       logError(error);
     }
   };
@@ -37,11 +35,11 @@ export function fetchDiscussionTours() {
 export function updateTourShowStatus(tourId) {
   return async (dispatch) => {
     try {
-      dispatch(updateUserDiscussionsTourRequest());
+      dispatch(discussionsTourRequest());
       const data = await updateDiscussionTour(tourId);
       dispatch(updateUserDiscussionsTourSuccess(camelCaseObject(data)));
     } catch (error) {
-      dispatch(updateUserDiscussionsTourError());
+      dispatch(discussionsToursRequestError());
       logError(error);
     }
   };

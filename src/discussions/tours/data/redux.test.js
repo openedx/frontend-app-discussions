@@ -3,16 +3,15 @@ import MockAdapter from 'axios-mock-adapter';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
+import { RequestStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { getDiscussionTourUrl } from './api';
 import { notRespondedFilterTour } from './selectors';
 import {
-  fetchUserDiscussionsToursError,
-  fetchUserDiscussionsToursRequest,
+  discussionsTourRequest,
+  discussionsToursRequestError,
   fetchUserDiscussionsToursSuccess,
   toursReducer,
-  updateUserDiscussionsTourError,
-  updateUserDiscussionsTourRequest,
   updateUserDiscussionsTourSuccess,
 } from './slices';
 import { fetchDiscussionTours, updateTourShowStatus } from './thunks';
@@ -55,7 +54,7 @@ describe('DiscussionToursThunk', () => {
     const expectedActions = [
       {
         payload: undefined,
-        type: 'userDiscussionsTours/fetchUserDiscussionsToursRequest',
+        type: 'userDiscussionsTours/discussionsTourRequest',
       },
       {
         type: 'userDiscussionsTours/fetchUserDiscussionsToursSuccess',
@@ -72,10 +71,10 @@ describe('DiscussionToursThunk', () => {
       .reply(500);
     const errorAction = [{
       payload: undefined,
-      type: 'userDiscussionsTours/fetchUserDiscussionsToursRequest',
+      type: 'userDiscussionsTours/discussionsTourRequest',
     }, {
       payload: undefined,
-      type: 'userDiscussionsTours/fetchUserDiscussionsToursError',
+      type: 'userDiscussionsTours/discussionsToursRequestError',
     }];
 
     await fetchDiscussionTours()(dispatch);
@@ -91,7 +90,7 @@ describe('DiscussionToursThunk', () => {
     const expectedActions = [
       {
         payload: undefined,
-        type: 'userDiscussionsTours/updateUserDiscussionsTourRequest',
+        type: 'userDiscussionsTours/discussionsTourRequest',
       },
       {
         type: 'userDiscussionsTours/updateUserDiscussionsTourSuccess',
@@ -108,10 +107,10 @@ describe('DiscussionToursThunk', () => {
       .reply(500);
     const errorAction = [{
       payload: undefined,
-      type: 'userDiscussionsTours/updateUserDiscussionsTourRequest',
+      type: 'userDiscussionsTours/discussionsTourRequest',
     }, {
       payload: undefined,
-      type: 'userDiscussionsTours/updateUserDiscussionsTourError',
+      type: 'userDiscussionsTours/discussionsToursRequestError',
     }];
 
     await updateTourShowStatus(1)(dispatch);
@@ -121,17 +120,17 @@ describe('DiscussionToursThunk', () => {
 });
 
 describe('toursReducer', () => {
-  it('handles the fetchUserDiscussionsToursRequest action', () => {
+  it('handles the discussionsToursRequest action', () => {
     const initialState = {
       tours: [],
       loading: false,
       error: null,
     };
-    const state = toursReducer(initialState, fetchUserDiscussionsToursRequest());
+    const state = toursReducer(initialState, discussionsTourRequest());
     expect(state)
       .toEqual({
         tours: [],
-        loading: true,
+        loading: RequestStatus.IN_PROGRESS,
         error: null,
       });
   });
@@ -147,38 +146,7 @@ describe('toursReducer', () => {
     expect(state)
       .toEqual({
         tours: mockData,
-        loading: false,
-        error: null,
-      });
-  });
-
-  it('handles the fetchUserDiscussionsToursError action', () => {
-    const initialState = {
-      tours: [],
-      loading: true,
-      error: null,
-    };
-    const mockError = new Error('Something went wrong');
-    const state = toursReducer(initialState, fetchUserDiscussionsToursError(mockError));
-    expect(state)
-      .toEqual({
-        tours: [],
-        loading: false,
-        error: mockError,
-      });
-  });
-
-  it('handles the updateUserDiscussionsTourRequest action', () => {
-    const initialState = {
-      tours: [],
-      loading: false,
-      error: null,
-    };
-    const state = toursReducer(initialState, updateUserDiscussionsTourRequest());
-    expect(state)
-      .toEqual({
-        tours: [],
-        loading: true,
+        loading: RequestStatus.SUCCESSFUL,
         error: null,
       });
   });
@@ -199,23 +167,23 @@ describe('toursReducer', () => {
     expect(state.tours)
       .toEqual({
         tours: [{ id: 1 }, updatedTour],
-        loading: false,
+        loading: RequestStatus.SUCCESSFUL,
         error: null,
       });
   });
 
-  it('handles the updateUserDiscussionsTourError action', () => {
+  it('handles the discussionsToursRequestError action', () => {
     const initialState = {
       tours: [],
       loading: true,
       error: null,
     };
     const mockError = new Error('Something went wrong');
-    const state = toursReducer(initialState, updateUserDiscussionsTourError(mockError));
+    const state = toursReducer(initialState, discussionsToursRequestError(mockError));
     expect(state)
       .toEqual({
         tours: [],
-        loading: false,
+        loading: RequestStatus.FAILED,
         error: mockError,
       });
   });
@@ -236,8 +204,13 @@ describe('notRespondedFilterTour', () => {
   });
 
   it('returns an empty object if the tours state is not defined', () => {
-    const state = {};
-    expect(notRespondedFilterTour(state)).toEqual({});
+    const state = {
+      tours: {
+        tours: [],
+      },
+    };
+    expect(notRespondedFilterTour(state))
+      .toEqual(null);
   });
 
   it('returns an empty object if the tours state does not contain not_responded_filter', () => {
@@ -249,6 +222,6 @@ describe('notRespondedFilterTour', () => {
         ],
       },
     };
-    expect(notRespondedFilterTour(state)).toEqual({});
+    expect(notRespondedFilterTour(state)).toEqual(null);
   });
 });

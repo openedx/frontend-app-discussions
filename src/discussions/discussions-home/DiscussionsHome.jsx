@@ -24,7 +24,7 @@ import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/compone
 import messages from '../messages';
 import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { selectPostEditorVisible } from '../posts/data/selectors';
-import NotRespondedFilter from '../tours/NotRespondedFilter';
+import NotRespondedFilterTour from '../tours/NotRespondedFilter';
 import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
@@ -102,7 +102,6 @@ export default function DiscussionsHome() {
             component={LegacyBreadcrumbMenu}
           />
         )}
-        <NotRespondedFilter />
 
         <div className="d-flex flex-row">
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
@@ -125,6 +124,7 @@ export default function DiscussionsHome() {
             </Switch>
           )}
         </div>
+        <NotRespondedFilterTour />
       </main>
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>
