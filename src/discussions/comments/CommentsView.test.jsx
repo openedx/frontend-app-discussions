@@ -10,6 +10,7 @@ import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { CommentOrdering } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
@@ -30,6 +31,7 @@ const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const sortedBy = CommentOrdering.BY_DESC;
 let store;
 let axiosMock;
 let testLocation;
@@ -46,6 +48,7 @@ function mockAxiosReturnPagedComments() {
             page_size: undefined,
             requested_fields: 'profile_image',
             endorsed,
+            sorted_by: sortedBy,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
