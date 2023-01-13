@@ -39,6 +39,7 @@ function CommentHeader({
           authorLabel={comment.authorLabel}
           labelColor={colorClass && `text-${colorClass}`}
           linkToProfile
+          postCreatedAt={comment.createdAt}
         />
       </div>
     </div>

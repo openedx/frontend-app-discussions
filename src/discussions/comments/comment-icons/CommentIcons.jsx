@@ -27,9 +27,6 @@ function CommentIcons({
         onClick={handleLike}
         voted={comment.voted}
       />
-      <div className="d-flex flex-fill text-gray-500 justify-content-end" title={comment.createdAt}>
-        {timeago.format(comment.createdAt, 'time-locale')}
-      </div>
     </div>
   );
 }
