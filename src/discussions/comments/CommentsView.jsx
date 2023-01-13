@@ -139,7 +139,7 @@ function DiscussionCommentsView({
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
               {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, false, false)
+                ? handleComments(endorsedComments, true, false)
                 : handleComments(endorsedComments, false, false)}
             </>
           )}
@@ -147,7 +147,7 @@ function DiscussionCommentsView({
             <>
               {handleDefinition(messages.responseCount, unEndorsedComments.length)}
               {unEndorsedComments.length === 0 && <br />}
-              {handleComments(unEndorsedComments, true)}
+              {handleComments(unEndorsedComments, false, true)}
               {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
@@ -216,7 +216,13 @@ function CommentsView({ intl }) {
       );
     }
     return (
-      <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+      }}
+      >
+        <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
+      </div>
     );
   }
 

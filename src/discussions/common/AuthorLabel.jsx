@@ -73,7 +73,7 @@ function AuthorLabel({
         trigger={['hover', 'focus']}
       >
         <div className={classNames('d-flex flex-row align-items-center', {
-          'diable-div': !authorToolTip,
+          'disable-div': !authorToolTip,
         })}
         >
           <Icon
@@ -82,7 +82,7 @@ function AuthorLabel({
               height: '1rem',
             }}
             src={icon}
-            disabled
+            data-testid="author-icon"
           />
           {authorLabelMessage && (
             <span
@@ -97,27 +97,6 @@ function AuthorLabel({
           )}
         </div>
       </OverlayTrigger>
-
-      {/* {icon && (
-        <Icon
-          style={{
-            width: '1rem',
-            height: '1rem',
-          }}
-          src={icon}
-        />
-      )}
-      {authorLabelMessage && (
-        <span
-          className={classNames('mr-1.5 font-size-14 font-style-normal font-family-inter font-weight-500', {
-            'text-primary-500': !authorLabelMessage && !isRetiredUser && !alert,
-            'text-gray-700': isRetiredUser,
-          })}
-          style={{ marginLeft: '2px' }}
-        >
-          {authorLabelMessage}
-        </span>
-      )} */}
       {
         postCreatedAt && (
           <span
