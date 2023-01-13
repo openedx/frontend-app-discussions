@@ -660,63 +660,69 @@ describe('CommentsView', () => {
         .toThrow();
     });
 
-    // it('handles liking a comment', async () => {
-    //   renderComponent(discussionPostId);
+    it('handles liking a comment', async () => {
+      renderComponent(discussionPostId);
 
-    //   // Wait for the content to load
-    //   await screen.findByText('comment number 7', { exact: false });
-    //   const view = screen.getByTestId('comment-comment-1');
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
+      const view = screen.getByTestId('comment-comment-1');
 
-    //   const likeButton = within(view).getByRole('button', { name: /like/i });
-    //   await act(async () => {
-    //     fireEvent.click(likeButton);
-    //   });
-    //   expect(axiosMock.history.patch).toHaveLength(2);
-    //   expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
-    // });
+      const likeButton = within(view).getByRole('button', { name: /like/i });
+      await act(async () => {
+        fireEvent.click(likeButton);
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
+    });
 
-    // it('handles endorsing comments', async () => {
-    //   renderComponent(discussionPostId);
-    //   // Wait for the content to load
-    //   await screen.findByText('comment number 7', { exact: false });
+    it('handles endorsing comments', async () => {
+      renderComponent(discussionPostId);
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
 
-    //   // There should be three buttons, one for the post, the second for the
-    //   // comment and the third for a response to that comment
-    //   const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
-    //   await act(async () => {
-    //     fireEvent.click(actionButtons[1]);
-    //   });
+      // There should be three buttons, one for the post, the second for the
+      // comment and the third for a response to that comment
+      const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
+      await act(async () => {
+        fireEvent.click(actionButtons[1]);
+      });
 
-    //   await act(async () => {
-    //     fireEvent.click(screen.getByRole('button', { name: /Endorse/i }));
-    //   });
-    //   expect(axiosMock.history.patch).toHaveLength(2);
-    //   expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ endorsed: true });
-    // });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /Endorse/i }));
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ endorsed: true });
+    });
 
-    // it('handles reporting comments', async () => {
-    //   renderComponent(discussionPostId);
-    //   // Wait for the content to load
-    //   await screen.findByText('comment number 7', { exact: false });
+    it('handles reporting comments', async () => {
+      renderComponent(discussionPostId);
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
 
-    //   // There should be three buttons, one for the post, the second for the
-    //   // comment and the third for a response to that comment
-    //   const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
-    //   await act(async () => {
-    //     fireEvent.click(actionButtons[1]);
-    //   });
+      // There should be three buttons, one for the post, the second for the
+      // comment and the third for a response to that comment
+      const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
+      await act(async () => {
+        fireEvent.click(actionButtons[1]);
+      });
 
-    //   await act(async () => {
-    //     fireEvent.click(screen.getByRole('button', { name: /Report/i }));
-    //   });
-    //   expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).toBeInTheDocument();
-    //   await act(async () => {
-    //     fireEvent.click(screen.queryByRole('button', { name: /Confirm/i }));
-    //   });
-    //   expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).not.toBeInTheDocument();
-    //   expect(axiosMock.history.patch).toHaveLength(2);
-    //   expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ abuse_flagged: true });
-    // });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /Report/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).toBeInTheDocument();
+      await act(async () => {
+        fireEvent.click(screen.queryByRole('button', { name: /Confirm/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).not.toBeInTheDocument();
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ abuse_flagged: true });
+    });
   });
 
   describe.each([
