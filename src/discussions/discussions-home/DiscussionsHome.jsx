@@ -24,6 +24,7 @@ import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/compone
 import messages from '../messages';
 import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { selectPostEditorVisible } from '../posts/data/selectors';
+import DiscussionsProductTour from '../tours/DiscussionsProductTour';
 import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
@@ -101,6 +102,7 @@ export default function DiscussionsHome() {
             component={LegacyBreadcrumbMenu}
           />
         )}
+
         <div className="d-flex flex-row">
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}
@@ -122,6 +124,7 @@ export default function DiscussionsHome() {
             </Switch>
           )}
         </div>
+        <DiscussionsProductTour />
       </main>
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>

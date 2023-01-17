@@ -148,12 +148,15 @@ function PostFilterBar({
             cohort: capitalize(selectedCohort?.name),
           })}
         </span>
-        <Collapsible.Visible whenClosed>
-          <Icon src={Tune} />
-        </Collapsible.Visible>
-        <Collapsible.Visible whenOpen>
-          <Icon src={Tune} />
-        </Collapsible.Visible>
+        <span id="icon-tune">
+          <Collapsible.Visible whenClosed>
+            <Icon src={Tune} />
+          </Collapsible.Visible>
+          <Collapsible.Visible whenOpen>
+            <Icon src={Tune} />
+          </Collapsible.Visible>
+        </span>
+
       </Collapsible.Trigger>
       <Collapsible.Body className="collapsible-body px-4 pb-3 pt-0">
         <Form>
