@@ -10,7 +10,9 @@ import { Report } from '@edx/paragon/icons';
 
 import { commentShape } from '../comments/comment/proptypes';
 import messages from '../comments/messages';
-import { selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../data/selectors';
+import {
+  selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
+} from '../data/selectors';
 import { postShape } from '../posts/post/proptypes';
 import AuthorLabel from './AuthorLabel';
 
@@ -20,9 +22,10 @@ function AlertBanner({
 }) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
+  const isAdmin = useSelector(selectUserIsStaff);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
-  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
+  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa || isAdmin || userIsContentAuthor);
   const canSeeReportedBanner = content?.abuseFlagged;
 
   return (
