@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -17,7 +18,7 @@ function DiscussionsProductTour({ intl }) {
 
   return (
     <>
-      {config.length && (
+      {!isEmpty(config) && (
         <ProductTour
           tours={config}
         />
