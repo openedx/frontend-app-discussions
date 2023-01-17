@@ -22,11 +22,13 @@ function AlertBanner({
 }) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
-  const isAdmin = useSelector(selectUserIsStaff);
+  const userIsGlobalStaff = useSelector(selectUserIsStaff);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === content.author;
-  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa || isAdmin || userIsContentAuthor);
   const canSeeReportedBanner = content?.abuseFlagged;
+  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
+    || userIsGlobalStaff || userIsContentAuthor
+  );
 
   return (
     <>
