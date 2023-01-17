@@ -8,7 +8,7 @@ const userDiscussionsToursSlice = createSlice({
   name: 'userDiscussionsTours',
   initialState: {
     tours: [],
-    loading: false,
+    loading: RequestStatus.SUCCESSFUL,
     error: null,
   },
   reducers: {
