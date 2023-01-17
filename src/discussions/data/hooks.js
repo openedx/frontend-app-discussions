@@ -1,6 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  useContext, useEffect, useRef, useState,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +20,10 @@ import { DiscussionContext } from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
+import tourCheckpoints from '../tours/constants';
+import { selectTours } from '../tours/data/selectors';
+import { updateTourShowStatus } from '../tours/data/thunks';
+import messages from '../tours/messages';
 import { discussionsPath, inBlackoutDateRange } from '../utils';
 import {
   selectAreThreadsFiltered,
@@ -40,10 +47,11 @@ export function useTotalTopicThreadCount() {
     return 0;
   }
 
-  return Object.keys(topics).reduce((total, topicId) => {
-    const topic = topics[topicId];
-    return total + topic.threadCounts.discussion + topic.threadCounts.question;
-  }, 0);
+  return Object.keys(topics)
+    .reduce((total, topicId) => {
+      const topic = topics[topicId];
+      return total + topic.threadCounts.discussion + topic.threadCounts.question;
+    }, 0);
 }
 
 export const useSidebarVisible = () => {
@@ -191,4 +199,28 @@ export const useUserCanAddThreadInBlackoutDate = () => {
 
   return (!(isInBlackoutDateRange)
           || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
+};
+
+function camelToConstant(string) {
+  return string.replace(/[A-Z]/g, (match) => `_${match}`).toUpperCase();
+}
+
+export const useTourConfiguration = (intl) => {
+  const dispatch = useDispatch();
+
+  const { enableInContextSidebar } = useContext(DiscussionContext);
+  const tours = useSelector(selectTours);
+
+  return tours.map((tour) => (
+    {
+      tourId: tour.tourName,
+      advanceButtonText: intl.formatMessage(messages.advanceButtonText),
+      dismissButtonText: intl.formatMessage(messages.dismissButtonText),
+      endButtonText: intl.formatMessage(messages.endButtonText),
+      enabled: tour && Boolean(tour.showTour && !enableInContextSidebar),
+      onDismiss: () => dispatch(updateTourShowStatus(tour.id)),
+      onEnd: () => dispatch(updateTourShowStatus(tour.id)),
+      checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
+    }
+  ));
 };
