@@ -6,7 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { RequestStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { getDiscussionTourUrl } from './api';
-import { notRespondedFilterTour } from './selectors';
+import { selectTours } from './selectors';
 import {
   discussionsTourRequest,
   discussionsToursRequestError,
@@ -189,8 +189,8 @@ describe('toursReducer', () => {
   });
 });
 
-describe('notRespondedFilterTour', () => {
-  it('filters the tours list by the "not_responded_filter" tour name', () => {
+describe('tourSelector', () => {
+  it('returns the tours list from state', () => {
     const state = {
       tours: {
         tours: [
@@ -199,29 +199,20 @@ describe('notRespondedFilterTour', () => {
         ],
       },
     };
-    const expectedResult = { id: 1, tourName: 'not_responded_filter' };
-    expect(notRespondedFilterTour(state)).toEqual(expectedResult);
+    const expectedResult = [
+      { id: 1, tourName: 'not_responded_filter' },
+      { id: 2, tourName: 'other_filter' },
+    ];
+    expect(selectTours(state)).toEqual(expectedResult);
   });
 
-  it('returns an empty object if the tours state is not defined', () => {
+  it('returns an empty list if the tours state is not defined', () => {
     const state = {
       tours: {
         tours: [],
       },
     };
-    expect(notRespondedFilterTour(state))
-      .toEqual(null);
-  });
-
-  it('returns an empty object if the tours state does not contain not_responded_filter', () => {
-    const state = {
-      tours: {
-        tours: [
-          { id: 1, tourName: 'other_data' },
-          { id: 2, tourName: 'other_data_1' },
-        ],
-      },
-    };
-    expect(notRespondedFilterTour(state)).toEqual(null);
+    expect(selectTours(state))
+      .toEqual([]);
   });
 });
