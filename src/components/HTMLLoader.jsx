@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import MathJax from 'react-mathjax-preview';
+import DOMPurify from 'dompurify';
 
 const baseConfig = {
   showMathMenu: true,
@@ -21,33 +21,64 @@ const baseConfig = {
       ['\\begin{displaymath}', '\\end{displaymath}'],
       ['\\begin{equation}', '\\end{equation}'],
     ],
+    processEnvironments: true,
   },
 
   skipStartupTypeset: true,
 };
 
+const defaultSanitizeOptions = {
+  USE_PROFILES: { html: true, mathMl: true },
+  ADD_ATTR: ['columnalign'],
+};
+
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
-  const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)\1/)
-                  || htmlNode.match(/(\[mathjax](.+?)\[\/mathjax])+/)
-                  || htmlNode.match(/(\[mathjaxinline](.+?)\[\/mathjaxinline])+/)
-                  || htmlNode.match(/(\\begin\{math}(.+?)\\end\{math})+/)
-                  || htmlNode.match(/(\\begin\{displaymath}(.+?)\\end\{displaymath})+/)
-                  || htmlNode.match(/(\\begin\{equation}(.+?)\\end\{equation})+/)
-                  || htmlNode.match(/(\\\[(.+?)\\\])+/)
-                  || htmlNode.match(/(\\\((.+?)\\\))+/);
+  const [loadingState, setLoadingState] = useState(window.MathJax ? 'loaded' : 'loading');
+  const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
+  const previewRef = useRef();
+  const mathjaxScript = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+
+  useEffect(() => {
+    let mathjaxScriptTag = document.querySelector(`script[src="${mathjaxScript}"]`);
+    if (!mathjaxScriptTag) {
+      mathjaxScriptTag = document.createElement('script');
+      mathjaxScriptTag.async = true;
+      mathjaxScriptTag.src = mathjaxScript;
+
+      const node = document.head || document.getElementsByTagName('head')[0];
+      node.appendChild(mathjaxScriptTag);
+    }
+    const onloadHandler = () => {
+      setLoadingState('loaded');
+      window.MathJax.Hub.Config({ ...baseConfig });
+    };
+    const onerrorHandler = () => {
+      setLoadingState('failed');
+    };
+
+    return () => {
+      mathjaxScriptTag.removeEventListener('load', onloadHandler);
+      mathjaxScriptTag.removeEventListener('error', onerrorHandler);
+    };
+  }, [setLoadingState, baseConfig]);
+
+  useEffect(() => {
+    if (loadingState !== 'loaded') {
+      return;
+    }
+    previewRef.current.innerHTML = sanitizedMath;
+    window.MathJax.Hub.Queue([
+      'Typeset',
+      window.MathJax.Hub,
+      previewRef.current,
+    ]);
+  }, [sanitizedMath, loadingState, previewRef]);
 
   return (
-    isLatex ? (
-      <MathJax
-        math={htmlNode}
-        id={componentId}
-        className={cssClassName}
-        sanitizeOptions={{ USE_PROFILES: { html: true } }}
-        config={baseConfig}
-      />
-    )
-      // eslint-disable-next-line react/no-danger
-      : <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: htmlNode }} />
+    <div ref={previewRef}>
+      {/* eslint-disable-next-line react/no-danger */}
+      <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: htmlNode }} />
+    </div>
   );
 }
 
