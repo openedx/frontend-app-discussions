@@ -112,7 +112,7 @@ function Comment({
             ? (
               <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} formClasses="pt-3" />
             )
-            : <HTMLLoader cssClassName="comment-body pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
+            : <HTMLLoader cssClassName="comment-body text-break pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
           <CommentIcons
             comment={comment}
             following={comment.following}
@@ -132,18 +132,18 @@ function Comment({
             ))}
           </div>
           {hasMorePages && (
-          <Button
-            onClick={handleLoadMoreComments}
-            variant="link"
-            block="true"
-            className="mt-4.5 font-size-14 font-style-normal font-family-inter font-weight-500 px-2.5 py-2"
-            data-testid="load-more-comments-responses"
-            style={{
-              lineHeight: '20px',
-            }}
-          >
-            {intl.formatMessage(messages.loadMoreComments)}
-          </Button>
+            <Button
+              onClick={handleLoadMoreComments}
+              variant="link"
+              block="true"
+              className="mt-4.5 font-size-14 font-style-normal font-family-inter font-weight-500 px-2.5 py-2"
+              data-testid="load-more-comments-responses"
+              style={{
+                lineHeight: '20px',
+              }}
+            >
+              {intl.formatMessage(messages.loadMoreComments)}
+            </Button>
           )}
           {!isNested && showFullThread && (
             isReplying ? (
@@ -159,16 +159,16 @@ function Comment({
               <>
                 {!isClosedPost && userCanAddThreadInBlackoutDate
                   && (
-                  <Button
-                    className="d-flex flex-grow mt-3 py-2 font-size-14"
-                    variant="outline-primary"
-                    style={{
-                      lineHeight: '20px',
-                    }}
-                    onClick={() => setReplying(true)}
-                  >
-                    {intl.formatMessage(messages.addComment)}
-                  </Button>
+                    <Button
+                      className="d-flex flex-grow mt-3 py-2 font-size-14"
+                      variant="outline-primary"
+                      style={{
+                        lineHeight: '20px',
+                      }}
+                      onClick={() => setReplying(true)}
+                    >
+                      {intl.formatMessage(messages.addComment)}
+                    </Button>
                   )}
               </>
 

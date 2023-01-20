@@ -125,7 +125,7 @@ function Reply({
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
-            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} cssClassName="text-primary-500" />}
+            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} cssClassName="text-break text-primary-500" />}
         </div>
       </div>
       <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>
