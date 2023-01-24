@@ -26,10 +26,10 @@ const userDiscussionsToursSlice = createSlice({
       state.error = action.payload;
     },
     updateUserDiscussionsTourSuccess: (state, action) => {
-      const tourIndex = state.tours.tours.findIndex(tour => tour.id === action.payload.id);
-      state.tours.tours[tourIndex] = action.payload;
-      state.tours.loading = RequestStatus.SUCCESSFUL;
-      state.tours.error = null;
+      const tourIndex = state.tours.findIndex(tour => tour.id === action.payload.id);
+      state.tours[tourIndex] = action.payload;
+      state.loading = RequestStatus.SUCCESSFUL;
+      state.error = null;
     },
   },
 });
