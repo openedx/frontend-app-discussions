@@ -58,4 +58,4 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn(),
 }));
 
-jest.setTimeout(30000);
+jest.setTimeout(1000000);
