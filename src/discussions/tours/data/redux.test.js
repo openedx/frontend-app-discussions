@@ -153,11 +153,10 @@ describe('toursReducer', () => {
 
   it('handles the updateUserDiscussionsTourSuccess action', () => {
     const initialState = {
-      tours: {
-        tours: [{ id: 1 }, { id: 2 }],
-        loading: true,
-        error: null,
-      },
+      tours: [
+        { id: 1 },
+        { id: 2 },
+      ],
     };
     const updatedTour = {
       id: 2,
@@ -165,11 +164,7 @@ describe('toursReducer', () => {
     };
     const state = toursReducer(initialState, updateUserDiscussionsTourSuccess(updatedTour));
     expect(state.tours)
-      .toEqual({
-        tours: [{ id: 1 }, updatedTour],
-        loading: RequestStatus.SUCCESSFUL,
-        error: null,
-      });
+      .toEqual([{ id: 1 }, updatedTour]);
   });
 
   it('handles the discussionsToursRequestError action', () => {

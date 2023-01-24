@@ -201,5 +201,10 @@
   "discussions.topics.sort.commentCount": "الاكثر نشاطًا",
   "discussions.topics.sort.courseStructure": "هيكل المساق",
   "discussions.topics.unnamed.label": "فئة بدون اسم",
-  "discussions.subtopics.unnamed.label": "فئة فرعية بدون اسم"
+  "discussions.subtopics.unnamed.label": "فئة فرعية بدون اسم",
+  "tour.action.advance": "Next",
+  "tour.action.dismiss": "Dismiss",
+  "tour.action.end": "Okay",
+  "tour.body.notRespondedFilter": "Now you can filter discussions to find posts with no response.",
+  "tour.title.notRespondedFilter": "New filtering option!"
 }
