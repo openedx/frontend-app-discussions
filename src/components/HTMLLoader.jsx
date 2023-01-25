@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import DOMPurify from 'dompurify';
@@ -21,10 +21,10 @@ const baseConfig = {
       ['\\begin{displaymath}', '\\end{displaymath}'],
       ['\\begin{equation}', '\\end{equation}'],
     ],
+    processEscapes: true,
     processEnvironments: true,
   },
-
-  skipStartupTypeset: true,
+  skipStartupTypeset: false,
 };
 
 const defaultSanitizeOptions = {
@@ -35,7 +35,6 @@ const defaultSanitizeOptions = {
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const [loadingState, setLoadingState] = useState(window.MathJax ? 'loaded' : 'loading');
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
-  const previewRef = useRef();
   const mathjaxScript = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_SVG';
 
   useEffect(() => {
@@ -66,18 +65,17 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
     if (loadingState !== 'loaded') {
       return;
     }
-    previewRef.current.innerHTML = sanitizedMath;
     window.MathJax.Hub.Queue([
       'Typeset',
       window.MathJax.Hub,
-      previewRef.current,
+      'mathjax-code',
     ]);
-  }, [sanitizedMath, loadingState, previewRef]);
+  }, [sanitizedMath, loadingState]);
 
   return (
-    <div ref={previewRef}>
+    <div id="mathjax-code">
       {/* eslint-disable-next-line react/no-danger */}
-      <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: htmlNode }} />
+      <div className={cssClassName} id={componentId} dangerouslySetInnerHTML={{ __html: sanitizedMath }} />
     </div>
   );
 }
