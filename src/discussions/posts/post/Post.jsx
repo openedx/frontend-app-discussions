@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -41,7 +41,7 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
-
+  const [showHoverCard, setShowHoverCard] = useState(false);
   const handleAbusedFlag = () => {
     if (post.abuseFlagged) {
       dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
@@ -92,6 +92,11 @@ function Post({
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment"
       aria-level={5}
+      data-testid={`post-${post.id}`}
+      onMouseEnter={() => setShowHoverCard(true)}
+      onMouseLeave={() => setShowHoverCard(false)}
+      onFocus={() => setShowHoverCard(true)}
+      onBlur={() => setShowHoverCard(false)}
     >
       <Confirmation
         isOpen={isDeleting}
@@ -113,16 +118,17 @@ function Post({
         />
       )}
 
-      <HoverCard
-        commentOrPost={post}
-        actionHandlers={actionHandlers}
-        handleResponseCommentButton={handleAddResponseButton}
-        addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
-        onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
-        onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
-        isClosedPost={post.closed}
-      />
-
+      {showHoverCard && (
+        <HoverCard
+          commentOrPost={post}
+          actionHandlers={actionHandlers}
+          handleResponseCommentButton={handleAddResponseButton}
+          addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
+          onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
+          onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
+          isClosedPost={post.closed}
+        />
+      )}
       <AlertBanner content={post} />
       <PostHeader post={post} />
       <div className="d-flex mt-14px text-break font-style-normal font-family-inter text-primary-500">
@@ -171,7 +177,7 @@ Post.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
   preview: PropTypes.bool,
-  handleAddResponseButton: PropTypes.objectOf(PropTypes.func).isRequired,
+  handleAddResponseButton: PropTypes.func.isRequired,
 };
 
 Post.defaultProps = {

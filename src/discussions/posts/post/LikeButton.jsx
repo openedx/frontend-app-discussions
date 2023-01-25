@@ -39,7 +39,6 @@ function LikeButton({
           alt="Like"
           iconAs={Icon}
           iconClassNames="like-icon-dimentions"
-
         />
       </OverlayTrigger>
       <div className="font-family-inter font-style-normal">

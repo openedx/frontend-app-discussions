@@ -33,7 +33,7 @@ function HoverCard({
 
   return (
     <div
-      className="flex-row flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute d-none"
+      className="d-flex hover-card mr-n4 position-absolute"
       data-testid="hover-card"
     >
       {userCanAddThreadInBlackoutDate && (
