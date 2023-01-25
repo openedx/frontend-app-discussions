@@ -230,18 +230,14 @@ describe('CommentsView', () => {
     });
 
     it('should not allow posting a comment on a closed post', async () => {
-      const componet = renderComponent(closedPostId);
+      renderComponent(closedPostId);
+
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 5', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 3', { exact: false })));
       });
-      // await waitFor(() => screen.findByText('thread-2', { exact: false }));
-      screen.debug(componet, 99999999);
-      expect(screen.queryByRole('button', { name: /add comment/i }, { hidden: false })).toBeDisabled();
-      // await act(async () => {
-      //   expect(
-      //     screen.queryByRole('button', { name: /add comment/i }, { hidden: false })
-      //   ).toBeDisabled();
-      // });
+
+      const addCommentButton = screen.getAllByRole('button', { name: /add comment/i }, { hidden: false })[0];
+      expect(addCommentButton).toBeDisabled();
     });
 
     it('should allow editing an existing comment', async () => {
@@ -322,7 +318,7 @@ describe('CommentsView', () => {
       setupCourseConfig();
       renderComponent(discussionPostId);
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('Thread-1', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByTestId('post-thread-1')));
       });
       await act(async () => {
         fireEvent.click(
@@ -353,7 +349,7 @@ describe('CommentsView', () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('Thread-1', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByTestId('post-thread-1')));
       });
       await act(async () => {
         fireEvent.click(
@@ -396,7 +392,7 @@ describe('CommentsView', () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('Thread-1', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByTestId('post-thread-1')));
       });
       await act(async () => {
         fireEvent.click(
@@ -413,7 +409,7 @@ describe('CommentsView', () => {
     it('should allow pinning the post', async () => {
       renderComponent(discussionPostId);
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('Thread-1', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByTestId('post-thread-1')));
       });
       await act(async () => {
         fireEvent.click(
@@ -430,7 +426,7 @@ describe('CommentsView', () => {
     it('should allow reporting the post', async () => {
       renderComponent(discussionPostId);
       await act(async () => {
-        fireEvent.mouseOver(await waitFor(() => screen.findByText('Thread-1', { exact: false })));
+        fireEvent.mouseOver(await waitFor(() => screen.findByTestId('post-thread-1')));
       });
       await act(async () => {
         fireEvent.click(
@@ -504,264 +500,257 @@ describe('CommentsView', () => {
     });
   });
 
-  // describe('for discussion thread', () => {
-  //   const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
+  describe('for discussion thread', () => {
+    const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
-  //   it('shown post not found when post id does not belong to course', async () => {
-  //     renderComponent('unloaded-id');
-  //     expect(await screen.findByText('Thread not found', { exact: true }))
-  //       .toBeInTheDocument();
-  //   });
+    it('shown post not found when post id does not belong to course', async () => {
+      renderComponent('unloaded-id');
+      expect(await screen.findByText('Thread not found', { exact: true }))
+        .toBeInTheDocument();
+    });
 
-  //   it('initially loads only the first page', async () => {
-  //     renderComponent(discussionPostId);
-  //     expect(await screen.findByText('comment number 1', { exact: false }))
-  //       .toBeInTheDocument();
-  //     expect(screen.queryByText('comment number 2', { exact: false }))
-  //       .not
-  //       .toBeInTheDocument();
-  //   });
+    it('initially loads only the first page', async () => {
+      renderComponent(discussionPostId);
+      expect(await screen.findByText('comment number 1', { exact: false }))
+        .toBeInTheDocument();
+      expect(screen.queryByText('comment number 2', { exact: false }))
+        .not
+        .toBeInTheDocument();
+    });
 
-  //   it('pressing load more button will load next page of comments', async () => {
-  //     renderComponent(discussionPostId);
+    it('pressing load more button will load next page of comments', async () => {
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsButton();
-  //     fireEvent.click(loadMoreButton);
+      const loadMoreButton = await findLoadMoreCommentsButton();
+      fireEvent.click(loadMoreButton);
 
-  //     await screen.findByText('comment number 1', { exact: false });
-  //     await screen.findByText('comment number 2', { exact: false });
-  //   });
+      await screen.findByText('comment number 1', { exact: false });
+      await screen.findByText('comment number 2', { exact: false });
+    });
 
-  //   it('newly loaded comments are appended to the old ones', async () => {
-  //     renderComponent(discussionPostId);
+    it('newly loaded comments are appended to the old ones', async () => {
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsButton();
-  //     fireEvent.click(loadMoreButton);
+      const loadMoreButton = await findLoadMoreCommentsButton();
+      fireEvent.click(loadMoreButton);
 
-  //     await screen.findByText('comment number 1', { exact: false });
-  //     // check that comments from the first page are also displayed
-  //     expect(screen.queryByText('comment number 2', { exact: false }))
-  //       .toBeInTheDocument();
-  //   });
+      await screen.findByText('comment number 1', { exact: false });
+      // check that comments from the first page are also displayed
+      expect(screen.queryByText('comment number 2', { exact: false }))
+        .toBeInTheDocument();
+    });
 
-  //   it('load more button is hidden when no more comments pages to load', async () => {
-  //     const totalPages = 2;
-  //     renderComponent(discussionPostId);
+    it('load more button is hidden when no more comments pages to load', async () => {
+      const totalPages = 2;
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsButton();
-  //     for (let page = 1; page < totalPages; page++) {
-  //       fireEvent.click(loadMoreButton);
-  //     }
+      const loadMoreButton = await findLoadMoreCommentsButton();
+      for (let page = 1; page < totalPages; page++) {
+        fireEvent.click(loadMoreButton);
+      }
 
-  //     await screen.findByText('comment number 2', { exact: false });
-  //     await expect(findLoadMoreCommentsButton())
-  //       .rejects
-  //       .toThrow();
-  //   });
-  // });
+      await screen.findByText('comment number 2', { exact: false });
+      await expect(findLoadMoreCommentsButton())
+        .rejects
+        .toThrow();
+    });
+  });
 
-  // describe('for question thread', () => {
-  //   const findLoadMoreCommentsButtons = () => screen.findAllByTestId('load-more-comments');
+  describe('for question thread', () => {
+    const findLoadMoreCommentsButtons = () => screen.findAllByTestId('load-more-comments');
 
-  //   it('initially loads only the first page', async () => {
-  //     act(() => renderComponent(questionPostId));
-  //     expect(await screen.findByText('comment number 3', { exact: false }))
-  //       .toBeInTheDocument();
-  //     expect(await screen.findByText('endorsed comment number 5', { exact: false }))
-  //       .toBeInTheDocument();
-  //     expect(screen.queryByText('comment number 4', { exact: false }))
-  //       .not
-  //       .toBeInTheDocument();
-  //   });
+    it('initially loads only the first page', async () => {
+      act(() => renderComponent(questionPostId));
+      expect(await screen.findByText('comment number 3', { exact: false }))
+        .toBeInTheDocument();
+      expect(await screen.findByText('endorsed comment number 5', { exact: false }))
+        .toBeInTheDocument();
+      expect(screen.queryByText('comment number 4', { exact: false }))
+        .not
+        .toBeInTheDocument();
+    });
 
-  //   it('pressing load more button will load next page of comments', async () => {
-  //     act(() => {
-  //       renderComponent(questionPostId);
-  //     });
+    it('pressing load more button will load next page of comments', async () => {
+      act(() => {
+        renderComponent(questionPostId);
+      });
 
-  //     const [loadMoreButtonEndorsed, loadMoreButtonUnendorsed] = await findLoadMoreCommentsButtons();
-  //     // Both load more buttons should show
-  //     expect(await findLoadMoreCommentsButtons()).toHaveLength(2);
-  //     expect(await screen.findByText('unendorsed comment number 3', { exact: false }))
-  //       .toBeInTheDocument();
-  //     expect(await screen.findByText('endorsed comment number 5', { exact: false }))
-  //       .toBeInTheDocument();
-  //     // Comments from next page should not be loaded yet.
-  //     expect(await screen.queryByText('endorsed comment number 6', { exact: false }))
-  //       .not
-  //       .toBeInTheDocument();
-  //     expect(await screen.queryByText('unendorsed comment number 4', { exact: false }))
-  //       .not
-  //       .toBeInTheDocument();
+      const [loadMoreButtonEndorsed, loadMoreButtonUnendorsed] = await findLoadMoreCommentsButtons();
+      // Both load more buttons should show
+      expect(await findLoadMoreCommentsButtons()).toHaveLength(2);
+      expect(await screen.findByText('unendorsed comment number 3', { exact: false }))
+        .toBeInTheDocument();
+      expect(await screen.findByText('endorsed comment number 5', { exact: false }))
+        .toBeInTheDocument();
+      // Comments from next page should not be loaded yet.
+      expect(await screen.queryByText('endorsed comment number 6', { exact: false }))
+        .not
+        .toBeInTheDocument();
+      expect(await screen.queryByText('unendorsed comment number 4', { exact: false }))
+        .not
+        .toBeInTheDocument();
 
-  //     await act(async () => {
-  //       fireEvent.click(loadMoreButtonEndorsed);
-  //     });
-  //     // Endorsed comment from next page should be loaded now.
-  //     await waitFor(() => expect(screen.queryByText('endorsed comment number 6', { exact: false }))
-  //       .toBeInTheDocument());
-  //     // Unendorsed comment from next page should not be loaded yet.
-  //     expect(await screen.queryByText('unendorsed comment number 4', { exact: false }))
-  //       .not
-  //       .toBeInTheDocument();
-  //     // Now only one load more buttons should show, for unendorsed comments
-  //     expect(await findLoadMoreCommentsButtons()).toHaveLength(1);
-  //     await act(async () => {
-  //       fireEvent.click(loadMoreButtonUnendorsed);
-  //     });
-  //     // Unendorsed comment from next page should be loaded now.
-  //     await waitFor(() => expect(screen.queryByText('unendorsed comment number 4', { exact: false }))
-  //       .toBeInTheDocument());
-  //     await expect(findLoadMoreCommentsButtons()).rejects.toThrow();
-  //   });
-  // });
+      await act(async () => {
+        fireEvent.click(loadMoreButtonEndorsed);
+      });
+      // Endorsed comment from next page should be loaded now.
+      await waitFor(() => expect(screen.queryByText('endorsed comment number 6', { exact: false }))
+        .toBeInTheDocument());
+      // Unendorsed comment from next page should not be loaded yet.
+      expect(await screen.queryByText('unendorsed comment number 4', { exact: false }))
+        .not
+        .toBeInTheDocument();
+      // Now only one load more buttons should show, for unendorsed comments
+      expect(await findLoadMoreCommentsButtons()).toHaveLength(1);
+      await act(async () => {
+        fireEvent.click(loadMoreButtonUnendorsed);
+      });
+      // Unendorsed comment from next page should be loaded now.
+      await waitFor(() => expect(screen.queryByText('unendorsed comment number 4', { exact: false }))
+        .toBeInTheDocument());
+      await expect(findLoadMoreCommentsButtons()).rejects.toThrow();
+    });
+  });
 
-  // describe('comments responses', () => {
-  //   const findLoadMoreCommentsResponsesButton = () => screen.findByTestId('load-more-comments-responses');
+  describe('comments responses', () => {
+    const findLoadMoreCommentsResponsesButton = () => screen.findByTestId('load-more-comments-responses');
 
-  //   it('initially loads only the first page', async () => {
-  //     renderComponent(discussionPostId);
+    it('initially loads only the first page', async () => {
+      renderComponent(discussionPostId);
 
-  //     await waitFor(() => screen.findByText('comment number 7', { exact: false }));
-  //     expect(screen.queryByText('comment number 8', { exact: false })).not.toBeInTheDocument();
-  //   });
+      await waitFor(() => screen.findByText('comment number 7', { exact: false }));
+      expect(screen.queryByText('comment number 8', { exact: false })).not.toBeInTheDocument();
+    });
 
-  //   it('pressing load more button will load next page of responses', async () => {
-  //     renderComponent(discussionPostId);
+    it('pressing load more button will load next page of responses', async () => {
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-  //     await act(async () => {
-  //       fireEvent.click(loadMoreButton);
-  //     });
+      const loadMoreButton = await findLoadMoreCommentsResponsesButton();
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
-  //     await screen.findByText('comment number 8', { exact: false });
-  //   });
+      await screen.findByText('comment number 8', { exact: false });
+    });
 
-  //   it('newly loaded responses are appended to the old ones', async () => {
-  //     renderComponent(discussionPostId);
+    it('newly loaded responses are appended to the old ones', async () => {
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-  //     await act(async () => {
-  //       fireEvent.click(loadMoreButton);
-  //     });
+      const loadMoreButton = await findLoadMoreCommentsResponsesButton();
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
-  //     await screen.findByText('comment number 8', { exact: false });
-  //     // check that comments from the first page are also displayed
-  //     expect(screen.queryByText('comment number 7', { exact: false })).toBeInTheDocument();
-  //   });
+      await screen.findByText('comment number 8', { exact: false });
+      // check that comments from the first page are also displayed
+      expect(screen.queryByText('comment number 7', { exact: false })).toBeInTheDocument();
+    });
 
-  //   it('load more button is hidden when no more responses pages to load', async () => {
-  //     const totalPages = 2;
-  //     renderComponent(discussionPostId);
+    it('load more button is hidden when no more responses pages to load', async () => {
+      const totalPages = 2;
+      renderComponent(discussionPostId);
 
-  //     const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-  //     for (let page = 1; page < totalPages; page++) {
-  //       act(() => {
-  //         fireEvent.click(loadMoreButton);
-  //       });
-  //     }
+      const loadMoreButton = await findLoadMoreCommentsResponsesButton();
+      for (let page = 1; page < totalPages; page++) {
+        act(() => {
+          fireEvent.click(loadMoreButton);
+        });
+      }
 
-  //     await screen.findByText('comment number 8', { exact: false });
-  //     await expect(findLoadMoreCommentsResponsesButton())
-  //       .rejects
-  //       .toThrow();
-  //   });
+      await screen.findByText('comment number 8', { exact: false });
+      await expect(findLoadMoreCommentsResponsesButton())
+        .rejects
+        .toThrow();
+    });
 
-  //   it('handles liking a comment', async () => {
-  //     renderComponent(discussionPostId);
+    it('handles liking a comment', async () => {
+      renderComponent(discussionPostId);
 
-  //     // Wait for the content to load
-  //     await act(async () => {
-  //       fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
-  //     });
-  //     const view = screen.getByTestId('comment-comment-1');
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
+      const view = screen.getByTestId('comment-comment-1');
 
-  //     const likeButton = within(view).getByRole('button', { name: /like/i });
-  //     await act(async () => {
-  //       fireEvent.click(likeButton);
-  //     });
-  //     expect(axiosMock.history.patch).toHaveLength(2);
-  //     expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
-  //   });
+      const likeButton = within(view).getByRole('button', { name: /like/i });
+      await act(async () => {
+        fireEvent.click(likeButton);
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ voted: true });
+    });
 
-  //   it('handles endorsing comments', async () => {
-  //     renderComponent(discussionPostId);
-  //     // Wait for the content to load
-  //     await act(async () => {
-  //       fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
-  //     });
+    it('handles endorsing comments', async () => {
+      renderComponent(discussionPostId);
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
 
-  //     // There should be three buttons, one for the post, the second for the
-  //     // comment and the third for a response to that comment
-  //     const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
-  //     await act(async () => {
-  //       fireEvent.click(actionButtons[1]);
-  //     });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /Endorse/i }));
+      });
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ endorsed: true });
+    });
 
-  //     await act(async () => {
-  //       fireEvent.click(screen.getByRole('button', { name: /Endorse/i }));
-  //     });
-  //     expect(axiosMock.history.patch).toHaveLength(2);
-  //     expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ endorsed: true });
-  //   });
+    it('handles reporting comments', async () => {
+      renderComponent(discussionPostId);
+      // Wait for the content to load
+      await act(async () => {
+        fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
+      });
 
-  //   it('handles reporting comments', async () => {
-  //     renderComponent(discussionPostId);
-  //     // Wait for the content to load
-  //     await act(async () => {
-  //       fireEvent.mouseOver(await waitFor(() => screen.findByText('comment number 7', { exact: false })));
-  //     });
+      // There should be three buttons, one for the post, the second for the
+      // comment and the third for a response to that comment
+      const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
+      await act(async () => {
+        fireEvent.click(actionButtons[1]);
+      });
 
-  //     // There should be three buttons, one for the post, the second for the
-  //     // comment and the third for a response to that comment
-  //     const actionButtons = screen.queryAllByRole('button', { name: /actions menu/i });
-  //     await act(async () => {
-  //       fireEvent.click(actionButtons[1]);
-  //     });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /Report/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).toBeInTheDocument();
+      await act(async () => {
+        fireEvent.click(screen.queryByRole('button', { name: /Confirm/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).not.toBeInTheDocument();
+      expect(axiosMock.history.patch).toHaveLength(2);
+      expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ abuse_flagged: true });
+    });
+  });
 
-  //     await act(async () => {
-  //       fireEvent.click(screen.getByRole('button', { name: /Report/i }));
-  //     });
-  //     expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).toBeInTheDocument();
-  //     await act(async () => {
-  //       fireEvent.click(screen.queryByRole('button', { name: /Confirm/i }));
-  //     });
-  //     expect(screen.queryByRole('dialog', { name: /Report \w+/i, exact: false })).not.toBeInTheDocument();
-  //     expect(axiosMock.history.patch).toHaveLength(2);
-  //     expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ abuse_flagged: true });
-  //   });
-  // });
-
-  // describe.each([
-  //   { component: 'post', testId: 'post-thread-1' },
-  //   { component: 'comment', testId: 'comment-comment-1' },
-  //   { component: 'reply', testId: 'reply-comment-7' },
-  // ])('delete confirmation modal', ({
-  //   component,
-  //   testId,
-  // }) => {
-  //   test(`for ${component}`, async () => {
-  //     renderComponent(discussionPostId);
-  //     // Wait for the content to load
-  //     await waitFor(() => expect(screen.queryByText('comment number 7', { exact: false })).toBeInTheDocument());
-  //     const content = screen.getByTestId(testId);
-  //     await act(async () => {
-  //       fireEvent.mouseOver(screen.getByTestId('post-thread-1'));
-  //     });
-  //     const actionsButton = within(content).getAllByRole('button', { name: /actions menu/i })[0];
-  //     await act(async () => {
-  //       fireEvent.click(actionsButton);
-  //     });
-  //     expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).not.toBeInTheDocument();
-  //     const deleteButton = within(content).queryByRole('button', { name: /delete/i });
-  //     await act(async () => {
-  //       fireEvent.click(deleteButton);
-  //     });
-  //     expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).toBeInTheDocument();
-  //     await act(async () => {
-  //       fireEvent.click(screen.queryByRole('button', { name: /delete/i }));
-  //     });
-  //     expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).not.toBeInTheDocument();
-  //   });
-  // });
+  describe.each([
+    { component: 'post', testId: 'post-thread-1' },
+    { component: 'comment', testId: 'comment-comment-1' },
+    { component: 'reply', testId: 'reply-comment-7' },
+  ])('delete confirmation modal', ({
+    component,
+    testId,
+  }) => {
+    test(`for ${component}`, async () => {
+      renderComponent(discussionPostId);
+      // Wait for the content to load
+      await waitFor(() => expect(screen.queryByText('comment number 7', { exact: false })).toBeInTheDocument());
+      const content = screen.getByTestId(testId);
+      await act(async () => {
+        fireEvent.mouseOver(content);
+      });
+      const actionsButton = within(content).getAllByRole('button', { name: /actions menu/i })[0];
+      await act(async () => {
+        fireEvent.click(actionsButton);
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).not.toBeInTheDocument();
+      const deleteButton = within(content).queryByRole('button', { name: /delete/i });
+      await act(async () => {
+        fireEvent.click(deleteButton);
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).toBeInTheDocument();
+      await act(async () => {
+        fireEvent.click(screen.queryByRole('button', { name: /delete/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /delete \w+/i, exact: false })).not.toBeInTheDocument();
+    });
+  });
 });

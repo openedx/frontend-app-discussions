@@ -43,6 +43,7 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const [showHoverCard, setShowHoverCard] = useState(false);
   const {
     courseId,
   } = useContext(DiscussionContext);
@@ -91,7 +92,13 @@ function Comment({
   );
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
-      <div className="d-flex flex-column card on-focus" data-testid={`comment-${comment.id}`} role="listitem">
+      {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
+      <div
+        tabIndex="0"
+        className="d-flex flex-column card on-focus"
+        data-testid={`comment-${comment.id}`}
+        role="listitem"
+      >
         <Confirmation
           isOpen={isDeleting}
           title={intl.formatMessage(messages.deleteResponseTitle)}
@@ -115,16 +122,22 @@ function Comment({
         <div
           className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px"
           aria-level={5}
+          onMouseEnter={() => setShowHoverCard(true)}
+          onMouseLeave={() => setShowHoverCard(false)}
+          onFocus={() => setShowHoverCard(true)}
+          onBlur={() => setShowHoverCard(false)}
         >
-          <HoverCard
-            commentOrPost={comment}
-            actionHandlers={actionHandlers}
-            handleResponseCommentButton={() => setReplying(true)}
-            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-            addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
-            isClosedPost={isClosedPost}
-            endorseIcons={endorseIcons}
-          />
+          {showHoverCard && (
+            <HoverCard
+              commentOrPost={comment}
+              actionHandlers={actionHandlers}
+              handleResponseCommentButton={() => setReplying(true)}
+              onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+              addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
+              isClosedPost={isClosedPost}
+              endorseIcons={endorseIcons}
+            />
+          )}
           <AlertBanner content={comment} />
           <CommentHeader comment={comment} />
           {isEditing
