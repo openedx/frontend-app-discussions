@@ -36,7 +36,7 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const [loadingState, setLoadingState] = useState(window.MathJax ? 'loaded' : 'loading');
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef();
-  const mathjaxScript = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  const mathjaxScript = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.7/MathJax.js?config=TeX-MML-AM_HTMLorMML';
 
   useEffect(() => {
     let mathjaxScriptTag = document.querySelector(`script[src="${mathjaxScript}"]`);
