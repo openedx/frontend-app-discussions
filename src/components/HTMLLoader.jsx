@@ -28,7 +28,7 @@ const baseConfig = {
 };
 
 const defaultSanitizeOptions = {
-  USE_PROFILES: { html: true, mathMl: true },
+  USE_PROFILES: { html: true },
   ADD_ATTR: ['columnalign'],
 };
 
@@ -36,7 +36,7 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const [loadingState, setLoadingState] = useState(window.MathJax ? 'loaded' : 'loading');
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef();
-  const mathjaxScript = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  const mathjaxScript = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_SVG';
 
   useEffect(() => {
     let mathjaxScriptTag = document.querySelector(`script[src="${mathjaxScript}"]`);
