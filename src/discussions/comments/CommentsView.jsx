@@ -25,7 +25,7 @@ import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
-import { discussionsPath, filterPosts } from '../utils';
+import { discussionsPath, filterPosts, isLastElementOfList } from '../utils';
 import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -99,13 +99,13 @@ function DiscussionCommentsView({
 
   const handleComments = (postComments, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
-      {postComments.map((comment, index) => (
+      {postComments.map((comment) => (
         <Comment
           comment={comment}
           key={comment.id}
           postType={postType}
           isClosedPost={isClosed}
-          marginBottom={index === (postComments.length - 1)}
+          marginBottom={isLastElementOfList(postComments, comment)}
         />
 
       ))}
