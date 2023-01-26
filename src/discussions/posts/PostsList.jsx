@@ -53,7 +53,6 @@ function PostsList({
     };
 
     if (prevFilters.current.search !== filters.search || !showOwnPosts) {
-      console.log(params);
       dispatch(fetchThreads(courseId, params));
     }
     if (showOwnPosts) {
