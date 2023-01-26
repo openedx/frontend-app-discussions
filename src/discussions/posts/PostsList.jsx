@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useMemo,
+  useCallback, useContext, useEffect, useMemo, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -39,6 +39,7 @@ function PostsList({
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
+  const prevFilters = useRef(filters);
 
   const loadThreads = (topicIds, pageNum = undefined, isFilterChanged = false) => {
     const params = {
@@ -51,10 +52,12 @@ function PostsList({
       isFilterChanged,
     };
 
+    if (prevFilters.current.search !== filters.search || !showOwnPosts) {
+      console.log(params);
+      dispatch(fetchThreads(courseId, params));
+    }
     if (showOwnPosts) {
       dispatch(fetchUserPosts(courseId, params));
-    } else {
-      dispatch(fetchThreads(courseId, params));
     }
   };
 
