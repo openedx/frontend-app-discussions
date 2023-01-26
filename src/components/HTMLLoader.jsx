@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 
 import DOMPurify from 'dompurify';
@@ -12,6 +12,7 @@ const defaultSanitizeOptions = {
 
 function HTMLLoader({ htmlNode, componentId, cssClassName }) {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
+  const previewRef = useRef();
 
   useEffect(() => {
     let promise = Promise.resolve(); // Used to hold chain of typesetting calls
@@ -22,15 +23,12 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
     }
 
     typeset(() => {
-      const math = document.querySelector('#tex2jax_process');
-      math.innerHTML = sanitizedMath;
-      return [math];
+      previewRef.current.innerHTML = sanitizedMath;
     });
   }, [sanitizedMath]);
 
   return (
-    <div className={cssClassName} id={componentId}>
-      <div id="tex2jax_process" />
+    <div ref={previewRef} className={cssClassName} id={componentId}>
     </div>
 
   );
