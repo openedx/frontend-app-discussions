@@ -339,7 +339,7 @@ header {
 }
 
 .actions-dropdown {
-  z-index: 0;
+  z-index: 1;
 }
 
 .discussion-topic-group:last-of-type .divider {
@@ -425,7 +425,7 @@ header {
   pointer-events: none;
 }
 
-.on-focus:focus {
+.on-focus:focus-visible {
   outline: 2px solid black;
 }
 

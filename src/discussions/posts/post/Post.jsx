@@ -64,6 +64,12 @@ function Post({
     hideReportConfirmation();
   };
 
+  const handleBlurEvent = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setShowHoverCard(false);
+    }
+  };
+
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -96,7 +102,7 @@ function Post({
       onMouseEnter={() => setShowHoverCard(true)}
       onMouseLeave={() => setShowHoverCard(false)}
       onFocus={() => setShowHoverCard(true)}
-      onBlur={() => setShowHoverCard(false)}
+      onBlur={(e) => handleBlurEvent(e)}
     >
       <Confirmation
         isOpen={isDeleting}
@@ -117,7 +123,6 @@ function Post({
           confirmButtonVariant="danger"
         />
       )}
-
       {showHoverCard && (
         <HoverCard
           commentOrPost={post}
@@ -159,7 +164,6 @@ function Post({
           </Hyperlink>
         </div>
       )}
-
       <PostFooter post={post} preview={preview} />
       <ClosePostReasonModal
         isOpen={isClosing}
