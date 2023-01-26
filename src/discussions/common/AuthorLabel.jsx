@@ -43,6 +43,7 @@ function AuthorLabel({
   }
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
+  const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
 
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
@@ -91,7 +92,7 @@ function AuthorLabel({
       {authorLabelMessage && (
         <span
           className={classNames('mr-1.5 font-size-14 font-style-normal font-family-inter font-weight-500', {
-            'text-primary-500': !authorLabelMessage && !isRetiredUser && !alert,
+            'text-primary-500': showTextPrimary,
             'text-gray-700': isRetiredUser,
           })}
           style={{ marginLeft: '2px' }}

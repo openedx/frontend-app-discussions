@@ -294,3 +294,7 @@ export function handleKeyDown(event) {
     selectedOption.focus();
   }
 }
+
+export function isLastElementOfList(list, element) {
+  return list[list.length - 1] === element;
+}
