@@ -9,9 +9,10 @@
       href="<%=htmlWebpackPlugin.options.FAVICON_URL%>"
       type="image/x-icon"
     />
-    <script>
-      window.MathJax = {
-        tex: {
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        tex2jax: {
           inlineMath: [
             ['$', '$'],
             ['\\\\(', '\\\\)'],
@@ -29,23 +30,15 @@
           ],
           processEscapes: true,
           processEnvironments: true,
-          autoload: {
-            color: [],
-            colorv2: ['color']
-          },
-          packages: {'[+]': ['noerrors']}
         },
-        options: {
-          ignoreHtmlClass: 'tex2jax_ignore',
-          processHtmlClass: 'tex2jax_process'
-        },
-        loader: {
-          load: ['input/asciimath', '[tex]/noerrors']
-        }
-      };
+      });
     </script>
-    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
-
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_SVG">
+    </script>
+    <script type="text/javascript">
+      MathJax.Hub.Configured()
+    </script>
   </head>
   <body>
     <div id="root" class="small"></div>
