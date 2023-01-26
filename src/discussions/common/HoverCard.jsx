@@ -33,11 +33,11 @@ function HoverCard({
 
   return (
     <div
-      className="d-flex hover-card mr-n4 position-absolute"
+      className="d-flex flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
       data-testid="hover-card"
     >
       {userCanAddThreadInBlackoutDate && (
-        <div className="actions d-flex">
+        <div className="d-flex">
           <Button
             variant="tertiary"
             className={classNames('px-2.5 py-2 border-0 font-style-normal font-family-inter text-gray-700 font-size-12',
@@ -98,8 +98,7 @@ function HoverCard({
           />
         </div>
       )}
-
-      <div className="hover-button ml-auto d-flex">
+      <div className="hover-button ml-auto">
         <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} dropDownIconSize />
       </div>
     </div>
