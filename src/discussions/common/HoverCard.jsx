@@ -33,14 +33,15 @@ function HoverCard({
 
   return (
     <div
-      className="d-flex flex-row flex-fill justify-content-end align-items-center hover-card mr-n3 position-absolute"
+      className="flex-row flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute d-none"
       data-testid="hover-card"
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="actions d-flex">
           <Button
             variant="tertiary"
-            className={classNames('px-2.5 py-2 font-size-14', { 'w-100': enableInContextSidebar })}
+            className={classNames('px-2.5 py-2 border-0 font-style-normal font-family-inter text-gray-700 font-size-12',
+              { 'w-100': enableInContextSidebar })}
             onClick={() => handleResponseCommentButton()}
             disabled={isClosedPost}
             style={{
@@ -68,7 +69,19 @@ function HoverCard({
 
         </div>
       )}
-
+      <div className="hover-button">
+        <IconButton
+          src={commentOrPost.voted ? ThumbUpFilled : ThumbUpOutline}
+          iconAs={Icon}
+          size="sm"
+          alt="Like"
+          iconClassNames="like-icon-dimentions"
+          onClick={(e) => {
+            e.preventDefault();
+            onLike();
+          }}
+        />
+      </div>
       {commentOrPost.following !== undefined && (
         <div className="hover-button">
           <IconButton
@@ -76,6 +89,7 @@ function HoverCard({
             iconAs={Icon}
             size="sm"
             alt="Follow"
+            iconClassNames="follow-icon-dimentions"
             onClick={(e) => {
               e.preventDefault();
               onFollow();
@@ -84,20 +98,9 @@ function HoverCard({
           />
         </div>
       )}
-      <div className="hover-button">
-        <IconButton
-          src={commentOrPost.voted ? ThumbUpFilled : ThumbUpOutline}
-          iconAs={Icon}
-          size="sm"
-          alt="Like"
-          onClick={(e) => {
-            e.preventDefault();
-            onLike();
-          }}
-        />
-      </div>
+
       <div className="hover-button ml-auto d-flex">
-        <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} />
+        <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} dropDownIconSize />
       </div>
     </div>
   );

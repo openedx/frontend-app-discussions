@@ -88,16 +88,16 @@ function DiscussionCommentsView({
 
   const handleDefinition = (message, commentsLength) => (
     <div
-      className="mx-4 my-14px text-primary-700"
+      className="mx-4 my-14px text-gray-700 font-style-normal font-family-inter"
       role="heading"
       aria-level="2"
-      style={{ lineHeight: '28px' }}
+      style={{ lineHeight: '24px' }}
     >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
   );
 
-  const handleComments = (postComments, showLoadMoreResponses = false, marginBottom = true) => (
+  const handleComments = (postComments, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
       {postComments.map((comment, index) => (
         <Comment
@@ -105,7 +105,7 @@ function DiscussionCommentsView({
           key={comment.id}
           postType={postType}
           isClosedPost={isClosed}
-          marginBottom={!marginBottom && index === (postComments.length - 1)}
+          marginBottom={index === (postComments.length - 1)}
         />
 
       ))}
@@ -114,7 +114,7 @@ function DiscussionCommentsView({
           onClick={handleLoadMoreResponses}
           variant="link"
           block="true"
-          className="px-4 py-0 mb-2 font-weight-500 font-size-14"
+          className="px-4 mt-3 py-0 mb-2 font-style-normal font-family-inter font-weight-500 font-size-14"
           style={{
             lineHeight: '24px',
             border: '0px',
@@ -125,8 +125,8 @@ function DiscussionCommentsView({
         </Button>
       )}
       {isLoading && !showLoadMoreResponses && (
-        <div className="mb-2 d-flex justify-content-center">
-          <Spinner animation="border" variant="primary" />
+        <div className="mb-2 mt-3 d-flex justify-content-center">
+          <Spinner animation="border" variant="primary" className="spinner-dimentions" />
         </div>
       )}
     </div>
@@ -139,22 +139,22 @@ function DiscussionCommentsView({
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
               {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, true, false)
-                : handleComments(endorsedComments, false, false)}
+                ? handleComments(endorsedComments, true)
+                : handleComments(endorsedComments, false)}
             </>
           )}
           {endorsed !== EndorsementStatus.ENDORSED && (
             <>
               {handleDefinition(messages.responseCount, unEndorsedComments.length)}
               {unEndorsedComments.length === 0 && <br />}
-              {handleComments(unEndorsedComments, false, true)}
+              {handleComments(unEndorsedComments, false)}
               {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
                     <Button
-                      variant="tertiary"
+                      variant="plain"
                       block="true"
-                      className="card mb-4 px-0 py-10px mt-2 font-weight-500 font-size-14 text-primary-500"
+                      className="card mb-4 px-0 py-10px mt-2 font-style-normal font-family-inter font-weight-500 font-size-14 text-primary-500"
                       style={{
                         lineHeight: '24px',
                         border: '0px',
@@ -260,10 +260,11 @@ function CommentsView({ intl }) {
           />
         )
       )}
-      <div className={classNames('discussion-comments d-flex flex-column card', {
-        'post-card-margin post-card-padding': !enableInContextSidebar,
-        'post-card-padding rounded-0 border-0 mb-4': enableInContextSidebar,
-      })}
+      <div
+        className={classNames('discussion-comments d-flex flex-column card border-0', {
+          'post-card-margin post-card-padding': !enableInContextSidebar,
+          'post-card-padding rounded-0 border-0 mb-4': enableInContextSidebar,
+        })}
       >
         <Post post={thread} handleAddResponseButton={() => setAddingResponse(true)} />
         {!thread.closed && (

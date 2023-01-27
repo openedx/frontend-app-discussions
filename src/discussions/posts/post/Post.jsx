@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -41,7 +41,6 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
-  const [showHoverCard, setShowHoverCard] = useState(false);
 
   const handleAbusedFlag = () => {
     if (post.abuseFlagged) {
@@ -91,10 +90,8 @@ function Post({
 
   return (
     <div
-      className="d-flex flex-column w-100 mw-100 "
-      data-testid={`post-${post.id}`}
-      onMouseEnter={() => setShowHoverCard(true)}
-      onMouseLeave={() => setShowHoverCard(false)}
+      className="d-flex flex-column w-100 mw-100 post-card-comment"
+      aria-level={5}
     >
       <Confirmation
         isOpen={isDeleting}
@@ -115,29 +112,29 @@ function Post({
           confirmButtonVariant="danger"
         />
       )}
-      {showHoverCard && (
-        <HoverCard
-          commentOrPost={post}
-          actionHandlers={actionHandlers}
-          handleResponseCommentButton={handleAddResponseButton}
-          addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
-          onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
-          onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
-          isClosedPost={post.closed}
-        />
-      )}
+
+      <HoverCard
+        commentOrPost={post}
+        actionHandlers={actionHandlers}
+        handleResponseCommentButton={handleAddResponseButton}
+        addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
+        onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
+        onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
+        isClosedPost={post.closed}
+      />
+
       <AlertBanner content={post} />
       <PostHeader post={post} />
-      <div className="d-flex mt-14px text-break font-style-normal text-primary-500">
-        <HTMLLoader htmlNode={post.renderedBody} componentId="post" />
+      <div className="d-flex mt-14px text-break font-style-normal font-family-inter text-primary-500">
+        <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" />
       </div>
       {topicContext && topic && (
         <div
-          className={classNames('mb-10px',
+          className={classNames('mt-14px mb-1 font-style-normal font-family-inter font-size-12',
             { 'w-100': enableInContextSidebar })}
           style={{ lineHeight: '20px' }}
         >
-          <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
+          <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
             destination={topicContext.unitLink}
             target="_top"

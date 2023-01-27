@@ -42,7 +42,6 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
-  const [showHoverCard, setShowHoverCard] = useState(false);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
     courseId,
@@ -92,7 +91,7 @@ function Comment({
   );
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
-      <div className="d-flex flex-column card" data-testid={`comment-${comment.id}`} role="listitem">
+      <div className="d-flex flex-column card on-focus" data-testid={`comment-${comment.id}`} role="listitem">
         <Confirmation
           isOpen={isDeleting}
           title={intl.formatMessage(messages.deleteResponseTitle)}
@@ -114,24 +113,18 @@ function Comment({
         )}
         <EndorsedAlertBanner postType={postType} content={comment} />
         <div
-          className={classNames('d-flex flex-column', {
-            'p-4': !hasMorePages,
-            'comment-card-padding': hasMorePages,
-          })}
-          onMouseEnter={() => setShowHoverCard(true)}
-          onMouseLeave={() => setShowHoverCard(false)}
+          className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px"
+          aria-level={5}
         >
-          {showHoverCard && (
-            <HoverCard
-              commentOrPost={comment}
-              actionHandlers={actionHandlers}
-              handleResponseCommentButton={() => setReplying(true)}
-              onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-              addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
-              isClosedPost={isClosedPost}
-              endorseIcons={endorseIcons}
-            />
-          )}
+          <HoverCard
+            commentOrPost={comment}
+            actionHandlers={actionHandlers}
+            handleResponseCommentButton={() => setReplying(true)}
+            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+            addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
+            isClosedPost={isClosedPost}
+            endorseIcons={endorseIcons}
+          />
           <AlertBanner content={comment} />
           <CommentHeader comment={comment} />
           {isEditing
@@ -151,24 +144,25 @@ function Comment({
             onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
             createdAt={comment.createdAt}
           />
-          <div className="sr-only" role="heading" aria-level="3"> {intl.formatMessage(messages.replies, { count: inlineReplies.length })}</div>
-          <div className="d-flex flex-column" role="list">
-            {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
-            {inlineReplies.map(inlineReply => (
-              <Reply
-                reply={inlineReply}
-                postType={postType}
-                key={inlineReply.id}
-                intl={intl}
-              />
-            ))}
-          </div>
+          {inlineReplies.length > 0 && (
+            <div className="d-flex flex-column mt-0.5" role="list">
+              {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
+              {inlineReplies.map(inlineReply => (
+                <Reply
+                  reply={inlineReply}
+                  postType={postType}
+                  key={inlineReply.id}
+                  intl={intl}
+                />
+              ))}
+            </div>
+          )}
           {hasMorePages && (
             <Button
               onClick={handleLoadMoreComments}
               variant="link"
               block="true"
-              className="mt-4.5 font-size-14 font-style-normal font-family-inter font-weight-500 px-2.5 py-2"
+              className="font-size-14 font-style-normal font-family-inter pt-10px border-0 font-weight-500 pb-0"
               data-testid="load-more-comments-responses"
               style={{
                 lineHeight: '20px',

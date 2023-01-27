@@ -21,7 +21,7 @@ function CommentIcons({
     return null;
   }
   return (
-    <div className="d-flex flex-row align-items-center">
+    <div className="ml-n1.5 mt-10px">
       <LikeButton
         count={comment.voteCount}
         onClick={handleLike}

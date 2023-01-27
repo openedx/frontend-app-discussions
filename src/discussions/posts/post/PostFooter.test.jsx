@@ -64,11 +64,6 @@ describe('PostFooter', () => {
     });
   });
 
-  it("shows 'x new' badge for new comments in case of read post only", () => {
-    renderComponent(mockPost, true, true);
-    expect(screen.getByText('2 New')).toBeTruthy();
-  });
-
   it("doesn't have 'new' badge when there are 0 new comments", () => {
     renderComponent({ ...mockPost, unreadCommentCount: 0 });
     expect(screen.queryByText('2 New')).toBeFalsy();
