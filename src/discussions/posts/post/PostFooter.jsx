@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
-import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
@@ -19,7 +18,6 @@ import {
   StarFilled,
   StarOutline,
 } from '../../../components/icons';
-import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
@@ -34,32 +32,34 @@ function PostFooter({
 }) {
   const dispatch = useDispatch();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
-  timeago.register('time-locale', timeLocale);
-
   return (
     <div className="d-flex align-items-center">
-      <LikeButton
-        count={post.voteCount}
-        onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
-        voted={post.voted}
-        preview={preview}
-      />
-      <IconButtonWithTooltip
-        id={`follow-${post.id}-tooltip`}
-        tooltipPlacement="top"
-        tooltipContent={intl.formatMessage(post.following ? messages.unFollow : messages.follow)}
-        src={post.following ? StarFilled : StarOutline}
-        iconAs={Icon}
-        alt="Follow"
-        onClick={(e) => {
-          e.preventDefault();
-          dispatch(updateExistingThread(post.id, { following: !post.following }));
-          return true;
-        }}
-        size={preview ? 'inline' : 'sm'}
-        className={preview && 'p-3'}
-        iconClassNames={preview && 'icon-size'}
-      />
+      {post.voteCount !== 0 && (
+        <LikeButton
+          count={post.voteCount}
+          onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
+          voted={post.voted}
+          preview={preview}
+        />
+      )}
+      {post.following && (
+        <IconButtonWithTooltip
+          id={`follow-${post.id}-tooltip`}
+          tooltipPlacement="top"
+          tooltipContent={intl.formatMessage(post.following ? messages.unFollow : messages.follow)}
+          src={post.following ? StarFilled : StarOutline}
+          iconAs={Icon}
+          alt="Follow"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(updateExistingThread(post.id, { following: !post.following }));
+            return true;
+          }}
+          size={preview ? 'inline' : 'sm'}
+          className={preview && 'p-3'}
+          iconClassNames={preview && 'icon-size'}
+        />
+      )}
       {preview && post.commentCount > 1 && (
         <div className="d-flex align-items-center ml-4">
           <IconButtonWithTooltip
@@ -100,9 +100,7 @@ function PostFooter({
             </span>
           </>
         )}
-        <span title={post.createdAt} className="text-gray-700">
-          {timeago.format(post.createdAt, 'time-locale')}
-        </span>
+
         {!preview && post.closed
           && (
             <OverlayTrigger

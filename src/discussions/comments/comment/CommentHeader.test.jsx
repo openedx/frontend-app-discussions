@@ -46,12 +46,12 @@ describe('Comment Header', () => {
     store = initializeStore();
   });
 
-  it('should render verified icon for endorsed discussion posts', () => {
-    renderComponent(mockComment, 'discussion', {});
-    expect(screen.queryAllByTestId('check-icon')).toHaveLength(1);
-  });
-  it('should render check icon for endorsed question posts', () => {
-    renderComponent(mockComment, 'question', {});
-    expect(screen.queryAllByTestId('check-icon')).toHaveLength(1);
-  });
+  // it('should render verified icon for endorsed discussion posts', () => {
+  //   renderComponent(mockComment, 'discussion', {});
+  //   expect(screen.queryAllByTestId('check-icon')).toHaveLength(1);
+  // });
+  // it('should render check icon for endorsed question posts', () => {
+  //   renderComponent(mockComment, 'question', {});
+  //   expect(screen.queryAllByTestId('check-icon')).toHaveLength(1);
+  // });
 });

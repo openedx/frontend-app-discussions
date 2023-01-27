@@ -9,7 +9,7 @@ import { Avatar, Badge, Icon } from '@edx/paragon';
 
 import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
-import { ActionsDropdown, AuthorLabel } from '../../common';
+import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
 import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
@@ -24,7 +24,7 @@ export function PostAvatar({
   const avatarSize = useMemo(() => {
     let size = '2rem';
     if (post.type === ThreadType.DISCUSSION && !fromPostLink) {
-      size = '2.375rem';
+      size = '2rem';
     } else if (post.type === ThreadType.QUESTION) {
       size = '1.5rem';
     }
@@ -52,11 +52,11 @@ export function PostAvatar({
         />
       )}
       <Avatar
-        className={classNames('border-0', {
+        className={classNames('border-0 mt-1', {
           [`outline-${outlineColor}`]: outlineColor,
           'outline-anonymous': !outlineColor,
           'mt-3 ml-2': post.type === ThreadType.QUESTION && fromPostLink,
-          'avarat-img-position': post.type === ThreadType.QUESTION,
+          'avarat-img-position mt-17px': post.type === ThreadType.QUESTION,
         })}
         style={{
           height: avatarSize,
@@ -86,14 +86,13 @@ function PostHeader({
   intl,
   post,
   preview,
-  actionHandlers,
 }) {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(post);
 
   return (
-    <div className={classNames('d-flex flex-fill mw-100', { 'mt-2': hasAnyAlert && !preview })}>
+    <div className={classNames('d-flex flex-fill mw-100', { 'mt-10px': hasAnyAlert && !preview })}>
       <div className="flex-shrink-0">
         <PostAvatar post={post} authorLabel={post.authorLabel} />
       </div>
@@ -109,21 +108,16 @@ function PostHeader({
                   && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
               </div>
             )
-            : <h4 className="mb-0" style={{ lineHeight: '28px' }} aria-level="1" tabIndex="-1" accessKey="h">{post.title}</h4>}
+            : <h5 className="mb-0" style={{ lineHeight: '21px' }} aria-level="1" tabIndex="-1" accessKey="h">{post.title}</h5>}
           <AuthorLabel
             author={post.author || intl.formatMessage(messages.anonymous)}
             authorLabel={post.authorLabel}
             labelColor={authorLabelColor && `text-${authorLabelColor}`}
             linkToProfile
+            postCreatedAt={post.createdAt}
           />
         </div>
       </div>
-      {!preview
-        && (
-          <div className="ml-auto d-flex">
-            <ActionsDropdown commentOrPost={post} actionHandlers={actionHandlers} />
-          </div>
-        )}
     </div>
   );
 }
@@ -132,7 +126,6 @@ PostHeader.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
   preview: PropTypes.bool,
-  actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 PostHeader.defaultProps = {

@@ -23,7 +23,7 @@ function LikeButton({
   };
 
   return (
-    <div className="d-flex align-items-center mr-4 text-primary-500">
+    <div className="d-flex align-items-center mr-36px text-primary-500">
       <IconButtonWithTooltip
         id={`like-${count}-tooltip`}
         tooltipPlacement="top"

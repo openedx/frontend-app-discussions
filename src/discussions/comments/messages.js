@@ -1,15 +1,15 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
-  addResponse: {
-    id: 'discussions.comments.comment.addResponse',
-    defaultMessage: 'Add a response',
-    description: 'Button to add a response in a thread of forum posts',
-  },
   addComment: {
     id: 'discussions.comments.comment.addComment',
-    defaultMessage: 'Add a comment',
+    defaultMessage: 'Add comment',
     description: 'Button to add a comment to a response',
+  },
+  addResponse: {
+    id: 'discussions.comments.comment.addResponse',
+    defaultMessage: 'Add a Response',
+    description: 'Button to add a response to a response',
   },
   abuseFlaggedMessage: {
     id: 'discussions.comments.comment.abuseFlaggedMessage',

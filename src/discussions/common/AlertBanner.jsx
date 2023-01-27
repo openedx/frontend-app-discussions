@@ -33,15 +33,15 @@ function AlertBanner({
   return (
     <>
       {canSeeReportedBanner && (
-        <Alert icon={Report} variant="danger" className="px-3 mb-2 py-10px shadow-none flex-fill">
+        <Alert icon={Report} variant="danger" className="px-3 mb-1 py-10px shadow-none flex-fill">
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
       {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
         <>
           {content.lastEdit?.reason && (
-            <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap">
+            <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
+              <div className="d-flex align-items-center flex-wrap text-gray-700">
                 {intl.formatMessage(messages.editedBy)}
                 <span className="ml-1 mr-3">
                   <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile />
@@ -51,8 +51,8 @@ function AlertBanner({
             </Alert>
           )}
           {content.closed && (
-            <Alert variant="info" className="px-3 shadow-none mb-2 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap">
+            <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
+              <div className="d-flex align-items-center flex-wrap text-gray-700">
                 {intl.formatMessage(messages.closedBy)}
                 <span className="ml-1 ">
                   <AuthorLabel author={content.closedBy} linkToProfile />

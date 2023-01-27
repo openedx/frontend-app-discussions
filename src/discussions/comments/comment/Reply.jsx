@@ -64,7 +64,7 @@ function Reply({
   const hasAnyAlert = useAlertBannerVisible(reply);
 
   return (
-    <div className="d-flex flex-column mt-4.5" data-testid={`reply-${reply.id}`} role="listitem">
+    <div className="d-flex flex-column mt-2.5 " data-testid={`reply-${reply.id}`} role="listitem">
       <Confirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deleteCommentTitle)}
@@ -108,28 +108,38 @@ function Reply({
           />
         </div>
         <div
-          className="bg-light-300 px-4 pb-2 pt-2.5 flex-fill"
+          className="bg-light-300 px-4 pt-2 flex-fill"
           style={{ borderRadius: '0rem 0.375rem 0.375rem' }}
         >
-          <div className="d-flex flex-row justify-content-between align-items-center mb-0.5">
-            <AuthorLabel author={reply.author} authorLabel={reply.authorLabel} labelColor={colorClass && `text-${colorClass}`} linkToProfile />
-            <div className="ml-auto d-flex">
+          <div className="d-flex flex-row justify-content-between" style={{ lineHeight: '24px' }}>
+            <AuthorLabel
+              author={reply.author}
+              authorLabel={reply.authorLabel}
+              labelColor={colorClass && `text-${colorClass}`}
+              linkToProfile
+              postCreatedAt={reply.createdAt}
+            />
+            <div className="ml-auto d-flex" style={{ lineHeight: '24px' }}>
               <ActionsDropdown
                 commentOrPost={{
                   ...reply,
                   postType,
                 }}
                 actionHandlers={actionHandlers}
+                iconSize="inline"
               />
             </div>
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />
-            : <HTMLLoader componentId="reply" htmlNode={reply.renderedBody} cssClassName="text-break text-primary-500" />}
+            : (
+              <HTMLLoader
+                componentId="reply"
+                htmlNode={reply.renderedBody}
+                cssClassName="html-loader text-break font-style-normal pb-1 font-family-inter text-primary-500"
+              />
+            )}
         </div>
-      </div>
-      <div className="text-gray-500 align-self-end mt-2" title={reply.createdAt}>
-        {timeago.format(reply.createdAt, 'time-locale')}
       </div>
     </div>
   );
