@@ -52,7 +52,7 @@ function PostsList({
       isFilterChanged,
     };
 
-    if (prevFilters.current.search !== filters.search || !showOwnPosts) {
+    if ((prevFilters.current.search !== '' && prevFilters.current.search !== filters.search) || !showOwnPosts) {
       dispatch(fetchThreads(courseId, params));
     }
     if (showOwnPosts) {
