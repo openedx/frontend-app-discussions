@@ -159,7 +159,7 @@ describe('HoverCard', () => {
 
   test('it should show hover card when hovered on comment', async () => {
     renderComponent(discussionPostId);
-    const comment = await waitFor(() => screen.findByText('comment number 1', { exact: false }));
+    const comment = await waitFor(() => screen.findByTestId('comment-1'));
     userEvent.hover(comment);
     expect(screen.getByTestId('hover-card')).toBeInTheDocument();
   });
@@ -182,7 +182,7 @@ describe('HoverCard', () => {
 
   test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
     renderComponent(questionPostId);
-    const comment = await waitFor(() => screen.findByText('unendorsed comment number 3', { exact: false }));
+    const comment = await waitFor(() => screen.findByTestId('comment-3'));
     userEvent.hover(comment);
     const view = screen.getByTestId('hover-card');
     expect(screen.getByTestId('hover-card')).toBeInTheDocument();

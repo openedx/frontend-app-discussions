@@ -149,6 +149,7 @@ function Comment({
                 cssClassName="comment-body html-loader text-break mt-14px font-style-normal font-family-inter text-primary-500"
                 componentId="comment"
                 htmlNode={comment.renderedBody}
+                testId={comment.id}
               />
             )}
           <CommentIcons

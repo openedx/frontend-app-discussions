@@ -138,6 +138,7 @@ function Reply({
                 componentId="reply"
                 htmlNode={reply.renderedBody}
                 cssClassName="html-loader text-break font-style-normal pb-1 font-family-inter text-primary-500"
+                testId={reply.id}
               />
             )}
         </div>

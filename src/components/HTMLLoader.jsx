@@ -10,14 +10,17 @@ const defaultSanitizeOptions = {
   ADD_ATTR: ['columnalign'],
 };
 
-function HTMLLoader({ htmlNode, componentId, cssClassName }) {
+function HTMLLoader({
+  htmlNode, componentId, cssClassName, testId,
+}) {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef();
 
   useEffect(() => {
     let promise = Promise.resolve(); // Used to hold chain of typesetting calls
+
     function typeset(code) {
-      promise = promise.then(() => window.MathJax.typesetPromise(code()))
+      promise = promise.then(() => window.MathJax?.typesetPromise(code()))
         .catch((err) => logError(`Typeset failed: ${err.message}`));
       return promise;
     }
@@ -25,10 +28,10 @@ function HTMLLoader({ htmlNode, componentId, cssClassName }) {
     typeset(() => {
       previewRef.current.innerHTML = sanitizedMath;
     });
-  }, [sanitizedMath]);
+  }, [htmlNode]);
 
   return (
-    <div ref={previewRef} className={cssClassName} id={componentId} />
+    <div ref={previewRef} className={cssClassName} id={componentId} data-testid={testId} />
 
   );
 }
@@ -37,12 +40,14 @@ HTMLLoader.propTypes = {
   htmlNode: PropTypes.node,
   componentId: PropTypes.string,
   cssClassName: PropTypes.string,
+  testId: PropTypes.string,
 };
 
 HTMLLoader.defaultProps = {
   htmlNode: '',
   componentId: null,
   cssClassName: '',
+  testId: '',
 };
 
 export default HTMLLoader;
