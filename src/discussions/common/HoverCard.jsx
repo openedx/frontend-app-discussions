@@ -53,7 +53,7 @@ function HoverCard({
         </div>
       )}
 
-      {endorseIcons !== undefined && (
+      {endorseIcons && (
         <div className="hover-button">
           <IconButton
             src={endorseIcons.icon}
@@ -66,7 +66,6 @@ function HoverCard({
             size="sm"
             alt="Endorse"
           />
-
         </div>
       )}
       <div className="hover-button">
@@ -82,7 +81,7 @@ function HoverCard({
           }}
         />
       </div>
-      {commentOrPost.following !== undefined && (
+      {commentOrPost.following && (
         <div className="hover-button">
           <IconButton
             src={commentOrPost.following ? StarFilled : StarOutline}
@@ -117,8 +116,8 @@ HoverCard.propTypes = {
 };
 
 HoverCard.defaultProps = {
-  onFollow: undefined,
-  endorseIcons: undefined,
+  onFollow: () => null,
+  endorseIcons: null,
 };
 
 export default injectIntl(HoverCard);
