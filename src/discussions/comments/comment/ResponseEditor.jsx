@@ -13,8 +13,6 @@ function ResponseEditor({
   handleCloseEditor,
   addingResponse,
 }) {
-  // const [addingResponse, setAddingResponse] = useState(false);
-
   useEffect(() => {
     handleCloseEditor();
   }, [postId]);
