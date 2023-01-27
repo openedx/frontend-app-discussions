@@ -8,11 +8,13 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { ContentActions } from '../../../data/constants';
+import { ContentActions, EndorsementStatus } from '../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../common';
 import { DiscussionContext } from '../../common/context';
+import HoverCard from '../../common/HoverCard';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
+import { useActions } from '../../utils';
 import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
@@ -28,6 +30,7 @@ function Comment({
   showFullThread = true,
   isClosedPost,
   intl,
+  marginBottom,
 }) {
   const dispatch = useDispatch();
   const hasChildren = comment.childCount > 0;
@@ -39,6 +42,7 @@ function Comment({
   const [isReplying, setReplying] = useState(false);
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
+  const [showHoverCard, setShowHoverCard] = useState(false);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
     courseId,
@@ -49,6 +53,11 @@ function Comment({
       dispatch(fetchCommentResponses(comment.id, { page: 1 }));
     }
   }, [comment.id]);
+  const actions = useActions({
+    ...comment,
+    postType,
+  });
+  const endorseIcons = actions.find(({ action }) => action === EndorsementStatus.ENDORSED);
 
   const handleAbusedFlag = () => {
     if (comment.abuseFlagged) {
@@ -81,9 +90,8 @@ function Comment({
   const handleLoadMoreComments = () => (
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
-
   return (
-    <div className={classNames({ 'py-2 my-3': showFullThread })}>
+    <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
       <div className="d-flex flex-column card" data-testid={`comment-${comment.id}`} role="listitem">
         <Confirmation
           isOpen={isDeleting}
@@ -105,14 +113,38 @@ function Comment({
           />
         )}
         <EndorsedAlertBanner postType={postType} content={comment} />
-        <div className="d-flex flex-column p-4.5">
+        <div
+          className={classNames('d-flex flex-column', {
+            'p-4': !hasMorePages,
+            'comment-card-padding': hasMorePages,
+          })}
+          onMouseEnter={() => setShowHoverCard(true)}
+          onMouseLeave={() => setShowHoverCard(false)}
+        >
+          {showHoverCard && (
+            <HoverCard
+              commentOrPost={comment}
+              actionHandlers={actionHandlers}
+              handleResponseCommentButton={() => setReplying(true)}
+              onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+              addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
+              isClosedPost={isClosedPost}
+              endorseIcons={endorseIcons}
+            />
+          )}
           <AlertBanner content={comment} />
-          <CommentHeader comment={comment} actionHandlers={actionHandlers} postType={postType} />
+          <CommentHeader comment={comment} />
           {isEditing
             ? (
               <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} formClasses="pt-3" />
             )
-            : <HTMLLoader cssClassName="comment-body text-break pt-4 text-primary-500" componentId="comment" htmlNode={comment.renderedBody} />}
+            : (
+              <HTMLLoader
+                cssClassName="comment-body html-loader text-break mt-14px font-style-normal font-family-inter text-primary-500"
+                componentId="comment"
+                htmlNode={comment.renderedBody}
+              />
+            )}
           <CommentIcons
             comment={comment}
             following={comment.following}
@@ -147,23 +179,26 @@ function Comment({
           )}
           {!isNested && showFullThread && (
             isReplying ? (
-              <CommentEditor
-                comment={{
-                  threadId: comment.threadId,
-                  parentId: comment.id,
-                }}
-                edit={false}
-                onCloseEditor={() => setReplying(false)}
-              />
+              <div className="mt-2.5">
+                <CommentEditor
+                  comment={{
+                    threadId: comment.threadId,
+                    parentId: comment.id,
+                  }}
+                  edit={false}
+                  onCloseEditor={() => setReplying(false)}
+                />
+              </div>
             ) : (
               <>
-                {!isClosedPost && userCanAddThreadInBlackoutDate
+                {!isClosedPost && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
                   && (
                     <Button
-                      className="d-flex flex-grow mt-3 py-2 font-size-14"
-                      variant="outline-primary"
+                      className="d-flex flex-grow mt-2 font-size-14 font-style-normal font-family-inter font-weight-500 text-primary-500"
+                      variant="plain"
                       style={{
-                        lineHeight: '20px',
+                        lineHeight: '24px',
+                        height: '36px',
                       }}
                       onClick={() => setReplying(true)}
                     >
@@ -171,7 +206,6 @@ function Comment({
                     </Button>
                   )}
               </>
-
             )
           )}
         </div>
@@ -186,11 +220,13 @@ Comment.propTypes = {
   showFullThread: PropTypes.bool,
   isClosedPost: PropTypes.bool,
   intl: intlShape.isRequired,
+  marginBottom: PropTypes.bool,
 };
 
 Comment.defaultProps = {
   showFullThread: true,
   isClosedPost: false,
+  marginBottom: true,
 };
 
 export default injectIntl(Comment);

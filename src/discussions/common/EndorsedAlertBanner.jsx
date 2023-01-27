@@ -27,32 +27,26 @@ function EndorsedAlertBanner({
     content.endorsed && (
       <Alert
         variant="plain"
-        className={`px-3 mb-0 py-10px align-items-center shadow-none ${classes}`}
+        className={`px-3 mb-0 py-8px align-items-center shadow-none ${classes}`}
         style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
         icon={iconClass}
       >
         <div className="d-flex justify-content-between flex-wrap">
-          <strong className="lead">{intl.formatMessage(
+          <strong className="font-family-inter">{intl.formatMessage(
             isQuestion
               ? messages.answer
               : messages.endorsed,
           )}
           </strong>
-          <span className="d-flex align-items-center mr-1 flex-wrap">
-            <span className="mr-1">
-              {intl.formatMessage(
-                isQuestion
-                  ? messages.answeredLabel
-                  : messages.endorsedLabel,
-              )}
-            </span>
+          <span className="d-flex align-items-center align-items-center mr-1 flex-wrap">
             <AuthorLabel
               author={content.endorsedBy}
               authorLabel={content.endorsedByLabel}
               linkToProfile
               alert={content.endorsed}
+              postCreatedAt={content.endorsedAt}
+              authorToolTip
             />
-            {intl.formatMessage(messages.time, { time: timeago.format(content.endorsedAt, 'time-locale') })}
           </span>
         </div>
       </Alert>

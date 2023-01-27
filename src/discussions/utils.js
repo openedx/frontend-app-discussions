@@ -185,7 +185,6 @@ export function useActions(content) {
         .every(condition => condition === true)
       : true
   );
-
   return ACTIONS_LIST.filter(
     ({
       action,

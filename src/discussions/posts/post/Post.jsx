@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -13,6 +13,7 @@ import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
+import HoverCard from '../../common/HoverCard';
 import { selectModerationSettings } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
@@ -26,6 +27,7 @@ function Post({
   post,
   preview,
   intl,
+  handleAddResponseButton,
 }) {
   const location = useLocation();
   const history = useHistory();
@@ -39,6 +41,7 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
+  const [showHoverCard, setShowHoverCard] = useState(false);
 
   const handleAbusedFlag = () => {
     if (post.abuseFlagged) {
@@ -87,7 +90,12 @@ function Post({
   );
 
   return (
-    <div className="d-flex flex-column w-100 mw-100" data-testid={`post-${post.id}`}>
+    <div
+      className="d-flex flex-column w-100 mw-100 "
+      data-testid={`post-${post.id}`}
+      onMouseEnter={() => setShowHoverCard(true)}
+      onMouseLeave={() => setShowHoverCard(false)}
+    >
       <Confirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deletePostTitle)}
@@ -107,14 +115,27 @@ function Post({
           confirmButtonVariant="danger"
         />
       )}
+      {showHoverCard && (
+        <HoverCard
+          commentOrPost={post}
+          actionHandlers={actionHandlers}
+          handleResponseCommentButton={handleAddResponseButton}
+          addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
+          onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
+          onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
+          isClosedPost={post.closed}
+        />
+      )}
       <AlertBanner content={post} />
-      <PostHeader post={post} actionHandlers={actionHandlers} />
-      <div className="d-flex mt-4 mb-2 text-break font-style-normal text-primary-500">
+      <PostHeader post={post} />
+      <div className="d-flex mt-14px text-break font-style-normal text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" />
       </div>
       {topicContext && topic && (
-        <div className={classNames('border px-3 rounded mb-4 border-light-400 align-self-start py-2.5',
-          { 'w-100': enableInContextSidebar })}
+        <div
+          className={classNames('mb-10px',
+            { 'w-100': enableInContextSidebar })}
+          style={{ lineHeight: '20px' }}
         >
           <span className="text-gray-500">{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
@@ -135,9 +156,8 @@ function Post({
           </Hyperlink>
         </div>
       )}
-      <div className="mb-3">
-        <PostFooter post={post} preview={preview} />
-      </div>
+
+      <PostFooter post={post} preview={preview} />
       <ClosePostReasonModal
         isOpen={isClosing}
         onCancel={hideClosePostModal}
@@ -154,6 +174,7 @@ Post.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
   preview: PropTypes.bool,
+  handleAddResponseButton: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 Post.defaultProps = {

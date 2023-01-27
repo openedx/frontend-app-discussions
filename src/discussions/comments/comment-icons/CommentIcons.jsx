@@ -17,6 +17,9 @@ function CommentIcons({
   timeago.register('time-locale', timeLocale);
 
   const handleLike = () => dispatch(editComment(comment.id, { voted: !comment.voted }));
+  if (comment.voteCount === 0) {
+    return null;
+  }
   return (
     <div className="d-flex flex-row align-items-center">
       <LikeButton
