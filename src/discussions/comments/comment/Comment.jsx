@@ -90,6 +90,12 @@ function Comment({
   const handleLoadMoreComments = () => (
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
+
+  const handleHoverCardBlurEvent = (e) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setShowHoverCard(false);
+    }
+  };
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
       {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
@@ -125,7 +131,7 @@ function Comment({
           onMouseEnter={() => setShowHoverCard(true)}
           onMouseLeave={() => setShowHoverCard(false)}
           onFocus={() => setShowHoverCard(true)}
-          onBlur={() => setShowHoverCard(false)}
+          onBlur={(e) => handleHoverCardBlurEvent(e)}
         >
           {showHoverCard && (
             <HoverCard
@@ -149,6 +155,7 @@ function Comment({
                 cssClassName="comment-body html-loader text-break mt-14px font-style-normal font-family-inter text-primary-500"
                 componentId="comment"
                 htmlNode={comment.renderedBody}
+                testId={comment.id}
               />
             )}
           <CommentIcons

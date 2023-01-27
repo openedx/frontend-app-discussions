@@ -81,7 +81,7 @@ function HoverCard({
           }}
         />
       </div>
-      {commentOrPost.following && (
+      {commentOrPost.following !== undefined && (
         <div className="hover-button">
           <IconButton
             src={commentOrPost.following ? StarFilled : StarOutline}

@@ -64,7 +64,7 @@ function Post({
     hideReportConfirmation();
   };
 
-  const handleBlurEvent = (e) => {
+  const handleHoverCardBlurEvent = (e) => {
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setShowHoverCard(false);
     }
@@ -102,7 +102,7 @@ function Post({
       onMouseEnter={() => setShowHoverCard(true)}
       onMouseLeave={() => setShowHoverCard(false)}
       onFocus={() => setShowHoverCard(true)}
-      onBlur={(e) => handleBlurEvent(e)}
+      onBlur={(e) => handleHoverCardBlurEvent(e)}
     >
       <Confirmation
         isOpen={isDeleting}
@@ -137,7 +137,7 @@ function Post({
       <AlertBanner content={post} />
       <PostHeader post={post} />
       <div className="d-flex mt-14px text-break font-style-normal font-family-inter text-primary-500">
-        <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" />
+        <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
       {topicContext && topic && (
         <div
