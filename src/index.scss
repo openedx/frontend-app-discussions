@@ -45,6 +45,14 @@ $fa-font-path: "~font-awesome/fonts";
   font-size: 14px;
 }
 
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-8 {
+  font-size: 8px;
+}
+
 .font-weight-500 {
   font-weight: 500;
 }
@@ -57,17 +65,27 @@ $fa-font-path: "~font-awesome/fonts";
   font-family: "Inter";
 }
 
-.icon-size {
-  height: 15px !important;
-  width: 15px !important;
+.post-footer-icon-dimentions {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.like-icon-dimentions {
+  width: 21px !important;
+  height: 23px !important;
+}
+
+.follow-icon-dimentions {
+  width: 21px !important;
+  height: 24px !important;
+}
+
+.dropdown-icon-dimentions {
+  width: 20px !important;
+  height: 21px !important;
 }
 
 .post-summary-icons-dimensions {
-  height: 16px !important;
-  width: 16px !important;
-}
-
-.footer-icons-dimensions {
   height: 16px !important;
   width: 16px !important;
 }
@@ -153,6 +171,14 @@ $fa-font-path: "~font-awesome/fonts";
 .py-8px {
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+.pb-10px {
+  padding-bottom: 10px;
+}
+
+.pt-10px {
+  padding-top: 10px !important;
 }
 
 .px-10px {
@@ -357,7 +383,7 @@ header {
 }
 
 .post-card-padding {
-  padding: 24px 24px 6px 24px;
+  padding: 24px 24px 10px 24px;
 }
 
 .post-card-margin {
@@ -381,7 +407,9 @@ header {
 }
 
 .hover-button:hover {
-  background-color: #F2F0EF;
+  background-color: #F2F0EF !important;
+  height: 36px;
+  border: none;
 }
 
 .btn-tertiary:hover {
@@ -393,14 +421,26 @@ header {
   background-color: transparent;
 }
 
-.comment-card-padding {
-  margin: 24px 24px 0px 24px;
-}
-
 .disable-div {
   pointer-events: none;
 }
 
-[role=listitem]:focus {
-  border: 2px solid black;
+.on-focus:focus {
+  outline: 2px solid black;
+}
+
+.html-loader p:last-child {
+  margin-bottom: 0px;
+}
+
+.post-card-comment:hover,
+.post-card-comment:focus {
+  .hover-card {
+    display: flex !important;
+  }
+}
+
+.spinner-dimentions {
+  height: 24px;
+  width: 24px;
 }

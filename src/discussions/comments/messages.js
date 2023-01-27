@@ -8,7 +8,7 @@ const messages = defineMessages({
   },
   addResponse: {
     id: 'discussions.comments.comment.addResponse',
-    defaultMessage: 'Add a Response',
+    defaultMessage: 'Add a response',
     description: 'Button to add a response to a response',
   },
   abuseFlaggedMessage: {
@@ -188,6 +188,11 @@ const messages = defineMessages({
     defaultMessage: 'Edited by',
     description: 'Text shown to users to indicate who edited a post. Followed by the username of editor.',
   },
+  fullStop: {
+    id: 'discussions.comment.comments.fullStop',
+    defaultMessage: '•',
+    description: 'Fullstop shown to users to indicate who edited a post. Followed by a reason.',
+  },
   reason: {
     id: 'discussions.comment.comments.reason',
     defaultMessage: 'Reason',
@@ -196,11 +201,6 @@ const messages = defineMessages({
   closedBy: {
     id: 'discussions.post.closedBy',
     defaultMessage: 'Post closed by',
-  },
-  replies: {
-    id: 'discussion.comment.repliesHeading',
-    defaultMessage: '{count} replies for the response added',
-    description: 'Text added for screen reader to understand nesting replies.',
   },
   time: {
     id: 'discussion.comment.time',

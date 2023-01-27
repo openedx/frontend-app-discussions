@@ -40,6 +40,7 @@ function CommentHeader({
           labelColor={colorClass && `text-${colorClass}`}
           linkToProfile
           postCreatedAt={comment.createdAt}
+          postOrComment
         />
       </div>
     </div>

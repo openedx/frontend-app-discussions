@@ -108,16 +108,17 @@ function Reply({
           />
         </div>
         <div
-          className="bg-light-300 px-4 pt-2 flex-fill"
+          className="bg-light-300 pl-4 pt-2.5 pr-2.5 pb-10px flex-fill"
           style={{ borderRadius: '0rem 0.375rem 0.375rem' }}
         >
-          <div className="d-flex flex-row justify-content-between" style={{ lineHeight: '24px' }}>
+          <div className="d-flex flex-row justify-content-between" style={{ height: '24px' }}>
             <AuthorLabel
               author={reply.author}
               authorLabel={reply.authorLabel}
               labelColor={colorClass && `text-${colorClass}`}
               linkToProfile
               postCreatedAt={reply.createdAt}
+              postOrComment
             />
             <div className="ml-auto d-flex" style={{ lineHeight: '24px' }}>
               <ActionsDropdown

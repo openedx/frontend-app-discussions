@@ -24,6 +24,7 @@ function ActionsDropdown({
   disabled,
   actionHandlers,
   iconSize,
+  dropDownIconSize,
 }) {
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
@@ -52,6 +53,7 @@ function ActionsDropdown({
         disabled={disabled}
         size={iconSize}
         ref={setTarget}
+        iconClassNames={dropDownIconSize ? 'dropdown-icon-dimentions' : ''}
       />
       <div className="actions-dropdown">
         <ModalPopup
@@ -96,11 +98,13 @@ ActionsDropdown.propTypes = {
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   iconSize: PropTypes.string,
+  dropDownIconSize: PropTypes.bool,
 };
 
 ActionsDropdown.defaultProps = {
   disabled: false,
   iconSize: 'sm',
+  dropDownIconSize: false,
 };
 
 export default injectIntl(ActionsDropdown);
