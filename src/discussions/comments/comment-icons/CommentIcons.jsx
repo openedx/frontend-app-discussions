@@ -17,10 +17,8 @@ function CommentIcons({
   timeago.register('time-locale', timeLocale);
 
   const handleLike = () => dispatch(editComment(comment.id, { voted: !comment.voted }));
-  if (comment.voteCount === 0) {
-    return null;
-  }
-  return (
+
+  return (comment.voted && (
     <div className="ml-n1.5 mt-10px">
       <LikeButton
         count={comment.voteCount}
@@ -28,7 +26,7 @@ function CommentIcons({
         voted={comment.voted}
       />
     </div>
-  );
+  ));
 }
 
 CommentIcons.propTypes = {

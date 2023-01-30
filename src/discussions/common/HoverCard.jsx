@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button,
-  Icon, IconButton,
-} from '@edx/paragon';
+import { Button, Icon, IconButton } from '@edx/paragon';
 
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
@@ -92,7 +89,6 @@ function HoverCard({
             onClick={(e) => {
               e.preventDefault();
               onFollow();
-              return true;
             }}
           />
         </div>

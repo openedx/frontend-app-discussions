@@ -14,8 +14,8 @@ import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
+import LikeButton from '../../posts/post/LikeButton';
 import { useActions } from '../../utils';
-import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
 import messages from '../messages';
@@ -158,12 +158,15 @@ function Comment({
                 testId={comment.id}
               />
             )}
-          <CommentIcons
-            comment={comment}
-            following={comment.following}
-            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-            createdAt={comment.createdAt}
-          />
+          {comment.voted && (
+            <div className="ml-n1.5 mt-10px">
+              <LikeButton
+                count={comment.voteCount}
+                onClick={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+                voted={comment.voted}
+              />
+            </div>
+          )}
           {inlineReplies.length > 0 && (
             <div className="d-flex flex-column mt-0.5" role="list">
               {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}

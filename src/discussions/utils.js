@@ -5,9 +5,7 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  CheckCircle,
-  CheckCircleOutline,
-  Delete, Edit, Pin, QuestionAnswer, Report, Verified, VerifiedOutline,
+  CheckCircle, CheckCircleOutline, Delete, Edit, Pin, QuestionAnswer, Report, Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
 import { InsertLink } from '../components/icons';
