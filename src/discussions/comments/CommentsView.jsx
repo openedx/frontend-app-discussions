@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -8,7 +10,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Button, Icon, IconButton, Spinner,
+  Button, Icon, IconButton,
+  Spinner,
 } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
@@ -17,12 +20,12 @@ import {
 } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
-import { useIsOnDesktop } from '../data/hooks';
+import { useIsOnDesktop, useUserCanAddThreadInBlackoutDate } from '../data/hooks';
 import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
 import { selectThread } from '../posts/data/selectors';
 import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
-import { discussionsPath, filterPosts } from '../utils';
+import { discussionsPath, filterPosts, isLastElementOfList } from '../utils';
 import { selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -80,26 +83,41 @@ function DiscussionCommentsView({
 
   const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
   const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const [addingResponse, setAddingResponse] = useState(false);
 
   const handleDefinition = (message, commentsLength) => (
-    <div className="mx-4 text-primary-700" role="heading" aria-level="2" style={{ lineHeight: '28px' }}>
+    <div
+      className="mx-4 my-14px text-gray-700 font-style-normal font-family-inter"
+      role="heading"
+      aria-level="2"
+      style={{ lineHeight: '24px' }}
+    >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
   );
 
-  const handleComments = (postComments, showAddResponse = false, showLoadMoreResponses = false) => (
+  const handleComments = (postComments, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
-      {postComments.map(comment => (
-        <Comment comment={comment} key={comment.id} postType={postType} isClosedPost={isClosed} />
+      {postComments.map((comment) => (
+        <Comment
+          comment={comment}
+          key={comment.id}
+          postType={postType}
+          isClosedPost={isClosed}
+          marginBottom={isLastElementOfList(postComments, comment)}
+        />
+
       ))}
       {hasMorePages && !isLoading && !showLoadMoreResponses && (
         <Button
           onClick={handleLoadMoreResponses}
           variant="link"
           block="true"
-          className="card p-4 mb-4 font-weight-500 font-size-14"
+          className="px-4 mt-3 py-0 mb-2 font-style-normal font-family-inter font-weight-500 font-size-14"
           style={{
-            lineHeight: '20px',
+            lineHeight: '24px',
+            border: '0px',
           }}
           data-testid="load-more-comments"
         >
@@ -107,12 +125,10 @@ function DiscussionCommentsView({
         </Button>
       )}
       {isLoading && !showLoadMoreResponses && (
-        <div className="card my-4 p-4 d-flex align-items-center">
-          <Spinner animation="border" variant="primary" />
+        <div className="mb-2 mt-3 d-flex justify-content-center">
+          <Spinner animation="border" variant="primary" className="spinner-dimentions" />
         </div>
       )}
-      {!!postComments.length && !isClosed && showAddResponse
-        && <ResponseEditor postId={postId} addWrappingDiv />}
     </div>
   );
   return (
@@ -123,15 +139,40 @@ function DiscussionCommentsView({
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
               {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, false, true)
-                : handleComments(endorsedComments)}
+                ? handleComments(endorsedComments, true)
+                : handleComments(endorsedComments, false)}
             </>
           )}
           {endorsed !== EndorsementStatus.ENDORSED && (
             <>
               {handleDefinition(messages.responseCount, unEndorsedComments.length)}
               {unEndorsedComments.length === 0 && <br />}
-              {handleComments(unEndorsedComments, true)}
+              {handleComments(unEndorsedComments, false)}
+              {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
+                <div className="mx-4">
+                  {!addingResponse && (
+                    <Button
+                      variant="plain"
+                      block="true"
+                      className="card mb-4 px-0 py-10px mt-2 font-style-normal font-family-inter font-weight-500 font-size-14 text-primary-500"
+                      style={{
+                        lineHeight: '24px',
+                        border: '0px',
+                      }}
+                      onClick={() => setAddingResponse(true)}
+                      data-testid="add-response"
+                    >
+                      {intl.formatMessage(messages.addResponse)}
+                    </Button>
+                  )}
+
+                  <ResponseEditor
+                    postId={postId}
+                    handleCloseEditor={() => setAddingResponse(false)}
+                    addingResponse={addingResponse}
+                  />
+                </div>
+              )}
             </>
           )}
         </>
@@ -158,12 +199,14 @@ function CommentsView({ intl }) {
   const history = useHistory();
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
+  const [addingResponse, setAddingResponse] = useState(false);
   const {
     courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
 
   useEffect(() => {
     if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
+    setAddingResponse(false);
   }, [postId]);
 
   if (!thread) {
@@ -173,7 +216,13 @@ function CommentsView({ intl }) {
       );
     }
     return (
-      <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+      }}
+      >
+        <Spinner animation="border" variant="primary" data-testid="loading-indicator" />
+      </div>
     );
   }
 
@@ -211,41 +260,52 @@ function CommentsView({ intl }) {
           />
         )
       )}
-      <div className={classNames('discussion-comments d-flex flex-column card', {
-        'm-4 p-4.5': !enableInContextSidebar,
-        'p-4 rounded-0 border-0 mb-4': enableInContextSidebar,
-      })}
+      <div
+        className={classNames('discussion-comments d-flex flex-column card border-0', {
+          'post-card-margin post-card-padding': !enableInContextSidebar,
+          'post-card-padding rounded-0 border-0 mb-4': enableInContextSidebar,
+        })}
       >
-        <Post post={thread} />
-        {!thread.closed && <ResponseEditor postId={postId} />}
+        <Post post={thread} handleAddResponseButton={() => setAddingResponse(true)} />
+        {!thread.closed && (
+          <ResponseEditor
+            postId={postId}
+            handleCloseEditor={() => setAddingResponse(false)}
+            addingResponse={addingResponse}
+          />
+        )}
       </div>
-      {thread.type === ThreadType.DISCUSSION && (
-        <DiscussionCommentsView
-          postId={postId}
-          intl={intl}
-          postType={thread.type}
-          endorsed={EndorsementStatus.DISCUSSION}
-          isClosed={thread.closed}
-        />
-      )}
-      {thread.type === ThreadType.QUESTION && (
-        <>
+      {
+        thread.type === ThreadType.DISCUSSION && (
           <DiscussionCommentsView
             postId={postId}
             intl={intl}
             postType={thread.type}
-            endorsed={EndorsementStatus.ENDORSED}
+            endorsed={EndorsementStatus.DISCUSSION}
             isClosed={thread.closed}
           />
-          <DiscussionCommentsView
-            postId={postId}
-            intl={intl}
-            postType={thread.type}
-            endorsed={EndorsementStatus.UNENDORSED}
-            isClosed={thread.closed}
-          />
-        </>
-      )}
+        )
+      }
+      {
+        thread.type === ThreadType.QUESTION && (
+          <>
+            <DiscussionCommentsView
+              postId={postId}
+              intl={intl}
+              postType={thread.type}
+              endorsed={EndorsementStatus.ENDORSED}
+              isClosed={thread.closed}
+            />
+            <DiscussionCommentsView
+              postId={postId}
+              intl={intl}
+              postType={thread.type}
+              endorsed={EndorsementStatus.UNENDORSED}
+              isClosed={thread.closed}
+            />
+          </>
+        )
+      }
     </>
   );
 }

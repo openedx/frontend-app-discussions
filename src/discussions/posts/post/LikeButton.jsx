@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Icon, IconButtonWithTooltip } from '@edx/paragon';
+import {
+  Icon, IconButton, OverlayTrigger, Tooltip,
+} from '@edx/paragon';
 
 import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
 import messages from './messages';
@@ -12,7 +14,6 @@ function LikeButton({
   intl,
   onClick,
   voted,
-  preview,
 }) {
   const handleClick = (e) => {
     e.preventDefault();
@@ -23,20 +24,27 @@ function LikeButton({
   };
 
   return (
-    <div className="d-flex align-items-center mr-4 text-primary-500">
-      <IconButtonWithTooltip
-        id={`like-${count}-tooltip`}
-        tooltipPlacement="top"
-        tooltipContent={intl.formatMessage(voted ? messages.removeLike : messages.like)}
-        src={voted ? ThumbUpFilled : ThumbUpOutline}
-        iconAs={Icon}
-        alt="Like"
-        onClick={handleClick}
-        size={preview ? 'inline' : 'sm'}
-        className={`mr-0.5 ${preview && 'p-3'}`}
-        iconClassNames={preview && 'icon-size'}
-      />
-      {(count && count > 0) ? count : null}
+    <div className="d-flex align-items-center mr-36px text-primary-500">
+      <OverlayTrigger
+        overlay={(
+          <Tooltip id={`liked-${count}-tooltip`}>
+            {intl.formatMessage(voted ? messages.removeLike : messages.like)}
+          </Tooltip>
+        )}
+      >
+        <IconButton
+          src={voted ? ThumbUpFilled : ThumbUpOutline}
+          onClick={handleClick}
+          className="post-footer-icon-dimentions"
+          alt="Like"
+          iconAs={Icon}
+          iconClassNames="like-icon-dimentions"
+        />
+      </OverlayTrigger>
+      <div className="font-family-inter font-style-normal">
+        {(count && count > 0) ? count : null}
+      </div>
+
     </div>
   );
 }
@@ -46,13 +54,11 @@ LikeButton.propTypes = {
   intl: intlShape.isRequired,
   onClick: PropTypes.func,
   voted: PropTypes.bool,
-  preview: PropTypes.bool,
 };
 
 LikeButton.defaultProps = {
   voted: false,
   onClick: undefined,
-  preview: false,
 };
 
 export default injectIntl(LikeButton);

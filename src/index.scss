@@ -45,6 +45,14 @@ $fa-font-path: "~font-awesome/fonts";
   font-size: 14px;
 }
 
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-8 {
+  font-size: 8px;
+}
+
 .font-weight-500 {
   font-weight: 500;
 }
@@ -57,9 +65,24 @@ $fa-font-path: "~font-awesome/fonts";
   font-family: "Inter";
 }
 
-.icon-size {
-  height: 20px !important;
+.post-footer-icon-dimentions {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.like-icon-dimentions {
+  width: 21px !important;
+  height: 23px !important;
+}
+
+.follow-icon-dimentions {
+  width: 21px !important;
+  height: 24px !important;
+}
+
+.dropdown-icon-dimentions {
   width: 20px !important;
+  height: 21px !important;
 }
 
 .post-summary-icons-dimensions {
@@ -75,6 +98,20 @@ $fa-font-path: "~font-awesome/fonts";
 .post-summary-card-selected {
   border-right-width: 4px;
   border-right-style: solid;
+}
+
+.my-14px {
+  margin-top: 14px;
+  margin-bottom: 14px;
+}
+
+.my-10px {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mb-14px {
+  margin-bottom: 14px;
 }
 
 .mr-0\.5 {
@@ -93,6 +130,26 @@ $fa-font-path: "~font-awesome/fonts";
   margin-left: 2px;
 }
 
+.mt-14px {
+  margin-top: 14px;
+}
+
+.mb-10px {
+  margin-bottom: 10px;
+}
+
+.mt-10px {
+  margin-top: 10px;
+}
+
+.mt-17px {
+  margin-top: 17px !important;
+}
+
+.mr-36px {
+  margin-right: 36.6px;
+}
+
 .badge-padding {
   padding-top: 1px;
   padding-bottom: 1px
@@ -102,7 +159,7 @@ $fa-font-path: "~font-awesome/fonts";
   background-color: unset !important;
 }
 
-.learner > a:hover {
+.learner>a:hover {
   background-color: #F2F0EF;
 }
 
@@ -111,14 +168,27 @@ $fa-font-path: "~font-awesome/fonts";
   padding-bottom: 10px;
 }
 
+.py-8px {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.pb-10px {
+  padding-bottom: 10px;
+}
+
+.pt-10px {
+  padding-top: 10px !important;
+}
+
 .px-10px {
   padding-left: 10px;
   padding-right: 10px;
 }
 
 .question-icon-size {
-  width: 1.625rem;
-  height: 1.625rem;
+  width: 1.4581rem;
+  height: 1.4581rem;
 }
 
 .question-icon-position {
@@ -134,6 +204,7 @@ $fa-font-path: "~font-awesome/fonts";
 header {
   .logo {
     margin-right: 1rem;
+
     img {
       height: 1.75rem;
     }
@@ -142,6 +213,7 @@ header {
 
 #learner-posts-link {
   color: inherit;
+
   span[role=heading]:hover {
     text-decoration: underline;
   }
@@ -170,11 +242,12 @@ header {
   }
 }
 
-.pointer-cursor-hover :hover{
+.pointer-cursor-hover :hover {
   cursor: pointer;
 }
 
-.filter-bar:focus-visible, .filter-bar:focus {
+.filter-bar:focus-visible,
+.filter-bar:focus {
   outline: none;
 }
 
@@ -198,9 +271,9 @@ header {
     };
   };
 
-  .container-xl{
+  .container-xl {
     .course-title-lockup {
-      font-size: 1.125 rem;
+      font-size: 1.125rem;
     };
 
     .logo {
@@ -221,7 +294,7 @@ header {
 
   .container-xl {
     padding-left: 31px;
-    font-size: 1.125 rem;
+    font-size: 1.125rem;
 
     .nav {
       line-height: 28px;
@@ -239,7 +312,7 @@ header {
 
 .header-action-bar {
   background-color: #fff;
-  z-index: 1;
+  z-index: 2;
   box-shadow: 0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%);
   position: sticky;
   top: 0;
@@ -250,10 +323,10 @@ header {
 }
 
 .actions-dropdown {
-  z-index: 0;
+  z-index: 1;
 }
 
-.discussion-topic-group:last-of-type .divider{
+.discussion-topic-group:last-of-type .divider {
   display: none;
 }
 
@@ -268,6 +341,12 @@ header {
 #iconbutton-tooltip-top {
   z-index: 0;
 }
+
+.btn-icon.btn-icon-primary:hover {
+  background-color: #F2F0EF !important;
+  color: #00262B !important
+}
+
 
 @media only screen and (max-width: 767px) {
   body:not(.tox-force-desktop) .tox .tox-dialog {
@@ -285,4 +364,67 @@ header {
 
 .pgn__checkpoint {
   max-width: 340px !important;
+}
+
+.post-card-padding {
+  padding: 24px 24px 10px 24px;
+}
+
+.post-card-margin {
+  margin: 24px 24px 0px 24px;
+}
+
+.hover-card {
+  height: 36px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15), 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  background: #FFFFFF;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-top: -2.063rem;
+  z-index: 1;
+  right: 32px;
+}
+
+.response-editor-position {
+  margin-top: 50px !important;
+}
+
+.hover-button:hover {
+  background-color: #F2F0EF !important;
+  height: 36px;
+  border: none;
+}
+
+.btn-tertiary:hover {
+  background-color: #F2F0EF;
+}
+
+.btn-tertiary:disabled {
+  color: #454545;
+  background-color: transparent;
+}
+
+.disable-div {
+  pointer-events: none;
+}
+
+.on-focus:focus-visible {
+  outline: 2px solid black;
+}
+
+.html-loader p:last-child {
+  margin-bottom: 0px;
+}
+
+.post-card-comment:hover,
+.post-card-comment:focus {
+  .hover-card {
+    display: flex !important;
+  }
+}
+
+.spinner-dimentions {
+  height: 24px;
+  width: 24px;
 }

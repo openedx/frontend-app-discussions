@@ -185,7 +185,6 @@ export function useActions(content) {
         .every(condition => condition === true)
       : true
   );
-
   return ACTIONS_LIST.filter(
     ({
       action,
@@ -294,4 +293,8 @@ export function handleKeyDown(event) {
   if (selectedOption) {
     selectedOption.focus();
   }
+}
+
+export function isLastElementOfList(list, element) {
+  return list[list.length - 1] === element;
 }

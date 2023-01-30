@@ -17,16 +17,16 @@ function CommentIcons({
   timeago.register('time-locale', timeLocale);
 
   const handleLike = () => dispatch(editComment(comment.id, { voted: !comment.voted }));
+  if (comment.voteCount === 0) {
+    return null;
+  }
   return (
-    <div className="d-flex flex-row align-items-center">
+    <div className="ml-n1.5 mt-10px">
       <LikeButton
         count={comment.voteCount}
         onClick={handleLike}
         voted={comment.voted}
       />
-      <div className="d-flex flex-fill text-gray-500 justify-content-end" title={comment.createdAt}>
-        {timeago.format(comment.createdAt, 'time-locale')}
-      </div>
     </div>
   );
 }

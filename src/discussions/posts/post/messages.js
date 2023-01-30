@@ -6,6 +6,11 @@ const messages = defineMessages({
     defaultMessage: 'anonymous',
     description: 'Author name displayed when a post is anonymous',
   },
+  addResponse: {
+    id: 'discussions.post.addResponse',
+    defaultMessage: 'Add response',
+    description: 'Button to add a response in a thread of forum posts',
+  },
   lastResponse: {
     id: 'discussions.post.lastResponse',
     defaultMessage: 'Last response {time}',

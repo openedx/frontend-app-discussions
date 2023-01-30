@@ -113,7 +113,7 @@ const messages = defineMessages({
   },
   showPreviewButton: {
     id: 'discussions.editor.posts.showPreview.button',
-    defaultMessage: 'Show Preview',
+    defaultMessage: 'Show preview',
     description: 'show preview button text to allow user to see their post content.',
   },
   actionsAlt: {

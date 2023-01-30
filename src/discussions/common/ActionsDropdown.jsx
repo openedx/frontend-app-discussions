@@ -23,6 +23,8 @@ function ActionsDropdown({
   commentOrPost,
   disabled,
   actionHandlers,
+  iconSize,
+  dropDownIconSize,
 }) {
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
@@ -49,8 +51,9 @@ function ActionsDropdown({
         src={MoreHoriz}
         iconAs={Icon}
         disabled={disabled}
-        size="sm"
+        size={iconSize}
         ref={setTarget}
+        iconClassNames={dropDownIconSize ? 'dropdown-icon-dimentions' : ''}
       />
       <div className="actions-dropdown">
         <ModalPopup
@@ -66,7 +69,7 @@ function ActionsDropdown({
             {actions.map(action => (
               <React.Fragment key={action.id}>
                 {(action.action === ContentActions.DELETE)
-              && <Dropdown.Divider />}
+                  && <Dropdown.Divider />}
 
                 <Dropdown.Item
                   as={Button}
@@ -94,10 +97,14 @@ ActionsDropdown.propTypes = {
   commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
+  iconSize: PropTypes.string,
+  dropDownIconSize: PropTypes.bool,
 };
 
 ActionsDropdown.defaultProps = {
   disabled: false,
+  iconSize: 'sm',
+  dropDownIconSize: false,
 };
 
 export default injectIntl(ActionsDropdown);

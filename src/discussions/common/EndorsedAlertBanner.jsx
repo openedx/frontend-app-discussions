@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
@@ -27,32 +27,35 @@ function EndorsedAlertBanner({
     content.endorsed && (
       <Alert
         variant="plain"
-        className={`px-3 mb-0 py-10px align-items-center shadow-none ${classes}`}
+        className={`px-2.5 mb-0 py-8px align-items-center shadow-none ${classes}`}
         style={{ borderRadius: '0.375rem 0.375rem 0 0' }}
-        icon={iconClass}
       >
         <div className="d-flex justify-content-between flex-wrap">
-          <strong className="lead">{intl.formatMessage(
-            isQuestion
-              ? messages.answer
-              : messages.endorsed,
-          )}
-          </strong>
-          <span className="d-flex align-items-center mr-1 flex-wrap">
-            <span className="mr-1">
-              {intl.formatMessage(
-                isQuestion
-                  ? messages.answeredLabel
-                  : messages.endorsedLabel,
-              )}
-            </span>
+          <div className="d-flex align-items-center">
+            <Icon
+              src={iconClass}
+              style={{
+                width: '21px',
+                height: '20px',
+              }}
+            />
+            <strong className="ml-2 font-family-inter">{intl.formatMessage(
+              isQuestion
+                ? messages.answer
+                : messages.endorsed,
+            )}
+            </strong>
+          </div>
+          <span className="d-flex align-items-center align-items-center flex-wrap" style={{ marginRight: '-1px' }}>
             <AuthorLabel
               author={content.endorsedBy}
               authorLabel={content.endorsedByLabel}
               linkToProfile
               alert={content.endorsed}
+              postCreatedAt={content.endorsedAt}
+              authorToolTip
+              postOrComment
             />
-            {intl.formatMessage(messages.time, { time: timeago.format(content.endorsedAt, 'time-locale') })}
           </span>
         </div>
       </Alert>
