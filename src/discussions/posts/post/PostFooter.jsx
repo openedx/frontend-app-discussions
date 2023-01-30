@@ -6,15 +6,9 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import {
-  Locked,
-} from '@edx/paragon/icons';
+import { Locked, People } from '@edx/paragon/icons';
 
-import {
-  People,
-  StarFilled,
-  StarOutline,
-} from '../../../components/icons';
+import { StarFilled, StarOutline } from '../../../components/icons';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
@@ -60,23 +54,22 @@ function PostFooter({
       )}
       <div className="d-flex flex-fill justify-content-end align-items-center">
         {post.groupId && userHasModerationPrivileges && (
-          <>
-            <OverlayTrigger
-              overlay={(
-                <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
-              )}
-            >
-              <span data-testid="cohort-icon">
-                <People />
-              </span>
-            </OverlayTrigger>
-            <span
-              className="text-gray-700 mx-1.5 font-weight-500"
-              style={{ fontSize: '16px' }}
-            >
-              ·
+          <OverlayTrigger
+            overlay={(
+              <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
+            )}
+          >
+            <span data-testid="cohort-icon">
+              <Icon
+                src={People}
+                style={{
+                  width: '22px',
+                  height: '20px',
+                }}
+                className="text-gray-500"
+              />
             </span>
-          </>
+          </OverlayTrigger>
         )}
 
         {post.closed
@@ -93,8 +86,8 @@ function PostFooter({
                 style={{
                   width: '1rem',
                   height: '1rem',
+                  marginLeft: '19.5px',
                 }}
-                className="ml-3"
               />
             </OverlayTrigger>
           )}
