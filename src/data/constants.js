@@ -80,16 +80,6 @@ export const AvatarOutlineAndLabelColors = {
 };
 
 /**
- * Enum for comment ordering.
- * @readonly
- * @enum {string}
- */
-export const CommentOrdering = {
-  BY_ASC: 'asc',
-  BY_DESC: 'desc',
-};
-
-/**
  * Enum for thread ordering.
  * @readonly
  * @enum {string}

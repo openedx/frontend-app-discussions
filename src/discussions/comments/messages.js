@@ -212,15 +212,14 @@ const messages = defineMessages({
     defaultMessage: 'Thread not found',
     description: 'message to show on screen if the request thread is not found in course',
   },
-  desc: {
-    id: 'discussion.comment.desc',
-    defaultMessage: 'Oldest first',
-    description: 'Text for oldest first button',
-  },
-  asc: {
-    id: 'discussion.comment.asc',
-    defaultMessage: 'Newest first',
-    description: 'Text for newest first button',
+  commentSort: {
+    id: 'discussions.comment.sortFilterStatus',
+    defaultMessage: `{sort, select,
+      false {Oldest first}
+      true {Newest first}
+      other {{sort}}
+    }`,
+    description: 'sort message showing current sorting',
   },
 });
 

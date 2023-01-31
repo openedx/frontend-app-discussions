@@ -24,7 +24,7 @@ import { fetchThread, markThreadAsRead } from '../posts/data/thunks';
 import { discussionsPath, filterPosts, isLastElementOfList } from '../utils';
 import CommentSortDropdown from './comment/CommentSortDropdown';
 import {
-  selectCommentSortedBy, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
+  selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './data/selectors';
 import { fetchThreadComments } from './data/thunks';
 import { Comment, ResponseEditor } from './comment';
@@ -46,23 +46,24 @@ function usePost(postId) {
 function usePostComments(postId, endorsed = null) {
   const [isLoading, dispatch] = useDispatchWithState();
   const comments = useSelector(selectThreadComments(postId, endorsed));
-  const sortedBy = useSelector(selectCommentSortedBy);
+  const reverseOrder = useSelector(selectCommentSortOrder);
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
 
   const handleLoadMoreResponses = async () => dispatch(fetchThreadComments(postId, {
     endorsed,
     page: currentPage + 1,
-    sortedBy,
+    reverseOrder,
   }));
 
   useEffect(() => {
     dispatch(fetchThreadComments(postId, {
       endorsed,
       page: 1,
-      sortedBy,
+      reverseOrder,
     }));
-  }, [postId]);
+  }, [postId, reverseOrder]);
+
   return {
     comments,
     hasMorePages,

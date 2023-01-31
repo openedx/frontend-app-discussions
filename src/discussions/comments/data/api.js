@@ -23,7 +23,7 @@ export async function getThreadComments(
     endorsed,
     page,
     pageSize,
-    sortedBy,
+    reverseOrder,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -31,7 +31,7 @@ export async function getThreadComments(
     endorsed: EndorsementValue[endorsed],
     page,
     pageSize,
-    sortedBy,
+    reverseOrder,
     requestedFields: 'profile_image',
   });
 

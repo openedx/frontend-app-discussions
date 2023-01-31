@@ -10,22 +10,21 @@ import {
   ExpandLess, ExpandMore,
 } from '@edx/paragon/icons';
 
-import { CommentOrdering } from '../../../data/constants';
-import { selectCommentSortedBy } from '../data/selectors';
-import { setCommentSortedBy } from '../data/slices';
+import { selectCommentSortOrder } from '../data/selectors';
+import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
 
 function CommentSortDropdown({
   intl,
 }) {
   const dispatch = useDispatch();
-  const commentSortedBy = useSelector(selectCommentSortedBy);
+  const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-
-  const handleActions = (sortBy) => {
+  console.log("sortedOrder",sortedOrder)
+  const handleActions = (reverseOrder) => {
     close();
-    dispatch(setCommentSortedBy(sortBy));
+    dispatch(setCommentSortOrder(reverseOrder));
   };
 
   return (
@@ -39,7 +38,7 @@ function CommentSortDropdown({
           size="sm"
           iconAfter={isOpen ? ExpandLess : ExpandMore}
         >
-          {intl.formatMessage(messages[commentSortedBy])}
+          {intl.formatMessage(messages.commentSort, {sort: sortedOrder})}
         </Button>
       </div>
       <ModalPopup
@@ -56,18 +55,18 @@ function CommentSortDropdown({
             as={Button}
             variant="tertiary"
             size="inline"
-            onClick={() => handleActions(CommentOrdering.BY_DESC)}
+            onClick={() => handleActions(false)}
           >
-            {intl.formatMessage(messages.desc)}
+            {intl.formatMessage(messages.commentSort, {sort: false})}
           </Dropdown.Item>
           <Dropdown.Item
             className="d-flex justify-content-start py-1.5"
             as={Button}
             variant="tertiary"
             size="inline"
-            onClick={() => handleActions(CommentOrdering.BY_ASC)}
+            onClick={() => handleActions(true)}
           >
-            {intl.formatMessage(messages.asc)}
+            {intl.formatMessage(messages.commentSort, {sort: true})}
           </Dropdown.Item>
         </div>
       </ModalPopup>
