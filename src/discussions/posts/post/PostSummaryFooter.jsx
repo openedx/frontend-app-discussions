@@ -85,25 +85,20 @@ function PostSummaryFooter({
       )}
       <div className="d-flex flex-fill justify-content-end align-items-center">
         {post.groupId && userHasModerationPrivileges && (
-          <>
-            <OverlayTrigger
-              overlay={(
-                <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
-              )}
-            >
-              <span data-testid="cohort-icon" className="post-summary-icons-dimensions">
-                <People />
-              </span>
-            </OverlayTrigger>
-            <span
-              className="text-gray-700 mx-1.5 font-weight-500"
-              style={{ fontSize: '16px' }}
-            >
-              ·
+          <OverlayTrigger
+            overlay={(
+              <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
+            )}
+          >
+            <span data-testid="cohort-icon" className="mr-2">
+              <Icon
+                src={People}
+                className="text-gray-500 post-summary-icons-dimensions"
+              />
             </span>
-          </>
+          </OverlayTrigger>
         )}
-        <span title={post.createdAt} className="text-gray-700 post-summary-timestamp">
+        <span title={post.createdAt} className="text-gray-700 post-summary-timestamp ml-0.5">
           {timeago.format(post.createdAt, 'time-locale')}
         </span>
       </div>
