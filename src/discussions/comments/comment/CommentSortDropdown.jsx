@@ -38,7 +38,9 @@ function CommentSortDropdown({
           size="sm"
           iconAfter={isOpen ? ExpandLess : ExpandMore}
         >
-          {intl.formatMessage(messages.commentSort, {sort: sortedOrder})}
+          {intl.formatMessage(messages.commentSort, {
+            sort: sortedOrder,
+          })}
         </Button>
       </div>
       <ModalPopup
@@ -57,7 +59,9 @@ function CommentSortDropdown({
             size="inline"
             onClick={() => handleActions(false)}
           >
-            {intl.formatMessage(messages.commentSort, {sort: false})}
+            {intl.formatMessage(messages.commentSort, {
+              sort: false,
+            })}
           </Dropdown.Item>
           <Dropdown.Item
             className="d-flex justify-content-start py-1.5"
@@ -66,7 +70,9 @@ function CommentSortDropdown({
             size="inline"
             onClick={() => handleActions(true)}
           >
-            {intl.formatMessage(messages.commentSort, {sort: true})}
+            {intl.formatMessage(messages.commentSort, {
+              sort: true,
+            })}
           </Dropdown.Item>
         </div>
       </ModalPopup>
