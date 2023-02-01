@@ -27,6 +27,7 @@ const threadsApiUrl = getThreadsApiUrl();
 const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const reverseOrder = false;
 let store;
 let axiosMock;
 let container;
@@ -43,6 +44,7 @@ function mockAxiosReturnPagedComments() {
             page_size: undefined,
             requested_fields: 'profile_image',
             endorsed,
+            reverse_order: reverseOrder,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
