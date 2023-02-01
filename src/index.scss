@@ -130,6 +130,11 @@ $fa-font-path: "~font-awesome/fonts";
   margin-left: 2px;
 }
 
+.mx-3px {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
 .mt-14px {
   margin-top: 14px;
 }
@@ -184,6 +189,11 @@ $fa-font-path: "~font-awesome/fonts";
 .px-10px {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.py-2px {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
 }
 
 .question-icon-size {
@@ -263,29 +273,43 @@ header {
       font-size: 18px;
       font-weight: 400;
       line-height: 28px;
-    };
+    }
+
+    ;
 
     span {
       font-weight: 500;
       line-height: 24px;
-    };
-  };
+    }
+
+    ;
+  }
+
+  ;
 
   .container-xl {
     .course-title-lockup {
       font-size: 1.125rem;
-    };
+    }
+
+    ;
 
     .logo {
       margin-top: 2px;
-    };
-  };
+    }
+
+    ;
+  }
+
+  ;
 
   span:first-child {
     font-size: 14px;
     margin-top: 1px !important;
     margin-bottom: -1px !important;
-  };
+  }
+
+  ;
 }
 
 #courseTabsNavigation {
@@ -303,7 +327,9 @@ header {
     .nav-item {
       padding-bottom: 8px;
     }
-  };
+  }
+
+  ;
 }
 
 .min-content-height {
@@ -431,4 +457,13 @@ header {
 
 .MJX-TEX {
   white-space: normal;
+}
+
+.fontStyle {
+  font-family: "Inter";
+  font-style: normal;
+}
+
+.in-context-navbar {
+  line-height: 44px;
 }

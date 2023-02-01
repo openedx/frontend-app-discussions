@@ -40,7 +40,7 @@ function HoverCard({
         <div className="d-flex">
           <Button
             variant="tertiary"
-            className={classNames('px-2.5 py-2 border-0 font-style-normal font-family-inter text-gray-700 font-size-12',
+            className={classNames('px-2.5 py-2 border-0 fontStyle text-gray-700 font-size-12',
               { 'w-100': enableInContextSidebar })}
             onClick={() => handleResponseCommentButton()}
             disabled={isClosedPost}

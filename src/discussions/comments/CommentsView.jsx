@@ -154,7 +154,7 @@ function DiscussionCommentsView({
                     <Button
                       variant="plain"
                       block="true"
-                      className="card mb-4 px-0 py-10px mt-2 font-style-normal font-family-inter font-weight-500 font-size-14 text-primary-500"
+                      className="card mb-4 px-0 py-10px mt-2 fontStyle font-weight-500 font-size-14 text-primary-500"
                       style={{
                         lineHeight: '24px',
                         border: '0px',
