@@ -1,5 +1,6 @@
 import {
-  act, fireEvent, render, screen, waitFor, within,
+  act, fireEvent, render, screen, waitFor,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
@@ -152,10 +153,27 @@ describe('HoverCard', () => {
 
   test('it should show hover card when hovered on post', async () => {
     renderComponent(discussionPostId);
-    const card = screen.getByTestId('hover-card-thread-1');
-    const element = document.getElementById('hover-card-thread-1');
-    element.classList.add('d-flex');
-    expect(card.className).toContain('d-flex');
+    const post = screen.getByTestId('post-thread-1');
+    // const card = screen.getByTestId('hover-card-thread-1');
+    // const element = document.getElementById('hover-card-thread-1');
+    // element.classList.add('d-flex');
+    // expect(card.className).toContain('d-flex');
+
+    // fireEvent.fireEvent.mouseOver(screen.getByTestId('post-thread-1'));
+    // console.log(screen.getByTestId('hover-card-thread-1').style.display);
+
+    await waitFor(() => screen.getByTestId('hover-card-thread-1'));
+    // console.log(screen.getByTestId('hover-card-thread-1').style.display);
+    fireEvent.mouseEnter(post);
+
+    const hoverCardElement = await waitFor(() => screen.getByTestId('hover-card-thread-1'));
+    expect(hoverCardElement).toHaveStyle('display: flex');
+    console.log(hoverCardElement.style.display);
+    fireEvent.mouseOut(post);
+    console.log(hoverCardElement.style.display);
+    expect(hoverCardElement).toHaveStyle('display: none');
+
+    expect(within(post).getByTestId('hover-card-thread-1')).toHaveStyle('display: flex');
   });
 
   // test('it should show hover card when hovered on comment', async () => {

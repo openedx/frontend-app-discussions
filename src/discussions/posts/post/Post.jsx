@@ -121,7 +121,6 @@ function Post({
         onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
         isClosedPost={post.closed}
       />
-
       <AlertBanner content={post} />
       <PostHeader post={post} />
       <div className="d-flex mt-14px text-break font-style text-primary-500">

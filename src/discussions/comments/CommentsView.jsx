@@ -129,8 +129,7 @@ function DiscussionCommentsView({
           {endorsedComments.length > 0 && (
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
-              {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, true)
+              {endorsed === EndorsementStatus.DISCUSSION ? handleComments(endorsedComments, true)
                 : handleComments(endorsedComments, false)}
             </>
           )}

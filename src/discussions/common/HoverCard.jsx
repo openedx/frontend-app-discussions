@@ -27,7 +27,6 @@ function HoverCard({
 }) {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute d-none"
