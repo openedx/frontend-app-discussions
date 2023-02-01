@@ -50,8 +50,7 @@ function PostsList({
       topicIds,
       isFilterChanged,
     };
-
-    if (showOwnPosts) {
+    if (showOwnPosts && filters.search === '') {
       dispatch(fetchUserPosts(courseId, params));
     } else {
       dispatch(fetchThreads(courseId, params));
