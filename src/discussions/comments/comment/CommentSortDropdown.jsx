@@ -21,7 +21,7 @@ function CommentSortDropdown({
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  console.log("sortedOrder",sortedOrder)
+
   const handleActions = (reverseOrder) => {
     close();
     dispatch(setCommentSortOrder(reverseOrder));
