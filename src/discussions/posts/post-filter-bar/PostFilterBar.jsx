@@ -76,7 +76,7 @@ function PostFilterBar({
 
   const selectedCohort = useMemo(() => cohorts.find(cohort => (
     toString(cohort.id) === currentFilters.cohort)),
-  [currentFilters.cohort]);
+    [currentFilters.cohort]);
 
   const handleSortFilterChange = (event) => {
     const currentType = currentFilters.postType;
@@ -138,7 +138,7 @@ function PostFilterBar({
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
-        <span className="text-primary-700 pr-4">
+        <span className="text-primary-500 pr-4 fontStyle">
           {intl.formatMessage(messages.sortFilterStatus, {
             own: false,
             type: currentFilters.postType,
