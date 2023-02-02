@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -234,12 +233,13 @@ function CommentsView({ intl }) {
             <div className="px-4 py-1.5 bg-white">
               <Button
                 variant="plain"
-                className="px-0 font-weight-light text-primary-500"
+                className="px-0 py-0 my-1.5 border-0 font-weight-normal fontStyle text-primary-500"
                 iconBefore={ArrowBack}
                 onClick={() => history.push(discussionsPath(PostsPages[page], {
                   courseId, learnerUsername, category, topicId,
                 })(location))}
                 size="sm"
+                style={{ lineHeight: '24px' }}
               >
                 {intl.formatMessage(messages.backAlt)}
               </Button>
@@ -261,10 +261,7 @@ function CommentsView({ intl }) {
         )
       )}
       <div
-        className={classNames('discussion-comments d-flex flex-column card border-0', {
-          'post-card-margin post-card-padding': !enableInContextSidebar,
-          'post-card-padding rounded-0 border-0 mb-4': enableInContextSidebar,
-        })}
+        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding"
       >
         <Post post={thread} handleAddResponseButton={() => setAddingResponse(true)} />
         {!thread.closed && (
