@@ -75,8 +75,7 @@ function PostFilterBar({
   const [isOpen, setOpen] = useState(false);
 
   const selectedCohort = useMemo(() => cohorts.find(cohort => (
-    toString(cohort.id) === currentFilters.cohort)),
-    [currentFilters.cohort]);
+    toString(cohort.id) === currentFilters.cohort)), [currentFilters.cohort]);
 
   const handleSortFilterChange = (event) => {
     const currentType = currentFilters.postType;

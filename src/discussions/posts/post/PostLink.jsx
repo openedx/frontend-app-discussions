@@ -74,9 +74,9 @@ function PostLink({
                 <Truncate lines={1} className="mr-1.5" whiteSpace>
                   <span
                     class={
-                        classNames('font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter align-bottom',
-                          { 'font-weight-bolder': !read })
-                      }
+                      classNames('font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter align-bottom',
+                        { 'font-weight-bolder': !read })
+                    }
                   >
                     {post.title}
                   </span>
@@ -107,10 +107,10 @@ function PostLink({
                 )}
 
                 {post.pinned && (
-                <Icon
-                  src={PushPin}
-                  className={`post-summary-icons-dimensions text-gray-700 ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-                />
+                  <Icon
+                    src={PushPin}
+                    className={`post-summary-icons-dimensions text-gray-700 ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                  />
                 )}
               </div>
             </div>

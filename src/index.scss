@@ -90,6 +90,16 @@ $fa-font-path: "~font-awesome/fonts";
   width: 16px !important;
 }
 
+.post-summary-commentcount-dimensions {
+  height: 15.39px;
+  width: 15.5px
+}
+
+.post-summary-like-dimensions {
+  height: 16px;
+  width: 17px
+}
+
 .post-summary-timestamp {
   font-size: 12px !important;
   line-height: 20px !important;
@@ -197,8 +207,8 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .question-icon-size {
-  width: 1.4581rem;
-  height: 1.4581rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .question-icon-position {
