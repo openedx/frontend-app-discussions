@@ -153,7 +153,7 @@ function DiscussionCommentsView({
                     <Button
                       variant="plain"
                       block="true"
-                      className="card mb-4 px-0 py-10px mt-2 fontStyle font-weight-500 font-size-14 text-primary-500"
+                      className="card mb-4 px-0 py-10px mt-2 font-style font-weight-500 font-size-14 text-primary-500"
                       style={{
                         lineHeight: '24px',
                         border: '0px',
@@ -233,7 +233,7 @@ function CommentsView({ intl }) {
             <div className="px-4 py-1.5 bg-white">
               <Button
                 variant="plain"
-                className="px-0 py-0 my-1.5 border-0 font-weight-normal fontStyle text-primary-500"
+                className="px-0 py-0 my-1.5 border-0 font-weight-normal font-style  text-primary-500"
                 iconBefore={ArrowBack}
                 onClick={() => history.push(discussionsPath(PostsPages[page], {
                   courseId, learnerUsername, category, topicId,

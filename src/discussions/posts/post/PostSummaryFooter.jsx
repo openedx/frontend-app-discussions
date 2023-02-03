@@ -27,7 +27,7 @@ function PostSummaryFooter({
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   timeago.register('time-locale', timeLocale);
   return (
-    <div className="d-flex align-items-center text-gray-700">
+    <div className="d-flex align-items-center text-gray-700" style={{ height: '24px' }}>
       <div className="d-flex align-items-center mr-4.5">
         <OverlayTrigger
           overlay={(
@@ -53,12 +53,14 @@ function PostSummaryFooter({
         )}
       >
         <Icon src={post.following ? StarFilled : StarOutline} className="post-summary-icons-dimensions mr-0.5">
-          <span className="sr-only">{' '}{intl.formatMessage(post.following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}</span>
+          <span className="sr-only">
+            {' '}{intl.formatMessage(post.following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}
+          </span>
         </Icon>
       </OverlayTrigger>
 
       {preview && post.commentCount > 1 && (
-        <div className="d-flex align-items-center ml-4.5">
+        <div className="d-flex align-items-center ml-4.5 text-gray-700 font-style font-size-12">
           <OverlayTrigger
             overlay={(
               <Tooltip id={`follow-${post.id}-tooltip`}>
@@ -68,7 +70,7 @@ function PostSummaryFooter({
           >
             <Icon
               src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline}
-              className="post-summary-commentcount-dimensions mr-0.5"
+              className="post-summary-comment-count-dimensions mr-0.5"
             >
               <span className="sr-only">{' '} {intl.formatMessage(messages.activity)}</span>
             </Icon>

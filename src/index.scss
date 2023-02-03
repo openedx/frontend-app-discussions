@@ -41,6 +41,10 @@ $fa-font-path: "~font-awesome/fonts";
   outline: #EAE6E5 solid 2px;
 }
 
+.font-size-16 {
+  font-size: 16px;
+}
+
 .font-size-14 {
   font-size: 14px;
 }
@@ -90,7 +94,7 @@ $fa-font-path: "~font-awesome/fonts";
   width: 16px !important;
 }
 
-.post-summary-commentcount-dimensions {
+.post-summary-comment-count-dimensions {
   height: 15.39px;
   width: 15.5px
 }
@@ -469,7 +473,7 @@ header {
   white-space: normal;
 }
 
-.fontStyle {
+.font-style {
   font-family: "Inter";
   font-style: normal;
 }

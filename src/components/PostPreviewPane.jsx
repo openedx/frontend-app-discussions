@@ -33,13 +33,12 @@ function PostPreviewPane({
         </div>
       )}
       <div className="d-flex justify-content-end">
-        {!showPreviewPane
-        && (
+        {!showPreviewPane && (
           <Button
             variant="link"
             size="sm"
             onClick={() => setShowPreviewPane(true)}
-            className={`text-primary-500 p-0 ${editExisting && 'mb-4.5'}`}
+            className={`text-primary-500 font-style p-0 ${editExisting && 'mb-4.5'}`}
             style={{ lineHeight: '26px' }}
           >
             {intl.formatMessage(messages.showPreviewButton)}
