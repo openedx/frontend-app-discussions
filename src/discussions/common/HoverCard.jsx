@@ -29,7 +29,7 @@ function HoverCard({
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   return (
     <div
-      className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute d-none"
+      className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
       data-testid={`hover-card-${commentOrPost.id}`}
       id={`hover-card-${commentOrPost.id}`}
     >

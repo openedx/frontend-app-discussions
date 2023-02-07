@@ -152,10 +152,10 @@ function DiscussionCommentsView({
                       {intl.formatMessage(messages.addResponse)}
                     </Button>
                   )}
-
                   <ResponseEditor
                     postId={postId}
                     handleCloseEditor={() => setAddingResponse(false)}
+                    addWrappingDiv
                     addingResponse={addingResponse}
                   />
                 </div>
