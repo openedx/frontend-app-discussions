@@ -88,7 +88,7 @@ function LearnerPostsView({ intl }) {
           onClick={() => history.push(discussionsPath(Routes.LEARNERS.PATH, { courseId })(location))}
           alt={intl.formatMessage(messages.back)}
         />
-        <div className="text-primary-500 font-style-normal font-family-inter font-weight-bold py-2.5">
+        <div className="text-primary-500 font-style font-weight-bold py-2.5">
           {intl.formatMessage(messages.activityForLearner, { username: capitalize(username) })}
         </div>
         <div style={{ padding: '18px' }} />

@@ -87,10 +87,9 @@ function DiscussionCommentsView({
 
   const handleDefinition = (message, commentsLength) => (
     <div
-      className="mx-4 my-14px text-gray-700 font-style-normal font-family-inter"
+      className="mx-4 my-14px text-gray-700 font-style"
       role="heading"
       aria-level="2"
-      style={{ lineHeight: '24px' }}
     >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
@@ -113,11 +112,7 @@ function DiscussionCommentsView({
           onClick={handleLoadMoreResponses}
           variant="link"
           block="true"
-          className="px-4 mt-3 py-0 mb-2 font-style-normal font-family-inter font-weight-500 font-size-14"
-          style={{
-            lineHeight: '24px',
-            border: '0px',
-          }}
+          className="px-4 mt-3 border-0 line-height-24 py-0 mb-2 font-style font-weight-500 font-size-14"
           data-testid="load-more-comments"
         >
           {intl.formatMessage(messages.loadMoreResponses)}
@@ -153,11 +148,8 @@ function DiscussionCommentsView({
                     <Button
                       variant="plain"
                       block="true"
-                      className="card mb-4 px-0 py-10px mt-2 font-style font-weight-500 font-size-14 text-primary-500"
-                      style={{
-                        lineHeight: '24px',
-                        border: '0px',
-                      }}
+                      className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
+                      line-height-24 font-size-14 text-primary-500"
                       onClick={() => setAddingResponse(true)}
                       data-testid="add-response"
                     >
@@ -233,13 +225,12 @@ function CommentsView({ intl }) {
             <div className="px-4 py-1.5 bg-white">
               <Button
                 variant="plain"
-                className="px-0 py-0 my-1.5 border-0 font-weight-normal font-style  text-primary-500"
+                className="px-0 line-height-24 py-0 my-1.5 border-0 font-weight-normal font-style text-primary-500"
                 iconBefore={ArrowBack}
                 onClick={() => history.push(discussionsPath(PostsPages[page], {
                   courseId, learnerUsername, category, topicId,
                 })(location))}
                 size="sm"
-                style={{ lineHeight: '24px' }}
               >
                 {intl.formatMessage(messages.backAlt)}
               </Button>

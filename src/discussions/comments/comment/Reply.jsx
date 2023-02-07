@@ -120,7 +120,7 @@ function Reply({
               postCreatedAt={reply.createdAt}
               postOrComment
             />
-            <div className="ml-auto d-flex" style={{ lineHeight: '24px' }}>
+            <div className="ml-auto d-flex">
               <ActionsDropdown
                 commentOrPost={{
                   ...reply,
@@ -137,7 +137,7 @@ function Reply({
               <HTMLLoader
                 componentId="reply"
                 htmlNode={reply.renderedBody}
-                cssClassName="html-loader text-break font-style-normal pb-1 font-family-inter text-primary-500"
+                cssClassName="html-loader text-break font-style text-primary-500"
                 testId={reply.id}
               />
             )}

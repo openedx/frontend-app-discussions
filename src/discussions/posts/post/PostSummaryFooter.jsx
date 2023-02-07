@@ -40,7 +40,7 @@ function PostSummaryFooter({
             <span className="sr-only">{' '}{intl.formatMessage(post.voted ? messages.likedPost : messages.postLikes)}</span>
           </Icon>
         </OverlayTrigger>
-        <div className="font-family-inter font-style-normal">
+        <div className="font-style">
           {(post.voteCount && post.voteCount > 0) ? post.voteCount : null}
         </div>
       </div>

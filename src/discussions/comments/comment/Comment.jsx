@@ -152,7 +152,7 @@ function Comment({
             )
             : (
               <HTMLLoader
-                cssClassName="comment-body html-loader text-break mt-14px font-style-normal font-family-inter text-primary-500"
+                cssClassName="comment-body html-loader text-break mt-14px font-style text-primary-500"
                 componentId="comment"
                 htmlNode={comment.renderedBody}
                 testId={comment.id}
@@ -182,7 +182,7 @@ function Comment({
               onClick={handleLoadMoreComments}
               variant="link"
               block="true"
-              className="font-size-14 font-style-normal font-family-inter pt-10px border-0 font-weight-500 pb-0"
+              className="font-size-14 font-style pt-10px border-0 font-weight-500 pb-0"
               data-testid="load-more-comments-responses"
               style={{
                 lineHeight: '20px',
@@ -208,12 +208,9 @@ function Comment({
                 {!isClosedPost && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
                   && (
                     <Button
-                      className="d-flex flex-grow mt-2 font-size-14 font-style-normal font-family-inter font-weight-500 text-primary-500"
+                      className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
                       variant="plain"
-                      style={{
-                        lineHeight: '24px',
-                        height: '36px',
-                      }}
+                      style={{ height: '36px' }}
                       onClick={() => setReplying(true)}
                     >
                       {intl.formatMessage(messages.addComment)}

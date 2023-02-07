@@ -136,12 +136,12 @@ function Post({
       )}
       <AlertBanner content={post} />
       <PostHeader post={post} />
-      <div className="d-flex mt-14px text-break font-style-normal font-family-inter text-primary-500">
+      <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
       {topicContext && topic && (
         <div
-          className={classNames('mt-14px mb-1 font-style-normal font-family-inter font-size-12',
+          className={classNames('mt-14px mb-1 font-style font-size-12',
             { 'w-100': enableInContextSidebar })}
           style={{ lineHeight: '20px' }}
         >
