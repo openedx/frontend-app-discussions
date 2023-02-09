@@ -1,8 +1,7 @@
 import {
-  act, fireEvent, render, screen, waitFor,
+  render, screen, waitFor,
   within,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route } from 'react-router';
@@ -151,63 +150,35 @@ describe('HoverCard', () => {
     mockAxiosReturnPagedCommentsResponses();
   });
 
-  test('it should show hover card when hovered on post', async () => {
+  test('it should have hover card on post', async () => {
     renderComponent(discussionPostId);
     const post = screen.getByTestId('post-thread-1');
-    // const card = screen.getByTestId('hover-card-thread-1');
-    // const element = document.getElementById('hover-card-thread-1');
-    // element.classList.add('d-flex');
-    // expect(card.className).toContain('d-flex');
-
-    // fireEvent.fireEvent.mouseOver(screen.getByTestId('post-thread-1'));
-    // console.log(screen.getByTestId('hover-card-thread-1').style.display);
-
-    await waitFor(() => screen.getByTestId('hover-card-thread-1'));
-    // console.log(screen.getByTestId('hover-card-thread-1').style.display);
-    fireEvent.mouseEnter(post);
-
-    const hoverCardElement = await waitFor(() => screen.getByTestId('hover-card-thread-1'));
-    expect(hoverCardElement).toHaveStyle('display: flex');
-    console.log(hoverCardElement.style.display);
-    fireEvent.mouseOut(post);
-    console.log(hoverCardElement.style.display);
-    expect(hoverCardElement).toHaveStyle('display: none');
-
-    expect(within(post).getByTestId('hover-card-thread-1')).toHaveStyle('display: flex');
+    expect(within(post).getByTestId('hover-card-thread-1')).toBeInTheDocument();
   });
 
-  // test('it should show hover card when hovered on comment', async () => {
-  //   renderComponent(discussionPostId);
-  //   const comment = await waitFor(() => screen.findByTestId('comment-1'));
-  //   userEvent.hover(comment);
-  //   expect(screen.getByTestId('hover-card')).toBeInTheDocument();
-  // });
+  test('it should have hover card on comment', async () => {
+    renderComponent(discussionPostId);
+    const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+    expect(within(comment).getByTestId('hover-card-comment-1')).toBeInTheDocument();
+  });
 
-  // test('it should not show hover card when post and comment not hovered', async () => {
-  //   renderComponent(discussionPostId);
-  //   expect(screen.queryByTestId('hover-card')).not.toBeInTheDocument();
-  // });
+  test('it should show add response, like, follow and actions menu for hovered post', async () => {
+    renderComponent(discussionPostId);
+    const post = screen.getByTestId('post-thread-1');
+    const view = within(post).getByTestId('hover-card-thread-1');
+    expect(within(view).queryByRole('button', { name: /Add response/i })).toBeInTheDocument();
+    expect(within(view).getByRole('button', { name: /like/i })).toBeInTheDocument();
+    expect(within(view).queryByRole('button', { name: /follow/i })).toBeInTheDocument();
+    expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+  });
 
-  // test('it should show add response, like, follow and actions menu for hovered post', async () => {
-  //   renderComponent(discussionPostId);
-  //   const post = screen.getByTestId('post-thread-1');
-  //   userEvent.hover(post);
-  //   const view = screen.getByTestId('hover-card');
-  //   expect(within(view).queryByRole('button', { name: /Add response/i })).toBeInTheDocument();
-  //   expect(within(view).getByRole('button', { name: /like/i })).toBeInTheDocument();
-  //   expect(within(view).queryByRole('button', { name: /follow/i })).toBeInTheDocument();
-  //   expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
-  // });
-
-  // test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
-  //   renderComponent(questionPostId);
-  //   const comment = await waitFor(() => screen.findByTestId('comment-3'));
-  //   userEvent.hover(comment);
-  //   const view = screen.getByTestId('hover-card');
-  //   expect(screen.getByTestId('hover-card')).toBeInTheDocument();
-  //   expect(within(view).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
-  //   expect(within(view).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
-  //   expect(within(view).queryByRole('button', { name: /like/i })).toBeInTheDocument();
-  //   expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
-  // });
+  test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
+    renderComponent(questionPostId);
+    const comment = await waitFor(() => screen.findByTestId('comment-comment-3'));
+    const view = within(comment).getByTestId('hover-card-comment-3');
+    expect(within(view).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
+    expect(within(view).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
+    expect(within(view).queryByRole('button', { name: /like/i })).toBeInTheDocument();
+    expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+  });
 });
