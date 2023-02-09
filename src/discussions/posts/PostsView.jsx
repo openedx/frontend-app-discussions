@@ -13,10 +13,7 @@ import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { handleKeyDown } from '../utils';
-import {
-  selectAllThreads,
-  selectTopicThreads,
-} from './data/selectors';
+import { selectAllThreads, selectTopicThreads } from './data/selectors';
 import { setSearchQuery } from './data/slices';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import PostsList from './PostsList';

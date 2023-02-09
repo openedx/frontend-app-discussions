@@ -4,10 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button,
-  Icon, IconButton,
-} from '@edx/paragon';
+import { Button, Icon, IconButton } from '@edx/paragon';
 
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
@@ -30,11 +27,11 @@ function HoverCard({
 }) {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-
   return (
     <div
-      className="d-flex flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
-      data-testid="hover-card"
+      className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
+      data-testid={`hover-card-${commentOrPost.id}`}
+      id={`hover-card-${commentOrPost.id}`}
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="d-flex">
@@ -44,15 +41,12 @@ function HoverCard({
               { 'w-100': enableInContextSidebar })}
             onClick={() => handleResponseCommentButton()}
             disabled={isClosedPost}
-            style={{
-              lineHeight: '20px',
-            }}
+            style={{ lineHeight: '20px' }}
           >
             {addResponseCommentButtonMessage}
           </Button>
         </div>
       )}
-
       {endorseIcons && (
         <div className="hover-button">
           <IconButton
@@ -92,7 +86,6 @@ function HoverCard({
             onClick={(e) => {
               e.preventDefault();
               onFollow();
-              return true;
             }}
           />
         </div>

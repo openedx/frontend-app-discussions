@@ -14,8 +14,8 @@ import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
 import { fetchThread } from '../../posts/data/thunks';
+import LikeButton from '../../posts/post/LikeButton';
 import { useActions } from '../../utils';
-import CommentIcons from '../comment-icons/CommentIcons';
 import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../data/thunks';
 import messages from '../messages';
@@ -43,7 +43,6 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const [showHoverCard, setShowHoverCard] = useState(false);
   const {
     courseId,
   } = useContext(DiscussionContext);
@@ -91,11 +90,6 @@ function Comment({
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
   );
 
-  const handleHoverCardBlurEvent = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      setShowHoverCard(false);
-    }
-  };
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
       {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
@@ -125,25 +119,16 @@ function Comment({
           />
         )}
         <EndorsedAlertBanner postType={postType} content={comment} />
-        <div
-          className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px"
-          aria-level={5}
-          onMouseEnter={() => setShowHoverCard(true)}
-          onMouseLeave={() => setShowHoverCard(false)}
-          onFocus={() => setShowHoverCard(true)}
-          onBlur={(e) => handleHoverCardBlurEvent(e)}
-        >
-          {showHoverCard && (
-            <HoverCard
-              commentOrPost={comment}
-              actionHandlers={actionHandlers}
-              handleResponseCommentButton={() => setReplying(true)}
-              onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-              addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
-              isClosedPost={isClosedPost}
-              endorseIcons={endorseIcons}
-            />
-          )}
+        <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" aria-level={5}>
+          <HoverCard
+            commentOrPost={comment}
+            actionHandlers={actionHandlers}
+            handleResponseCommentButton={() => setReplying(true)}
+            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+            addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
+            isClosedPost={isClosedPost}
+            endorseIcons={endorseIcons}
+          />
           <AlertBanner content={comment} />
           <CommentHeader comment={comment} />
           {isEditing
@@ -158,12 +143,15 @@ function Comment({
                 testId={comment.id}
               />
             )}
-          <CommentIcons
-            comment={comment}
-            following={comment.following}
-            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-            createdAt={comment.createdAt}
-          />
+          {comment.voted && (
+            <div className="ml-n1.5 mt-10px">
+              <LikeButton
+                count={comment.voteCount}
+                onClick={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+                voted={comment.voted}
+              />
+            </div>
+          )}
           {inlineReplies.length > 0 && (
             <div className="d-flex flex-column mt-0.5" role="list">
               {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
@@ -182,11 +170,8 @@ function Comment({
               onClick={handleLoadMoreComments}
               variant="link"
               block="true"
-              className="font-size-14 font-style pt-10px border-0 font-weight-500 pb-0"
+              className="font-size-14 line-height-24 font-style pt-10px border-0 font-weight-500 pb-0"
               data-testid="load-more-comments-responses"
-              style={{
-                lineHeight: '20px',
-              }}
             >
               {intl.formatMessage(messages.loadMoreComments)}
             </Button>
@@ -195,10 +180,7 @@ function Comment({
             isReplying ? (
               <div className="mt-2.5">
                 <CommentEditor
-                  comment={{
-                    threadId: comment.threadId,
-                    parentId: comment.id,
-                  }}
+                  comment={{ threadId: comment.threadId, parentId: comment.id }}
                   edit={false}
                   onCloseEditor={() => setReplying(false)}
                 />

@@ -39,11 +39,8 @@ function EndorsedAlertBanner({
                 height: '20px',
               }}
             />
-            <strong className="ml-2 font-family-inter">{intl.formatMessage(
-              isQuestion
-                ? messages.answer
-                : messages.endorsed,
-            )}
+            <strong className="ml-2 font-family-inter">
+              {intl.formatMessage(isQuestion ? messages.answer : messages.endorsed)}
             </strong>
           </div>
           <span className="d-flex align-items-center align-items-center flex-wrap" style={{ marginRight: '-1px' }}>

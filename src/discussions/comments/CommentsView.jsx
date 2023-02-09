@@ -9,14 +9,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Button, Icon, IconButton,
-  Spinner,
+  Button, Icon, IconButton, Spinner,
 } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
-import {
-  EndorsementStatus, PostsPages, ThreadType,
-} from '../../data/constants';
+import { EndorsementStatus, PostsPages, ThreadType } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
 import { useIsOnDesktop, useUserCanAddThreadInBlackoutDate } from '../data/hooks';
@@ -132,8 +129,7 @@ function DiscussionCommentsView({
           {endorsedComments.length > 0 && (
             <>
               {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
-              {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, true)
+              {endorsed === EndorsementStatus.DISCUSSION ? handleComments(endorsedComments, true)
                 : handleComments(endorsedComments, false)}
             </>
           )}
@@ -156,10 +152,10 @@ function DiscussionCommentsView({
                       {intl.formatMessage(messages.addResponse)}
                     </Button>
                   )}
-
                   <ResponseEditor
                     postId={postId}
                     handleCloseEditor={() => setAddingResponse(false)}
+                    addWrappingDiv
                     addingResponse={addingResponse}
                   />
                 </div>
@@ -169,7 +165,6 @@ function DiscussionCommentsView({
         </>
       )}
     </>
-
   );
 }
 

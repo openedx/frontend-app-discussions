@@ -441,10 +441,19 @@ header {
   margin-bottom: 0px;
 }
 
-.post-card-comment:hover,
-.post-card-comment:focus {
-  .hover-card {
-    display: flex !important;
+.post-card-comment {
+  &:not(:hover),
+  &:not(:focus) {
+    .hover-card {
+      display: none;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    .hover-card {
+      display: flex;
+    }
   }
 }
 
