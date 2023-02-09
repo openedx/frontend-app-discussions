@@ -42,17 +42,17 @@ function PostActionsBar({
           : <Search />
       )}
       {enableInContextSidebar && (
-        <h4 className="d-flex flex-grow-1 font-weight-bold my-0 py-0 align-self-center">
+        <h4 className="d-flex flex-grow-1 font-weight-bold font-style my-0 py-10px align-self-center">
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-      {loadingStatus === RequestStatus.SUCCESSFUL && userCanAddThreadInBlackoutDate
-      && (
+      {loadingStatus === RequestStatus.SUCCESSFUL && userCanAddThreadInBlackoutDate && (
         <>
           {!enableInContextSidebar && <div className="border-right border-light-400 mx-3" />}
           <Button
             variant={enableInContextSidebar ? 'plain' : 'brand'}
-            className={classNames('my-0', { 'p-0': enableInContextSidebar })}
+            className={classNames('my-0 font-style border-0 line-height-24',
+              { 'px-3 py-10px border-0': enableInContextSidebar })}
             onClick={() => dispatch(showPostEditor())}
             size={enableInContextSidebar ? 'md' : 'sm'}
           >
@@ -62,13 +62,17 @@ function PostActionsBar({
       )}
       {enableInContextSidebar && (
         <>
-          <div className="border-right border-light-300 mr-2 ml-3.5 my-2" />
-          <IconButton
-            src={Close}
-            iconAs={Icon}
-            onClick={handleCloseInContext}
-            alt={intl.formatMessage(messages.close)}
-          />
+          <div className="border-right border-light-300 mr-3 ml-1.5 my-10px" />
+          <div className="justify-content-center mt-2.5 mx-3px">
+            <IconButton
+              src={Close}
+              iconAs={Icon}
+              onClick={handleCloseInContext}
+              alt={intl.formatMessage(messages.close)}
+              iconClassNames="spinner-dimentions"
+              className="spinner-dimentions"
+            />
+          </div>
         </>
       )}
     </div>

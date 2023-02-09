@@ -54,9 +54,9 @@ function DiscussionPostType({
   value,
   type,
   selected,
-  description,
   icon,
 }) {
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
     <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
@@ -66,12 +66,11 @@ function DiscussionPostType({
           'border-primary': selected,
           'border-light-400': !selected,
         })}
-        style={{ cursor: 'pointer', width: '14.25rem' }}
+        style={{ cursor: 'pointer', width: `${enableInContextSidebar ? '10.021rem' : '14.25rem'}` }}
       >
-        <Card.Section className="py-3 px-10px d-flex flex-column align-items-center">
+        <Card.Section className="px-4 py-3 d-flex flex-column align-items-center">
           <span className="text-primary-300 mb-0.5">{icon}</span>
-          <span className="text-gray-700 mb-0.5">{type}</span>
-          <span className="x-small text-gray-500">{description}</span>
+          <span className="text-gray-700">{type}</span>
         </Card.Section>
       </Card>
     </label>
@@ -82,7 +81,6 @@ DiscussionPostType.propTypes = {
   value: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   selected: PropTypes.bool.isRequired,
-  description: PropTypes.string.isRequired,
   icon: PropTypes.element.isRequired,
 };
 
@@ -270,7 +268,7 @@ function PostEditor({
         resetForm,
       }) => (
         <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
-          <h4 className="mb-4" style={{ lineHeight: '16px' }}>
+          <h4 className="mb-4 font-style font-size-16" style={{ lineHeight: '16px' }}>
             {editExisting
               ? intl.formatMessage(messages.editPostHeading)
               : intl.formatMessage(messages.addPostHeading)}
@@ -444,7 +442,7 @@ function PostEditor({
 
           <PostPreviewPane htmlNode={values.comment} isPost editExisting={editExisting} />
 
-          <div className="d-flex flex-row mt-n4 w-75 text-primary">
+          <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
             {!editExisting && (
               <>
                 <Form.Group>
@@ -461,18 +459,18 @@ function PostEditor({
                   </Form.Checkbox>
                 </Form.Group>
                 {allowAnonymousToPeers && (
-                <Form.Group>
-                  <Form.Checkbox
-                    name="anonymousToPeers"
-                    checked={values.anonymousToPeers}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  >
-                    <span className="font-size-14">
-                      {intl.formatMessage(messages.anonymousToPeersPost)}
-                    </span>
-                  </Form.Checkbox>
-                </Form.Group>
+                  <Form.Group>
+                    <Form.Checkbox
+                      name="anonymousToPeers"
+                      checked={values.anonymousToPeers}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    >
+                      <span className="font-size-14">
+                        {intl.formatMessage(messages.anonymousToPeersPost)}
+                      </span>
+                    </Form.Checkbox>
+                  </Form.Group>
                 )}
               </>
             )}
@@ -498,7 +496,7 @@ function PostEditor({
           </div>
         </Form>
       )
-    }
+      }
     </Formik>
   );
 }

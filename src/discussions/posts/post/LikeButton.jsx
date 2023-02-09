@@ -41,7 +41,7 @@ function LikeButton({
           iconClassNames="like-icon-dimentions"
         />
       </OverlayTrigger>
-      <div className="font-family-inter font-style-normal">
+      <div className="font-style">
         {(count && count > 0) ? count : null}
       </div>
 

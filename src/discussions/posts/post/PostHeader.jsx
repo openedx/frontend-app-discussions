@@ -108,7 +108,17 @@ function PostHeader({
                   && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
               </div>
             )
-            : <h5 className="mb-0 font-style-normal font-family-inter text-primary-500" style={{ lineHeight: '21px' }} aria-level="1" tabIndex="-1" accessKey="h">{post.title}</h5>}
+            : (
+              <h5
+                className="mb-0 font-style text-primary-500"
+                style={{ lineHeight: '21px' }}
+                aria-level="1"
+                tabIndex="-1"
+                accessKey="h"
+              >
+                {post.title}
+              </h5>
+            )}
           <AuthorLabel
             author={post.author || intl.formatMessage(messages.anonymous)}
             authorLabel={post.authorLabel}

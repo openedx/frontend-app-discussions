@@ -40,7 +40,7 @@ function LearnerCard({
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
             <div className="d-flex align-items-center flex-fill">
               <div
-                className="text-truncate font-weight-500 font-size-14 text-primary-500 font-style-normal font-family-inter"
+                className="text-truncate font-weight-500 font-size-14 text-primary-500 font-style"
               >
                 {learner.username}
               </div>

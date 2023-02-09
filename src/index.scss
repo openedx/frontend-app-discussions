@@ -41,6 +41,10 @@ $fa-font-path: "~font-awesome/fonts";
   outline: #EAE6E5 solid 2px;
 }
 
+.font-size-16 {
+  font-size: 16px;
+}
+
 .font-size-14 {
   font-size: 14px;
 }
@@ -90,6 +94,16 @@ $fa-font-path: "~font-awesome/fonts";
   width: 16px !important;
 }
 
+.post-summary-comment-count-dimensions {
+  height: 15.39px;
+  width: 15.5px
+}
+
+.post-summary-like-dimensions {
+  height: 16px;
+  width: 17px
+}
+
 .post-summary-timestamp {
   font-size: 12px !important;
   line-height: 20px !important;
@@ -128,6 +142,11 @@ $fa-font-path: "~font-awesome/fonts";
 
 .ml-0\.5 {
   margin-left: 2px;
+}
+
+.mx-3px {
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
 .mt-14px {
@@ -186,9 +205,14 @@ $fa-font-path: "~font-awesome/fonts";
   padding-right: 10px;
 }
 
+.py-2px {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
 .question-icon-size {
-  width: 1.4581rem;
-  height: 1.4581rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .question-icon-position {
@@ -431,4 +455,17 @@ header {
 
 .MJX-TEX {
   white-space: normal;
+}
+
+.font-style {
+  font-family: "Inter";
+  font-style: normal;
+}
+
+.in-context-navbar {
+  line-height: 44px;
+}
+
+.line-height-24 {
+  line-height: 24px;
 }

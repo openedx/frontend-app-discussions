@@ -9,16 +9,10 @@ import {
   Badge, Icon, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
-  Locked,
+  StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '@edx/paragon/icons';
 
-import {
-  People,
-  QuestionAnswer,
-  QuestionAnswerOutline,
-  StarFilled,
-  StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '../../../components/icons';
+import { People, QuestionAnswer, QuestionAnswerOutline } from '../../../components/icons';
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import messages from './messages';
@@ -32,9 +26,8 @@ function PostSummaryFooter({
 }) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   timeago.register('time-locale', timeLocale);
-
   return (
-    <div className="d-flex align-items-center text-gray-700">
+    <div className="d-flex align-items-center text-gray-700" style={{ height: '24px' }}>
       <div className="d-flex align-items-center mr-4.5">
         <OverlayTrigger
           overlay={(
@@ -43,11 +36,11 @@ function PostSummaryFooter({
             </Tooltip>
           )}
         >
-          <Icon src={post.voted ? ThumbUpFilled : ThumbUpOutline} className="post-summary-icons-dimensions mr-0.5">
+          <Icon src={post.voted ? ThumbUpFilled : ThumbUpOutline} className="post-summary-like-dimensions mr-0.5">
             <span className="sr-only">{' '}{intl.formatMessage(post.voted ? messages.likedPost : messages.postLikes)}</span>
           </Icon>
         </OverlayTrigger>
-        <div className="font-family-inter font-style-normal">
+        <div className="font-style">
           {(post.voteCount && post.voteCount > 0) ? post.voteCount : null}
         </div>
       </div>
@@ -60,12 +53,14 @@ function PostSummaryFooter({
         )}
       >
         <Icon src={post.following ? StarFilled : StarOutline} className="post-summary-icons-dimensions mr-0.5">
-          <span className="sr-only">{' '}{ intl.formatMessage(post.following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}</span>
+          <span className="sr-only">
+            {' '}{intl.formatMessage(post.following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}
+          </span>
         </Icon>
       </OverlayTrigger>
 
       {preview && post.commentCount > 1 && (
-        <div className="d-flex align-items-center ml-4.5">
+        <div className="d-flex align-items-center ml-4.5 text-gray-700 font-style font-size-12">
           <OverlayTrigger
             overlay={(
               <Tooltip id={`follow-${post.id}-tooltip`}>
@@ -73,7 +68,10 @@ function PostSummaryFooter({
               </Tooltip>
             )}
           >
-            <Icon src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline} className="post-summary-icons-dimensions mr-0.5">
+            <Icon
+              src={post.unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline}
+              className="post-summary-comment-count-dimensions mr-0.5"
+            >
               <span className="sr-only">{' '} {intl.formatMessage(messages.activity)}</span>
             </Icon>
           </OverlayTrigger>
@@ -108,25 +106,6 @@ function PostSummaryFooter({
         <span title={post.createdAt} className="text-gray-700 post-summary-timestamp">
           {timeago.format(post.createdAt, 'time-locale')}
         </span>
-        {!preview && post.closed
-          && (
-            <OverlayTrigger
-              overlay={(
-                <Tooltip id={`closed-${post.id}-tooltip`}>
-                  {intl.formatMessage(messages.postClosed)}
-                </Tooltip>
-              )}
-            >
-              <Icon
-                src={Locked}
-                style={{
-                  width: '1rem',
-                  height: '1rem',
-                }}
-                className="ml-3 post-summary-icons-dimensions"
-              />
-            </OverlayTrigger>
-          )}
       </div>
     </div>
   );

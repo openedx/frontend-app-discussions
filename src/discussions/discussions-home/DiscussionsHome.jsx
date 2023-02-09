@@ -87,7 +87,7 @@ export default function DiscussionsHome() {
         >
           <div
             className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
-              'pl-4 pr-2.5 py-1.5': enableInContextSidebar,
+              'pl-4 pr-3 py-0': enableInContextSidebar,
             })}
           >
             {!enableInContextSidebar && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
@@ -120,7 +120,7 @@ export default function DiscussionsHome() {
                 path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
                 render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
               />
-              {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
+              {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />}
             </Switch>
           )}
         </div>

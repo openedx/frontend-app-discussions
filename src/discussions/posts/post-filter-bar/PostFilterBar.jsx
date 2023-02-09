@@ -71,7 +71,6 @@ function PostFilterBar({
   const currentFilters = useSelector(selectThreadFilters());
   const { status } = useSelector(state => state.cohorts);
   const cohorts = useSelector(selectCourseCohorts);
-
   const [isOpen, setOpen] = useState(false);
 
   const selectedCohort = useMemo(() => cohorts.find(cohort => (
@@ -138,7 +137,7 @@ function PostFilterBar({
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
-        <span className="text-primary-700 pr-4">
+        <span className="text-primary-500 pr-4 font-style">
           {intl.formatMessage(messages.sortFilterStatus, {
             own: false,
             type: currentFilters.postType,

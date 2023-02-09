@@ -41,13 +41,13 @@ function AlertBanner({
         <>
           {content.lastEdit?.reason && (
             <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap text-gray-700 font-family-inter">
+              <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
                 {intl.formatMessage(messages.editedBy)}
                 <span className="ml-1 mr-3">
                   <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile postOrComment />
                 </span>
                 <span
-                  className="mx-1.5 font-family-inter font-size-8 font-style-normal text-light-700"
+                  className="mx-1.5 font-size-8 font-style text-light-700"
                   style={{ lineHeight: '15px' }}
                 >
                   {intl.formatMessage(messages.fullStop)}
@@ -58,13 +58,13 @@ function AlertBanner({
           )}
           {content.closed && (
             <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap text-gray-700 font-family-inter">
+              <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
                 {intl.formatMessage(messages.closedBy)}
                 <span className="ml-1 ">
                   <AuthorLabel author={content.closedBy} linkToProfile postOrComment />
                 </span>
                 <span
-                  className="mx-1.5 font-family-inter font-size-8 font-style-normal text-light-700"
+                  className="mx-1.5 font-size-8 font-style text-light-700"
                   style={{ lineHeight: '15px' }}
                 >
                   {intl.formatMessage(messages.fullStop)}
