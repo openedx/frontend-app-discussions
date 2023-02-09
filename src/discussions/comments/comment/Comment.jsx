@@ -170,11 +170,8 @@ function Comment({
               onClick={handleLoadMoreComments}
               variant="link"
               block="true"
-              className="font-size-14 font-style pt-10px border-0 font-weight-500 pb-0"
+              className="font-size-14 line-height-24 font-style pt-10px border-0 font-weight-500 pb-0"
               data-testid="load-more-comments-responses"
-              style={{
-                lineHeight: '24px',
-              }}
             >
               {intl.formatMessage(messages.loadMoreComments)}
             </Button>

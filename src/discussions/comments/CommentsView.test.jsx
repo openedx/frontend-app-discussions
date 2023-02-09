@@ -163,8 +163,8 @@ describe('CommentsView', () => {
     it('should show and hide the editor', async () => {
       renderComponent(discussionPostId);
       const post = screen.getByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
-      const addResponseButton = within(view).getByRole('button', { name: /Add response/i });
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      const addResponseButton = within(hoverCard).getByRole('button', { name: /Add response/i });
       await act(async () => {
         fireEvent.click(
           addResponseButton,
@@ -180,8 +180,8 @@ describe('CommentsView', () => {
     it('should allow posting a response', async () => {
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
-      const addResponseButton = within(view).getByRole('button', { name: /Add response/i });
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      const addResponseButton = within(hoverCard).getByRole('button', { name: /Add response/i });
       await act(async () => {
         fireEvent.click(
           addResponseButton,
@@ -203,17 +203,17 @@ describe('CommentsView', () => {
     it('should not allow posting a response on a closed post', async () => {
       renderComponent(closedPostId);
       const post = screen.getByTestId('post-thread-2');
-      const view = within(post).getByTestId('hover-card-thread-2');
-      expect(within(view).getByRole('button', { name: /Add response/i })).toBeDisabled();
+      const hoverCard = within(post).getByTestId('hover-card-thread-2');
+      expect(within(hoverCard).getByRole('button', { name: /Add response/i })).toBeDisabled();
     });
 
     it('should allow posting a comment', async () => {
       renderComponent(discussionPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /Add comment/i }),
+          within(hoverCard).getByRole('button', { name: /Add comment/i }),
         );
       });
       act(() => {
@@ -231,17 +231,17 @@ describe('CommentsView', () => {
     it('should not allow posting a comment on a closed post', async () => {
       renderComponent(closedPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-3'));
-      const view = within(comment).getByTestId('hover-card-comment-3');
-      expect(within(view).getByRole('button', { name: /Add comment/i })).toBeDisabled();
+      const hoverCard = within(comment).getByTestId('hover-card-comment-3');
+      expect(within(hoverCard).getByRole('button', { name: /Add comment/i })).toBeDisabled();
     });
 
     it('should allow editing an existing comment', async () => {
       renderComponent(discussionPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
@@ -279,10 +279,10 @@ describe('CommentsView', () => {
       setupCourseConfig();
       renderComponent(discussionPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
@@ -311,10 +311,10 @@ describe('CommentsView', () => {
       setupCourseConfig();
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
@@ -338,10 +338,10 @@ describe('CommentsView', () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
@@ -358,10 +358,10 @@ describe('CommentsView', () => {
         setupCourseConfig(reasonCodesEnabled);
         renderComponent(closedPostId);
         const post = screen.getByTestId('post-thread-2');
-        const view = within(post).getByTestId('hover-card-thread-2');
+        const hoverCard = within(post).getByTestId('hover-card-thread-2');
         await act(async () => {
           fireEvent.click(
-            within(view).getByRole('button', { name: /actions menu/i }),
+            within(hoverCard).getByRole('button', { name: /actions menu/i }),
           );
         });
         expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
@@ -377,10 +377,10 @@ describe('CommentsView', () => {
       setupCourseConfig(false);
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
@@ -392,10 +392,10 @@ describe('CommentsView', () => {
     it('should allow pinning the post', async () => {
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
@@ -407,10 +407,10 @@ describe('CommentsView', () => {
     it('should allow reporting the post', async () => {
       renderComponent(discussionPostId);
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
@@ -428,10 +428,10 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
 
       const post = await screen.findByTestId('post-thread-1');
-      const view = within(post).getByTestId('hover-card-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /like/i }),
+          within(hoverCard).getByRole('button', { name: /like/i }),
         );
       });
       expect(axiosMock.history.patch).toHaveLength(2);
@@ -442,10 +442,10 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /like/i }),
+          within(hoverCard).getByRole('button', { name: /like/i }),
         );
       });
       expect(axiosMock.history.patch).toHaveLength(2);
@@ -456,9 +456,9 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
       // Wait for the content to load
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
-        fireEvent.click(within(view).getByRole('button', { name: /Endorse/i }));
+        fireEvent.click(within(hoverCard).getByRole('button', { name: /Endorse/i }));
       });
       expect(axiosMock.history.patch).toHaveLength(2);
       expect(JSON.parse(axiosMock.history.patch[1].data)).toMatchObject({ endorsed: true });
@@ -468,10 +468,10 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
       // Wait for the content to load
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-      const view = within(comment).getByTestId('hover-card-comment-1');
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
 
@@ -664,11 +664,11 @@ describe('CommentsView', () => {
       renderComponent(discussionPostId);
       // Wait for the content to load
       const post = await screen.findByTestId(testId);
-      const view = within(post).getByTestId(cardId);
+      const hoverCard = within(post).getByTestId(cardId);
       expect(screen.queryByRole('dialog', { name: /Delete response/i, exact: false })).not.toBeInTheDocument();
       await act(async () => {
         fireEvent.click(
-          within(view).getByRole('button', { name: /actions menu/i }),
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
         );
       });
       await act(async () => {
