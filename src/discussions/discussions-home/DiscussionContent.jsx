@@ -6,7 +6,7 @@ import { Route, Switch } from 'react-router';
 import { injectIntl } from '@edx/frontend-platform/i18n';
 
 import { Routes } from '../../data/constants';
-import { CommentsView } from '../comments';
+import { PostCommentsView } from '../post-comments';
 import { PostEditor } from '../posts';
 
 function DiscussionContent() {
@@ -25,7 +25,7 @@ function DiscussionContent() {
               <PostEditor editExisting />
             </Route>
             <Route path={Routes.COMMENTS.PATH}>
-              <CommentsView />
+              <PostCommentsView />
             </Route>
           </Switch>
         )}

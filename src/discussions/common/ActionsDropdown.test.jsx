@@ -14,7 +14,7 @@ import messages from '../messages';
 import { ACTIONS_LIST } from '../utils';
 import ActionsDropdown from './ActionsDropdown';
 
-import '../comments/data/__factories__';
+import '../post-comments/data/__factories__';
 import '../posts/data/__factories__';
 
 let store;

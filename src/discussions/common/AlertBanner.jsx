@@ -8,11 +8,11 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Report } from '@edx/paragon/icons';
 
-import { commentShape } from '../comments/comment/proptypes';
-import messages from '../comments/messages';
 import {
   selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
 } from '../data/selectors';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
+import messages from '../post-comments/messages';
 import { postShape } from '../posts/post/proptypes';
 import AuthorLabel from './AuthorLabel';
 

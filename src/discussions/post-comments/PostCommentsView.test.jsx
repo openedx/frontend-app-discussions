@@ -106,7 +106,7 @@ function renderComponent(postId) {
   );
 }
 
-describe('CommentsView', () => {
+describe('ThreadView', () => {
   beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {

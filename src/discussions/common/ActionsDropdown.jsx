@@ -11,9 +11,9 @@ import {
 import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
-import { commentShape } from '../comments/comment/proptypes';
 import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
 import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
 import { DiscussionContext } from './context';

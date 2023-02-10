@@ -276,8 +276,7 @@ describe('Comments/Responses data layer tests', () => {
     const commentId = 'comment-1';
 
     // This will generate 3 comments, so the responses will start at id = 'comment-4'
-    axiosMock.onGet(commentsApiUrl)
-      .reply(200, Factory.build('commentsResult'));
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
     await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
 
     // Build all comments first, so we can paginate over them and they
@@ -301,8 +300,7 @@ describe('Comments/Responses data layer tests', () => {
       parent_id: commentId,
     });
     allResponses.push(comment);
-    axiosMock.onPost(commentsApiUrl)
-      .reply(200, comment);
+    axiosMock.onPost(commentsApiUrl).reply(200, comment);
     await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
 
     // Someone else posted a new response now
@@ -316,15 +314,14 @@ describe('Comments/Responses data layer tests', () => {
       });
     await executeThunk(fetchCommentResponses(commentId, { page: 2 }), store.dispatch, store.getState);
 
+    // sorting is implemented on backend
     expect(store.getState().comments.commentsInComments[commentId])
       .toEqual([
         'comment-4',
         'comment-5',
         'comment-6',
-        'comment-7',
-        // our comment was pushed down
         'comment-8',
-        // the newer comment is placed correctly
+        'comment-7',
         'comment-9',
       ]);
   });
@@ -356,8 +353,7 @@ describe('Comments/Responses data layer tests', () => {
     // Post new comment
     const comment = Factory.build('comment', { thread_id: threadId });
     allComments.push(comment);
-    axiosMock.onPost(commentsApiUrl)
-      .reply(200, comment);
+    axiosMock.onPost(commentsApiUrl).reply(200, comment);
     await executeThunk(addComment('Test Comment', threadId, null), store.dispatch, store.getState);
 
     // Somebody else posted a new response now
@@ -371,15 +367,14 @@ describe('Comments/Responses data layer tests', () => {
       });
     await executeThunk(fetchThreadComments(threadId, { page: 2, endorsed }), store.dispatch, store.getState);
 
+    // sorting is implemented on backend
     expect(store.getState().comments.commentsInThreads[threadId][endorsed])
       .toEqual([
         'comment-1',
         'comment-2',
         'comment-3',
-        'comment-4',
-        // our comment was pushed down
         'comment-5',
-        // the newer comment is placed correctly
+        'comment-4',
         'comment-6',
       ]);
   });

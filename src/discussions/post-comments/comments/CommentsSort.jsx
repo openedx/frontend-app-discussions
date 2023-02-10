@@ -29,7 +29,7 @@ function CommentSortDropdown({
 
   return (
     <>
-      <div>
+      <div className="comments-sort d-flex justify-content-end mx-4 mt-2">
         <Button
           alt={intl.formatMessage(messages.actionsAlt)}
           ref={setTarget}
@@ -43,39 +43,41 @@ function CommentSortDropdown({
           })}
         </Button>
       </div>
-      <ModalPopup
-        onClose={close}
-        positionRef={target}
-        isOpen={isOpen}
-      >
-        <div
-          className="bg-white p-1 shadow d-flex flex-column"
-          data-testid="comment-sort-dropdown-modal-popup"
+      <div className="actions-dropdown">
+        <ModalPopup
+          onClose={close}
+          positionRef={target}
+          isOpen={isOpen}
         >
-          <Dropdown.Item
-            className="d-flex justify-content-start py-1.5 mb-1"
-            as={Button}
-            variant="tertiary"
-            size="inline"
-            onClick={() => handleActions(false)}
+          <div
+            className="bg-white p-1 shadow d-flex flex-column"
+            data-testid="comment-sort-dropdown-modal-popup"
           >
-            {intl.formatMessage(messages.commentSort, {
-              sort: false,
-            })}
-          </Dropdown.Item>
-          <Dropdown.Item
-            className="d-flex justify-content-start py-1.5"
-            as={Button}
-            variant="tertiary"
-            size="inline"
-            onClick={() => handleActions(true)}
-          >
-            {intl.formatMessage(messages.commentSort, {
-              sort: true,
-            })}
-          </Dropdown.Item>
-        </div>
-      </ModalPopup>
+            <Dropdown.Item
+              className="d-flex justify-content-start py-1.5 mb-1"
+              as={Button}
+              variant="tertiary"
+              size="inline"
+              onClick={() => handleActions(false)}
+            >
+              {intl.formatMessage(messages.commentSort, {
+                sort: false,
+              })}
+            </Dropdown.Item>
+            <Dropdown.Item
+              className="d-flex justify-content-start py-1.5"
+              as={Button}
+              variant="tertiary"
+              size="inline"
+              onClick={() => handleActions(true)}
+            >
+              {intl.formatMessage(messages.commentSort, {
+                sort: true,
+              })}
+            </Dropdown.Item>
+          </div>
+        </ModalPopup>
+      </div>
     </>
   );
 }
