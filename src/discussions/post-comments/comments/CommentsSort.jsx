@@ -59,6 +59,7 @@ function CommentSortDropdown({
               variant="tertiary"
               size="inline"
               onClick={() => handleActions(false)}
+              autoFocus={sortedOrder === false}
             >
               {intl.formatMessage(messages.commentSort, {
                 sort: false,
@@ -70,6 +71,7 @@ function CommentSortDropdown({
               variant="tertiary"
               size="inline"
               onClick={() => handleActions(true)}
+              autoFocus={sortedOrder === true}
             >
               {intl.formatMessage(messages.commentSort, {
                 sort: true,
