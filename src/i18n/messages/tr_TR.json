@@ -1,7 +1,7 @@
 {
   "navigation.course.tabs.label": "Ders Materyali",
   "learn.course.tabs.navigation.overflow.menu": "Daha Fazlası...",
-  "discussions.comments.comment.addComment": "Add comment",
+  "discussions.comments.comment.addComment": "Yorum ekle",
   "discussions.comments.comment.addResponse": "Bir cevap ekle",
   "discussions.comments.comment.abuseFlaggedMessage": "Personelin incelemesi için bildirilen içerik",
   "discussions.actions.back.alt": "Listeye dön",
@@ -52,7 +52,7 @@
   "discussions.subtopics.unnamed.topic.label": "Unnamed Topic",
   "discussions.topics.title": "No topic exists",
   "discussions.topics.createTopic": "Please contact you admin to create a topic",
-  "discussions.topics.nothing": "Nothing here yet",
+  "discussions.topics.nothing": "Burada henüz bir şey yok",
   "discussions.topics.archived.label": "Arşivlenmiş",
   "discussions.learner.reported": "{reported} rapor edildi",
   "discussions.learner.previouslyReported": "{previouslyReported} daha önce rapor edildi",
@@ -178,7 +178,7 @@
   "discussions.post.liked": "liked",
   "discussions.post.likes": "likes",
   "discussions.post.viewActivity": "Etkinliği görüntüle",
-  "discussions.post.activity": "Activity",
+  "discussions.post.activity": "Etkinlik",
   "discussions.post.closed": "Yanıtlar ve yorumlar için gönderi kapatıldı",
   "discussions.post.relatedTo": "Bunun ile ilgili",
   "discussions.editor.delete.post.title": "Gönderiyi sil",
@@ -203,9 +203,9 @@
   "discussions.topics.sort.courseStructure": "Ders Yapısı",
   "discussions.topics.unnamed.label": "İsimsiz kategori",
   "discussions.subtopics.unnamed.label": "İsimsiz alt kategori",
-  "tour.action.advance": "Next",
+  "tour.action.advance": "Sonraki",
   "tour.action.dismiss": "Dismiss",
-  "tour.action.end": "Okay",
+  "tour.action.end": "Tamam",
   "tour.body.notRespondedFilter": "Now you can filter discussions to find posts with no response.",
   "tour.title.notRespondedFilter": "New filtering option!"
 }
