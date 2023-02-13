@@ -74,11 +74,18 @@ function normaliseComments(data) {
   };
 }
 
-export function fetchThreadComments(threadId, { page = 1, endorsed = EndorsementStatus.DISCUSSION } = {}) {
+export function fetchThreadComments(
+  threadId,
+  {
+    page = 1,
+    reverseOrder,
+    endorsed = EndorsementStatus.DISCUSSION,
+  } = {},
+) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentsRequest());
-      const data = await getThreadComments(threadId, { page, endorsed });
+      const data = await getThreadComments(threadId, { page, reverseOrder, endorsed });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
         endorsed,

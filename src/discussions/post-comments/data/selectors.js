@@ -36,4 +36,6 @@ export const selectCommentCurrentPage = commentId => (
   state => state.comments.responsesPagination[commentId]?.currentPage || null
 );
 
-export const commentsStatus = state => state.comments.status;
+export const selectCommentsStatus = state => state.comments.status;
+
+export const selectCommentSortOrder = state => state.comments.sortOrder;

@@ -13,20 +13,21 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
-import { getCommentsApiUrl } from '../comments/data/api';
 import DiscussionContent from '../discussions-home/DiscussionContent';
+import { getCommentsApiUrl } from '../post-comments/data/api';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { DiscussionContext } from './context';
 
 import '../posts/data/__factories__';
-import '../comments/data/__factories__';
+import '../post-comments/data/__factories__';
 
 const commentsApiUrl = getCommentsApiUrl();
 const threadsApiUrl = getThreadsApiUrl();
 const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const reverseOrder = false;
 let store;
 let axiosMock;
 let container;
@@ -43,6 +44,7 @@ function mockAxiosReturnPagedComments() {
             page_size: undefined,
             requested_fields: 'profile_image',
             endorsed,
+            reverse_order: reverseOrder,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {

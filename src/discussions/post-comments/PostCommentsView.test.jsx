@@ -19,6 +19,7 @@ import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { getCommentsApiUrl } from './data/api';
+import { removeComment } from './data/thunks';
 
 import '../posts/data/__factories__';
 import './data/__factories__';
@@ -30,9 +31,11 @@ const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const reverseOrder = false;
 let store;
 let axiosMock;
 let testLocation;
+let container;
 
 function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
@@ -46,6 +49,7 @@ function mockAxiosReturnPagedComments() {
             page_size: undefined,
             requested_fields: 'profile_image',
             endorsed,
+            reverse_order: reverseOrder,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
@@ -82,7 +86,7 @@ function mockAxiosReturnPagedCommentsResponses() {
 }
 
 function renderComponent(postId) {
-  render(
+  const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
@@ -102,9 +106,10 @@ function renderComponent(postId) {
       </AppProvider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
-describe('CommentsView', () => {
+describe('ThreadView', () => {
   beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {
@@ -691,6 +696,70 @@ describe('CommentsView', () => {
         fireEvent.click(screen.queryByRole('button', { name: /Delete/i }));
       });
       expect(screen.queryByRole('dialog', { name: /Delete/i, exact: false })).toBeInTheDocument();
+    });
+  });
+
+  describe('for comments sort', () => {
+    it('should show sort dropdown if there are endorse or unendorsed comments', async () => {
+      renderComponent(discussionPostId);
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const sortWrapper = container.querySelector('.comments-sort');
+      const sortDropDown = within(sortWrapper).getByRole('button', { name: /Oldest first/i });
+
+      expect(comment).toBeInTheDocument();
+      expect(sortDropDown).toBeInTheDocument();
+    });
+
+    it('should not show sort dropdown if there is no response', async () => {
+      const commentId = 'comment-1';
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(201);
+      await executeThunk(removeComment(commentId, discussionPostId), store.dispatch, store.getState);
+
+      expect(await waitFor(() => screen.findByText('No responses', { exact: true }))).toBeInTheDocument();
+      expect(container.querySelector('.comments-sort')).not.toBeInTheDocument();
+    });
+
+    it('should have only two options', async () => {
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Oldest first/i })); });
+      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
+
+      expect(dropdown).toBeInTheDocument();
+      expect(await within(dropdown).getAllByRole('button')).toHaveLength(2);
+    });
+
+    it('should be selected Oldest first and auto focus', async () => {
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Oldest first/i })); });
+      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
+
+      expect(dropdown).toBeInTheDocument();
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toBeInTheDocument();
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toHaveFocus();
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).not.toHaveFocus();
+    });
+
+    test('successfully handles sort state update', async () => {
+      renderComponent(discussionPostId);
+
+      expect(store.getState().comments.sortOrder).toBeFalsy();
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Oldest first/i })); });
+      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
+      await act(async () => {
+        fireEvent.click(within(dropdown).getByRole('button', { name: /Newest first/i }));
+      });
+
+      expect(store.getState().comments.sortOrder).toBeTruthy();
     });
   });
 });

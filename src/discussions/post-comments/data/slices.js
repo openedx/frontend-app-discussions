@@ -22,6 +22,7 @@ const commentsSlice = createSlice({
     postStatus: RequestStatus.SUCCESSFUL,
     pagination: {},
     responsesPagination: {},
+    sortOrder: false,
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -56,15 +57,6 @@ const commentsSlice = createSlice({
         hasMorePages: Boolean(payload.pagination.next),
       };
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
-      // We sort the comments by creation time.
-      // This way our new comments are pushed down to the correct
-      // position when more pages of older comments are loaded.
-      state.commentsInThreads[threadId][endorsed].sort(
-        (a, b) => (
-          Date.parse(state.commentsById[a].createdAt)
-          - Date.parse(state.commentsById[b].createdAt)
-        ),
-      );
     },
     fetchCommentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
@@ -90,12 +82,6 @@ const commentsSlice = createSlice({
         ]),
       ];
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
-      state.commentsInComments[payload.commentId].sort(
-        (a, b) => (
-          Date.parse(state.commentsById[a].createdAt)
-          - Date.parse(state.commentsById[b].createdAt)
-        ),
-      );
       state.responsesPagination[payload.commentId] = {
         currentPage: payload.page,
         totalPages: payload.pagination.numPages,
@@ -181,6 +167,9 @@ const commentsSlice = createSlice({
       }
       delete state.commentsById[commentId];
     },
+    setCommentSortOrder: (state, { payload }) => {
+      state.sortOrder = payload;
+    },
   },
 });
 
@@ -206,6 +195,7 @@ export const {
   deleteCommentFailed,
   deleteCommentRequest,
   deleteCommentSuccess,
+  setCommentSortOrder,
 } = commentsSlice.actions;
 
 export const commentsReducer = commentsSlice.reducer;

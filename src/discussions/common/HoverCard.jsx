@@ -9,8 +9,8 @@ import { Button, Icon, IconButton } from '@edx/paragon';
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
-import { commentShape } from '../comments/comment/proptypes';
 import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
 import { postShape } from '../posts/post/proptypes';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';

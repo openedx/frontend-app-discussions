@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar } from '@edx/paragon';
 
-import { AvatarOutlineAndLabelColors } from '../../../data/constants';
-import { AuthorLabel } from '../../common';
-import { useAlertBannerVisible } from '../../data/hooks';
-import { selectAuthorAvatars } from '../../posts/data/selectors';
+import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
+import { AuthorLabel } from '../../../common';
+import { useAlertBannerVisible } from '../../../data/hooks';
+import { selectAuthorAvatars } from '../../../posts/data/selectors';
 import { commentShape } from './proptypes';
 
 function CommentHeader({

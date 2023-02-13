@@ -7,16 +7,16 @@ import * as timeago from 'timeago.js';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
-import HTMLLoader from '../../../components/HTMLLoader';
-import { AvatarOutlineAndLabelColors, ContentActions } from '../../../data/constants';
+import HTMLLoader from '../../../../components/HTMLLoader';
+import { AvatarOutlineAndLabelColors, ContentActions } from '../../../../data/constants';
 import {
   ActionsDropdown, AlertBanner, AuthorLabel, Confirmation,
-} from '../../common';
-import timeLocale from '../../common/time-locale';
-import { useAlertBannerVisible } from '../../data/hooks';
-import { selectAuthorAvatars } from '../../posts/data/selectors';
-import { editComment, removeComment } from '../data/thunks';
-import messages from '../messages';
+} from '../../../common';
+import timeLocale from '../../../common/time-locale';
+import { useAlertBannerVisible } from '../../../data/hooks';
+import { selectAuthorAvatars } from '../../../posts/data/selectors';
+import { editComment, removeComment } from '../../data/thunks';
+import messages from '../../messages';
 import CommentEditor from './CommentEditor';
 import { commentShape } from './proptypes';
 

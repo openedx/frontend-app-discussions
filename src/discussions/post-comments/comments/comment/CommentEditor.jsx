@@ -9,19 +9,19 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
-import { TinyMCEEditor } from '../../../components';
-import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
-import PostPreviewPane from '../../../components/PostPreviewPane';
-import { useDispatchWithState } from '../../../data/hooks';
+import { TinyMCEEditor } from '../../../../components';
+import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
+import PostPreviewPane from '../../../../components/PostPreviewPane';
+import { useDispatchWithState } from '../../../../data/hooks';
 import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
-} from '../../data/selectors';
-import { formikCompatibleHandler, isFormikFieldInvalid } from '../../utils';
-import { addComment, editComment } from '../data/thunks';
-import messages from '../messages';
+} from '../../../data/selectors';
+import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
+import { addComment, editComment } from '../../data/thunks';
+import messages from '../../messages';
 
 function CommentEditor({
   intl,

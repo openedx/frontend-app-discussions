@@ -8,8 +8,8 @@ import { Alert, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
-import { commentShape } from '../comments/comment/proptypes';
-import messages from '../comments/messages';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
+import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
