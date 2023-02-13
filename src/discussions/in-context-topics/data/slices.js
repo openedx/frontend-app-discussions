@@ -44,6 +44,7 @@ export const {
   fetchCourseTopicsRequest,
   fetchCourseTopicsSuccess,
   fetchCourseTopicsFailed,
+  fetchCourseTopicsDenied,
   setFilter,
   setSortBy,
 } = topicsSlice.actions;

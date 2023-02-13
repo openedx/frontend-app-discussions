@@ -3,8 +3,11 @@ import { reduce } from 'lodash';
 
 import { logError } from '@edx/frontend-platform/logging';
 
+import { getHttpErrorStatus } from '../../utils';
 import { getCourseTopicsV3 } from './api';
-import { fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess } from './slices';
+import {
+  fetchCourseTopicsDenied, fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess,
+} from './slices';
 
 function normalizeTopicsV3(topics) {
   const coursewareUnits = reduce(topics, (arrayOfUnits, chapter) => {
@@ -57,7 +60,11 @@ export function fetchCourseTopicsV3(courseId) {
       const data = await getCourseTopicsV3(courseId);
       dispatch(fetchCourseTopicsSuccess(normalizeTopicsV3(data)));
     } catch (error) {
-      dispatch(fetchCourseTopicsFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(fetchCourseTopicsDenied());
+      } else {
+        dispatch(fetchCourseTopicsFailed());
+      }
       logError(error);
     }
   };
