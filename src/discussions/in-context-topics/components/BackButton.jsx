@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Icon, IconButton } from '@edx/paragon';
+import { Icon, IconButton, Spinner } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
 import messages from '../messages';
 
-function BackButton({ intl, path, title }) {
+function BackButton({
+  intl, path, title, loading,
+}) {
   const history = useHistory();
 
   return (
@@ -24,7 +26,7 @@ function BackButton({ intl, path, title }) {
           alt={intl.formatMessage(messages.backAlt)}
         />
         <div className="d-flex flex-fill justify-content-center align-items-center mr-4.5">
-          {title}
+          {loading ? <Spinner animation="border" variant="primary" size="sm" /> : title}
         </div>
       </div>
       <div className="border-bottom border-light-400" />
@@ -36,6 +38,11 @@ BackButton.propTypes = {
   intl: intlShape.isRequired,
   path: PropTypes.shape({}).isRequired,
   title: PropTypes.string.isRequired,
+  loading: PropTypes.bool,
+};
+
+BackButton.defaultProps = {
+  loading: false,
 };
 
 export default injectIntl(BackButton);

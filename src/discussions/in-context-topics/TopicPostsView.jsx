@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -8,6 +8,7 @@ import { Spinner } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
+import { selectDiscussionProvider } from '../data/selectors';
 import { selectTopicThreads } from '../posts/data/selectors';
 import PostsList from '../posts/PostsList';
 import { discussionsPath, handleKeyDown } from '../utils';
@@ -15,13 +16,16 @@ import {
   selectArchivedTopic, selectLoadingStatus, selectNonCoursewareTopics,
   selectSubsection, selectSubsectionUnits, selectUnits,
 } from './data/selectors';
+import { fetchCourseTopicsV3 } from './data/thunks';
 import { BackButton, NoResults } from './components';
 import messages from './messages';
 import { Topic } from './topic';
 
 function TopicPostsView({ intl }) {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { courseId, topicId, category } = useContext(DiscussionContext);
+  const provider = useSelector(selectDiscussionProvider);
   const topicsLoadingStatus = useSelector(selectLoadingStatus);
   const posts = useSelector(selectTopicThreads([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
@@ -29,6 +33,12 @@ function TopicPostsView({ intl }) {
   const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
   const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
+
+  useEffect(() => {
+    if (provider && topicsLoadingStatus === RequestStatus.IDLE) {
+      dispatch(fetchCourseTopicsV3(courseId));
+    }
+  }, [provider]);
 
   const backButtonPath = () => {
     const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
@@ -40,12 +50,14 @@ function TopicPostsView({ intl }) {
     <div className="discussion-posts d-flex flex-column h-100">
       {topicId ? (
         <BackButton
+          loading={topicsLoadingStatus === RequestStatus.IN_PROGRESS}
           path={backButtonPath()}
           title={selectedUnit?.name || selectedNonCoursewareTopic?.name || selectedArchivedTopic?.name
             || intl.formatMessage(messages.unnamedTopic)}
         />
       ) : (
         <BackButton
+          loading={topicsLoadingStatus === RequestStatus.IN_PROGRESS}
           path={discussionsPath(Routes.TOPICS.ALL, { courseId })(location)}
           title={selectedSubsection?.displayName || intl.formatMessage(messages.unnamedSubsection)}
         />
