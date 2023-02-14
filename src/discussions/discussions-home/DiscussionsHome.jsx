@@ -93,7 +93,7 @@ export default function DiscussionsHome() {
             {!enableInContextSidebar && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
             <PostActionsBar />
           </div>
-          {isFeedbackBannerVisible && <InformationBanner />}
+          {isFeedbackBannerVisible && !enableInContextSidebar && <InformationBanner />}
           <BlackoutInformationBanner />
         </div>
         {provider === DiscussionProvider.LEGACY && (
