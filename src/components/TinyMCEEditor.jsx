@@ -119,6 +119,7 @@ export default function TinyMCEEditor(props) {
           content_css: false,
           content_style: contentStyle,
           body_class: 'm-2 text-editor',
+          convert_urls: false,
           relative_urls: false,
           default_link_target: '_blank',
           target_list: false,
