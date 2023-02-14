@@ -126,7 +126,7 @@ function Post({
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
-      {topicContext && topic && (
+      {topicContext && (
         <div
           className={classNames('mt-14px mb-1 font-style font-size-12',
             { 'w-100': enableInContextSidebar })}
@@ -137,7 +137,7 @@ function Post({
             destination={topicContext.unitLink}
             target="_top"
           >
-            {enableInContextSidebar
+            {(topicContext && !topic)
               ? (
                 <>
                   <span className="w-auto">{topicContext.chapterName}</span>
