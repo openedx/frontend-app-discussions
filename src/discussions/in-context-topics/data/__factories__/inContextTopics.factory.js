@@ -8,7 +8,7 @@ Factory.define('topic')
   .sequence('name', ['topicNamePrefix'], (idx, topicNamePrefix) => `${topicNamePrefix}-${idx}`)
   .sequence('usage-key', ['usageKey'], (idx, usageKey) => usageKey)
   .sequence('courseware', ['courseware'], (idx, courseware) => courseware)
-
+  .attr('activeFlags', null, true)
   .attr('thread_counts', ['discussionCount', 'questionCount'], (discCount, questCount) => {
     Factory.reset('thread-counts');
     return Factory.build('thread-counts', null, { discussionCount: discCount, questionCount: questCount });
