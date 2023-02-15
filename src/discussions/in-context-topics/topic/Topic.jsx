@@ -11,6 +11,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
+import TopicStats from '../../../components/TopicStats';
 import { Routes } from '../../../data/constants';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { discussionsPath } from '../../utils';
@@ -53,65 +54,11 @@ function Topic({
                 {topic?.name || topic?.displayName || intl.formatMessage(messages.unnamedTopicSubCategories)}
               </div>
             </div>
-            <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
-              <OverlayTrigger
-                overlay={(
-                  <Tooltip>
-                    <div className="d-flex flex-column align-items-start">
-                      {intl.formatMessage(messages.discussions, {
-                        count: topic.threadCounts?.discussion || 0,
-                      })}
-                    </div>
-                  </Tooltip>
-                  )}
-              >
-                <div className="d-flex align-items-center mr-3.5">
-                  <Icon src={PostOutline} className="icon-size mr-2" />
-                  {topic.threadCounts?.discussion || 0}
-                </div>
-              </OverlayTrigger>
-              <OverlayTrigger
-                overlay={(
-                  <Tooltip>
-                    <div className="d-flex flex-column align-items-start">
-                      {intl.formatMessage(messages.questions, {
-                        count: topic.threadCounts?.question || 0,
-                      })}
-                    </div>
-                  </Tooltip>
-                )}
-              >
-                <div className="d-flex align-items-center mr-3.5">
-                  <Icon src={HelpOutline} className="icon-size mr-2" />
-                  {topic.threadCounts?.question || 0}
-                </div>
-              </OverlayTrigger>
-              {Boolean(canSeeReportedStats) && (
-                <OverlayTrigger
-                  overlay={(
-                    <Tooltip>
-                      <div className="d-flex flex-column align-items-start">
-                        {Boolean(activeFlags) && (
-                        <span>
-                          {intl.formatMessage(messages.reported, { reported: activeFlags })}
-                        </span>
-                        )}
-                        {Boolean(inactiveFlags) && (
-                        <span>
-                          {intl.formatMessage(messages.previouslyReported, { previouslyReported: inactiveFlags })}
-                        </span>
-                        )}
-                      </div>
-                    </Tooltip>
-                    )}
-                >
-                  <div className="d-flex align-items-center">
-                    <Icon src={Report} className="icon-size mr-2 text-danger" />
-                    {activeFlags}{Boolean(inactiveFlags) && `/${inactiveFlags}`}
-                  </div>
-                </OverlayTrigger>
-              )}
-            </div>
+            <TopicStats
+              threadCounts={topic?.threadCounts}
+              activeFlags={topic?.activeFlags}
+              inactiveFlags={topic?.inactiveFlags}
+            />
           </div>
         </div>
       </Link>

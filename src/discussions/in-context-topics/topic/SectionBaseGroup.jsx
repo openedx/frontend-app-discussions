@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
+import TopicStats from '../../../components/TopicStats';
 import { Routes } from '../../../data/constants';
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
@@ -55,6 +56,7 @@ function SectionBaseGroup({
                 <div className="topic-name text-truncate">
                   {subsection?.displayName || intl.formatMessage(messages.unnamedSubsection)}
                 </div>
+                <TopicStats threadCounts={subsection?.threadCounts} />
               </div>
             </div>
           </div>
