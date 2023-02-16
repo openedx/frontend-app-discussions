@@ -33,7 +33,7 @@ function Post({
   const history = useHistory();
   const dispatch = useDispatch();
   const { enableInContextSidebar } = useContext(DiscussionContext);
-  const { courseId } = useSelector((state) => state.courseTabs);
+  const courseId = useSelector((state) => state.config.id);
   const topic = useSelector(selectTopic(post.topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
