@@ -23,7 +23,7 @@ import NoResults from './NoResults';
 import { PostLink } from './post';
 
 function PostsList({
-  posts, topics, intl, isTopicTab,
+  posts, topics, intl, isTopicTab, parentIsLoading,
 }) {
   const dispatch = useDispatch();
   const {
@@ -85,10 +85,10 @@ function PostsList({
 
   return (
     <>
-      {postInstances(pinnedPosts)}
-      {postInstances(unpinnedPosts)}
+      {!parentIsLoading && postInstances(pinnedPosts)}
+      {!parentIsLoading && postInstances(unpinnedPosts)}
       {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
-      {loadingStatus === RequestStatus.IN_PROGRESS ? (
+      {loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading ? (
         <div className="d-flex justify-content-center p-4 mx-auto my-auto">
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
@@ -110,6 +110,7 @@ PostsList.propTypes = {
   })),
   topics: PropTypes.arrayOf(PropTypes.string),
   isTopicTab: PropTypes.bool,
+  parentIsLoading: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 
@@ -117,6 +118,7 @@ PostsList.defaultProps = {
   posts: [],
   topics: undefined,
   isTopicTab: false,
+  parentIsLoading: undefined,
 };
 
 export default injectIntl(PostsList);

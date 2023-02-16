@@ -63,6 +63,7 @@ export const ContentActions = {
  * @enum {string}
  */
 export const RequestStatus = {
+  IDLE: 'idle',
   IN_PROGRESS: 'in-progress',
   SUCCESSFUL: 'successful',
   FAILED: 'failed',

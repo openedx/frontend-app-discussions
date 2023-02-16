@@ -6,7 +6,7 @@ import { RequestStatus } from '../../../data/constants';
 const topicsSlice = createSlice({
   name: 'inContextTopics',
   initialState: {
-    status: RequestStatus.IN_PROGRESS,
+    status: RequestStatus.IDLE,
     topics: [],
     coursewareTopics: [],
     nonCoursewareTopics: [],
