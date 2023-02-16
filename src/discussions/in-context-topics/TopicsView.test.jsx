@@ -59,7 +59,7 @@ function renderComponent() {
   return container;
 }
 
-describe('Legacy Topics View', () => {
+describe('InContext Topics View', () => {
   let nonCoursewareTopics;
   let coursewareTopics;
   beforeEach(() => {
@@ -103,32 +103,33 @@ describe('Legacy Topics View', () => {
     await setupMockResponse();
     renderComponent();
 
-    nonCoursewareTopics.forEach(async topic => {
-      const noncoursewareTopic = await screen.findByText(topic.name);
+    const nonCourseware = nonCoursewareTopics[0];
+    const nonCoursewareTopic = await screen.findByText(nonCourseware.name);
 
-      await act(async () => fireEvent.click(noncoursewareTopic));
-      await waitFor(async () => {
-        expect(screen.queryByText(topic.name)).toBeInTheDocument();
-        expect(lastLocation.pathname.endsWith(`/topics/${topic.id}`)).toBeTruthy();
-      });
+    await act(async () => {
+      fireEvent.click(nonCoursewareTopic);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText(nonCourseware.name)).toBeInTheDocument();
+      expect(lastLocation.pathname.endsWith(`/topics/${nonCourseware.id}`)).toBeTruthy();
     });
   });
 
   it('A non-courseware topic should be on the top of the list', async () => {
     await setupMockResponse();
     renderComponent();
-    const topicsList = await screen.getByRole('list');
-    const { firstChild } = topicsList;
-    expect(within(firstChild).queryByText(nonCoursewareTopics[0].name)).toBeInTheDocument();
-    expect(topicsList.children[1]).toBe(topicsList.querySelector('.divider'));
+    const topic = await container.querySelector('.discussion-topic');
+
+    expect(within(topic).queryByText('general-topic-1')).toBeInTheDocument();
+    expect(topic.nextSibling).toBe(container.querySelector('.divider'));
   });
 
   it('A non-Courseware topic should have 3 stats and should be hoverable', async () => {
     await setupMockResponse();
     renderComponent();
-    const topicsList = await screen.getByRole('list');
-    const { firstChild } = topicsList;
-    const statsList = await firstChild.getElementsByClassName('pgn__icon');
+
+    const topic = await container.querySelector('.discussion-topic');
+    const statsList = await topic.querySelectorAll('.icon-size');
 
     expect(statsList.length).toBe(3);
     fireEvent.mouseOver(statsList[0]);
@@ -151,7 +152,7 @@ describe('Legacy Topics View', () => {
     renderComponent();
     const sectionGroups = await screen.getAllByTestId('section-group');
     coursewareTopics.forEach(async (topic, index) => {
-      const statsList = await sectionGroups[index].getElementsByClassName('pgn__icon');
+      const statsList = await sectionGroups[index].querySelectorAll('.icon-size');
       const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
 
       expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
@@ -163,11 +164,12 @@ describe('Legacy Topics View', () => {
   it('The subsection should have a title name, be clickable, and not have the stats', async () => {
     await setupMockResponse();
     renderComponent();
-    const subSection = await container.querySelector(`[data-subsection-id=${coursewareTopics[0].children[0].id}]`);
-    const subSectionTitleContainer = await within(subSection).queryByText(coursewareTopics[0].children[0].displayName);
-    const statsList = await subSection.getElementsByClassName('pgn__icon');
+    const subsectionObject = coursewareTopics[0].children[0];
+    const subSection = await container.querySelector(`[data-subsection-id=${subsectionObject.id}]`);
+    const subSectionTitle = await within(subSection).queryByText(subsectionObject.displayName);
+    const statsList = await subSection.querySelectorAll('.icon-size');
 
-    expect(subSectionTitleContainer).toBeInTheDocument();
+    expect(subSectionTitle).toBeInTheDocument();
     expect(statsList).toHaveLength(0);
   });
 
@@ -175,18 +177,20 @@ describe('Legacy Topics View', () => {
     await setupMockResponse();
     renderComponent();
 
-    const subSection = await container.querySelector(`[data-subsection-id=${coursewareTopics[0].children[0].id}]`);
+    const subsectionObject = coursewareTopics[0].children[0];
+    const subSection = await container.querySelector(`[data-subsection-id=${subsectionObject.id}]`);
+
     await act(async () => fireEvent.click(subSection));
     await waitFor(async () => {
       const backButton = await screen.getByLabelText('Back to topics list');
       const topicsList = await screen.getByRole('list');
-      const subSectionHeadingContainer = await screen.findByText(coursewareTopics[0].children[0].displayName);
-      const units = await topicsList.getElementsByClassName('discussion-topic');
+      const subSectionHeading = await screen.findByText(subsectionObject.displayName);
+      const units = await topicsList.querySelectorAll('.discussion-topic');
 
       expect(backButton).toBeInTheDocument();
-      expect(subSectionHeadingContainer).toBeInTheDocument();
+      expect(subSectionHeading).toBeInTheDocument();
       expect(units).toHaveLength(4);
-      expect(lastLocation.pathname.endsWith(`/category/${coursewareTopics[0].children[0].id}`)).toBeTruthy();
+      expect(lastLocation.pathname.endsWith(`/category/${subsectionObject.id}`)).toBeTruthy();
     });
   });
 
@@ -197,7 +201,7 @@ describe('Legacy Topics View', () => {
 
     await act(async () => fireEvent.click(subSection));
     await waitFor(async () => {
-      const units = await container.getElementsByClassName('discussion-topic');
+      const units = await container.querySelectorAll('.discussion-topic');
 
       expect(units).toHaveLength(4);
     });
@@ -206,21 +210,23 @@ describe('Legacy Topics View', () => {
   it('A unit should have a title and stats and should be clickable', async () => {
     await setupMockResponse();
     renderComponent();
-    const unit = coursewareTopics[0].children[0].children[0];
-    const subSection = await container.querySelector(`[data-subsection-id=${coursewareTopics[0].children[0].id}]`);
+    const subSectionObject = coursewareTopics[0].children[0];
+    const unitObject = subSectionObject.children[0];
+
+    const subSection = await container.querySelector(`[data-subsection-id=${subSectionObject.id}]`);
 
     await act(async () => fireEvent.click(subSection));
     await waitFor(async () => {
-      const ele = await screen.findByText(unit.name);
-      const unitContainer = await container.querySelector(`[data-topic-id=${unit.id}]`);
-      const statsList = await unitContainer.getElementsByClassName('pgn__icon');
+      const unitElement = await screen.findByText(unitObject.name);
+      const unitContainer = await container.querySelector(`[data-topic-id=${unitObject.id}]`);
+      const statsList = await unitContainer.querySelectorAll('.icon-size');
 
-      expect(ele).toBeInTheDocument();
+      expect(unitElement).toBeInTheDocument();
       expect(statsList).toHaveLength(3);
 
       await act(async () => fireEvent.click(unitContainer));
       await waitFor(async () => {
-        expect(lastLocation.pathname.endsWith(`/topics/${unit.id}`)).toBeTruthy();
+        expect(lastLocation.pathname.endsWith(`/topics/${unitObject.id}`)).toBeTruthy();
       });
     });
   });

@@ -101,7 +101,7 @@ describe('Redux in context topics tests', () => {
       // contain chapter at first level
       coursewareTopics.forEach((chapter, index) => {
         expect(chapter.courseware).toEqual(true);
-        expect(chapter.id).toEqual(`courseware-topic-${index + 1}`);
+        expect(chapter.id).toEqual(`courseware-topic-${index + 1}-v3`);
         expect(chapter.type).toEqual('chapter');
         expect(chapter).toHaveProperty('blockId');
         expect(chapter).toHaveProperty('lmsWebUrl');
@@ -120,7 +120,7 @@ describe('Redux in context topics tests', () => {
           // contain sub section at third level
           section.children.forEach((subSection, subSecIndex) => {
             expect(subSection.enabledInContext).toEqual(true);
-            expect(subSection.id).toEqual(`${section.id}-${subSecIndex + 1}`);
+            expect(subSection.id).toEqual(`courseware-topic-${index + 1}-v3-${subSecIndex + 1}`);
             expect(subSection).toHaveProperty('usageKey');
             expect(subSection).not.toHaveProperty('blockId');
             expect(subSection?.threadCounts?.discussion).toEqual(1);
