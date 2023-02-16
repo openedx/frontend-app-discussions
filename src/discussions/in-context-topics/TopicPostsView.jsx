@@ -26,7 +26,8 @@ function TopicPostsView({ intl }) {
   const dispatch = useDispatch();
   const { courseId, topicId, category } = useContext(DiscussionContext);
   const provider = useSelector(selectDiscussionProvider);
-  const topicsLoadingStatus = useSelector(selectLoadingStatus);
+  const topicsStatus = useSelector(selectLoadingStatus);
+  const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
   const posts = useSelector(selectTopicThreads([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
   const selectedSubsection = useSelector(selectSubsection(category));
@@ -35,7 +36,7 @@ function TopicPostsView({ intl }) {
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
 
   useEffect(() => {
-    if (provider && topicsLoadingStatus === RequestStatus.IDLE) {
+    if (provider && topicsStatus === RequestStatus.IDLE) {
       dispatch(fetchCourseTopicsV3(courseId));
     }
   }, [provider]);
@@ -50,14 +51,14 @@ function TopicPostsView({ intl }) {
     <div className="discussion-posts d-flex flex-column h-100">
       {topicId ? (
         <BackButton
-          loading={topicsLoadingStatus === RequestStatus.IN_PROGRESS}
+          loading={topicsInProgress}
           path={backButtonPath()}
           title={selectedUnit?.name || selectedNonCoursewareTopic?.name || selectedArchivedTopic?.name
             || intl.formatMessage(messages.unnamedTopic)}
         />
       ) : (
         <BackButton
-          loading={topicsLoadingStatus === RequestStatus.IN_PROGRESS}
+          loading={topicsInProgress}
           path={discussionsPath(Routes.TOPICS.ALL, { courseId })(location)}
           title={selectedSubsection?.displayName || intl.formatMessage(messages.unnamedSubsection)}
         />
@@ -68,6 +69,7 @@ function TopicPostsView({ intl }) {
           <PostsList
             posts={posts}
             topics={[topicId]}
+            parentIsLoading={topicsInProgress}
           />
         ) : (
           selectedSubsectionUnits?.map((unit) => (
@@ -77,10 +79,10 @@ function TopicPostsView({ intl }) {
             />
           ))
         )}
-        {(category && selectedSubsectionUnits.length === 0 && topicsLoadingStatus === RequestStatus.SUCCESSFUL) && (
+        {(category && selectedSubsectionUnits.length === 0 && topicsStatus === RequestStatus.SUCCESSFUL) && (
           <NoResults />
         )}
-        {(category && topicsLoadingStatus === RequestStatus.IN_PROGRESS) && (
+        {(category && topicsInProgress) && (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
           </div>
