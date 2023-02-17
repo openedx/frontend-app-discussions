@@ -40,6 +40,7 @@ function PostCommentsView({ intl }) {
   const {
     courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
+  const enableCommentsSort = false;
 
   useEffect(() => {
     if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
@@ -109,7 +110,7 @@ function PostCommentsView({ intl }) {
           />
         )}
       </div>
-      {!!commentsCount && commentsStatus === RequestStatus.SUCCESSFUL && <CommentsSort />}
+      {!!commentsCount && commentsStatus === RequestStatus.SUCCESSFUL && enableCommentsSort && <CommentsSort />}
       {thread.type === ThreadType.DISCUSSION && (
         <CommentsView
           postId={postId}
