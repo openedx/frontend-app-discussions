@@ -27,6 +27,11 @@ Factory.define('sub-section')
   .sequence('student_view_url', ['id', 'courseId'],
     (idx, id) => `${getApiBaseUrl}/xblock/block-v1:${id}`)
   .attr('type', null, 'sequential')
+  .attr('activeFlags', null, true)
+  .attr('thread_counts', ['discussionCount', 'questionCount'], (discCount, questCount) => {
+    Factory.reset('thread-counts');
+    return Factory.build('thread-counts', null, { discussionCount: discCount, questionCount: questCount });
+  })
   .attr('children', ['id', 'display-name', 'courseId'], (id, name, courseId) => {
     Factory.reset('topic');
     return Factory.buildList('topic', 2, null, {
@@ -55,7 +60,13 @@ Factory.define('section')
   .attr('type', null, 'chapter')
   .attr('children', ['id', 'display-name'], (id, name) => {
     Factory.reset('sub-section');
-    return Factory.buildList('sub-section', 2, null, { sectionPrefix: `${name}-`, topicPrefix: 'section', id });
+    return Factory.buildList('sub-section', 2, null, {
+      sectionPrefix: `${name}-`,
+      topicPrefix: 'section',
+      id,
+      discussionCount: 1,
+      questionCount: 1,
+    });
   });
 
 Factory.define('thread-counts')

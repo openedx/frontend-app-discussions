@@ -30,10 +30,10 @@ const topicsApiUrl = `${getCourseTopicsApiUrl()}`;
 let store;
 let axiosMock;
 let lastLocation;
-let component;
 let container;
+
 function renderComponent() {
-  component = render(
+  const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{ courseId, category }}>
@@ -55,8 +55,7 @@ function renderComponent() {
       </AppProvider>
     </IntlProvider>,
   );
-  container = component.container;
-  return container;
+  container = wrapper.container;
 }
 
 describe('InContext Topics View', () => {
@@ -146,7 +145,7 @@ describe('InContext Topics View', () => {
     expect(sectionGroups.length).toBe(2);
     expect(topicsList.children[5]).toStrictEqual(topicsList.querySelector('.divider'));
   });
-
+  // need updation
   it('A section group should have only a title and required subsections.', async () => {
     await setupMockResponse();
     renderComponent();
@@ -156,7 +155,7 @@ describe('InContext Topics View', () => {
       const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
 
       expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
-      expect(statsList).toHaveLength(0);
+      expect(statsList).toHaveLength(subsectionGroups.length + 2);
       expect(subsectionGroups).toHaveLength(2);
     });
   });
@@ -170,7 +169,7 @@ describe('InContext Topics View', () => {
     const statsList = await subSection.querySelectorAll('.icon-size');
 
     expect(subSectionTitle).toBeInTheDocument();
-    expect(statsList).toHaveLength(0);
+    expect(statsList).toHaveLength(2);
   });
 
   it('Subsection names should be clickable and redirected to the units lists', async () => {
