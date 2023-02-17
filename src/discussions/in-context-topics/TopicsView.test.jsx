@@ -145,17 +145,18 @@ describe('InContext Topics View', () => {
     expect(sectionGroups.length).toBe(2);
     expect(topicsList.children[5]).toStrictEqual(topicsList.querySelector('.divider'));
   });
-  // need updation
+
   it('A section group should have only a title and required subsections.', async () => {
     await setupMockResponse();
     renderComponent();
     const sectionGroups = await screen.getAllByTestId('section-group');
+
     coursewareTopics.forEach(async (topic, index) => {
-      const statsList = await sectionGroups[index].querySelectorAll('.icon-size');
+      const stats = await sectionGroups[index].querySelectorAll('.icon-size:not([data-testid="subsection-group"].icon-size)');
       const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
 
       expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
-      expect(statsList).toHaveLength(subsectionGroups.length + 2);
+      expect(stats).toHaveLength(0);
       expect(subsectionGroups).toHaveLength(2);
     });
   });
