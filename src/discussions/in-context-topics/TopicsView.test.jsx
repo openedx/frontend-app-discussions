@@ -160,7 +160,7 @@ describe('InContext Topics View', () => {
     });
   });
 
-  it('The subsection should have a title name, be clickable, and not have the stats', async () => {
+  it('The subsection should have a title name, be clickable, and have the stats', async () => {
     await setupMockResponse();
     renderComponent();
     const subsectionObject = coursewareTopics[0].children[0];
