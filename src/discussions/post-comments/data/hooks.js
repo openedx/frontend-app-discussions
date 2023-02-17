@@ -50,7 +50,6 @@ export function usePostComments(postId, endorsed = null) {
       reverseOrder,
     };
     await dispatch(fetchThreadComments(postId, params));
-    console.log('clicked');
     trackLoadMoreEvent(postId, params);
   };
 
