@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+
 import { EndorsementStatus } from '../../../data/constants';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectThread } from '../../posts/data/selectors';
@@ -10,6 +12,16 @@ import {
   selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
+
+function trackLoadMoreEvent(postId, params) {
+  sendTrackEvent(
+    'edx.forum.responses.loadMore',
+    {
+      postId,
+      params,
+    },
+  );
+}
 
 export function usePost(postId) {
   const dispatch = useDispatch();
@@ -31,11 +43,15 @@ export function usePostComments(postId, endorsed = null) {
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
 
-  const handleLoadMoreResponses = async () => dispatch(fetchThreadComments(postId, {
-    endorsed,
-    page: currentPage + 1,
-    reverseOrder,
-  }));
+  const handleLoadMoreResponses = async () => {
+    const params = {
+      endorsed,
+      page: currentPage + 1,
+      reverseOrder,
+    };
+    await dispatch(fetchThreadComments(postId, params));
+    trackLoadMoreEvent(postId, params);
+  };
 
   useEffect(() => {
     dispatch(fetchThreadComments(postId, {
