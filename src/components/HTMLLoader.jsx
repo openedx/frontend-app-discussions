@@ -13,12 +13,12 @@ const defaultSanitizeOptions = {
 };
 
 function HTMLLoader({
-  htmlNode, componentId, cssClassName, testId,
+  htmlNode, componentId, cssClassName, testId, delay,
 }) {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef();
 
-  const debouncedPostContent = useDebounce(htmlNode, 500);
+  const debouncedPostContent = useDebounce(htmlNode, delay);
 
   useEffect(() => {
     let promise = Promise.resolve(); // Used to hold chain of typesetting calls
@@ -45,6 +45,7 @@ HTMLLoader.propTypes = {
   componentId: PropTypes.string,
   cssClassName: PropTypes.string,
   testId: PropTypes.string,
+  delay: PropTypes.number,
 };
 
 HTMLLoader.defaultProps = {
@@ -52,6 +53,7 @@ HTMLLoader.defaultProps = {
   componentId: null,
   cssClassName: '',
   testId: '',
+  delay: 0,
 };
 
 export default HTMLLoader;

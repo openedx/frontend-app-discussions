@@ -29,7 +29,13 @@ function PostPreviewPane({
             className="float-right p-3"
             iconClassNames="icon-size"
           />
-          <HTMLLoader htmlNode={htmlNode} cssClassName="text-primary" componentId="post-preview" testId="post-preview" />
+          <HTMLLoader
+            htmlNode={htmlNode}
+            cssClassName="text-primary"
+            componentId="post-preview"
+            testId="post-preview"
+            delay={500}
+          />
         </div>
       )}
       <div className="d-flex justify-content-end">
