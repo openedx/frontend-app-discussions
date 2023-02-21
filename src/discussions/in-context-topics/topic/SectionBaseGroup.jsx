@@ -50,7 +50,7 @@ function SectionBaseGroup({
           aria-current={isSelected(section.id) ? 'page' : undefined}
           tabIndex={(isSelected(subsection.id) || index === 0) ? 0 : -1}
         >
-          <div className="d-flex flex-row py-3.5 px-4">
+          <div className="d-flex flex-row pt-2.5 pb-2 px-4">
             <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
               <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
                 <div className="topic-name text-truncate">
