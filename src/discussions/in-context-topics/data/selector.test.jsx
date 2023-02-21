@@ -88,7 +88,7 @@ describe('In Context Topics Selector test cases', () => {
 
       expect(coursewareTopics).not.toBeUndefined();
       coursewareTopics.forEach((topic, index) => {
-        expect(topic?.id).toEqual(`courseware-topic-${index + 1}`);
+        expect(topic?.id).toEqual(`courseware-topic-${index + 1}-v3`);
       });
     });
   });
