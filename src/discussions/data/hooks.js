@@ -71,14 +71,14 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId) {
+export function useCourseDiscussionData(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
       await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      if (!enableInContextSidebar) { await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username)); }
     }
 
     fetchBaseData();

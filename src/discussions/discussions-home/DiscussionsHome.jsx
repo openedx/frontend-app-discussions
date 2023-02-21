@@ -50,7 +50,7 @@ export default function DiscussionsHome() {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
 
-  useCourseDiscussionData(courseId);
+  useCourseDiscussionData(courseId, enableInContextSidebar);
   useRedirectToThread(courseId, enableInContextSidebar);
 
   /*  Display the content area if we are currently viewing/editing a post or creating one.
@@ -124,7 +124,7 @@ export default function DiscussionsHome() {
             </Switch>
           )}
         </div>
-        <DiscussionsProductTour />
+        {!enableInContextSidebar && <DiscussionsProductTour />}
       </main>
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>
