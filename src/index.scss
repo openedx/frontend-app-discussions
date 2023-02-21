@@ -254,3 +254,12 @@ header {
     align-self: center;
   }
 }
+
+.post-preview,
+.discussion-comments {
+  blockquote {
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+  }
+}
