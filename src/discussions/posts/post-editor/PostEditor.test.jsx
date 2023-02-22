@@ -141,6 +141,16 @@ describe('PostEditor', () => {
         }
       },
     );
+    test('selectThread is not called while creating a new post', async () => {
+      const mockSelectThread = jest.fn();
+      jest.mock('../data/selectors', () => ({
+        selectThread: mockSelectThread,
+      }));
+      await renderComponent();
+      expect(mockSelectThread)
+        .not
+        .toHaveBeenCalled();
+    });
   });
 
   describe('cohorting', () => {
