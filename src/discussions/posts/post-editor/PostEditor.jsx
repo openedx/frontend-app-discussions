@@ -87,7 +87,6 @@ DiscussionPostType.propTypes = {
 function PostEditor({
   editExisting,
 }) {
-  console.log(editExisting)
   const intl = useIntl();
   const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
