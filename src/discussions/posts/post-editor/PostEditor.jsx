@@ -87,6 +87,7 @@ DiscussionPostType.propTypes = {
 function PostEditor({
   editExisting,
 }) {
+  console.log(editExisting)
   const intl = useIntl();
   const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
@@ -106,7 +107,7 @@ function PostEditor({
   const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
   const coursewareTopics = useSelector(enableInContext ? inContextCourseware : selectCoursewareTopics);
   const cohorts = useSelector(selectCourseCohorts);
-  const post = useSelector(selectThread(postId));
+  const post = useSelector(editExisting ? selectThread(postId) : () => ({}));
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const settings = useSelector(selectDivisionSettings);
