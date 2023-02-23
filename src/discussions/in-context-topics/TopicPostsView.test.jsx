@@ -29,15 +29,13 @@ import '../posts/data/__factories__/threads.factory';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const threadsApiUrl = getThreadsApiUrl();
-const topicsApiUrl = `${getCourseTopicsApiUrl()}`;
+const topicsApiUrl = getCourseTopicsApiUrl();
 let store;
 let axiosMock;
 let lastLocation;
 let container;
 
-async function renderComponent({
-  topicId, category,
-} = { }) {
+async function renderComponent({ topicId, category } = { }) {
   let path = `/${courseId}/topics`;
   if (topicId) {
     path = generatePath(Routes.POSTS.PATH, { courseId, topicId });
@@ -214,7 +212,7 @@ describe('InContext Topic Posts View', () => {
       await renderComponent();
 
       const searchField = await within(container).getByPlaceholderText('Search topics');
-      const searchButton = container.querySelector('[data-test-id = "search-icon"]');
+      const searchButton = await within(container).getByTestId('search-icon');
       fireEvent.change(searchField, { target: { value: searchText } });
 
       await waitFor(async () => expect(searchField).toHaveValue(searchText));
@@ -236,7 +234,8 @@ describe('InContext Topic Posts View', () => {
 
     const searchText = 'hello world';
     const searchField = await within(container).getByPlaceholderText('Search topics');
-    const searchButton = container.querySelector('[data-test-id = "search-icon"]');
+    const searchButton = await within(container).getByTestId('search-icon');
+
     fireEvent.change(searchField, { target: { value: searchText } });
 
     await waitFor(async () => expect(searchField).toHaveValue(searchText));
