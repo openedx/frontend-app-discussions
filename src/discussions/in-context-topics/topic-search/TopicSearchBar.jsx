@@ -50,6 +50,7 @@ function TopicSearchBar({ intl }) {
           <Icon
             src={SearchIcon}
             onClick={() => onSubmit(searchValue)}
+            data-test-id="search-icon"
           />
         </span>
       </SearchField.Advanced>

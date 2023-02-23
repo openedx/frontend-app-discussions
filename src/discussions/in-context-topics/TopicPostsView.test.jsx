@@ -16,9 +16,10 @@ import { Routes } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
+import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
-import { getCourseTopicsApiUrl, getThreadsApiUrl } from './data/api';
-import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
+import { getCourseTopicsApiUrl } from './data/api';
+import { selectCoursewareTopics } from './data/selectors';
 import { fetchCourseTopicsV3 } from './data/thunks';
 import TopicPostsView from './TopicPostsView';
 import TopicsView from './TopicsView';
@@ -35,34 +36,29 @@ let lastLocation;
 let container;
 
 async function renderComponent({
-  topicId, category, enableInContextSidebar = false,
-} = { myPosts: false }) {
-  let path = `/${courseId}/topics/`;
-  let page = 'topics';
+  topicId, category,
+} = { }) {
+  let path = `/${courseId}/topics`;
   if (topicId) {
     path = generatePath(Routes.POSTS.PATH, { courseId, topicId });
-    page = 'posts';
   } else if (category) {
     path = generatePath(Routes.TOPICS.CATEGORY, { courseId, category });
-    page = 'category';
   }
   const wrapper = await render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <MemoryRouter initialEntries={[path]}>
-          <DiscussionContext.Provider value={{
-            courseId,
-            topicId,
-            category,
-            page,
-            enableInContextSidebar,
-          }}
-          >
-            <Route
-              path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-              component={TopicPostsView}
-            />
-            <Route exact path="/:courseId/topics/">
+        <DiscussionContext.Provider value={{
+          courseId,
+          topicId,
+          category,
+          page: 'topics',
+        }}
+        >
+          <MemoryRouter initialEntries={[path]}>
+            <Route exact path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}>
+              <TopicPostsView />
+            </Route>
+            <Route exact path={[Routes.TOPICS.ALL]}>
               <PostActionsBar />
               <TopicsView />
             </Route>
@@ -72,8 +68,8 @@ async function renderComponent({
                 return null;
               }}
             />
-          </DiscussionContext.Provider>
-        </MemoryRouter>
+          </MemoryRouter>
+        </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
@@ -81,7 +77,6 @@ async function renderComponent({
 }
 
 describe('InContext Topic Posts View', () => {
-  let nonCoursewareTopics;
   let coursewareTopics;
 
   beforeEach(() => {
@@ -99,9 +94,7 @@ describe('InContext Topic Posts View', () => {
         enableInContext: true,
         provider: 'openedx',
         hasModerationPrivileges: true,
-        blackouts: ['2021-12-31T10:15', '2021-12-31T10:20'],
-        visibility: false,
-        status: 'successful',
+        blackouts: [],
       },
     });
     Factory.resetAll();
@@ -119,67 +112,50 @@ describe('InContext Topic Posts View', () => {
         courseware: false,
         discussionCount: 1,
         questionCount: 1,
-      }).concat(Factory.buildList('section', 2, null, { topicPrefix: 'courseware' })))
+      })
+        .concat(Factory.buildList('section', 2, null, { topicPrefix: 'courseware' })))
         .concat(Factory.buildList('archived-topics', 2, null)));
     await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
 
     const state = store.getState();
-    nonCoursewareTopics = selectNonCoursewareTopics(state);
     coursewareTopics = selectCoursewareTopics(state);
   }
 
-  async function setupPostsMockResponse(id, count = 3) {
+  async function setupPostsMockResponse(topicId, numOfResponses = 3) {
     axiosMock.onGet(threadsApiUrl)
       .reply(() => {
         const threadAttrs = { previewBody: 'thread preview body' };
         return [200, Factory.build('threadsResult', {}, {
-          topicId: id,
+          topicId,
           threadAttrs,
-          count,
+          count: numOfResponses,
         })];
       });
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
   }
 
   test.each([
-    { parent: nonCoursewareTopics[0], topicType: 'NonCourseware' },
-    { parent: coursewareTopics[0].children[0].children[0], topicType: 'courseware' },
-  ])('\'$topicType\' topic should have a required number of post lengths.', async ({ parent }) => {
+    { parentId: 'noncourseware-topic-1', parentTitle: 'general-topic-1', topicType: 'NonCourseware' },
+    { parentId: 'courseware-topic-1-v3-1', parentTitle: 'Introduction Introduction 1-1-1', topicType: 'Courseware' },
+  ])('\'$topicType\' topic should have a required number of post lengths.', async ({ parentId, parentTitle }) => {
     await setupTopicsMockResponse();
+    await setupPostsMockResponse(parentId, 3);
 
     await act(async () => {
-      setupPostsMockResponse(parent.id, 3);
-      renderComponent({ topicId: parent.id });
+      renderComponent({ topicId: parentId });
     });
 
     await waitFor(async () => {
       const posts = await container.querySelectorAll('.discussion-post');
+      const backButton = screen.getByLabelText('Back to topics list');
+      const parentHeader = await screen.findByText(parentTitle);
 
-      expect(lastLocation.pathname.endsWith(`/topics/${parent.id}`)).toBeTruthy();
-      expect(posts).toHaveLength(6);
+      expect(lastLocation.pathname.endsWith(`/topics/${parentId}`)).toBeTruthy();
+      expect(posts).toHaveLength(3);
+      expect(backButton).toBeInTheDocument();
+      expect(parentHeader).toBeInTheDocument();
     });
   });
-
-  test.each([
-    { parent: nonCoursewareTopics[0], topicType: 'NonCourseware' },
-    { parent: coursewareTopics[0].children[0].children[0], topicType: 'courseware' },
-  ])('\'$topicType\' topic should have a Back navigation bar with selected \'$topicType\' topic title.',
-    async ({ parent }) => {
-      await setupTopicsMockResponse();
-
-      await act(async () => {
-        setupPostsMockResponse(parent.id, 3);
-        renderComponent({ topicId: parent.id });
-      });
-
-      await waitFor(async () => {
-        const backButton = await screen.getByLabelText('Back to topics list');
-        const parentHeader = await screen.findByText(parent.name);
-
-        expect(backButton).toBeInTheDocument();
-        expect(parentHeader).toBeInTheDocument();
-      });
-    });
 
   it('A back button should redirect from list of posts to list of units.', async () => {
     await setupTopicsMockResponse();
@@ -195,11 +171,11 @@ describe('InContext Topic Posts View', () => {
 
     await act(async () => fireEvent.click(backButton));
     await waitFor(async () => {
-      renderComponent({ topicId: undefined, category: subSection.id });
+      renderComponent({ category: subSection.id });
 
       const subSectionList = await container.querySelector('.list-group');
-      const units = await subSectionList.querySelectorAll('.discussion-topic');
-      const unitHeader = await within(subSectionList).queryByText(unit.name);
+      const units = subSectionList.querySelectorAll('.discussion-topic');
+      const unitHeader = within(subSectionList).queryByText(unit.name);
 
       expect(lastLocation.pathname.endsWith(`/category/${subSection.id}`)).toBeTruthy();
       expect(unitHeader).toBeInTheDocument();
@@ -211,7 +187,7 @@ describe('InContext Topic Posts View', () => {
     await setupTopicsMockResponse();
     const subSection = coursewareTopics[0].children[0];
 
-    renderComponent({ topicId: undefined, category: subSection.id });
+    renderComponent({ category: subSection.id });
 
     const backButton = await screen.getByLabelText('Back to topics list');
 
@@ -220,36 +196,37 @@ describe('InContext Topic Posts View', () => {
       renderComponent();
 
       const sectionList = await container.querySelector('.list-group');
-      const subSections = await sectionList.querySelectorAll('.discussion-topic-group');
-      const subSectionHeader = await within(sectionList).queryByText(subSection.displayName);
+      const subSections = sectionList.querySelectorAll('.discussion-topic-group');
+      const subSectionHeader = within(sectionList).queryByText(subSection.displayName);
 
-      expect(lastLocation.pathname.endsWith('/topics/')).toBeTruthy();
+      expect(lastLocation.pathname.endsWith('/topics')).toBeTruthy();
       expect(subSectionHeader).toBeInTheDocument();
       expect(subSections).toHaveLength(3);
     });
   });
 
   test.each([
-    { searchText: 'hello world', output: 'Showing 0 results for' },
-    { searchText: 'introduction', output: 'Showing 8 results for' },
+    { searchText: 'hello world', output: 'Showing 0 results for', resultCount: 0 },
+    { searchText: 'introduction', output: 'Showing 8 results for', resultCount: 8 },
   ])('It should have a search bar with a clear button and \'$output\' results found text.',
-    async ({ searchText, output }) => {
+    async ({ searchText, output, resultCount }) => {
       await setupTopicsMockResponse();
       await renderComponent();
 
       const searchField = await within(container).getByPlaceholderText('Search topics');
-      const search = await container.querySelector('.pointer-cursor-hover');
-      const searchButton = await search.querySelector('.pgn__icon');
+      const searchButton = container.querySelector('[data-test-id = "search-icon"]');
       fireEvent.change(searchField, { target: { value: searchText } });
 
       await waitFor(async () => expect(searchField).toHaveValue(searchText));
       await act(async () => fireEvent.click(searchButton));
       await waitFor(async () => {
         const clearButton = await within(container).queryByText('Clear results');
-        const searchMessage = await within(container).queryByText(`${output} "${searchText}"`);
+        const searchMessage = within(container).queryByText(`${output} "${searchText}"`);
+        const units = container.querySelectorAll('.discussion-topic');
 
         expect(searchMessage).toBeInTheDocument();
         expect(clearButton).toBeInTheDocument();
+        expect(units).toHaveLength(resultCount);
       });
     });
 
@@ -259,8 +236,7 @@ describe('InContext Topic Posts View', () => {
 
     const searchText = 'hello world';
     const searchField = await within(container).getByPlaceholderText('Search topics');
-    const search = await container.querySelector('.pointer-cursor-hover');
-    const searchButton = await search.querySelector('.pgn__icon');
+    const searchButton = container.querySelector('[data-test-id = "search-icon"]');
     fireEvent.change(searchField, { target: { value: searchText } });
 
     await waitFor(async () => expect(searchField).toHaveValue(searchText));
