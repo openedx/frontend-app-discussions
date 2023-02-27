@@ -90,8 +90,9 @@ function Post({
   return (
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment"
-      aria-level={5}
       data-testid={`post-${post.id}`}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex="0"
     >
       <Confirmation
         isOpen={isDeleting}
