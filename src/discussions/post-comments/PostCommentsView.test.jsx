@@ -35,6 +35,7 @@ const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
 const reverseOrder = false;
+const enableInContextSidebar = false;
 let store;
 let axiosMock;
 let testLocation;
@@ -52,6 +53,7 @@ function mockAxiosReturnPagedComments() {
             requested_fields: 'profile_image',
             endorsed,
             reverse_order: reverseOrder,
+            enable_in_context_sidebar: enableInContextSidebar,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
