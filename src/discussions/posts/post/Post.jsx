@@ -36,7 +36,6 @@ function Post({
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseId = useSelector((state) => state.config.id);
   const topic = useSelector(selectTopic(post.topicId));
-  const CourseWideTopicURL = `${getConfig().BASE_URL}/${courseId}/topics/${post.topicId}`;
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
@@ -141,7 +140,7 @@ function Post({
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
-            destination={topicContext ? topicContext.unitLink : CourseWideTopicURL}
+            destination={topicContext ? topicContext.unitLink : `${getConfig().BASE_URL}/${courseId}/topics/${post.topicId}`}
             target="_top"
           >
             {(topicContext && !topic)
