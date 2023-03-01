@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
@@ -35,6 +36,7 @@ function Post({
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseId = useSelector((state) => state.config.id);
   const topic = useSelector(selectTopic(post.topicId));
+  const CourseWideTopicURL = `${getConfig().BASE_URL}/${courseId}/topics/${post.topicId}`;
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(post.topicId));
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
@@ -87,6 +89,10 @@ function Post({
     topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
   );
 
+  const getTopicInfo = topicData => (
+    getTopicCategoryName(topicData) ? `${getTopicCategoryName(topicData)} / ${topicData.name}` : `${topicData.name}`
+  );
+
   return (
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment"
@@ -127,7 +133,7 @@ function Post({
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
-      {topicContext && (
+      {(topicContext || topic) && (
         <div
           className={classNames('mt-14px mb-1 font-style font-size-12',
             { 'w-100': enableInContextSidebar })}
@@ -135,7 +141,7 @@ function Post({
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
-            destination={topicContext.unitLink}
+            destination={topicContext ? topicContext.unitLink : CourseWideTopicURL}
             target="_top"
           >
             {(topicContext && !topic)
@@ -148,7 +154,7 @@ function Post({
                   <span className="w-auto">{topicContext.unitName}</span>
                 </>
               )
-              : `${getTopicCategoryName(topic)} / ${topic.name}`}
+              : getTopicInfo(topic)}
           </Hyperlink>
         </div>
       )}
