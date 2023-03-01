@@ -119,7 +119,7 @@ function Comment({
           />
         )}
         <EndorsedAlertBanner postType={postType} content={comment} />
-        <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" aria-level={5}>
+        <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" tabIndex="0">
           <HoverCard
             commentOrPost={comment}
             actionHandlers={actionHandlers}
