@@ -59,36 +59,37 @@ describe('Learner api test cases', () => {
     return store.getState().learners;
   }
 
-  async function setupPostsMockResponse(learnerCourseId, statusCode) {
+  async function setupPostsMockResponse(learnerCourseId, statusCode, filters = { status: 'all' }) {
     axiosMock.onGet(learnerPostsApiUrl(learnerCourseId), { username, count_flagged: true })
       .reply(() => [statusCode, Factory.build('learnerPosts', {}, {
         abuseFlaggedCount: 1,
       })]);
 
-    await executeThunk(fetchUserPosts(courseId, { filters: { status: 'statusUnread', search: 'Title', cohort: 'post' } }), store.dispatch, store.getState);
-    await executeThunk(fetchUserPosts(courseId, { filters: { status: 'statusUnanswered' } }), store.dispatch, store.getState);
-    await executeThunk(fetchUserPosts(courseId, { filters: { status: 'statusReported' } }), store.dispatch, store.getState);
-    await executeThunk(fetchUserPosts(courseId, { filters: { status: 'statusUnresponded' } }), store.dispatch, store.getState);
-    await executeThunk(fetchUserPosts(courseId, { filters: { status: 'all' } }), store.dispatch, store.getState);
+    await executeThunk(fetchUserPosts(courseId, { filters }), store.dispatch, store.getState);
     return store.getState().threads;
   }
 
-  test('Successfully get and store API response for the learner\'s list and learners posts in redux', async () => {
-    const learners = await setupLearnerMockResponse(courseId, 200);
-    const threads = await setupPostsMockResponse(courseId, 200);
+  test('Successfully get and store API response for the learner\'s list and learners posts in redux',
+    async () => {
+      const learners = await setupLearnerMockResponse(courseId, 200);
+      const threads = await setupPostsMockResponse(courseId, 200);
 
-    expect(learners.status).toEqual('successful');
-    expect(Object.values(learners.learnerProfiles)).toHaveLength(3);
+      expect(learners.status).toEqual('successful');
+      expect(Object.values(learners.learnerProfiles)).toHaveLength(3);
+      expect(threads.status).toEqual('successful');
+      expect(Object.values(threads.threadsById)).toHaveLength(2);
+    });
+
+  test.each([
+    { status: 'statusUnread', search: 'Title', cohort: 'post' },
+    { status: 'statusUnanswered', search: 'Title', cohort: 'post' },
+    { status: 'statusReported', search: 'Title', cohort: 'post' },
+    { status: 'statusUnresponded', search: 'Title', cohort: 'post' },
+  ])('Successfully fetch user posts based on multiple filters', async ({ status, search, cohort }) => {
+    const threads = await setupPostsMockResponse(courseId, 200, { status, search, cohort });
+
     expect(threads.status).toEqual('successful');
     expect(Object.values(threads.threadsById)).toHaveLength(2);
-  });
-
-  test('Successfully store learners and learnerPosts API data in redux', async () => {
-    const learners = await setupLearnerMockResponse(courseId, 200);
-    const threads = await setupPostsMockResponse(courseId, 200);
-
-    expect(Object.values(threads.threadsById)).toHaveLength(2);
-    expect(Object.values(learners.learnerProfiles)).toHaveLength(3);
   });
 
   it('failed to fetch learners', async () => {
