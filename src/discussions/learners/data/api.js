@@ -10,6 +10,8 @@ ensureConfig([
 
 export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
 export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/v1/accounts`;
+export const learnerPostsApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/learner/`;
+export const learnersApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/activity_stats/`;
 
 /**
  * Fetches all the learners in the given course.
@@ -18,8 +20,7 @@ export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/
  * @returns {Promise<{}>}
  */
 export async function getLearners(courseId, params) {
-  const url = `${getCoursesApiUrl()}${courseId}/activity_stats/`;
-  const { data } = await getAuthenticatedHttpClient().get(url, { params });
+  const { data } = await getAuthenticatedHttpClient().get(learnersApiUrl(courseId), { params });
   return data;
 }
 
@@ -65,8 +66,6 @@ export async function getUserPosts(courseId, {
   countFlagged,
   cohort,
 } = {}) {
-  const learnerPostsApiUrl = `${getCoursesApiUrl()}${courseId}/learner/`;
-
   const params = snakeCaseObject({
     page,
     pageSize,
@@ -81,6 +80,6 @@ export async function getUserPosts(courseId, {
   });
 
   const { data } = await getAuthenticatedHttpClient()
-    .get(learnerPostsApiUrl, { params });
+    .get(learnerPostsApiUrl(courseId), { params });
   return data;
 }

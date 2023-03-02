@@ -6,7 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
-import { getCoursesApiUrl, getUserProfileApiUrl } from './api';
+import { getUserProfileApiUrl, learnersApiUrl } from './api';
 import {
   learnersLoadingStatus,
   selectLearnerNextPage,
@@ -18,7 +18,6 @@ import { fetchLearners } from './thunks';
 import './__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const coursesApiUrl = getCoursesApiUrl();
 const userProfileApiUrl = getUserProfileApiUrl();
 
 let axiosMock;
@@ -41,18 +40,16 @@ describe('Learner selectors test cases', () => {
     store = initializeStore();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
 
-    const learnersData = Factory.build('learnersResult', {}, {
-      count: learnerCount,
-      pageSize: 3,
-    });
-    axiosMock.onGet(`${coursesApiUrl}${courseId}/activity_stats/`)
-      .reply(() => [200, learnersData]);
+    axiosMock.onGet(learnersApiUrl(courseId))
+      .reply(() => [200, Factory.build('learnersResult', {}, {
+        count: learnerCount,
+        pageSize: 3,
+      })]);
 
-    const learnersProfile = Factory.build('learnersProfile', {}, {
-      username: ['learner-1', 'learner-2', 'learner-3'],
-    });
     axiosMock.onGet(`${userProfileApiUrl}?username=learner-1,learner-2,learner-3`)
-      .reply(() => [200, learnersProfile.profiles]);
+      .reply(() => [200, Factory.build('learnersProfile', {}, {
+        username: ['learner-1', 'learner-2', 'learner-3'],
+      }).profiles]);
 
     await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
     state = store.getState();

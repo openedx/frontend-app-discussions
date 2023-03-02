@@ -6,14 +6,13 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
-import { getCoursesApiUrl, getUserProfileApiUrl } from './api';
+import { getUserProfileApiUrl, learnersApiUrl } from './api';
 import { setPostFilter, setSortedBy, setUsernameSearch } from './slices';
 import { fetchLearners } from './thunks';
 
 import './__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const coursesApiUrl = getCoursesApiUrl();
 const userProfileApiUrl = getUserProfileApiUrl();
 
 let axiosMock;
@@ -41,51 +40,49 @@ describe('Learner redux test cases', () => {
   });
 
   async function setupLearnerMockResponse() {
-    const learnersData = Factory.build('learnersResult', {}, {
-      count: learnerCount,
-      pageSize: 3,
-    });
-    axiosMock.onGet(`${coursesApiUrl}${courseId}/activity_stats/`)
-      .reply(() => [200, learnersData]);
+    axiosMock.onGet(learnersApiUrl(courseId))
+      .reply(() => [200, Factory.build('learnersResult', {}, {
+        count: learnerCount,
+        pageSize: 3,
+      })]);
 
-    const learnersProfile = Factory.build('learnersProfile', {}, {
-      username: ['learner-1', 'learner-2', 'learner-3'],
-    });
     axiosMock.onGet(`${userProfileApiUrl}?username=learner-1,learner-2,learner-3`)
-      .reply(() => [200, learnersProfile.profiles]);
+      .reply(() => [200, Factory.build('learnersProfile', {}, {
+        username: ['learner-1', 'learner-2', 'learner-3'],
+      }).profiles]);
 
     await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
     return store.getState().learners;
   }
 
   test('Successfully load initial states in redux', async () => {
-    executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
-    const state = store.getState();
+    executeThunk(fetchLearners(courseId, { usernameSearch: 'learner-1' }), store.dispatch, store.getState);
+    const { learners } = store.getState();
 
-    expect(state.learners.status).toEqual('in-progress');
-    expect(state.learners.learnerProfiles).toEqual({});
-    expect(state.learners.pages).toHaveLength(0);
-    expect(state.learners.nextPage).toBeNull();
-    expect(state.learners.totalPages).toBeNull();
-    expect(state.learners.totalLearners).toBeNull();
-    expect(state.learners.sortedBy).toEqual('activity');
-    expect(state.learners.usernameSearch).toBeNull();
-    expect(state.learners.postFilter.postType).toEqual('all');
-    expect(state.learners.postFilter.status).toEqual('statusAll');
-    expect(state.learners.postFilter.orderBy).toEqual('lastActivityAt');
-    expect(state.learners.postFilter.cohort).toEqual('');
+    expect(learners.status).toEqual('in-progress');
+    expect(learners.learnerProfiles).toEqual({});
+    expect(learners.pages).toHaveLength(0);
+    expect(learners.nextPage).toBeNull();
+    expect(learners.totalPages).toBeNull();
+    expect(learners.totalLearners).toBeNull();
+    expect(learners.sortedBy).toEqual('activity');
+    expect(learners.usernameSearch).toBeNull();
+    expect(learners.postFilter.postType).toEqual('all');
+    expect(learners.postFilter.status).toEqual('statusAll');
+    expect(learners.postFilter.orderBy).toEqual('lastActivityAt');
+    expect(learners.postFilter.cohort).toEqual('');
   });
 
   test('Successfully store a learner posts stats data as pages object in redux',
     async () => {
       const learners = await setupLearnerMockResponse();
-      const pages = learners.pages[0];
-      const stats = pages[0];
+      const page = learners.pages[0];
+      const statsObject = page[0];
 
-      expect(pages).toHaveLength(3);
-      expect(stats.responses).toEqual(3);
-      expect(stats.threads).toEqual(1);
-      expect(stats.replies).toEqual(0);
+      expect(page).toHaveLength(3);
+      expect(statsObject.responses).toEqual(3);
+      expect(statsObject.threads).toEqual(1);
+      expect(statsObject.replies).toEqual(0);
     });
 
   test('Successfully store the nextPage, totalPages, totalLearners, and sortedBy data in redux',
