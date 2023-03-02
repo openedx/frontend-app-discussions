@@ -99,7 +99,7 @@ function PostCommentsView({ intl }) {
         )
       )}
       <div
-        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding"
+        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
       >
         <Post post={thread} handleAddResponseButton={() => setAddingResponse(true)} />
         {!thread.closed && (
