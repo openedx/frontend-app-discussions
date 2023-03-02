@@ -1,4 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -43,28 +46,28 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const {
-    courseId,
-  } = useContext(DiscussionContext);
+  const { courseId } = useContext(DiscussionContext);
+
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
     if (hasChildren && !currentPage && showFullThread) {
       dispatch(fetchCommentResponses(comment.id, { page: 1 }));
     }
   }, [comment.id]);
+
   const actions = useActions({
     ...comment,
     postType,
   });
   const endorseIcons = actions.find(({ action }) => action === EndorsementStatus.ENDORSED);
 
-  const handleAbusedFlag = () => {
+  const handleAbusedFlag = useCallback(() => {
     if (comment.abuseFlagged) {
       dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  };
+  }, [comment.abuseFlagged, comment.id, dispatch, showReportConfirmation]);
 
   const handleDeleteConfirmation = () => {
     dispatch(removeComment(comment.id));
@@ -76,7 +79,7 @@ function Comment({
     hideReportConfirmation();
   };
 
-  const actionHandlers = {
+  const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
       await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }, ContentActions.ENDORSE));
@@ -84,7 +87,7 @@ function Comment({
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => handleAbusedFlag(),
-  };
+  }), [showDeleteConfirmation, dispatch, comment.id, comment.endorsed, comment.threadId, courseId, handleAbusedFlag]);
 
   const handleLoadMoreComments = () => (
     dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
