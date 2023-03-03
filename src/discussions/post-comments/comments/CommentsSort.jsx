@@ -33,7 +33,7 @@ function CommentSortDropdown({
       tourName: 'response_sort',
     };
     dispatch(updateUserDiscussionsTourByName(data));
-  });
+  }, []);
 
   useEffect(() => {
     enableCommentsSortTour(true);
