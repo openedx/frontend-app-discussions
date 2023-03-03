@@ -10,6 +10,7 @@ import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
@@ -17,11 +18,13 @@ import { getCourseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
-import { fetchThreads } from '../posts/data/thunks';
+import { fetchThread, fetchThreads } from '../posts/data/thunks';
+import { fetchCourseTopics } from '../topics/data/thunks';
 import { getCommentsApiUrl } from './data/api';
 
 import '../posts/data/__factories__';
 import './data/__factories__';
+import '../topics/data/__factories__';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 const commentsApiUrl = getCommentsApiUrl();
@@ -30,6 +33,7 @@ const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
+const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
 const reverseOrder = false;
 let store;
 let axiosMock;
@@ -106,6 +110,52 @@ function renderComponent(postId) {
   );
   return wrapper;
 }
+
+describe('PostView', () => {
+  const threadId = 'thread-1';
+  beforeEach(() => {
+    initializeMockApp({
+      authenticatedUser: {
+        userId: 3,
+        username: 'abc123',
+        administrator: true,
+        roles: [],
+      },
+    });
+
+    store = initializeStore();
+    Factory.resetAll();
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
+      .reply(200, Factory.build('thread'));
+
+    executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+  });
+
+  it('should show Topic Info for non-courseware topics', async () => {
+    axiosMock.onGet(topicsApiUrl)
+      .reply(200, {
+        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'test-' }),
+        courseware_topics: Factory.buildList('category', 2, {}, { topicPrefix: 'test-' }),
+      });
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+    renderComponent(threadId);
+    expect(await screen.findByText('Related to')).toBeInTheDocument();
+    expect(await screen.findByText('test-topic 1')).toBeInTheDocument();
+  });
+
+  it('should show Topic Info for courseware topics with category', async () => {
+    axiosMock.onGet(topicsApiUrl)
+      .reply(200, {
+        courseware_topics: Factory.buildList('category', 2, {}, { name: 'test' }),
+        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'test-' }),
+      });
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+    renderComponent(threadId);
+    expect(await screen.findByText('Related to')).toBeInTheDocument();
+    expect(await screen.findByText('category-2 / test-topic 1')).toBeInTheDocument();
+  });
+});
 
 describe('ThreadView', () => {
   beforeEach(() => {
