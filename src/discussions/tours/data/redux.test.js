@@ -11,7 +11,7 @@ import {
   discussionsTourRequest,
   discussionsToursRequestError,
   fetchUserDiscussionsToursSuccess,
-  toursReducer,
+  toursReducer, updateUserDiscussionsTourByName,
   updateUserDiscussionsTourSuccess,
 } from './slices';
 import { fetchDiscussionTours, updateTourShowStatus } from './thunks';
@@ -181,6 +181,34 @@ describe('toursReducer', () => {
         loading: RequestStatus.FAILED,
         error: mockError,
       });
+  });
+  it('handles the updateUserDiscussionsTourByName action', () => {
+    const initialState = {
+      tours: [
+        {
+          id: 1,
+          tourName: 'not_responded_filter',
+        },
+        {
+          id: 2,
+          tourName: 'response_sort',
+        },
+      ],
+    };
+    const updatedTour = {
+      tourName: 'response_sort',
+      enabled: false,
+    };
+    const state = toursReducer(initialState, updateUserDiscussionsTourByName(updatedTour));
+    expect(state.tours)
+      .toEqual([{
+        id: 1,
+        tourName: 'not_responded_filter',
+      }, {
+        id: 2,
+        tourName: 'response_sort',
+        enabled: false,
+      }]);
   });
 });
 

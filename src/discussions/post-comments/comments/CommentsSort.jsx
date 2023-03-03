@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -27,13 +27,13 @@ function CommentSortDropdown({
     dispatch(setCommentSortOrder(reverseOrder));
   };
 
-  const enableCommentsSortTour = (enabled) => {
+  const enableCommentsSortTour = useCallback((enabled) => {
     const data = {
       enabled,
       tourName: 'response_sort',
     };
     dispatch(updateUserDiscussionsTourByName(data));
-  };
+  });
 
   useEffect(() => {
     enableCommentsSortTour(true);

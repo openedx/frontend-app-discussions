@@ -10,11 +10,7 @@ import {
 } from './slices';
 
 function normaliseTourData(data) {
-  data.forEach(tour => {
-    // eslint-disable-next-line no-param-reassign
-    tour.enabled = true;
-  });
-  return data;
+  return data.map(tour => ({ ...tour, enabled: true }));
 }
 
 /**
