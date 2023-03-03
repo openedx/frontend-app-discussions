@@ -85,12 +85,13 @@ describe('Learner api test cases', () => {
     { status: 'statusUnanswered', search: 'Title', cohort: 'post' },
     { status: 'statusReported', search: 'Title', cohort: 'post' },
     { status: 'statusUnresponded', search: 'Title', cohort: 'post' },
-  ])('Successfully fetch user posts based on multiple filters', async ({ status, search, cohort }) => {
-    const threads = await setupPostsMockResponse(courseId, 200, { status, search, cohort });
+  ])('Successfully fetch user posts based on \'$status\', \'$search\' , and \'$cohort\'  filters',
+    async ({ status, search, cohort }) => {
+      const threads = await setupPostsMockResponse(courseId, 200, { status, search, cohort });
 
-    expect(threads.status).toEqual('successful');
-    expect(Object.values(threads.threadsById)).toHaveLength(2);
-  });
+      expect(threads.status).toEqual('successful');
+      expect(Object.values(threads.threadsById)).toHaveLength(2);
+    });
 
   it('failed to fetch learners', async () => {
     const learners = await setupLearnerMockResponse(courseId2, 200);
