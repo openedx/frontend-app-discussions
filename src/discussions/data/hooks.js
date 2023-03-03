@@ -217,7 +217,7 @@ export const useTourConfiguration = (intl) => {
       advanceButtonText: intl.formatMessage(messages.advanceButtonText),
       dismissButtonText: intl.formatMessage(messages.dismissButtonText),
       endButtonText: intl.formatMessage(messages.endButtonText),
-      enabled: tour && Boolean(tour.showTour && !enableInContextSidebar),
+      enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
       onDismiss: () => dispatch(updateTourShowStatus(tour.id)),
       onEnd: () => dispatch(updateTourShowStatus(tour.id)),
       checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],

@@ -9,6 +9,14 @@ import {
   updateUserDiscussionsTourSuccess,
 } from './slices';
 
+function normaliseTourData(data) {
+  data.forEach(tour => {
+    // eslint-disable-next-line no-param-reassign
+    tour.enabled = true;
+  });
+  return data;
+}
+
 /**
  * Action thunk to fetch the list of discussion tours for the current user.
  * @returns {function} - Thunk that dispatches the request, success, and error actions.
@@ -18,7 +26,7 @@ export function fetchDiscussionTours() {
     try {
       dispatch(discussionsTourRequest());
       const data = await getDiscssionTours();
-      dispatch(fetchUserDiscussionsToursSuccess(camelCaseObject(data)));
+      dispatch(fetchUserDiscussionsToursSuccess(camelCaseObject(normaliseTourData(data))));
     } catch (error) {
       dispatch(discussionsToursRequestError());
       logError(error);

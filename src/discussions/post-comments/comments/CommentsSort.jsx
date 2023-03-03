@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,6 +13,7 @@ import {
 import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
+import { updateUserDiscussionsTourByName } from '../../tours/data';
 
 function CommentSortDropdown({
   intl,
@@ -21,16 +22,31 @@ function CommentSortDropdown({
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-
   const handleActions = (reverseOrder) => {
     close();
     dispatch(setCommentSortOrder(reverseOrder));
   };
 
+  const enableCommentsSortTour = (enabled) => {
+    const data = {
+      enabled,
+      tourName: 'response_sort',
+    };
+    dispatch(updateUserDiscussionsTourByName(data));
+  };
+
+  useEffect(() => {
+    enableCommentsSortTour(true);
+    return () => {
+      enableCommentsSortTour(false);
+    };
+  }, []);
+
   return (
     <>
       <div className="comments-sort d-flex justify-content-end mx-4 mt-2">
         <Button
+          id="comment-sort"
           alt={intl.formatMessage(messages.actionsAlt)}
           ref={setTarget}
           variant="tertiary"

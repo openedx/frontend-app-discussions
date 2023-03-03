@@ -26,6 +26,16 @@ const messages = defineMessages({
     defaultMessage: 'New filtering option!',
     description: 'Title of the tour for the not responded filter',
   },
+  responseSortTourBody: {
+    id: 'tour.body.responseSortTour',
+    defaultMessage: 'Responses and comments are now sorted by newest first. Please use this option to change the sort order',
+    description: 'Body of the tour for the response sort',
+  },
+  responseSortTourTitle: {
+    id: 'tour.title.responseSortTour',
+    defaultMessage: 'Sort Responses!',
+    description: 'Title of the tour for the response sort',
+  },
 });
 
 export default messages;
