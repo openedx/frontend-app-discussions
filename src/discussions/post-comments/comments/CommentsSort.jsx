@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,10 +10,10 @@ import {
   ExpandLess, ExpandMore,
 } from '@edx/paragon/icons';
 
+import { updateUserDiscussionsTourByName } from '../../tours/data';
 import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
-import { updateUserDiscussionsTourByName } from '../../tours/data';
 
 function CommentSortDropdown({
   intl,
