@@ -48,7 +48,7 @@ function PostsList({ posts, topics, intl }) {
       topicIds,
     };
 
-    if (showOwnPosts) {
+    if (showOwnPosts && filters.search === '') {
       dispatch(fetchUserPosts(courseId, params));
     } else {
       dispatch(fetchThreads(courseId, params));
