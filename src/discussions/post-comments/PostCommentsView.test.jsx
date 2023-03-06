@@ -20,6 +20,7 @@ import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
 import { fetchCourseTopics } from '../topics/data/thunks';
+import { fetchUserDiscussionsToursSuccess } from '../tours/data';
 import { getCommentsApiUrl } from './data/api';
 import { removeComment } from './data/thunks';
 
@@ -749,7 +750,7 @@ describe('ThreadView', () => {
       });
       expect(screen.queryByRole('dialog', {
         name: /Delete/i,
-        exact: false
+        exact: false,
       }))
         .toBeInTheDocument();
     });
@@ -842,6 +843,28 @@ describe('ThreadView', () => {
 
       expect(store.getState().comments.sortOrder)
         .toBeTruthy();
+    });
+    test('successfully handles tour state update', async () => {
+      const tourData = [{
+        id: 15,
+        tourName: 'not_responded_filter',
+        showTour: false,
+        enabled: true,
+        user: 8,
+      }, {
+        id: 16,
+        tourName: 'response_sort',
+        showTour: false,
+        enabled: true,
+        user: 8,
+      }];
+      await store.dispatch(fetchUserDiscussionsToursSuccess(tourData));
+      renderComponent(discussionPostId);
+      expect(store.getState().tours.tours[1].enabled)
+        .toBeTruthy();
+      container.unmount();
+      expect(store.getState().tours.tours[1].enabled)
+        .toBeFalsy();
     });
   });
 });
