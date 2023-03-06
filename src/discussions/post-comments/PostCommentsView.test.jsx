@@ -87,6 +87,12 @@ function mockAxiosReturnPagedCommentsResponses() {
   }
 }
 
+async function getThreadAPIResponse(threadId, topicId) {
+  axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
+    .reply(200, Factory.build('thread', { id: threadId, topic_id: topicId }));
+  await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
+}
+
 function renderComponent(postId) {
   const wrapper = render(
     <IntlProvider locale="en">
@@ -112,7 +118,6 @@ function renderComponent(postId) {
 }
 
 describe('PostView', () => {
-  const threadId = 'thread-1';
   beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {
@@ -126,34 +131,28 @@ describe('PostView', () => {
     store = initializeStore();
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
-      .reply(200, Factory.build('thread'));
 
-    executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+    axiosMock.onGet(topicsApiUrl)
+      .reply(200, {
+        non_courseware_topics: Factory.buildList('topic', 1, {}, { topicPrefix: 'non-courseware-' }),
+        courseware_topics: Factory.buildList('category', 1, {}, { name: 'courseware' }),
+      });
+    executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
   });
 
   it('should show Topic Info for non-courseware topics', async () => {
-    axiosMock.onGet(topicsApiUrl)
-      .reply(200, {
-        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'test-' }),
-        courseware_topics: Factory.buildList('category', 2, {}, { topicPrefix: 'test-' }),
-      });
-    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
-    renderComponent(threadId);
+    await getThreadAPIResponse('thread-1', 'non-courseware-topic-1');
+    renderComponent(discussionPostId);
     expect(await screen.findByText('Related to')).toBeInTheDocument();
-    expect(await screen.findByText('test-topic 1')).toBeInTheDocument();
+    expect(await screen.findByText('non-courseware-topic 1')).toBeInTheDocument();
   });
 
   it('should show Topic Info for courseware topics with category', async () => {
-    axiosMock.onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: Factory.buildList('category', 2, {}, { name: 'test' }),
-        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'test-' }),
-      });
-    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
-    renderComponent(threadId);
+    await getThreadAPIResponse('thread-2', 'courseware-topic-2');
+
+    renderComponent('thread-2');
     expect(await screen.findByText('Related to')).toBeInTheDocument();
-    expect(await screen.findByText('category-2 / test-topic 1')).toBeInTheDocument();
+    expect(await screen.findByText('category-1 / courseware-topic 2')).toBeInTheDocument();
   });
 });
 
