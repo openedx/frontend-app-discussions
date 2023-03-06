@@ -11,6 +11,7 @@ import { PostEditor } from '../posts';
 
 function DiscussionContent() {
   const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
+  console.log('DiscussionSidebar');
 
   return (
     <div className="d-flex bg-light-400 flex-column w-75 w-xs-100 w-xl-75 align-items-center">
