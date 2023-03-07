@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -42,13 +42,14 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
-  const handleAbusedFlag = () => {
+
+  const handleAbusedFlag = useCallback(() => {
     if (post.abuseFlagged) {
       dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  };
+  }, [dispatch, post.abuseFlagged, post.id, showReportConfirmation]);
 
   const handleDeleteConfirmation = async () => {
     await dispatch(removeThread(post.id));
@@ -64,7 +65,7 @@ function Post({
     hideReportConfirmation();
   };
 
-  const actionHandlers = {
+  const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
       pathname: `${location.pathname}/edit`,
@@ -82,7 +83,19 @@ function Post({
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => handleAbusedFlag(),
-  };
+  }), [
+    showDeleteConfirmation,
+    history,
+    location,
+    post.closed,
+    post.id,
+    post.pinned,
+    reasonCodesEnabled,
+    dispatch,
+    showClosePostModal,
+    courseId,
+    handleAbusedFlag,
+  ]);
 
   const getTopicCategoryName = topicData => (
     topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId

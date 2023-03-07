@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,13 +31,13 @@ function Reply({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
 
-  const handleAbusedFlag = () => {
+  const handleAbusedFlag = useCallback(() => {
     if (reply.abuseFlagged) {
       dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  };
+  }, [dispatch, reply.abuseFlagged, reply.id, showReportConfirmation]);
 
   const handleDeleteConfirmation = () => {
     dispatch(removeComment(reply.id));
@@ -49,7 +49,7 @@ function Reply({
     hideReportConfirmation();
   };
 
-  const actionHandlers = {
+  const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(
       reply.id,
@@ -58,7 +58,8 @@ function Reply({
     )),
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => handleAbusedFlag(),
-  };
+  }), [dispatch, handleAbusedFlag, reply.endorsed, reply.id, showDeleteConfirmation]);
+
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(reply);
