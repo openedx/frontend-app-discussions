@@ -21,6 +21,7 @@ import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { fetchUserDiscussionsToursSuccess } from '../tours/data';
+import { selectTours } from '../tours/data/selectors';
 import { getCommentsApiUrl } from './data/api';
 import { removeComment } from './data/thunks';
 
@@ -42,6 +43,7 @@ let store;
 let axiosMock;
 let testLocation;
 let container;
+let unmount;
 
 function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
@@ -120,6 +122,7 @@ function renderComponent(postId) {
     </IntlProvider>,
   );
   container = wrapper.container;
+  unmount = wrapper.unmount;
 }
 
 describe('PostView', () => {
@@ -860,10 +863,11 @@ describe('ThreadView', () => {
       }];
       await store.dispatch(fetchUserDiscussionsToursSuccess(tourData));
       renderComponent(discussionPostId);
-      expect(store.getState().tours.tours[1].enabled)
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      expect(selectTours(store.getState()).find(item => item.tourName === 'response_sort').enabled)
         .toBeTruthy();
-      container.unmount();
-      expect(store.getState().tours.tours[1].enabled)
+      await unmount();
+      expect(selectTours(store.getState()).find(item => item.tourName === 'response_sort').enabled)
         .toBeFalsy();
     });
   });
