@@ -20,8 +20,10 @@ import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
 import { fetchCourseTopics } from '../topics/data/thunks';
-import { fetchUserDiscussionsToursSuccess } from '../tours/data';
+import { getDiscussionTourUrl } from '../tours/data/api';
 import { selectTours } from '../tours/data/selectors';
+import { fetchDiscussionTours } from '../tours/data/thunks';
+import discussionTourFactory from '../tours/data/tours.factory';
 import { getCommentsApiUrl } from './data/api';
 import { removeComment } from './data/thunks';
 
@@ -758,7 +760,22 @@ describe('ThreadView', () => {
         .toBeInTheDocument();
     });
   });
+
   describe('for comments sort', () => {
+    const getDropdown = async () => {
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /Oldest first/i }));
+      });
+      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
+
+      expect(dropdown)
+        .toBeInTheDocument();
+      return dropdown;
+    };
+
     it('should show sort dropdown if there are endorse or unendorsed comments', async () => {
       renderComponent(discussionPostId);
 
@@ -790,32 +807,14 @@ describe('ThreadView', () => {
     });
 
     it('should have only two options', async () => {
-      renderComponent(discussionPostId);
-
-      await waitFor(() => screen.findByTestId('comment-comment-1'));
-      await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /Oldest first/i }));
-      });
-      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
-
-      expect(dropdown)
-        .toBeInTheDocument();
+      const dropdown = await getDropdown();
       expect(await within(dropdown)
         .getAllByRole('button'))
         .toHaveLength(2);
     });
 
     it('should be selected Oldest first and auto focus', async () => {
-      renderComponent(discussionPostId);
-
-      await waitFor(() => screen.findByTestId('comment-comment-1'));
-      await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /Oldest first/i }));
-      });
-      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
-
-      expect(dropdown)
-        .toBeInTheDocument();
+      const dropdown = await getDropdown();
       expect(within(dropdown)
         .getByRole('button', { name: /Oldest first/i }))
         .toBeInTheDocument();
@@ -848,26 +847,27 @@ describe('ThreadView', () => {
         .toBeTruthy();
     });
     test('successfully handles tour state update', async () => {
-      const tourData = [{
-        id: 15,
-        tourName: 'not_responded_filter',
-        showTour: false,
-        enabled: true,
-        user: 8,
-      }, {
-        id: 16,
-        tourName: 'response_sort',
-        showTour: false,
-        enabled: true,
-        user: 8,
-      }];
-      await store.dispatch(fetchUserDiscussionsToursSuccess(tourData));
+      const names = ['not_responded_filter', 'response_sort'];
+      const tourData = discussionTourFactory.buildList(2, {}, { tourNameList: names });
+
+      const url = getDiscussionTourUrl();
+      await axiosMock.onGet(url, {})
+        .reply(200, tourData);
+
+      await executeThunk(fetchDiscussionTours(), store.dispatch, store.getState);
+
       renderComponent(discussionPostId);
       await waitFor(() => screen.findByTestId('comment-comment-1'));
-      expect(selectTours(store.getState()).find(item => item.tourName === 'response_sort').enabled)
+
+      const responseSortTour = () => selectTours(store.getState())
+        .find(item => item.tourName === 'response_sort');
+
+      expect(responseSortTour().enabled)
         .toBeTruthy();
+
       await unmount();
-      expect(selectTours(store.getState()).find(item => item.tourName === 'response_sort').enabled)
+
+      expect(responseSortTour().enabled)
         .toBeFalsy();
     });
   });

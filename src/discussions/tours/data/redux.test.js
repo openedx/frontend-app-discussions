@@ -47,7 +47,7 @@ describe('DiscussionToursThunk', () => {
   });
 
   it('dispatches get request, success actions', async () => {
-    const mockData = discussionTourFactory.buildList(2);
+    const mockData = discussionTourFactory.buildList(2, {}, { tourNameList: [] });
     mockAxios.onGet(url)
       .reply(200, mockData);
 
@@ -83,7 +83,7 @@ describe('DiscussionToursThunk', () => {
   });
 
   it('dispatches put request, success actions', async () => {
-    const mockData = discussionTourFactory.build();
+    const mockData = discussionTourFactory.build({}, { tourNameList: [] });
     mockAxios.onPut(`${url}${1}`)
       .reply(200, mockData);
 
