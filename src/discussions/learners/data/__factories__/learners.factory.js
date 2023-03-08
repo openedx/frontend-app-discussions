@@ -13,9 +13,9 @@ Factory.define('learner')
   });
 
 Factory.define('learnersResult')
-  .option('count', null, 3)
-  .option('page', null, 1)
-  .option('pageSize', null, 5)
+  .option('count', null)
+  .option('page', null)
+  .option('pageSize', null)
   .option('courseId', null, 'course-v1:Test+TestX+Test_Course')
   .option('activeFlags', null, 0)
   .attr(
