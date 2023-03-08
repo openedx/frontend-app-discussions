@@ -740,40 +740,25 @@ describe('ThreadView', () => {
     });
   });
 
-  describe('for comments replies', () => {
+  describe('For comments replies', () => {
     it('shows delete confirmation modal', async () => {
       renderComponent(discussionPostId);
+
       const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
-      await act(async () => {
-        fireEvent.click(
-          within(reply)
-            .getByRole('button', { name: /actions menu/i }),
-        );
-      });
-      await act(async () => {
-        fireEvent.click(screen.queryByRole('button', { name: /Delete/i }));
-      });
-      expect(screen.queryByRole('dialog', {
-        name: /Delete/i,
-        exact: false,
-      }))
-        .toBeInTheDocument();
+      await act(async () => { fireEvent.click(within(reply).getByRole('button', { name: /actions menu/i })); });
+      await act(async () => { fireEvent.click(screen.queryByRole('button', { name: /Delete/i })); });
+
+      expect(screen.queryByRole('dialog', { name: /Delete/i, exact: false })).toBeInTheDocument();
     });
   });
 
   describe('for comments sort', () => {
-    const getDropdown = async () => {
+    const getCommentSortDropdown = async () => {
       renderComponent(discussionPostId);
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
-      await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /Oldest first/i }));
-      });
-      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
-
-      expect(dropdown)
-        .toBeInTheDocument();
-      return dropdown;
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Oldest first/i })); });
+      return waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
     };
 
     it('should show sort dropdown if there are endorse or unendorsed comments', async () => {
@@ -807,68 +792,42 @@ describe('ThreadView', () => {
     });
 
     it('should have only two options', async () => {
-      const dropdown = await getDropdown();
-      expect(await within(dropdown)
-        .getAllByRole('button'))
-        .toHaveLength(2);
+      const dropdown = await getCommentSortDropdown();
+
+      expect(dropdown).toBeInTheDocument();
+      expect(await within(dropdown).getAllByRole('button')).toHaveLength(2);
     });
 
     it('should be selected Oldest first and auto focus', async () => {
-      const dropdown = await getDropdown();
-      expect(within(dropdown)
-        .getByRole('button', { name: /Oldest first/i }))
-        .toBeInTheDocument();
-      expect(within(dropdown)
-        .getByRole('button', { name: /Oldest first/i }))
-        .toHaveFocus();
-      expect(within(dropdown)
-        .getByRole('button', { name: /Newest first/i }))
-        .not
-        .toHaveFocus();
+      const dropdown = await getCommentSortDropdown();
+
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toBeInTheDocument();
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toHaveFocus();
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).not.toHaveFocus();
     });
 
     test('successfully handles sort state update', async () => {
-      renderComponent(discussionPostId);
+      const dropdown = await getCommentSortDropdown();
 
-      expect(store.getState().comments.sortOrder)
-        .toBeFalsy();
+      expect(store.getState().comments.sortOrder).toBeFalsy();
+      await act(async () => { fireEvent.click(within(dropdown).getByRole('button', { name: /Newest first/i })); });
 
-      await waitFor(() => screen.findByTestId('comment-comment-1'));
-      await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /Oldest first/i }));
-      });
-      const dropdown = await waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
-      await act(async () => {
-        fireEvent.click(within(dropdown)
-          .getByRole('button', { name: /Newest first/i }));
-      });
-
-      expect(store.getState().comments.sortOrder)
-        .toBeTruthy();
+      expect(store.getState().comments.sortOrder).toBeTruthy();
     });
+
     test('successfully handles tour state update', async () => {
-      const names = ['not_responded_filter', 'response_sort'];
-      const tourData = discussionTourFactory.buildList(2, {}, { tourNameList: names });
-
-      const url = getDiscussionTourUrl();
-      await axiosMock.onGet(url, {})
-        .reply(200, tourData);
-
+      const tourName = 'response_sort';
+      await axiosMock.onGet(getDiscussionTourUrl(), {}).reply(200, [discussionTourFactory.build({ tourName })]);
       await executeThunk(fetchDiscussionTours(), store.dispatch, store.getState);
 
       renderComponent(discussionPostId);
+
       await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const responseSortTour = () => selectTours(store.getState()).find(item => item.tourName === 'response_sort');
 
-      const responseSortTour = () => selectTours(store.getState())
-        .find(item => item.tourName === 'response_sort');
-
-      expect(responseSortTour().enabled)
-        .toBeTruthy();
-
+      expect(responseSortTour().enabled).toBeTruthy();
       await unmount();
-
-      expect(responseSortTour().enabled)
-        .toBeFalsy();
+      expect(responseSortTour().enabled).toBeFalsy();
     });
   });
 });
