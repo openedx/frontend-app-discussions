@@ -64,9 +64,9 @@ describe('LearnersView', () => {
     axiosMock.onGet(`${coursesApiUrl}${courseId}/activity_stats/`)
       .reply(() => [200, learnersData]);
     const learnersProfile = Factory.build('learnersProfile', {}, {
-      username: ['leaner-1', 'leaner-2', 'leaner-3'],
+      username: ['learner-1', 'learner-2', 'learner-3'],
     });
-    axiosMock.onGet(`${userProfileApiUrl}?username=leaner-1,leaner-2,leaner-3`)
+    axiosMock.onGet(`${userProfileApiUrl}?username=learner-1,learner-2,learner-3`)
       .reply(() => [200, learnersProfile.profiles]);
     await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
   });
