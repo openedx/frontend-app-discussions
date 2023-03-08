@@ -5,25 +5,22 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
-import { executeThunk, setupLearnerMockResponse } from '../../../test-utils';
+import { executeThunk } from '../../../test-utils';
+import { setupLearnerMockResponse } from '../test-utils';
 import { setPostFilter, setSortedBy, setUsernameSearch } from './slices';
 import { fetchLearners } from './thunks';
 
 import './__factories__';
 
-const courseId = 'course-v1:edX+DemoX+Demo_Course';
-
 let axiosMock;
 let store;
-const username = 'abc123';
-const learnerCount = 6;
 
 describe('Learner redux test cases', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
-        username,
+        username: 'abc123',
         administrator: true,
         roles: [],
       },
@@ -38,7 +35,10 @@ describe('Learner redux test cases', () => {
   });
 
   test('Successfully load initial states in redux', async () => {
-    executeThunk(fetchLearners(courseId, { usernameSearch: 'learner-1' }), store.dispatch, store.getState);
+    executeThunk(
+      fetchLearners('course-v1:edX+DemoX+Demo_Course', { usernameSearch: 'learner-1' }),
+      store.dispatch, store.getState,
+    );
     const { learners } = store.getState();
 
     expect(learners.status).toEqual('in-progress');
@@ -57,7 +57,7 @@ describe('Learner redux test cases', () => {
 
   test('Successfully store a learner posts stats data as pages object in redux',
     async () => {
-      const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
+      const learners = await setupLearnerMockResponse();
       const page = learners.pages[0];
       const statsObject = page[0];
 
@@ -69,7 +69,7 @@ describe('Learner redux test cases', () => {
 
   test('Successfully store the nextPage, totalPages, totalLearners, and sortedBy data in redux',
     async () => {
-      const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
+      const learners = await setupLearnerMockResponse();
 
       expect(learners.nextPage).toEqual(2);
       expect(learners.totalPages).toEqual(2);
@@ -78,7 +78,7 @@ describe('Learner redux test cases', () => {
     });
 
   test('Successfully updated the learner\'s sort data in redux', async () => {
-    const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
+    const learners = await setupLearnerMockResponse();
 
     expect(learners.sortedBy).toEqual('activity');
     expect(learners.pages[0]).toHaveLength(3);
@@ -91,7 +91,7 @@ describe('Learner redux test cases', () => {
   });
 
   test('Successfully updated the post-filter data in redux', async () => {
-    const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
+    const learners = await setupLearnerMockResponse();
     const filter = {
       ...learners.postFilter,
       postType: 'discussion',
@@ -108,7 +108,7 @@ describe('Learner redux test cases', () => {
 
   test('Successfully update the learner\'s search query in redux when searching for a learner',
     async () => {
-      const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
+      const learners = await setupLearnerMockResponse();
 
       expect(learners.usernameSearch).toBeNull();
 

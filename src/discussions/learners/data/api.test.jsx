@@ -4,31 +4,24 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
-import { initializeStore } from '../../../store';
-import { setupLearnerMockResponse, setupPostsMockResponse } from '../../../test-utils';
+import { setupLearnerMockResponse, setupPostsMockResponse } from '../test-utils';
 
 import './__factories__';
 
-const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const courseId2 = 'course-v1:edX+TestX+Test_Course2';
-
 let axiosMock;
-let store;
-const username = 'abc123';
-const learnerCount = 3;
 
 describe('Learner api test cases', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
-        username,
+        username: 'abc123',
         administrator: true,
         roles: [],
       },
     });
     Factory.resetAll();
-    store = initializeStore();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });
 
@@ -36,18 +29,10 @@ describe('Learner api test cases', () => {
     axiosMock.reset();
   });
 
-  test('Successfully get and store API response for the learner\'s list and learners posts in redux',
+  it('Successfully get and store API response for the learner\'s list and learners posts in redux',
     async () => {
-      const learners = await setupLearnerMockResponse(courseId, 200, axiosMock, store, learnerCount, courseId);
-      const threads = await setupPostsMockResponse(
-        courseId,
-        200,
-        { status: 'all' },
-        axiosMock,
-        store,
-        courseId,
-        username,
-      );
+      const learners = await setupLearnerMockResponse();
+      const threads = await setupPostsMockResponse();
 
       expect(learners.status).toEqual('successful');
       expect(Object.values(learners.learnerProfiles)).toHaveLength(3);
@@ -55,63 +40,39 @@ describe('Learner api test cases', () => {
       expect(Object.values(threads.threadsById)).toHaveLength(2);
     });
 
-  test.each([
+  it.each([
     { status: 'statusUnread', search: 'Title', cohort: 'post' },
     { status: 'statusUnanswered', search: 'Title', cohort: 'post' },
     { status: 'statusReported', search: 'Title', cohort: 'post' },
     { status: 'statusUnresponded', search: 'Title', cohort: 'post' },
-  ])('Successfully fetch user posts based on \'$status\', \'$search\' , and \'$cohort\'  filters',
+  ])('Successfully fetch user posts based on %s filters',
     async ({ status, search, cohort }) => {
-      const threads = await setupPostsMockResponse(
-        courseId,
-        200,
-        { status, search, cohort },
-        axiosMock,
-        store,
-        courseId,
-        username,
-      );
+      const threads = await setupPostsMockResponse({ filters: { status, search, cohort } });
 
       expect(threads.status).toEqual('successful');
       expect(Object.values(threads.threadsById)).toHaveLength(2);
     });
 
-  it('failed to fetch learners', async () => {
-    const learners = await setupLearnerMockResponse(courseId2, 200, axiosMock, store, learnerCount, courseId);
+  it('Failed to fetch learners', async () => {
+    const learners = await setupLearnerMockResponse({ learnerCourseId: courseId2 });
 
     expect(learners.status).toEqual('failed');
   });
 
-  it('denied to fetch learners', async () => {
-    const learners = await setupLearnerMockResponse(courseId, 403, axiosMock, store, learnerCount, courseId);
+  it('Denied to fetch learners', async () => {
+    const learners = await setupLearnerMockResponse({ statusCode: 403 });
 
     expect(learners.status).toEqual('denied');
   });
 
-  it('failed to fetch learnerPosts', async () => {
-    const threads = await setupPostsMockResponse(
-      courseId2,
-      200,
-      { status: 'all' },
-      axiosMock,
-      store,
-      courseId,
-      username,
-    );
+  it('Failed to fetch learnerPosts', async () => {
+    const threads = await setupPostsMockResponse({ learnerCourseId: courseId2 });
 
     expect(threads.status).toEqual('failed');
   });
 
-  it('denied to fetch learnerPosts', async () => {
-    const threads = await setupPostsMockResponse(
-      courseId,
-      403,
-      { status: 'all' },
-      axiosMock,
-      store,
-      courseId,
-      username,
-    );
+  it('Denied to fetch learnerPosts', async () => {
+    const threads = await setupPostsMockResponse({ statusCode: 403 });
 
     expect(threads.status).toEqual('denied');
   });
