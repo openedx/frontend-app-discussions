@@ -766,13 +766,10 @@ describe('ThreadView', () => {
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const sortWrapper = container.querySelector('.comments-sort');
-      const sortDropDown = within(sortWrapper)
-        .getByRole('button', { name: /Oldest first/i });
+      const sortDropDown = within(sortWrapper).getByRole('button', { name: /Oldest first/i });
 
-      expect(comment)
-        .toBeInTheDocument();
-      expect(sortDropDown)
-        .toBeInTheDocument();
+      expect(comment).toBeInTheDocument();
+      expect(sortDropDown).toBeInTheDocument();
     });
 
     it('should not show sort dropdown if there is no response', async () => {
@@ -780,15 +777,11 @@ describe('ThreadView', () => {
       renderComponent(discussionPostId);
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
-      axiosMock.onDelete(`${commentsApiUrl}${commentId}/`)
-        .reply(201);
+      axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(201);
       await executeThunk(removeComment(commentId, discussionPostId), store.dispatch, store.getState);
 
-      expect(await waitFor(() => screen.findByText('No responses', { exact: true })))
-        .toBeInTheDocument();
-      expect(container.querySelector('.comments-sort'))
-        .not
-        .toBeInTheDocument();
+      expect(await waitFor(() => screen.findByText('No responses', { exact: true }))).toBeInTheDocument();
+      expect(container.querySelector('.comments-sort')).not.toBeInTheDocument();
     });
 
     it('should have only two options', async () => {
