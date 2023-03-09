@@ -39,7 +39,7 @@ const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
-const reverseOrder = false;
+const reverseOrder = true;
 const enableInContextSidebar = false;
 let store;
 let axiosMock;
@@ -757,7 +757,7 @@ describe('ThreadView', () => {
       renderComponent(discussionPostId);
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
-      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Oldest first/i })); });
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Newest first/i })); });
       return waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
     };
 
@@ -766,7 +766,7 @@ describe('ThreadView', () => {
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const sortWrapper = container.querySelector('.comments-sort');
-      const sortDropDown = within(sortWrapper).getByRole('button', { name: /Oldest first/i });
+      const sortDropDown = within(sortWrapper).getByRole('button', { name: /Newest first/i });
 
       expect(comment).toBeInTheDocument();
       expect(sortDropDown).toBeInTheDocument();
@@ -791,21 +791,21 @@ describe('ThreadView', () => {
       expect(await within(dropdown).getAllByRole('button')).toHaveLength(2);
     });
 
-    it('should be selected Oldest first and auto focus', async () => {
+    it('should be selected Newest first and auto focus', async () => {
       const dropdown = await getCommentSortDropdown();
 
-      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toBeInTheDocument();
-      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).toHaveFocus();
-      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).not.toHaveFocus();
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).toBeInTheDocument();
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).toHaveFocus();
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).not.toHaveFocus();
     });
 
     test('successfully handles sort state update', async () => {
       const dropdown = await getCommentSortDropdown();
 
-      expect(store.getState().comments.sortOrder).toBeFalsy();
-      await act(async () => { fireEvent.click(within(dropdown).getByRole('button', { name: /Newest first/i })); });
-
       expect(store.getState().comments.sortOrder).toBeTruthy();
+      await act(async () => { fireEvent.click(within(dropdown).getByRole('button', { name: /Oldest first/i })); });
+
+      expect(store.getState().comments.sortOrder).toBeFalsy();
     });
 
     test('successfully handles tour state update', async () => {

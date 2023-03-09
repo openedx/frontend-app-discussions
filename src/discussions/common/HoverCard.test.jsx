@@ -27,7 +27,7 @@ const threadsApiUrl = getThreadsApiUrl();
 const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
-const reverseOrder = false;
+const reverseOrder = true;
 const enableInContextSidebar = false;
 let store;
 let axiosMock;

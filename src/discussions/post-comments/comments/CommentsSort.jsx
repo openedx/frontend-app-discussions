@@ -6,18 +6,14 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Dropdown, ModalPopup, useToggle,
 } from '@edx/paragon';
-import {
-  ExpandLess, ExpandMore,
-} from '@edx/paragon/icons';
+import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 
 import { updateUserDiscussionsTourByName } from '../../tours/data';
 import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
 
-function CommentSortDropdown({
-  intl,
-}) {
+function CommentSortDropdown({ intl }) {
   const dispatch = useDispatch();
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
