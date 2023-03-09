@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
@@ -12,24 +17,22 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
-import { getCourseConfigApiUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
-import { getCoursesApiUrl } from './data/api';
+import { learnerPostsApiUrl } from './data/api';
 import LearnerPostsView from './LearnerPostsView';
+import { setUpPrivilages } from './test-utils';
 
 import './data/__factories__';
 
 let store;
 let axiosMock;
-const coursesApiUrl = getCoursesApiUrl();
-const courseConfigApiUrl = getCourseConfigApiUrl();
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const username = 'abc123';
+let container;
+let lastLocation;
 
-function renderComponent(path = `/${courseId}/learners/${username}/posts`) {
-  return render(
+function renderComponent() {
+  const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
@@ -38,18 +41,25 @@ function renderComponent(path = `/${courseId}/learners/${username}/posts`) {
             courseId,
           }}
         >
-          <MemoryRouter initialEntries={[path]}>
-            <Route path={path}>
+          <MemoryRouter initialEntries={[`/${courseId}/learners/${username}/posts`]}>
+            <Route path="/:courseId/learners/:learnerUsername/posts">
               <LearnerPostsView />
             </Route>
+            <Route
+              render={({ location }) => {
+                lastLocation = location;
+                return null;
+              }}
+            />
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
-describe('LearnerPostsView', () => {
+describe('Learner Posts View', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
@@ -62,31 +72,71 @@ describe('LearnerPostsView', () => {
 
     store = initializeStore();
     Factory.resetAll();
-    const learnerPosts = Factory.build('learnerPosts', {}, {
-      abuseFlaggedCount: 1,
-    });
-    const apiUrl = `${coursesApiUrl}${courseId}/learner/`;
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onGet(apiUrl, { username, count_flagged: true })
-      .reply(() => [200, learnerPosts]);
+    axiosMock.onGet(learnerPostsApiUrl(courseId), { username, count_flagged: true })
+      .reply(() => [200, Factory.build('learnerPosts', {}, {
+        abuseFlaggedCount: 1,
+      })]);
   });
 
-  describe('Basic', () => {
-    test('Reported icon is visible to moderator for post with reported comment', async () => {
-      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-        has_moderation_privileges: true,
-      });
-      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
-      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
-      await act(async () => {
-        renderComponent();
-      });
-      expect(screen.queryAllByTestId('reported-post')[0]).toBeInTheDocument();
+  it('Reported icon is visible to moderator for post with reported comment', async () => {
+    await setUpPrivilages(axiosMock, store, true);
+    await act(async () => {
+      renderComponent(true);
     });
 
-    test('Reported icon is not visible to learner for post with reported comment', async () => {
+    expect(screen.queryAllByTestId('reported-post')[0]).toBeInTheDocument();
+  });
+
+  it('Reported icon is not visible to learner for post with reported comment', async () => {
+    await renderComponent();
+    expect(screen.queryByTestId('reported-post')).not.toBeInTheDocument();
+  });
+
+  it('Learner title bar should display a title bar, a learner name, and a back button', async () => {
+    await renderComponent();
+
+    const titleBar = await container.querySelector('.discussion-posts').children[0];
+    const learnerName = await screen.queryByText('Activity for Abc123');
+    const backButton = await screen.getByLabelText('Back');
+
+    expect(titleBar).toBeInTheDocument();
+    expect(learnerName).toBeInTheDocument();
+    expect(backButton).toBeInTheDocument();
+  });
+
+  it('Learner title bar should redirect to the learners list when clicking on the back button',
+    async () => {
       await renderComponent();
-      expect(screen.queryByTestId('reported-post')).not.toBeInTheDocument();
+
+      const backButton = await screen.getByLabelText('Back');
+
+      await act(async () => fireEvent.click(backButton));
+      await waitFor(async () => {
+        expect(lastLocation.pathname.endsWith('/learners')).toBeTruthy();
+      });
+    });
+
+  it('It should display a post-filter bar and All posts sorted by recent activity text.', async () => {
+    await setUpPrivilages(axiosMock, store, false);
+    await act(async () => {
+      renderComponent();
+    });
+    const filterBar = await container.querySelector('.filter-bar');
+    const recentActivity = screen.getByText('All posts sorted by recent activity');
+
+    expect(filterBar).toBeInTheDocument();
+    expect(recentActivity).toBeInTheDocument();
+  });
+
+  it(`It should display a list of the interactive posts of a selected learner and the posts count
+     should be equal to the API response count.`, async () => {
+    await act(async () => renderComponent());
+    await waitFor(async () => {
+      const posts = await container.querySelectorAll('.discussion-post');
+
+      expect(posts).toHaveLength(2);
+      expect(posts).toHaveLength(Object.values(store.getState().threads.threadsById).length);
     });
   });
 });
