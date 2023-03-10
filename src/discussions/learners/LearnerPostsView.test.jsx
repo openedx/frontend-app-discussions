@@ -17,8 +17,10 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
+import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
 import { learnerPostsApiUrl } from './data/api';
+import { fetchUserPosts } from './data/thunks';
 import LearnerPostsView from './LearnerPostsView';
 import { setUpPrivilages } from './test-utils';
 
@@ -31,7 +33,7 @@ const username = 'abc123';
 let container;
 let lastLocation;
 
-function renderComponent() {
+async function renderComponent() {
   const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
@@ -77,66 +79,63 @@ describe('Learner Posts View', () => {
       .reply(() => [200, Factory.build('learnerPosts', {}, {
         abuseFlaggedCount: 1,
       })]);
+    await executeThunk(fetchUserPosts(courseId), store.dispatch, store.getState);
   });
 
-  it('Reported icon is visible to moderator for post with reported comment', async () => {
+  test('Reported icon is visible to moderator for post with reported comment', async () => {
     await setUpPrivilages(axiosMock, store, true);
-    await act(async () => {
-      renderComponent(true);
-    });
+    await waitFor(() => { renderComponent(); });
 
-    expect(screen.queryAllByTestId('reported-post')[0]).toBeInTheDocument();
+    expect(container.querySelector('[data-testid="reported-post"]')).toBeInTheDocument();
   });
 
-  it('Reported icon is not visible to learner for post with reported comment', async () => {
+  test('Reported icon is not visible to learner for post with reported comment', async () => {
     await renderComponent();
     expect(screen.queryByTestId('reported-post')).not.toBeInTheDocument();
   });
 
-  it('Learner title bar should display a title bar, a learner name, and a back button', async () => {
+  test('Learner title bar should display a title bar, a learner name, and a back button', async () => {
     await renderComponent();
 
-    const titleBar = await container.querySelector('.discussion-posts').children[0];
-    const learnerName = await screen.queryByText('Activity for Abc123');
-    const backButton = await screen.getByLabelText('Back');
+    const titleBar = container.querySelector('.discussion-posts:first-child');
+    const learnerName = screen.queryByText('Activity for Abc123');
+    const backButton = screen.getByLabelText('Back');
 
     expect(titleBar).toBeInTheDocument();
     expect(learnerName).toBeInTheDocument();
     expect(backButton).toBeInTheDocument();
   });
 
-  it('Learner title bar should redirect to the learners list when clicking on the back button',
+  test('Learner title bar should redirect to the learners list when clicking on the back button',
     async () => {
       await renderComponent();
 
-      const backButton = await screen.getByLabelText('Back');
+      const backButton = screen.getByLabelText('Back');
 
-      await act(async () => fireEvent.click(backButton));
-      await waitFor(async () => {
+      await act(() => fireEvent.click(backButton));
+      await waitFor(() => {
         expect(lastLocation.pathname.endsWith('/learners')).toBeTruthy();
       });
     });
 
-  it('It should display a post-filter bar and All posts sorted by recent activity text.', async () => {
-    await setUpPrivilages(axiosMock, store, false);
-    await act(async () => {
-      renderComponent();
-    });
-    const filterBar = await container.querySelector('.filter-bar');
+  it('should display a post-filter bar and All posts sorted by recent activity text.', async () => {
+    await renderComponent();
+
+    const filterBar = container.querySelector('.filter-bar');
     const recentActivity = screen.getByText('All posts sorted by recent activity');
 
     expect(filterBar).toBeInTheDocument();
     expect(recentActivity).toBeInTheDocument();
   });
 
-  it(`It should display a list of the interactive posts of a selected learner and the posts count
+  it(`should display a list of the interactive posts of a selected learner and the posts count
      should be equal to the API response count.`, async () => {
-    await act(async () => renderComponent());
-    await waitFor(async () => {
-      const posts = await container.querySelectorAll('.discussion-post');
-
-      expect(posts).toHaveLength(2);
-      expect(posts).toHaveLength(Object.values(store.getState().threads.threadsById).length);
+    await waitFor(() => {
+      renderComponent();
     });
+    const posts = await container.querySelectorAll('.discussion-post');
+
+    expect(posts).toHaveLength(2);
+    expect(posts).toHaveLength(Object.values(store.getState().threads.threadsById).length);
   });
 });
