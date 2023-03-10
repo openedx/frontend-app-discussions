@@ -55,6 +55,7 @@ export async function getCommentResponses(
   commentId, {
     page,
     pageSize,
+    reverseOrder,
   } = {},
 ) {
   const url = `${getCommentsApiUrl()}${commentId}/`;
@@ -62,6 +63,7 @@ export async function getCommentResponses(
     page,
     pageSize,
     requestedFields: 'profile_image',
+    reverseOrder,
   });
   const { data } = await getAuthenticatedHttpClient()
     .get(url, { params });

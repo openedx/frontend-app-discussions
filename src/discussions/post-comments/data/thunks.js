@@ -106,11 +106,11 @@ export function fetchThreadComments(
   };
 }
 
-export function fetchCommentResponses(commentId, { page = 1 } = {}) {
+export function fetchCommentResponses(commentId, { page = 1, reverseOrder = true } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentResponsesRequest({ commentId }));
-      const data = await getCommentResponses(commentId, { page });
+      const data = await getCommentResponses(commentId, { page, reverseOrder });
       dispatch(fetchCommentResponsesSuccess({
         ...normaliseComments(camelCaseObject(data)),
         page,

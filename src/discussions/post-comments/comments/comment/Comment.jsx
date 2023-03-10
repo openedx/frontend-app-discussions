@@ -19,7 +19,12 @@ import { useUserCanAddThreadInBlackoutDate } from '../../../data/hooks';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
-import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../../data/selectors';
+import {
+  selectCommentCurrentPage,
+  selectCommentHasMorePages,
+  selectCommentResponses,
+  selectCommentSortOrder,
+} from '../../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../../data/thunks';
 import messages from '../../messages';
 import CommentEditor from './CommentEditor';
@@ -47,13 +52,17 @@ function Comment({
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const { courseId } = useContext(DiscussionContext);
+  const sortedOrder = useSelector(selectCommentSortOrder);
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
-    if (hasChildren && !currentPage && showFullThread) {
-      dispatch(fetchCommentResponses(comment.id, { page: 1 }));
+    if (hasChildren && showFullThread) {
+      dispatch(fetchCommentResponses(comment.id, {
+        page: 1,
+        reverseOrder: sortedOrder,
+      }));
     }
-  }, [comment.id]);
+  }, [comment.id, sortedOrder]);
 
   const actions = useActions({
     ...comment,
@@ -90,7 +99,10 @@ function Comment({
   }), [showDeleteConfirmation, dispatch, comment.id, comment.endorsed, comment.threadId, courseId, handleAbusedFlag]);
 
   const handleLoadMoreComments = () => (
-    dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
+    dispatch(fetchCommentResponses(comment.id, {
+      page: currentPage + 1,
+      reverseOrder: sortedOrder,
+    }))
   );
 
   return (

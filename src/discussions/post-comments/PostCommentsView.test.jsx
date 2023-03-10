@@ -82,6 +82,7 @@ function mockAxiosReturnPagedCommentsResponses() {
     page: undefined,
     page_size: undefined,
     requested_fields: 'profile_image',
+    reverse_order: true,
   };
 
   for (let page = 1; page <= 2; page++) {
