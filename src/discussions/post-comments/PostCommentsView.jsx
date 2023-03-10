@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -10,9 +9,7 @@ import {
 } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
-import {
-  EndorsementStatus, PostsPages, RequestStatus, ThreadType,
-} from '../../data/constants';
+import { EndorsementStatus, PostsPages, ThreadType } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
@@ -24,14 +21,12 @@ import { ResponseEditor } from './comments/comment';
 import CommentsSort from './comments/CommentsSort';
 import CommentsView from './comments/CommentsView';
 import { useCommentsCount, usePost } from './data/hooks';
-import { selectCommentsStatus } from './data/selectors';
 import messages from './messages';
 
 function PostCommentsView({ intl }) {
   const [isLoading, submitDispatch] = useDispatchWithState();
   const { postId } = useParams();
   const thread = usePost(postId);
-  const commentsStatus = useSelector(selectCommentsStatus);
   const commentsCount = useCommentsCount(postId);
   const history = useHistory();
   const location = useLocation();
@@ -40,7 +35,6 @@ function PostCommentsView({ intl }) {
   const {
     courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
-  const enableCommentsSort = false;
 
   useEffect(() => {
     if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
@@ -110,7 +104,7 @@ function PostCommentsView({ intl }) {
           />
         )}
       </div>
-      {!!commentsCount && commentsStatus === RequestStatus.SUCCESSFUL && enableCommentsSort && <CommentsSort />}
+      {!!commentsCount && <CommentsSort />}
       {thread.type === ThreadType.DISCUSSION && (
         <CommentsView
           postId={postId}

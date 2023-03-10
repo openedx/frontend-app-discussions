@@ -22,7 +22,7 @@ const commentsSlice = createSlice({
     postStatus: RequestStatus.SUCCESSFUL,
     pagination: {},
     responsesPagination: {},
-    sortOrder: false,
+    sortOrder: true,
   },
   reducers: {
     fetchCommentsRequest: (state) => {

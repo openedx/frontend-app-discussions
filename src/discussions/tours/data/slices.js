@@ -31,6 +31,12 @@ const userDiscussionsToursSlice = createSlice({
       state.loading = RequestStatus.SUCCESSFUL;
       state.error = null;
     },
+    updateUserDiscussionsTourByName: (state, action) => {
+      const tourIndex = state.tours.findIndex(tour => tour.tourName === action.payload.tourName);
+      state.tours[tourIndex] = { ...state.tours[tourIndex], ...action.payload };
+      state.loading = RequestStatus.SUCCESSFUL;
+      state.error = null;
+    },
   },
 });
 
@@ -39,6 +45,7 @@ export const {
   fetchUserDiscussionsToursSuccess,
   discussionsToursRequestError,
   updateUserDiscussionsTourSuccess,
+  updateUserDiscussionsTourByName,
 } = userDiscussionsToursSlice.actions;
 
 export const toursReducer = userDiscussionsToursSlice.reducer;
