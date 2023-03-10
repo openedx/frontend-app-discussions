@@ -32,8 +32,8 @@ const courseConfigApiUrl = getCourseConfigApiUrl();
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let container;
 
-async function renderComponent() {
-  const wrapper = await render(
+function renderComponent() {
+  const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{
@@ -53,7 +53,7 @@ async function renderComponent() {
   container = wrapper.container;
 }
 
-describe('Learners view test cases', () => {
+describe('LearnersView', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
@@ -96,40 +96,39 @@ describe('Learners view test cases', () => {
       learners_tab_enabled: true,
       user_is_privileged: true,
     });
-    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
+
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   }
 
-  it('Learners tab is disabled by default', async () => {
+  test('Learners tab is disabled by default', async () => {
     await setUpLearnerMockResponse();
-    await act(async () => {
-      await renderComponent();
-    });
-    expect(screen.queryByText(/Last active/i)).toBeFalsy();
+    await renderComponent();
+
+    expect(screen.queryByText('learner-1')).not.toBeInTheDocument();
   });
 
-  it('Learners tab is enabled', async () => {
+  test('Learners tab is enabled', async () => {
     await setUpLearnerMockResponse();
     await assignPrivilages();
-    await act(async () => {
-      await renderComponent();
+    await waitFor(() => {
+      renderComponent();
     });
+
+    expect(screen.queryByText('learner-1')).toBeInTheDocument();
   });
 
-  it('Most activity should be selected by default for the non-moderator role.', async () => {
+  test('Most activity should be selected by default for the non-moderator role.', async () => {
     await setUpLearnerMockResponse();
-    await act(async () => {
-      await renderComponent();
-    });
+    await renderComponent();
 
-    const filterBar = await container.querySelector('.collapsible-trigger');
+    const filterBar = container.querySelector('.collapsible-trigger');
 
     await act(async () => {
       fireEvent.click(filterBar);
     });
 
-    await waitFor(async () => {
-      const mostActivity = await screen.getByTestId('activity selected');
+    await waitFor(() => {
+      const mostActivity = screen.getByTestId('activity selected');
 
       expect(mostActivity).toBeInTheDocument();
     });
@@ -138,52 +137,47 @@ describe('Learners view test cases', () => {
   it.each([
     { searchBy: 'sort-recency', result: 0 },
     { searchBy: 'sort-activity', result: 3 },
-  ])('Successfully display learners by %s.', async ({ searchBy, result }) => {
+  ])('successfully display learners by %s.', async ({ searchBy, result }) => {
     await setUpLearnerMockResponse();
     await assignPrivilages();
+    await renderComponent();
 
-    await act(async () => {
-      await renderComponent();
-    });
-
-    const filterBar = await container.querySelector('.collapsible-trigger');
+    const filterBar = container.querySelector('.collapsible-trigger');
     await act(async () => {
       fireEvent.click(filterBar);
     });
 
     await waitFor(async () => {
-      const activity = await container.querySelector(`#${searchBy}`);
+      const activity = container.querySelector(`#${searchBy}`);
 
       await act(async () => {
         fireEvent.click(activity);
       });
-      await waitFor(async () => {
-        const learners = await container.querySelectorAll('.discussion-post') ?? [];
+      await waitFor(() => {
+        const learners = container.querySelectorAll('.discussion-post');
 
         expect(learners).toHaveLength(result);
       });
     });
   });
 
-  it('It should display a learner\'s list.', async () => {
+  it('should display a learner\'s list.', async () => {
     await setUpLearnerMockResponse();
     await assignPrivilages();
-
-    await act(async () => {
-      await renderComponent();
+    await waitFor(() => {
+      renderComponent();
     });
 
-    await waitFor(async () => {
-      const learners = await container.querySelectorAll('.discussion-post') ?? [];
-      const learnerAvatar = learners[0].querySelector('[alt=learner-1]');
-      const learnerTitle = within(learners[0]).queryByText('learner-1');
-      const stats = learners[0].querySelectorAll('.icon-size');
+    const learners = await container.querySelectorAll('.discussion-post');
+    const firstLearner = learners.item(0);
+    const learnerAvatar = firstLearner.querySelector('[alt=learner-1]');
+    const learnerTitle = within(firstLearner).queryByText('learner-1');
+    const stats = firstLearner.querySelectorAll('.icon-size');
 
-      expect(learners).toHaveLength(3);
-      expect(learnerAvatar).toBeInTheDocument();
-      expect(learnerTitle).toBeInTheDocument();
-      expect(stats).toHaveLength(2);
-    });
+    expect(learners).toHaveLength(3);
+    expect(learnerAvatar).toBeInTheDocument();
+    expect(learnerTitle).toBeInTheDocument();
+    expect(stats).toHaveLength(2);
   });
 
   it.each([
@@ -200,7 +194,7 @@ describe('Learners view test cases', () => {
       username:
         ['learner-1', 'learner-2'],
     },
-  ])('It should have a search bar with a clear button and \'$output\' results found text.',
+  ])('should have a search bar with a clear button and \'$output\' results found text.',
     async ({
       searchText, output, learnersCount, username,
     }) => {
@@ -208,53 +202,51 @@ describe('Learners view test cases', () => {
       await assignPrivilages();
       await renderComponent();
 
-      const searchField = await within(container).getByPlaceholderText('Search learners');
-      const searchButton = await within(container).getByTestId('search-icon');
+      const searchField = within(container).getByPlaceholderText('Search learners');
+      const searchButton = within(container).getByTestId('search-icon');
+
       await fireEvent.change(searchField, { target: { value: searchText } });
       await act(async () => {
         fireEvent.click(searchButton);
-        await setUpLearnerMockResponse(learnersCount, learnersCount, 1, username, searchText);
+        setUpLearnerMockResponse(learnersCount, learnersCount, 1, username, searchText);
       });
 
-      await waitFor(async () => {
+      await waitFor(() => {
         const clearButton = within(container).queryByText('Clear results');
         const searchMessage = within(container).queryByText(`${output} "${searchText}"`);
-        const units = container.querySelectorAll('.discussion-post') ?? [];
+        const leaners = container.querySelectorAll('.discussion-post') ?? [];
 
         expect(searchMessage).toBeInTheDocument();
         expect(clearButton).toBeInTheDocument();
-        expect(units).toHaveLength(learnersCount);
+        expect(leaners).toHaveLength(learnersCount);
       });
     });
 
-  it('When click on the clear button it should move to a list of all learners.', async () => {
+  test('When click on the clear button it should move to a list of all learners.', async () => {
     await setUpLearnerMockResponse();
     await assignPrivilages();
     await renderComponent();
 
-    const searchField = await within(container).getByPlaceholderText('Search learners');
-    const searchButton = await within(container).getByTestId('search-icon');
+    const searchField = within(container).getByPlaceholderText('Search learners');
+    const searchButton = within(container).getByTestId('search-icon');
+    let clearButton;
 
     await fireEvent.change(searchField, { target: { value: 'learner' } });
     await act(async () => {
       fireEvent.click(searchButton);
-      await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], 'learner');
+      setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], 'learner');
     });
 
-    await waitFor(async () => {
-      const clearButton = await within(container).queryByText('Clear results');
-
-      await act(async () => fireEvent.click(clearButton));
-      await waitFor(async () => {
-        await act(async () => {
-          await setUpLearnerMockResponse();
-        });
-        await waitFor(async () => {
-          const units = container.querySelectorAll('.discussion-post') ?? [];
-
-          expect(units).toHaveLength(3);
-        });
-      });
+    await waitFor(() => {
+      clearButton = within(container).queryByText('Clear results');
     });
+    await act(async () => fireEvent.click(clearButton));
+    await waitFor(() => {
+      setUpLearnerMockResponse();
+    });
+
+    const leaners = container.querySelectorAll('.discussion-post');
+
+    expect(leaners).toHaveLength(3);
   });
 });
