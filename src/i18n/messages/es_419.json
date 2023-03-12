@@ -208,5 +208,7 @@
   "tour.action.dismiss": "Descartar",
   "tour.action.end": "Okey",
   "tour.body.notRespondedFilter": "Ahora puede filtrar debates para encontrar publicaciones sin respuesta.",
-  "tour.title.notRespondedFilter": "¡Nueva opción de filtrado!"
+  "tour.title.notRespondedFilter": "¡Nueva opción de filtrado!",
+  "tour.body.responseSortTour": "Responses and comments are now sorted by newest first. Please use this option to change the sort order",
+  "tour.title.responseSortTour": "Sort Responses!"
 }

@@ -208,5 +208,7 @@
   "tour.action.dismiss": "İptal",
   "tour.action.end": "Tamam",
   "tour.body.notRespondedFilter": "Artık yanıt vermeyen iletileri bulmak için tartışmaları filtreleyebilirsiniz.",
-  "tour.title.notRespondedFilter": "Yeni filtreleme seçeneği!"
+  "tour.title.notRespondedFilter": "Yeni filtreleme seçeneği!",
+  "tour.body.responseSortTour": "Responses and comments are now sorted by newest first. Please use this option to change the sort order",
+  "tour.title.responseSortTour": "Sort Responses!"
 }
