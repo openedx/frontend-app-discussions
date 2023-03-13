@@ -5,6 +5,8 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { getDiscussionsConfigUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 import { getUserProfileApiUrl, learnerPostsApiUrl, learnersApiUrl } from './data/api';
 import { fetchLearners, fetchUserPosts } from './data/thunks';
 
@@ -49,4 +51,12 @@ export async function setupPostsMockResponse({
 
   await executeThunk(fetchUserPosts(courseId, { filters }), store.dispatch, store.getState);
   return store.getState().threads;
+}
+
+export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges) {
+  axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+    has_moderation_privileges: hasModerationPrivileges,
+  });
+
+  await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 }
