@@ -1,10 +1,7 @@
 import React from 'react';
 
 import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
+  fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -137,5 +134,36 @@ describe('Learner Posts View', () => {
 
     expect(posts).toHaveLength(2);
     expect(posts).toHaveLength(Object.values(store.getState().threads.threadsById).length);
+  });
+
+  it.each([
+    { searchBy: 'type-all', result: 2 },
+    { searchBy: 'type-discussions', result: 2 },
+    { searchBy: 'type-questions', result: 2 },
+    { searchBy: 'status-unread', result: 2 },
+    { searchBy: 'sort-comments', result: 2 },
+    { searchBy: 'sort-votes', result: 2 },
+    { searchBy: 'sort-activity', result: 2 },
+  ])('successfully display learners by %s.', async ({ searchBy, result }) => {
+    await setUpPrivilages(axiosMock, store, true);
+    await renderComponent();
+
+    const filterBar = container.querySelector('.collapsible-trigger');
+    await act(async () => {
+      fireEvent.click(filterBar);
+    });
+
+    await waitFor(async () => {
+      const activity = container.querySelector(`[for='${searchBy}']`);
+
+      await act(async () => {
+        fireEvent.click(activity);
+      });
+      await waitFor(() => {
+        const learners = container.querySelectorAll('.discussion-post');
+
+        expect(learners).toHaveLength(result);
+      });
+    });
   });
 });
