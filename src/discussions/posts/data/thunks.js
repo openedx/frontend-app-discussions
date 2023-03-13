@@ -204,6 +204,7 @@ export function createNewThread({
   anonymous,
   anonymousToPeers,
   cohort,
+  enableInContextSidebar,
 }) {
   return async (dispatch) => {
     try {
@@ -223,7 +224,7 @@ export function createNewThread({
         following,
         anonymous,
         anonymousToPeers,
-      });
+      }, enableInContextSidebar);
       dispatch(postThreadSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {

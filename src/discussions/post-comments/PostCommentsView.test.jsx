@@ -10,6 +10,7 @@ import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
@@ -17,11 +18,18 @@ import { getCourseConfigApiUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
-import { fetchThreads } from '../posts/data/thunks';
+import { fetchThread, fetchThreads } from '../posts/data/thunks';
+import { fetchCourseTopics } from '../topics/data/thunks';
+import { getDiscussionTourUrl } from '../tours/data/api';
+import { selectTours } from '../tours/data/selectors';
+import { fetchDiscussionTours } from '../tours/data/thunks';
+import discussionTourFactory from '../tours/data/tours.factory';
 import { getCommentsApiUrl } from './data/api';
+import { removeComment } from './data/thunks';
 
 import '../posts/data/__factories__';
 import './data/__factories__';
+import '../topics/data/__factories__';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 const commentsApiUrl = getCommentsApiUrl();
@@ -30,10 +38,14 @@ const discussionPostId = 'thread-1';
 const questionPostId = 'thread-2';
 const closedPostId = 'thread-2';
 const courseId = 'course-v1:edX+TestX+Test_Course';
-const reverseOrder = false;
+const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
+const reverseOrder = true;
+const enableInContextSidebar = false;
 let store;
 let axiosMock;
 let testLocation;
+let container;
+let unmount;
 
 function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
@@ -48,6 +60,7 @@ function mockAxiosReturnPagedComments() {
             requested_fields: 'profile_image',
             endorsed,
             reverse_order: reverseOrder,
+            enable_in_context_sidebar: enableInContextSidebar,
           },
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
@@ -69,6 +82,7 @@ function mockAxiosReturnPagedCommentsResponses() {
     page: undefined,
     page_size: undefined,
     requested_fields: 'profile_image',
+    reverse_order: true,
   };
 
   for (let page = 1; page <= 2; page++) {
@@ -81,6 +95,12 @@ function mockAxiosReturnPagedCommentsResponses() {
         count: 2,
       }));
   }
+}
+
+async function getThreadAPIResponse(threadId, topicId) {
+  axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
+    .reply(200, Factory.build('thread', { id: threadId, topic_id: topicId }));
+  await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
 function renderComponent(postId) {
@@ -104,8 +124,48 @@ function renderComponent(postId) {
       </AppProvider>
     </IntlProvider>,
   );
-  return wrapper;
+  container = wrapper.container;
+  unmount = wrapper.unmount;
 }
+
+describe('PostView', () => {
+  beforeEach(() => {
+    initializeMockApp({
+      authenticatedUser: {
+        userId: 3,
+        username: 'abc123',
+        administrator: true,
+        roles: [],
+      },
+    });
+
+    store = initializeStore();
+    Factory.resetAll();
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+
+    axiosMock.onGet(topicsApiUrl)
+      .reply(200, {
+        non_courseware_topics: Factory.buildList('topic', 1, {}, { topicPrefix: 'non-courseware-' }),
+        courseware_topics: Factory.buildList('category', 1, {}, { name: 'courseware' }),
+      });
+    executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+  });
+
+  it('should show Topic Info for non-courseware topics', async () => {
+    await getThreadAPIResponse('thread-1', 'non-courseware-topic-1');
+    renderComponent(discussionPostId);
+    expect(await screen.findByText('Related to')).toBeInTheDocument();
+    expect(await screen.findByText('non-courseware-topic 1')).toBeInTheDocument();
+  });
+
+  it('should show Topic Info for courseware topics with category', async () => {
+    await getThreadAPIResponse('thread-2', 'courseware-topic-2');
+
+    renderComponent('thread-2');
+    expect(await screen.findByText('Related to')).toBeInTheDocument();
+    expect(await screen.findByText('category-1 / courseware-topic 2')).toBeInTheDocument();
+  });
+});
 
 describe('ThreadView', () => {
   beforeEach(() => {
@@ -681,19 +741,87 @@ describe('ThreadView', () => {
     });
   });
 
-  describe('for comments replies', () => {
+  describe('For comments replies', () => {
     it('shows delete confirmation modal', async () => {
       renderComponent(discussionPostId);
+
       const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
-      await act(async () => {
-        fireEvent.click(
-          within(reply).getByRole('button', { name: /actions menu/i }),
-        );
-      });
-      await act(async () => {
-        fireEvent.click(screen.queryByRole('button', { name: /Delete/i }));
-      });
+      await act(async () => { fireEvent.click(within(reply).getByRole('button', { name: /actions menu/i })); });
+      await act(async () => { fireEvent.click(screen.queryByRole('button', { name: /Delete/i })); });
+
       expect(screen.queryByRole('dialog', { name: /Delete/i, exact: false })).toBeInTheDocument();
+    });
+  });
+
+  describe('for comments sort', () => {
+    const getCommentSortDropdown = async () => {
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Newest first/i })); });
+      return waitFor(() => screen.findByTestId('comment-sort-dropdown-modal-popup'));
+    };
+
+    it('should show sort dropdown if there are endorse or unendorsed comments', async () => {
+      renderComponent(discussionPostId);
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const sortWrapper = container.querySelector('.comments-sort');
+      const sortDropDown = within(sortWrapper).getByRole('button', { name: /Newest first/i });
+
+      expect(comment).toBeInTheDocument();
+      expect(sortDropDown).toBeInTheDocument();
+    });
+
+    it('should not show sort dropdown if there is no response', async () => {
+      const commentId = 'comment-1';
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(201);
+      await executeThunk(removeComment(commentId, discussionPostId), store.dispatch, store.getState);
+
+      expect(await waitFor(() => screen.findByText('No responses', { exact: true }))).toBeInTheDocument();
+      expect(container.querySelector('.comments-sort')).not.toBeInTheDocument();
+    });
+
+    it('should have only two options', async () => {
+      const dropdown = await getCommentSortDropdown();
+
+      expect(dropdown).toBeInTheDocument();
+      expect(await within(dropdown).getAllByRole('button')).toHaveLength(2);
+    });
+
+    it('should be selected Newest first and auto focus', async () => {
+      const dropdown = await getCommentSortDropdown();
+
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).toBeInTheDocument();
+      expect(within(dropdown).getByRole('button', { name: /Newest first/i })).toHaveFocus();
+      expect(within(dropdown).getByRole('button', { name: /Oldest first/i })).not.toHaveFocus();
+    });
+
+    test('successfully handles sort state update', async () => {
+      const dropdown = await getCommentSortDropdown();
+
+      expect(store.getState().comments.sortOrder).toBeTruthy();
+      await act(async () => { fireEvent.click(within(dropdown).getByRole('button', { name: /Oldest first/i })); });
+
+      expect(store.getState().comments.sortOrder).toBeFalsy();
+    });
+
+    test('successfully handles tour state update', async () => {
+      const tourName = 'response_sort';
+      await axiosMock.onGet(getDiscussionTourUrl(), {}).reply(200, [discussionTourFactory.build({ tourName })]);
+      await executeThunk(fetchDiscussionTours(), store.dispatch, store.getState);
+
+      renderComponent(discussionPostId);
+
+      await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const responseSortTour = () => selectTours(store.getState()).find(item => item.tourName === 'response_sort');
+
+      expect(responseSortTour().enabled).toBeTruthy();
+      await unmount();
+      expect(responseSortTour().enabled).toBeFalsy();
     });
   });
 });

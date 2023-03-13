@@ -1,4 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -16,7 +19,12 @@ import { useUserCanAddThreadInBlackoutDate } from '../../../data/hooks';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
-import { selectCommentCurrentPage, selectCommentHasMorePages, selectCommentResponses } from '../../data/selectors';
+import {
+  selectCommentCurrentPage,
+  selectCommentHasMorePages,
+  selectCommentResponses,
+  selectCommentSortOrder,
+} from '../../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../../data/thunks';
 import messages from '../../messages';
 import CommentEditor from './CommentEditor';
@@ -43,28 +51,32 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const {
-    courseId,
-  } = useContext(DiscussionContext);
+  const { courseId } = useContext(DiscussionContext);
+  const sortedOrder = useSelector(selectCommentSortOrder);
+
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
-    if (hasChildren && !currentPage && showFullThread) {
-      dispatch(fetchCommentResponses(comment.id, { page: 1 }));
+    if (hasChildren && showFullThread) {
+      dispatch(fetchCommentResponses(comment.id, {
+        page: 1,
+        reverseOrder: sortedOrder,
+      }));
     }
-  }, [comment.id]);
+  }, [comment.id, sortedOrder]);
+
   const actions = useActions({
     ...comment,
     postType,
   });
   const endorseIcons = actions.find(({ action }) => action === EndorsementStatus.ENDORSED);
 
-  const handleAbusedFlag = () => {
+  const handleAbusedFlag = useCallback(() => {
     if (comment.abuseFlagged) {
       dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  };
+  }, [comment.abuseFlagged, comment.id, dispatch, showReportConfirmation]);
 
   const handleDeleteConfirmation = () => {
     dispatch(removeComment(comment.id));
@@ -76,7 +88,7 @@ function Comment({
     hideReportConfirmation();
   };
 
-  const actionHandlers = {
+  const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: async () => {
       await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }, ContentActions.ENDORSE));
@@ -84,10 +96,13 @@ function Comment({
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
     [ContentActions.REPORT]: () => handleAbusedFlag(),
-  };
+  }), [showDeleteConfirmation, dispatch, comment.id, comment.endorsed, comment.threadId, courseId, handleAbusedFlag]);
 
   const handleLoadMoreComments = () => (
-    dispatch(fetchCommentResponses(comment.id, { page: currentPage + 1 }))
+    dispatch(fetchCommentResponses(comment.id, {
+      page: currentPage + 1,
+      reverseOrder: sortedOrder,
+    }))
   );
 
   return (

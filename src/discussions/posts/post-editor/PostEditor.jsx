@@ -187,6 +187,7 @@ function PostEditor({
         anonymous: allowAnonymous ? values.anonymous : undefined,
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
+        enableInContextSidebar,
       }));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */

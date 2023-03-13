@@ -87,6 +87,7 @@ export async function getThread(threadId, courseId) {
  * @param {boolean} following Follow the thread after creating
  * @param {boolean} anonymous Should the thread be anonymous to all users
  * @param {boolean} anonymousToPeers Should the thread be anonymous to peers
+ * @param {boolean} enableInContextSidebar
  * @returns {Promise<{}>}
  */
 export async function postThread(
@@ -101,6 +102,7 @@ export async function postThread(
     anonymous,
     anonymousToPeers,
   } = {},
+  enableInContextSidebar = false,
 ) {
   const postData = snakeCaseObject({
     courseId,
@@ -112,8 +114,8 @@ export async function postThread(
     anonymous,
     anonymousToPeers,
     groupId: cohort,
+    enableInContextSidebar,
   });
-
   const { data } = await getAuthenticatedHttpClient()
     .post(getThreadsApiUrl(), postData);
   return data;
