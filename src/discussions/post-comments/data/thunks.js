@@ -80,12 +80,15 @@ export function fetchThreadComments(
     page = 1,
     reverseOrder,
     endorsed = EndorsementStatus.DISCUSSION,
+    enableInContextSidebar,
   } = {},
 ) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentsRequest());
-      const data = await getThreadComments(threadId, { page, reverseOrder, endorsed });
+      const data = await getThreadComments(threadId, {
+        page, reverseOrder, endorsed, enableInContextSidebar,
+      });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
         endorsed,
@@ -103,11 +106,11 @@ export function fetchThreadComments(
   };
 }
 
-export function fetchCommentResponses(commentId, { page = 1 } = {}) {
+export function fetchCommentResponses(commentId, { page = 1, reverseOrder = true } = {}) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentResponsesRequest({ commentId }));
-      const data = await getCommentResponses(commentId, { page });
+      const data = await getCommentResponses(commentId, { page, reverseOrder });
       dispatch(fetchCommentResponsesSuccess({
         ...normaliseComments(camelCaseObject(data)),
         page,
@@ -144,7 +147,7 @@ export function editComment(commentId, comment, action = null) {
   };
 }
 
-export function addComment(comment, threadId, parentId = null) {
+export function addComment(comment, threadId, parentId = null, enableInContextSidebar = false) {
   return async (dispatch) => {
     try {
       dispatch(postCommentRequest({
@@ -152,7 +155,7 @@ export function addComment(comment, threadId, parentId = null) {
         threadId,
         parentId,
       }));
-      const data = await postComment(comment, threadId, parentId);
+      const data = await postComment(comment, threadId, parentId, enableInContextSidebar);
       dispatch(postCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {

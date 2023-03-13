@@ -106,7 +106,7 @@ function PostEditor({
   const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
   const coursewareTopics = useSelector(enableInContext ? inContextCourseware : selectCoursewareTopics);
   const cohorts = useSelector(selectCourseCohorts);
-  const post = useSelector(selectThread(postId));
+  const post = useSelector(editExisting ? selectThread(postId) : () => ({}));
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const settings = useSelector(selectDivisionSettings);
@@ -187,6 +187,7 @@ function PostEditor({
         anonymous: allowAnonymous ? values.anonymous : undefined,
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
+        enableInContextSidebar,
       }));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */

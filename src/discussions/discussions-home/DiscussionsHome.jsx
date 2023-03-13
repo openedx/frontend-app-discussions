@@ -124,7 +124,7 @@ export default function DiscussionsHome() {
             </Switch>
           )}
         </div>
-        <DiscussionsProductTour />
+        {!enableInContextSidebar && <DiscussionsProductTour />}
       </main>
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>

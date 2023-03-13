@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
@@ -41,13 +42,14 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
-  const handleAbusedFlag = () => {
+
+  const handleAbusedFlag = useCallback(() => {
     if (post.abuseFlagged) {
       dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  };
+  }, [dispatch, post.abuseFlagged, post.id, showReportConfirmation]);
 
   const handleDeleteConfirmation = async () => {
     await dispatch(removeThread(post.id));
@@ -63,7 +65,7 @@ function Post({
     hideReportConfirmation();
   };
 
-  const actionHandlers = {
+  const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
       pathname: `${location.pathname}/edit`,
@@ -81,17 +83,34 @@ function Post({
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => handleAbusedFlag(),
-  };
+  }), [
+    showDeleteConfirmation,
+    history,
+    location,
+    post.closed,
+    post.id,
+    post.pinned,
+    reasonCodesEnabled,
+    dispatch,
+    showClosePostModal,
+    courseId,
+    handleAbusedFlag,
+  ]);
 
   const getTopicCategoryName = topicData => (
     topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
   );
 
+  const getTopicInfo = topicData => (
+    getTopicCategoryName(topicData) ? `${getTopicCategoryName(topicData)} / ${topicData.name}` : `${topicData.name}`
+  );
+
   return (
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment"
-      aria-level={5}
       data-testid={`post-${post.id}`}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex="0"
     >
       <Confirmation
         isOpen={isDeleting}
@@ -126,7 +145,7 @@ function Post({
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
-      {topicContext && (
+      {(topicContext || topic) && (
         <div
           className={classNames('mt-14px mb-1 font-style font-size-12',
             { 'w-100': enableInContextSidebar })}
@@ -134,7 +153,7 @@ function Post({
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
           <Hyperlink
-            destination={topicContext.unitLink}
+            destination={topicContext ? topicContext.unitLink : `${getConfig().BASE_URL}/${courseId}/topics/${post.topicId}`}
             target="_top"
           >
             {(topicContext && !topic)
@@ -147,7 +166,7 @@ function Post({
                   <span className="w-auto">{topicContext.unitName}</span>
                 </>
               )
-              : `${getTopicCategoryName(topic)} / ${topic.name}`}
+              : getTopicInfo(topic)}
           </Hyperlink>
         </div>
       )}

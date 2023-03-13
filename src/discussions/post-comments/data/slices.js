@@ -22,7 +22,7 @@ const commentsSlice = createSlice({
     postStatus: RequestStatus.SUCCESSFUL,
     pagination: {},
     responsesPagination: {},
-    sortOrder: false,
+    sortOrder: true,
   },
   reducers: {
     fetchCommentsRequest: (state) => {
@@ -75,12 +75,16 @@ const commentsSlice = createSlice({
     },
     fetchCommentResponsesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.commentsInComments[payload.commentId] = [
-        ...new Set([
-          ...(state.commentsInComments[payload.commentId] || []),
-          ...(payload.commentsInComments[payload.commentId] || []),
-        ]),
-      ];
+      if (payload.page === 1) {
+        state.commentsInComments[payload.commentId] = payload.commentsInComments[payload.commentId] || [];
+      } else {
+        state.commentsInComments[payload.commentId] = [
+          ...new Set([
+            ...(state.commentsInComments[payload.commentId] || []),
+            ...(payload.commentsInComments[payload.commentId] || []),
+          ]),
+        ];
+      }
       state.commentsById = { ...state.commentsById, ...payload.commentsById };
       state.responsesPagination[payload.commentId] = {
         currentPage: payload.page,

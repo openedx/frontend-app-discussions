@@ -13,6 +13,7 @@ import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPane from '../../../../components/PostPreviewPane';
 import { useDispatchWithState } from '../../../../data/hooks';
+import { DiscussionContext } from '../../../common/context';
 import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
@@ -32,6 +33,7 @@ function CommentEditor({
 }) {
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsStaff = useSelector(selectUserIsStaff);
@@ -71,7 +73,7 @@ function CommentEditor({
       };
       await dispatch(editComment(comment.id, payload));
     } else {
-      await dispatch(addComment(values.comment, comment.threadId, comment.parentId));
+      await dispatch(addComment(values.comment, comment.threadId, comment.parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {

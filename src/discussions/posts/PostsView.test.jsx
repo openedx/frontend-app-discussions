@@ -160,9 +160,9 @@ describe('PostsView', () => {
     test('displays a list of posts in a topic', async () => {
       setupStore();
       await act(async () => {
-        await renderComponent({ topicId: 'some-topic-1' });
+        await renderComponent({ topicId: 'test-topic-1' });
       });
-      expect(screen.getAllByText(/this is thread-\d+ in topic some-topic-1/i)).toHaveLength(Math.ceil(threadCount / 3));
+      expect(screen.getAllByText(/this is thread-\d+ in topic test-topic-1/i)).toHaveLength(Math.ceil(threadCount / 3));
     });
 
     test.each([true, false])(
@@ -173,10 +173,10 @@ describe('PostsView', () => {
             blocks: {
               'test-usage-key': {
                 type: 'vertical',
-                topics: ['some-topic-2', 'some-topic-0'],
+                topics: ['test-topic-2', 'test-topic-0'],
                 parent: 'test-seq-key',
               },
-              'test-seq-key': { type: 'sequential', topics: ['some-topic-0', 'some-topic-1', 'some-topic-2'] },
+              'test-seq-key': { type: 'sequential', topics: ['test-topic-0', 'test-topic-1', 'test-topic-2'] },
             },
           },
           config: { groupAtSubsection: grouping, hasModerationPrivileges: true, provider: 'openedx' },
@@ -185,12 +185,12 @@ describe('PostsView', () => {
           await renderComponent({ category: 'test-usage-key', enableInContextSidebar: true, p: true });
         });
         const topicThreadCount = Math.ceil(threadCount / 3);
-        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-2/i))
+        expect(screen.queryAllByText(/this is thread-\d+ in topic test-topic-2/i))
           .toHaveLength(topicThreadCount);
-        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-0/i))
+        expect(screen.queryAllByText(/this is thread-\d+ in topic test-topic-0/i))
           .toHaveLength(topicThreadCount);
         // When grouping is enabled, topic 1 will be shown, but not otherwise.
-        expect(screen.queryAllByText(/this is thread-\d+ in topic some-topic-1/i))
+        expect(screen.queryAllByText(/this is thread-\d+ in topic test-topic-1/i))
           .toHaveLength(grouping ? topicThreadCount : 2);
       },
     );

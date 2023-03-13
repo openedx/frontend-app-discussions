@@ -2,7 +2,7 @@ import { Factory } from 'rosie';
 
 Factory.define('learner')
   .sequence('id')
-  .attr('username', ['id'], (id) => `leaner-${id}`)
+  .attr('username', ['id'], (id) => `learner-${id}`)
   .option('activeFlags', null, null)
   .attr('active_flags', ['activeFlags'], (activeFlags) => activeFlags)
   .attrs({
@@ -13,9 +13,9 @@ Factory.define('learner')
   });
 
 Factory.define('learnersResult')
-  .option('count', null, 3)
-  .option('page', null, 1)
-  .option('pageSize', null, 5)
+  .option('count', null)
+  .option('page', null)
+  .option('pageSize', null)
   .option('courseId', null, 'course-v1:Test+TestX+Test_Course')
   .option('activeFlags', null, 0)
   .attr(
@@ -23,14 +23,8 @@ Factory.define('learnersResult')
     ['courseId', 'count', 'page', 'pageSize'],
     (courseId, count, page, pageSize) => {
       const numPages = Math.ceil(count / pageSize);
-      const next = page < numPages
-        ? `http://test.site/api/discussion/v1/courses/course-v1:edX+DemoX+Demo_Course/activity_stats?page=${page + 1
-        }`
-        : null;
-      const prev = page > 1
-        ? `http://test.site/api/discussion/v1/courses/course-v1:edX+DemoX+Demo_Course/activity_stats?page=${page - 1
-        }`
-        : null;
+      const next = page < numPages ? page + 1 : null;
+      const prev = page > 1 ? page - 1 : null;
       return {
         next,
         prev,
@@ -65,7 +59,7 @@ Factory.define('learnersResult')
   );
 
 Factory.define('learnersProfile')
-  .option('usernames', null, ['leaner-1', 'leaner-2', 'leaner-3'])
+  .option('usernames', null, ['learner-1', 'learner-2', 'learner-3'])
   .attr('profiles', ['usernames'], (usernames) => {
     const profiles = usernames.map((user) => ({
       account_privacy: 'private',

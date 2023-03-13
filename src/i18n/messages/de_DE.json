@@ -208,5 +208,7 @@
   "tour.action.dismiss": "Abgewiesen",
   "tour.action.end": "okay",
   "tour.body.notRespondedFilter": "Jetzt können Sie Diskussionen filtern, um Beiträge ohne Antwort zu finden.",
-  "tour.title.notRespondedFilter": "Neue Filteroption!"
+  "tour.title.notRespondedFilter": "Neue Filteroption!",
+  "tour.body.responseSortTour": "Responses and comments are now sorted by newest first. Please use this option to change the sort order",
+  "tour.title.responseSortTour": "Sort Responses!"
 }

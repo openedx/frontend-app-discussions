@@ -433,7 +433,7 @@ header {
   pointer-events: none;
 }
 
-.on-focus:focus-visible {
+.on-focus:focus-within {
   outline: 2px solid black;
 }
 
@@ -442,6 +442,8 @@ header {
 }
 
 .post-card-comment {
+  outline: none;
+
   &:not(:hover),
   &:not(:focus) {
     .hover-card {
@@ -450,7 +452,7 @@ header {
   }
 
   &:hover,
-  &:focus {
+  &:focus-within {
     .hover-card {
       display: flex;
     }

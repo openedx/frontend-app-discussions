@@ -72,6 +72,7 @@ function Search({ intl }) {
           <Icon
             src={SearchIcon}
             onClick={() => onSubmit(searchValue)}
+            data-testid="search-icon"
           />
         </span>
       </SearchField.Advanced>
