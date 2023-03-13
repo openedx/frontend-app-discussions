@@ -1,8 +1,7 @@
 import React from 'react';
 
 import {
-  fireEvent, render, screen, waitFor,
-  within,
+  fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -18,7 +17,7 @@ import { PostActionsBar } from '../../components';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
-import { getCourseConfigApiUrl } from '../data/api';
+import { getDiscussionsConfigUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import { getUserProfileApiUrl, learnersApiUrl } from './data/api';
 import { fetchLearners } from './data/thunks';
@@ -28,7 +27,6 @@ import './data/__factories__';
 
 let store;
 let axiosMock;
-const courseConfigApiUrl = getCourseConfigApiUrl();
 const courseId = 'course-v1:edX+TestX+Test_Course';
 let container;
 
@@ -92,7 +90,7 @@ describe('LearnersView', () => {
   }
 
   async function assignPrivilages() {
-    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
       learners_tab_enabled: true,
       user_is_privileged: true,
     });
@@ -245,8 +243,8 @@ describe('LearnersView', () => {
       setUpLearnerMockResponse();
     });
 
-    const leaners = container.querySelectorAll('.discussion-post');
+    const learners = container.querySelectorAll('.discussion-post');
 
-    expect(leaners).toHaveLength(3);
+    expect(learners).toHaveLength(3);
   });
 });
