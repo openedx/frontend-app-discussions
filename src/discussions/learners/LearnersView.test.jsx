@@ -260,43 +260,36 @@ describe('LearnersView', () => {
     async () => {
       await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], '', 1, 1);
       await assignPrivilages(true);
-      await waitFor(() => {
-        renderComponent();
-      });
+      await renderComponent();
+
+      await waitFor(() => container.querySelector('.text-danger'));
+
       const reportedIcon = container.querySelector('.text-danger');
 
       await act(async () => fireEvent.mouseEnter(reportedIcon));
 
-      await waitFor(async () => {
-        const reported = await screen.getByText('2 reported');
-        const previouslyReported = screen.getByText('1 previously reported');
+      const reported = await screen.getByText('2 reported');
+      const previouslyReported = screen.getByText('1 previously reported');
 
-        expect(reportedIcon).toBeInTheDocument();
-        expect(reported).toBeInTheDocument();
-        expect(previouslyReported).toBeInTheDocument();
-      });
+      expect(reportedIcon).toBeInTheDocument();
+      expect(reported).toBeInTheDocument();
+      expect(previouslyReported).toBeInTheDocument();
     });
 
   it('should display load more button and display more learners by clicking on button.', async () => {
     await setUpLearnerMockResponse();
     await assignPrivilages(true);
+    await renderComponent();
 
-    await waitFor(() => {
-      renderComponent();
-    });
+    await waitFor(() => container.querySelector('[data-testid="load-more"]'));
 
     const loadMoreButton = container.querySelector('[data-testid="load-more"]');
-    let posts = container.querySelectorAll('.discussion-post');
-
-    expect(loadMoreButton).toBeInTheDocument();
-    expect(posts).toHaveLength(3);
 
     await act(async () => {
       fireEvent.click(loadMoreButton);
     });
 
-    posts = container.querySelectorAll('.discussion-post');
     expect(loadMoreButton).not.toBeInTheDocument();
-    expect(posts).toHaveLength(6);
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(6);
   });
 });

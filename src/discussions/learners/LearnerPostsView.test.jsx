@@ -183,33 +183,29 @@ describe('Learner Posts View', () => {
       store.dispatch,
       store.getState,
     );
-    await waitFor(() => {
-      renderComponent();
-    });
+    await renderComponent();
 
-    const filterBar = container.querySelector('.collapsible-trigger');
+    const filterBar = await container.querySelector('.collapsible-trigger');
     await act(async () => {
       fireEvent.click(filterBar);
     });
 
-    await waitFor(async () => {
-      const cohort = container.querySelector(`[for='${searchBy}']`);
+    const cohort = await container.querySelector(`[for='${searchBy}']`);
 
-      await act(async () => {
-        fireEvent.click(cohort);
-      });
-      await waitFor(() => {
-        const learners = container.querySelectorAll('.discussion-post');
+    await act(async () => {
+      fireEvent.click(cohort);
+    });
+    await waitFor(() => {
+      const learners = container.querySelectorAll('.discussion-post');
 
-        expect(learners).toHaveLength(result);
-      });
+      expect(learners).toHaveLength(result);
     });
   });
 
   it('should display load more posts button and display more posts by clicking on button.', async () => {
-    await waitFor(() => {
-      renderComponent();
-    });
+    await renderComponent();
+    await waitFor(() => container.querySelector('[data-testid="load-more"]'));
+
     const loadMoreButton = container.querySelector('[data-testid="load-more"]');
 
     expect(loadMoreButton).toBeInTheDocument();
@@ -218,8 +214,7 @@ describe('Learner Posts View', () => {
       fireEvent.click(loadMoreButton);
     });
 
-    const posts = await container.querySelectorAll('.discussion-post');
     expect(loadMoreButton).not.toBeInTheDocument();
-    expect(posts).toHaveLength(2);
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(2);
   });
 });
