@@ -89,7 +89,7 @@ function LearnersView({ intl }) {
           </div>
         ) : (
           nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
-            <Button onClick={() => loadPage()} variant="primary" size="md">
+            <Button onClick={() => loadPage()} variant="primary" size="md" data-testid="load-more">
               {intl.formatMessage(messages.loadMore)}
             </Button>
           )

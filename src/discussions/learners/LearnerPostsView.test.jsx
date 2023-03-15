@@ -15,12 +15,15 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { getCohortsApiUrl } from '../cohorts/data/api';
+import { fetchCourseCohorts } from '../cohorts/data/thunks';
 import { DiscussionContext } from '../common/context';
 import { learnerPostsApiUrl } from './data/api';
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostsView from './LearnerPostsView';
 import { setUpPrivilages } from './test-utils';
 
+import '../cohorts/data/__factories__/cohorts.factory';
 import './data/__factories__';
 
 let store;
@@ -165,5 +168,58 @@ describe('Learner Posts View', () => {
         expect(learners).toHaveLength(result);
       });
     });
+  });
+
+  it.each([
+    { searchBy: 'type-all', result: 2 },
+    { searchBy: 'cohort-1', result: 2 },
+  ])('successfully display learners by %s.', async ({ searchBy, result }) => {
+    await setUpPrivilages(axiosMock, store, true);
+    axiosMock.onGet(getCohortsApiUrl(courseId))
+      .reply(200, Factory.buildList('cohort', 3));
+
+    await executeThunk(
+      fetchCourseCohorts(courseId),
+      store.dispatch,
+      store.getState,
+    );
+    await waitFor(() => {
+      renderComponent();
+    });
+
+    const filterBar = container.querySelector('.collapsible-trigger');
+    await act(async () => {
+      fireEvent.click(filterBar);
+    });
+
+    await waitFor(async () => {
+      const cohort = container.querySelector(`[for='${searchBy}']`);
+
+      await act(async () => {
+        fireEvent.click(cohort);
+      });
+      await waitFor(() => {
+        const learners = container.querySelectorAll('.discussion-post');
+
+        expect(learners).toHaveLength(result);
+      });
+    });
+  });
+
+  it('should display load more posts button and display more posts by clicking on button.', async () => {
+    await waitFor(() => {
+      renderComponent();
+    });
+    const loadMoreButton = container.querySelector('[data-testid="load-more"]');
+
+    expect(loadMoreButton).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(loadMoreButton);
+    });
+
+    const posts = await container.querySelectorAll('.discussion-post');
+    expect(loadMoreButton).not.toBeInTheDocument();
+    expect(posts).toHaveLength(2);
   });
 });

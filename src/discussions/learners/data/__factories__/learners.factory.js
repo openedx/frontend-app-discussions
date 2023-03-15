@@ -5,6 +5,8 @@ Factory.define('learner')
   .attr('username', ['id'], (id) => `learner-${id}`)
   .option('activeFlags', null, null)
   .attr('active_flags', ['activeFlags'], (activeFlags) => activeFlags)
+  .option('inactiveFlags', null, null)
+  .attr('inactive_flags', ['inactiveFlags'], (inactiveFlags) => inactiveFlags)
   .attrs({
     threads: 1,
     replies: 0,
@@ -18,11 +20,12 @@ Factory.define('learnersResult')
   .option('pageSize', null)
   .option('courseId', null, 'course-v1:Test+TestX+Test_Course')
   .option('activeFlags', null, 0)
+  .option('inactiveFlags', null, 0)
   .attr(
     'pagination',
     ['courseId', 'count', 'page', 'pageSize'],
     (courseId, count, page, pageSize) => {
-      const numPages = Math.ceil(count / pageSize);
+      const numPages = Math.ceil(pageSize / count);
       const next = page < numPages ? page + 1 : null;
       const prev = page > 1 ? page - 1 : null;
       return {
@@ -35,24 +38,24 @@ Factory.define('learnersResult')
   )
   .attr(
     'results',
-    ['count', 'pageSize', 'page', 'courseId', 'activeFlags'],
-    (count, pageSize, page, courseId, activeFlags) => {
+    ['count', 'pageSize', 'page', 'courseId', 'activeFlags', 'inactiveFlags'],
+    (count, pageSize, page, courseId, activeFlags, inactiveFlags) => {
       const attrs = { course_id: courseId };
       Object.keys(attrs).forEach((key) => (attrs[key] === undefined ? delete attrs[key] : {}));
       const len = pageSize * page <= count ? pageSize : count % pageSize;
       let learners = [];
 
-      if (activeFlags && activeFlags <= len) {
+      if (activeFlags <= len) {
         learners = Factory.buildList('learner', len - activeFlags, attrs);
         learners = learners.concat(
           Factory.buildList(
             'learner',
             activeFlags,
-            { ...attrs, active_flags: Math.floor(Math.random() * 10) + 1 },
+            { ...attrs, active_flags: activeFlags + 1, inactive_flags: inactiveFlags },
           ),
         );
       } else {
-        learners = Factory.buildList('learner', len, attrs);
+        learners = Factory.buildList('learner', len, attrs, activeFlags, inactiveFlags);
       }
       return learners;
     },
@@ -135,8 +138,8 @@ Factory.define('learnerPosts')
     },
   )
   .attr('pagination', [], () => ({
-    next: null,
+    next: 1,
     prev: null,
     count: 2,
-    num_pages: 1,
+    num_pages: 2,
   }));
