@@ -50,28 +50,26 @@ function AuthorLabel({
   const showUserNameAsLink = useShowLearnersTab()
     && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
 
+  const authorName = (
+    <span
+      className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
+        'text-gray-700': isRetiredUser,
+        'text-primary-500': !authorLabelMessage && !isRetiredUser,
+      })}
+      role="heading"
+      aria-level="2"
+    >
+      {isRetiredUser ? '[Deactivated]' : author}
+    </span>
+  );
   const labelContents = (
     <div className={className}>
-      {!alert && (
-        <span
-          className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
-            'text-gray-700': isRetiredUser,
-            'text-primary-500': !authorLabelMessage && !isRetiredUser,
-          })}
-          role="heading"
-          aria-level="2"
-        >
-          {isRetiredUser ? '[Deactivated]' : author}
-        </span>
-      )}
-
       <OverlayTrigger
         overlay={(
           <Tooltip id={`endorsed-by-${author}-tooltip`}>
             {author}
           </Tooltip>
         )}
-
         trigger={['hover', 'focus']}
       >
         <div className={classNames('d-flex flex-row align-items-center', {
@@ -86,20 +84,19 @@ function AuthorLabel({
             src={icon}
             data-testid="author-icon"
           />
-
+          {authorLabelMessage && (
+            <span
+              className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
+                'text-primary-500': showTextPrimary,
+                'text-gray-700': isRetiredUser,
+              })}
+              style={{ marginLeft: '2px' }}
+            >
+              {authorLabelMessage}
+            </span>
+          )}
         </div>
       </OverlayTrigger>
-      {authorLabelMessage && (
-        <span
-          className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
-            'text-primary-500': showTextPrimary,
-            'text-gray-700': isRetiredUser,
-          })}
-          style={{ marginLeft: '2px' }}
-        >
-          {authorLabelMessage}
-        </span>
-      )}
       {postCreatedAt && (
         <span
           title={postCreatedAt}
@@ -118,17 +115,20 @@ function AuthorLabel({
 
   return showUserNameAsLink
     ? (
-      <Link
-        data-testid="learner-posts-link"
-        id="learner-posts-link"
-        to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
-        className="text-decoration-none"
-        style={{ width: 'fit-content' }}
-      >
+      <div className={className}>
+        <Link
+          data-testid="learner-posts-link"
+          id="learner-posts-link"
+          to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
+          className="text-decoration-none"
+          style={{ width: 'fit-content' }}
+        >
+          {!alert && authorName}
+        </Link>
         {labelContents}
-      </Link>
+      </div>
     )
-    : <>{labelContents}</>;
+    : <div className={className}>{labelContents}</div>;
 }
 
 AuthorLabel.propTypes = {
