@@ -178,11 +178,7 @@ describe('Learner Posts View', () => {
     axiosMock.onGet(getCohortsApiUrl(courseId))
       .reply(200, Factory.buildList('cohort', 3));
 
-    await executeThunk(
-      fetchCourseCohorts(courseId),
-      store.dispatch,
-      store.getState,
-    );
+    await executeThunk(fetchCourseCohorts(courseId), store.dispatch, store.getState);
     await renderComponent();
 
     const filterBar = await container.querySelector('.collapsible-trigger');
@@ -204,9 +200,9 @@ describe('Learner Posts View', () => {
 
   it('should display load more posts button and display more posts by clicking on button.', async () => {
     await renderComponent();
-    await waitFor(() => container.querySelector('[data-testid="load-more"]'));
+    await waitFor(() => container.querySelector('[data-testid="load-more-posts"]'));
 
-    const loadMoreButton = container.querySelector('[data-testid="load-more"]');
+    const loadMoreButton = container.querySelector('[data-testid="load-more-posts"]');
 
     expect(loadMoreButton).toBeInTheDocument();
 

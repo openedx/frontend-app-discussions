@@ -261,7 +261,6 @@ describe('LearnersView', () => {
       await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], '', 1, 1);
       await assignPrivilages(true);
       await renderComponent();
-
       await waitFor(() => container.querySelector('.text-danger'));
 
       const reportedIcon = container.querySelector('.text-danger');
@@ -281,9 +280,9 @@ describe('LearnersView', () => {
     await assignPrivilages(true);
     await renderComponent();
 
-    await waitFor(() => container.querySelector('[data-testid="load-more"]'));
+    await waitFor(() => container.querySelector('[data-testid="load-more-learners"]'));
 
-    const loadMoreButton = container.querySelector('[data-testid="load-more"]');
+    const loadMoreButton = container.querySelector('[data-testid="load-more-learners"]');
 
     await act(async () => {
       fireEvent.click(loadMoreButton);
