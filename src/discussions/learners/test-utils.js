@@ -15,7 +15,7 @@ const courseId = 'course-v1:edX+DemoX+Demo_Course';
 export async function setupLearnerMockResponse({
   learnerCourseId = courseId,
   statusCode = 200,
-  learnerCount = 6,
+  learnerCount = 3,
 } = {}) {
   const store = initializeStore();
   const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
@@ -23,7 +23,8 @@ export async function setupLearnerMockResponse({
   axiosMock.onGet(learnersApiUrl(learnerCourseId))
     .reply(() => [statusCode, Factory.build('learnersResult', {}, {
       count: learnerCount,
-      pageSize: 3,
+      pageSize: 6,
+      page: 1,
     })]);
 
   axiosMock.onGet(`${getUserProfileApiUrl()}?username=learner-1,learner-2,learner-3`)
@@ -55,7 +56,7 @@ export async function setupPostsMockResponse({
 
 export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges) {
   axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-    has_moderation_privileges: hasModerationPrivileges,
+    hasModerationPrivileges,
   });
 
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);

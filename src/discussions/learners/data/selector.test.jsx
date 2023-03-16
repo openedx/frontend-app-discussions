@@ -23,7 +23,7 @@ const userProfileApiUrl = getUserProfileApiUrl();
 let axiosMock;
 let store;
 const username = 'abc123';
-const learnerCount = 6;
+const learnerCount = 3;
 let state;
 
 describe('Learner selectors test cases', () => {
@@ -43,7 +43,8 @@ describe('Learner selectors test cases', () => {
     axiosMock.onGet(learnersApiUrl(courseId))
       .reply(() => [200, Factory.build('learnersResult', {}, {
         count: learnerCount,
-        pageSize: 3,
+        pageSize: 6,
+        page: 1,
       })]);
 
     axiosMock.onGet(`${userProfileApiUrl}?username=learner-1,learner-2,learner-3`)

@@ -36,6 +36,7 @@ function renderComponent() {
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{
           page: 'learners',
+          learnerUsername: 'learner-1',
         }}
         >
           <MemoryRouter initialEntries={[`/${courseId}/`]}>
@@ -56,9 +57,10 @@ describe('LearnersView', () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
-        username: 'abc123',
+        username: 'test_user',
         administrator: true,
         roles: [],
+        learnersTabEnabled: false,
       },
     });
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
@@ -72,12 +74,16 @@ describe('LearnersView', () => {
     page = 1,
     username = ['learner-1', 'learner-2', 'learner-3'],
     searchText,
+    activeFlags,
+    inactiveFlags,
   ) {
     Factory.resetAll();
     const learnersData = Factory.build('learnersResult', {}, {
       count,
       pageSize,
       page,
+      activeFlags,
+      inactiveFlags,
     });
     axiosMock.onGet(learnersApiUrl(courseId))
       .reply(() => [200, learnersData]);
@@ -89,10 +95,11 @@ describe('LearnersView', () => {
     await executeThunk(fetchLearners(courseId, { usernameSearch: searchText }), store.dispatch, store.getState);
   }
 
-  async function assignPrivilages() {
+  async function assignPrivilages(hasModerationPrivileges = false) {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
       learners_tab_enabled: true,
       user_is_privileged: true,
+      hasModerationPrivileges,
     });
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
@@ -133,11 +140,12 @@ describe('LearnersView', () => {
   });
 
   it.each([
-    { searchBy: 'sort-recency', result: 0 },
+    { searchBy: 'sort-recency', result: 3 },
     { searchBy: 'sort-activity', result: 3 },
+    { searchBy: 'sort-reported', result: 3 },
   ])('successfully display learners by %s.', async ({ searchBy, result }) => {
     await setUpLearnerMockResponse();
-    await assignPrivilages();
+    await assignPrivilages(true);
     await renderComponent();
 
     const filterBar = container.querySelector('.collapsible-trigger');
@@ -206,7 +214,7 @@ describe('LearnersView', () => {
       await fireEvent.change(searchField, { target: { value: searchText } });
       await act(async () => {
         fireEvent.click(searchButton);
-        setUpLearnerMockResponse(learnersCount, learnersCount, 1, username, searchText);
+        setUpLearnerMockResponse(learnersCount, learnersCount, 1, username, searchText, 1);
       });
 
       await waitFor(() => {
@@ -222,7 +230,7 @@ describe('LearnersView', () => {
 
   test('When click on the clear button it should move to a list of all learners.', async () => {
     await setUpLearnerMockResponse();
-    await assignPrivilages();
+    await assignPrivilages(true);
     await renderComponent();
 
     const searchField = within(container).getByPlaceholderText('Search learners');
@@ -246,5 +254,41 @@ describe('LearnersView', () => {
     const learners = container.querySelectorAll('.discussion-post');
 
     expect(learners).toHaveLength(3);
+  });
+
+  it('should display reported and previously reported message by passing activeFlags or inactiveFlags',
+    async () => {
+      await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], '', 1, 1);
+      await assignPrivilages(true);
+      await renderComponent();
+      await waitFor(() => container.querySelector('.text-danger'));
+
+      const reportedIcon = container.querySelector('.text-danger');
+
+      await act(async () => fireEvent.mouseEnter(reportedIcon));
+
+      const reported = await screen.getByText('2 reported');
+      const previouslyReported = screen.getByText('1 previously reported');
+
+      expect(reportedIcon).toBeInTheDocument();
+      expect(reported).toBeInTheDocument();
+      expect(previouslyReported).toBeInTheDocument();
+    });
+
+  it('should display load more button and display more learners by clicking on button.', async () => {
+    await setUpLearnerMockResponse();
+    await assignPrivilages(true);
+    await renderComponent();
+
+    await waitFor(() => container.querySelector('[data-testid="load-more-learners"]'));
+
+    const loadMoreButton = container.querySelector('[data-testid="load-more-learners"]');
+
+    await act(async () => {
+      fireEvent.click(loadMoreButton);
+    });
+
+    expect(loadMoreButton).not.toBeInTheDocument();
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(6);
   });
 });

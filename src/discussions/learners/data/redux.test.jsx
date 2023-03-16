@@ -73,7 +73,7 @@ describe('Learner redux test cases', () => {
 
       expect(learners.nextPage).toEqual(2);
       expect(learners.totalPages).toEqual(2);
-      expect(learners.totalLearners).toEqual(6);
+      expect(learners.totalLearners).toEqual(3);
       expect(learners.sortedBy).toEqual('activity');
     });
 
