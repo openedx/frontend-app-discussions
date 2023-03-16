@@ -93,12 +93,12 @@ describe('Author label', () => {
       async () => {
         renderComponent(author, authorLabel, linkToProfile, labelColor);
         const authorElement = container.querySelector('[role=heading]');
-        const labelElement = authorElement.parentNode.lastChild;
+        const labelElement = authorElement.parentNode.parentNode.lastChild.lastChild;
         const label = ['TA', 'Staff'].includes(labelElement.textContent) && labelElement.textContent;
 
         if (linkToProfile) {
-          expect(authorElement.parentNode).toHaveClass(labelColor);
-          expect(authorElement.parentNode.lastChild).toHaveTextContent(label);
+          expect(authorElement.parentNode.parentNode).toHaveClass(labelColor);
+          expect(labelElement).toHaveTextContent(label);
         } else {
           expect(authorElement.parentNode.lastChild).not.toHaveTextContent(label, { exact: true });
           expect(authorElement.parentNode).not.toHaveClass(labelColor, { exact: true });

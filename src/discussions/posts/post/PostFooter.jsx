@@ -16,8 +16,8 @@ import messages from './messages';
 import { postShape } from './proptypes';
 
 function PostFooter({
-  post,
   intl,
+  post,
   userHasModerationPrivileges,
 }) {
   const dispatch = useDispatch();

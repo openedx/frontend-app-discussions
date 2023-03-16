@@ -44,7 +44,6 @@ function AuthorLabel({
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
-
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
   const showUserNameAsLink = useShowLearnersTab()
@@ -63,7 +62,7 @@ function AuthorLabel({
     </span>
   );
   const labelContents = (
-    <div className={className}>
+    <>
       <OverlayTrigger
         overlay={(
           <Tooltip id={`endorsed-by-${author}-tooltip`}>
@@ -109,8 +108,7 @@ function AuthorLabel({
           {timeago.format(postCreatedAt, 'time-locale')}
         </span>
       )}
-
-    </div>
+    </>
   );
 
   return showUserNameAsLink
@@ -128,7 +126,7 @@ function AuthorLabel({
         {labelContents}
       </div>
     )
-    : <div className={className}>{labelContents}</div>;
+    : <div className={className}>{authorName}{labelContents}</div>;
 }
 
 AuthorLabel.propTypes = {
