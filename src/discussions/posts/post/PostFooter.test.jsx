@@ -92,4 +92,24 @@ describe('PostFooter', () => {
     renderComponent({ ...mockPost, following: false });
     expect(screen.queryByRole('button', { name: /follow/i })).not.toBeInTheDocument();
   });
+
+  it('test like button when voteCount is zero', async () => {
+    renderComponent({ ...mockPost, voteCount: 0 });
+    expect(screen.queryByRole('button', { name: /like/i })).not.toBeInTheDocument();
+  });
+
+  it('test like button when voteCount is not zero', async () => {
+    renderComponent({ ...mockPost, voted: true, voteCount: 4 });
+    const likeButton = screen.getByRole('button', { name: /like/i });
+    await act(async () => {
+      fireEvent.mouseEnter(likeButton);
+    });
+
+    expect(screen.getByRole('tooltip')).toHaveTextContent(/unlike/i);
+    await act(async () => {
+      fireEvent.click(likeButton);
+    });
+    // clicking on the button triggers thread update.
+    expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
+  });
 });

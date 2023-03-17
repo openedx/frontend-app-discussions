@@ -233,6 +233,32 @@ describe('ThreadView', () => {
       renderComponent(discussionPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
+    it('should not show post footer', async () => {
+      Factory.resetAll();
+      await axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
+        .reply(200, Factory.build('thread', {
+          vote_count: 0,
+          following: false,
+          closed: false,
+          group_id: null,
+        }));
+      await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
+      renderComponent(discussionPostId);
+      expect(screen.queryByTestId('post-footer')).not.toBeInTheDocument();
+    });
+
+    it('should show post footer', async () => {
+      Factory.resetAll();
+      await axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
+        .reply(200, Factory.build('thread', {
+          vote_count: 4,
+          following: true,
+          closed: false,
+          group_id: null,
+        }));
+      await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
+      renderComponent(discussionPostId);
+      expect(screen.queryByTestId('post-footer')).toBeInTheDocument();
     });
 
     it('should show and hide the editor', async () => {

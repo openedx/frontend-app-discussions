@@ -22,7 +22,7 @@ function PostFooter({
 }) {
   const dispatch = useDispatch();
   return (
-    <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }}>
+    <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }} data-testid="post-footer">
       {post.voteCount !== 0 && (
         <LikeButton
           count={post.voteCount}
