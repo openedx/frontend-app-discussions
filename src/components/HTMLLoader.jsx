@@ -16,8 +16,7 @@ function HTMLLoader({
   htmlNode, componentId, cssClassName, testId, delay,
 }) {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
-  const previewRef = useRef();
-
+  const previewRef = useRef(null);
   const debouncedPostContent = useDebounce(htmlNode, delay);
 
   useEffect(() => {
@@ -27,16 +26,18 @@ function HTMLLoader({
         .catch((err) => logError(`Typeset failed: ${err.message}`));
       return promise;
     }
+
     if (debouncedPostContent) {
       typeset(() => {
-        previewRef.current.innerHTML = sanitizedMath;
+        if (previewRef.current !== null) {
+          previewRef.current.innerHTML = sanitizedMath;
+        }
       });
     }
   }, [debouncedPostContent]);
 
   return (
     <div ref={previewRef} className={cssClassName} id={componentId} data-testid={testId} />
-
   );
 }
 
