@@ -109,7 +109,7 @@
   "discussions.post.closedBy": "Post geschlossen von",
   "discussion.comment.time": "{time} vor",
   "discussion.thread.notFound": "Thema nicht gefunden",
-  "discussions.comment.sortFilterStatus": "{sort, select,\n      false {Oldest first}\n      true {Newest first}\n      other {{sort}}\n    }",
+  "discussions.comment.sortFilterStatus": "{sort, select, false {Älteste zuerst} true {Neueste zuerst} other {{sort}} }",
   "discussions.app.title": "Diskussionen",
   "discussions.posts.actionBar.searchAllPosts": "Einträge durchsuchen",
   "discussions.posts.actionBar.search": "{page, select, topics {Suchthemen} posts {Alle Beiträge durchsuchen} learners {Lernende suchen} myPosts {Alle Beiträge durchsuchen} a00a14c5d87{d9fz}09 {d9fz}09 {d9fz}09 {d9fz}",
@@ -209,6 +209,6 @@
   "tour.action.end": "okay",
   "tour.body.notRespondedFilter": "Jetzt können Sie Diskussionen filtern, um Beiträge ohne Antwort zu finden.",
   "tour.title.notRespondedFilter": "Neue Filteroption!",
-  "tour.body.responseSortTour": "Responses and comments are now sorted by newest first. Please use this option to change the sort order",
-  "tour.title.responseSortTour": "Sort Responses!"
+  "tour.body.responseSortTour": "Antworten und Kommentare werden jetzt nach Datum sortiert. Bitte verwenden Sie diese Option, um die Sortierreihenfolge zu ändern.",
+  "tour.title.responseSortTour": "Antworten sortieren!"
 }
