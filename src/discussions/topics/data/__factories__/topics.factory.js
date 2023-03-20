@@ -5,8 +5,8 @@ Factory.define('topic')
   .sequence('id', ['topicPrefix'], (idx, topicPrefix) => `${topicPrefix}topic-${idx}`)
   .sequence('name', ['topicPrefix'], (idx, topicPrefix) => `${topicPrefix}topic ${idx}`)
   .attr('thread_counts', [], {
-    discussion: 0,
-    question: 0,
+    discussion: 1,
+    question: 1,
   })
   .attr('children', []);
 

@@ -12,27 +12,31 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
-import { getCourseConfigApiUrl } from '../data/api';
+import { getCourseConfigApiUrl, getDiscussionsConfigUrl } from '../data/api';
 import { fetchCourseConfig } from '../data/thunks';
 import { getCourseTopicsApiUrl } from '../in-context-topics/data/api';
 import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
 import navigationBarMessages from '../navigation/navigation-bar/messages';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
+import { fetchCourseTopics } from '../topics/data/thunks';
 import DiscussionsHome from './DiscussionsHome';
 
 import '../posts/data/__factories__/threads.factory';
 import '../in-context-topics/data/__factories__/inContextTopics.factory';
+import '../topics/data/__factories__/topics.factory';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
 let store;
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
+let container;
 
 function renderComponent(location = `/${courseId}/`) {
-  render(
+  const wrapper = render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
         <AppProvider store={store}>
@@ -43,6 +47,7 @@ function renderComponent(location = `/${courseId}/`) {
       </ResponsiveContext.Provider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
 describe('DiscussionsHome', () => {
@@ -58,6 +63,16 @@ describe('DiscussionsHome', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     store = initializeStore();
   });
+
+  async function setUpV1TopicsMockResponse() {
+    axiosMock
+      .onGet(`${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`)
+      .reply(200, {
+        courseware_topics: Factory.buildList('category', 2),
+        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw' }),
+      });
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+  }
 
   test('clicking "All Topics" button renders topics view', async () => {
     renderComponent();
@@ -166,4 +181,67 @@ describe('DiscussionsHome', () => {
 
       expect(screen.queryByText('No topic selected')).toBeInTheDocument();
     });
+
+  it('should display empty page message for empty learners list', async () => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      learners_tab_enabled: true,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+
+    await renderComponent(`/${courseId}/learners`);
+
+    expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
+  });
+
+  it('should display post editor form when click on add a post button', async () => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      learners_tab_enabled: true,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+
+    await renderComponent(`/${courseId}/my-posts`);
+
+    await act(async () => {
+      fireEvent.click(screen.queryByText('Add a post'));
+    });
+
+    await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
+  });
+
+  it('should display post editor to add post.', async () => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      enable_in_context: false,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+
+    await renderComponent(`/${courseId}/topics`);
+
+    expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(screen.queryByText('Add a post'));
+    });
+
+    await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
+  });
+
+  it('should display Add a post button for V1 topics', async () => {
+    await renderComponent(`/${courseId}/topics/topic-1`);
+
+    expect(screen.queryByText('Add a post')).toBeInTheDocument();
+  });
+
+  it('should display No post selected for V1 topics', async () => {
+    await setUpV1TopicsMockResponse();
+    await renderComponent(`/${courseId}/topics/category-1-topic-1`);
+
+    expect(screen.queryByText('No post selected')).toBeInTheDocument();
+  });
+
+  it('should display No topic selected for V1 topics', async () => {
+    await setUpV1TopicsMockResponse();
+    await renderComponent(`/${courseId}/topics`);
+
+    expect(screen.queryByText('No topic selected')).toBeInTheDocument();
+  });
 });
