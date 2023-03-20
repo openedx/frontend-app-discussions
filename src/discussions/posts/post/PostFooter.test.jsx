@@ -93,12 +93,12 @@ describe('PostFooter', () => {
     expect(screen.queryByRole('button', { name: /follow/i })).not.toBeInTheDocument();
   });
 
-  it('test like button when voteCount is zero', async () => {
+  it('tests like button when voteCount is zero', async () => {
     renderComponent({ ...mockPost, voteCount: 0 });
     expect(screen.queryByRole('button', { name: /like/i })).not.toBeInTheDocument();
   });
 
-  it('test like button when voteCount is not zero', async () => {
+  it('tests like button when voteCount is not zero', async () => {
     renderComponent({ ...mockPost, voted: true, voteCount: 4 });
     const likeButton = screen.getByRole('button', { name: /like/i });
     await act(async () => {
