@@ -97,9 +97,9 @@ function mockAxiosReturnPagedCommentsResponses() {
   }
 }
 
-async function getThreadAPIResponse(threadId, topicId) {
+async function getThreadAPIResponse(attr = null) {
   axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
-    .reply(200, Factory.build('thread', { id: threadId, topic_id: topicId }));
+    .reply(200, Factory.build('thread', attr));
   await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
@@ -152,14 +152,14 @@ describe('PostView', () => {
   });
 
   it('should show Topic Info for non-courseware topics', async () => {
-    await getThreadAPIResponse('thread-1', 'non-courseware-topic-1');
+    await getThreadAPIResponse({ id: 'thread-1', topic_id: 'non-courseware-topic-1' });
     renderComponent(discussionPostId);
     expect(await screen.findByText('Related to')).toBeInTheDocument();
     expect(await screen.findByText('non-courseware-topic 1')).toBeInTheDocument();
   });
 
   it('should show Topic Info for courseware topics with category', async () => {
-    await getThreadAPIResponse('thread-2', 'courseware-topic-2');
+    await getThreadAPIResponse({ id: 'thread-2', topic_id: 'courseware-topic-2' });
 
     renderComponent('thread-2');
     expect(await screen.findByText('Related to')).toBeInTheDocument();
@@ -235,28 +235,18 @@ describe('ThreadView', () => {
       expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
     it('should not show post footer', async () => {
       Factory.resetAll();
-      await axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
-        .reply(200, Factory.build('thread', {
-          vote_count: 0,
-          following: false,
-          closed: false,
-          group_id: null,
-        }));
-      await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
+      await getThreadAPIResponse({
+        vote_count: 0, following: false, closed: false, group_id: null,
+      });
       renderComponent(discussionPostId);
       expect(screen.queryByTestId('post-footer')).not.toBeInTheDocument();
     });
 
     it('should show post footer', async () => {
       Factory.resetAll();
-      await axiosMock.onGet(`${threadsApiUrl}${discussionPostId}/`)
-        .reply(200, Factory.build('thread', {
-          vote_count: 4,
-          following: true,
-          closed: false,
-          group_id: null,
-        }));
-      await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
+      await getThreadAPIResponse({
+        vote_count: 4, following: true, closed: false, group_id: null,
+      });
       renderComponent(discussionPostId);
       expect(screen.queryByTestId('post-footer')).toBeInTheDocument();
     });
