@@ -223,6 +223,18 @@ describe('ThreadView', () => {
       expect(JSON.parse(axiosMock.history.patch[axiosMock.history.patch.length - 1].data)).toMatchObject(data);
     }
 
+    it('should display post content', async () => {
+      renderComponent(discussionPostId);
+      const post = screen.getByTestId('post-thread-1');
+      expect(within(post).queryByTestId(discussionPostId)).toBeInTheDocument();
+    });
+
+    it('should display comment content', async () => {
+      renderComponent(discussionPostId);
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
+    });
+
     it('should show and hide the editor', async () => {
       renderComponent(discussionPostId);
       const post = screen.getByTestId('post-thread-1');
