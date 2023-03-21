@@ -223,6 +223,18 @@ describe('ThreadView', () => {
       expect(JSON.parse(axiosMock.history.patch[axiosMock.history.patch.length - 1].data)).toMatchObject(data);
     }
 
+    it('should display post content', async () => {
+      renderComponent(discussionPostId);
+      const post = screen.getByTestId('post-thread-1');
+      expect(within(post).queryByTestId(discussionPostId)).toBeInTheDocument();
+    });
+
+    it('should display comment content', async () => {
+      renderComponent(discussionPostId);
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
+    });
+
     it('should show and hide the editor', async () => {
       renderComponent(discussionPostId);
       const post = screen.getByTestId('post-thread-1');
@@ -742,6 +754,20 @@ describe('ThreadView', () => {
   });
 
   describe('For comments replies', () => {
+    it('shows action dropdown for replies', async () => {
+      renderComponent(discussionPostId);
+
+      const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
+      expect(within(reply).getByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+    });
+
+    it('should display reply content', async () => {
+      renderComponent(discussionPostId);
+
+      const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
+      expect(within(reply).queryByTestId('comment-7')).toBeInTheDocument();
+    });
+
     it('shows delete confirmation modal', async () => {
       renderComponent(discussionPostId);
 
