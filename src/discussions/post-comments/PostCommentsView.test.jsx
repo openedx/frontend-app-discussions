@@ -754,6 +754,20 @@ describe('ThreadView', () => {
   });
 
   describe('For comments replies', () => {
+    it('shows action dropdown for replies', async () => {
+      renderComponent(discussionPostId);
+
+      const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
+      expect(within(reply).getByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+    });
+
+    it('should display reply content', async () => {
+      renderComponent(discussionPostId);
+
+      const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
+      expect(within(reply).queryByTestId('comment-7')).toBeInTheDocument();
+    });
+
     it('shows delete confirmation modal', async () => {
       renderComponent(discussionPostId);
 
