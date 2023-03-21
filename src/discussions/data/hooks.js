@@ -128,9 +128,11 @@ export function useContainerSize(refContainer) {
 
   const resizeObserver = useRef(new ResizeObserver(() => {
     /* istanbul ignore if: ResizeObserver isn't available in the testing env */
-    if (refContainer?.current) {
-      setHeight(refContainer?.current?.clientHeight);
-    }
+    window.requestAnimationFrame(() => {
+      if (refContainer?.current) {
+        setHeight(refContainer?.current?.clientHeight);
+      }
+    });
   }));
 
   useEffect(() => {
@@ -198,7 +200,7 @@ export const useUserCanAddThreadInBlackoutDate = () => {
   const isInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
 
   return (!(isInBlackoutDateRange)
-          || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
+    || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
 };
 
 function camelToConstant(string) {
