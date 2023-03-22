@@ -153,7 +153,6 @@ describe('DiscussionsHome', () => {
         })];
       });
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
-
     await renderComponent(`/${courseId}/${searchByEndPoint}?inContextSidebar`);
 
     expect(screen.queryByText('No post selected')).toBeInTheDocument();
@@ -176,7 +175,6 @@ describe('DiscussionsHome', () => {
         }).concat(Factory.buildList('section', 2, null, { topicPrefix: 'courseware' })))
           .concat(Factory.buildList('archived-topics', 2, null)));
       await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
-
       await renderComponent(`/${courseId}/${searchByEndPoint}?inContextSidebar`);
 
       expect(screen.queryByText('No topic selected')).toBeInTheDocument();
@@ -187,7 +185,6 @@ describe('DiscussionsHome', () => {
       learners_tab_enabled: true,
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
-
     await renderComponent(`/${courseId}/learners`);
 
     expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
@@ -198,9 +195,7 @@ describe('DiscussionsHome', () => {
       learners_tab_enabled: true,
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
-
     await renderComponent(`/${courseId}/my-posts`);
-
     await act(async () => {
       fireEvent.click(screen.queryByText('Add a post'));
     });
@@ -213,7 +208,6 @@ describe('DiscussionsHome', () => {
       enable_in_context: false,
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
-
     await renderComponent(`/${courseId}/topics`);
 
     expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();

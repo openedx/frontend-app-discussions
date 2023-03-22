@@ -268,16 +268,12 @@ describe('InContext Topic Posts View', () => {
     await renderComponent();
 
     const searchField = await within(container).getByPlaceholderText('Search topics');
-    const searchButton = await within(container).getByTestId('search-icon');
     fireEvent.change(searchField, { target: { value: '' } });
 
-    await act(async () => fireEvent.click(searchButton));
-    await waitFor(async () => {
-      const clearButton = await within(container).queryByText('Clear results');
-      const units = container.querySelectorAll('.discussion-topic');
-
-      expect(clearButton).not.toBeInTheDocument();
-      expect(units).toHaveLength(3);
+    await act(async () => fireEvent.click(within(container).getByTestId('search-icon')));
+    await waitFor(() => {
+      expect(within(container).queryByText('Clear results')).not.toBeInTheDocument();
+      expect(container.querySelectorAll('.discussion-topic')).toHaveLength(3);
     });
   });
 });
