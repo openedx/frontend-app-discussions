@@ -30,7 +30,7 @@ export const selectCoursewareTopics = createSelector(
 export const selectNonCoursewareIds = state => state.topics.nonCoursewareIds;
 
 export const selectNonCoursewareTopics = state => state.topics.nonCoursewareIds?.map(id => state.topics.topics[id])
-  || [];
+|| [];
 
 export const selectTopic = topicId => state => state.topics.topics[topicId];
 
