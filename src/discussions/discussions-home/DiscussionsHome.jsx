@@ -29,6 +29,7 @@ import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
+import useFeedbackWrapper from './FeedbackWrapper';
 import InformationBanner from './InformationBanner';
 
 export default function DiscussionsHome() {
@@ -52,7 +53,7 @@ export default function DiscussionsHome() {
 
   useCourseDiscussionData(courseId);
   useRedirectToThread(courseId, enableInContextSidebar);
-
+  useFeedbackWrapper();
   /*  Display the content area if we are currently viewing/editing a post or creating one.
   If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
   However, for smaller screens or embeds, onlyshow the sidebar if the content area isn't displayed. */
