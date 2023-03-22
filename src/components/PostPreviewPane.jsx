@@ -28,6 +28,7 @@ function PostPreviewPane({
             size="inline"
             className="float-right p-3"
             iconClassNames="icon-size"
+            data-testid="hide-preview-button"
           />
           <HTMLLoader
             htmlNode={htmlNode}
@@ -46,6 +47,7 @@ function PostPreviewPane({
             onClick={() => setShowPreviewPane(true)}
             className={`text-primary-500 font-style p-0 ${editExisting && 'mb-4.5'}`}
             style={{ lineHeight: '26px' }}
+            data-testid="show-preview-button"
           >
             {intl.formatMessage(messages.showPreviewButton)}
           </Button>
