@@ -15,7 +15,7 @@ import { selectorForUnitSubsection, selectTopicContext } from '../../../data/sel
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
-import { selectModerationSettings } from '../../data/selectors';
+import { selectModerationSettings, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import ClosePostReasonModal from './ClosePostReasonModal';
@@ -26,7 +26,6 @@ import { postShape } from './proptypes';
 
 function Post({
   post,
-  preview,
   intl,
   handleAddResponseButton,
 }) {
@@ -42,6 +41,9 @@ function Post({
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const displayPostFooter = post.following || post.voteCount || post.closed
+  || (post.groupId && userHasModerationPrivileges);
 
   const handleAbusedFlag = useCallback(() => {
     if (post.abuseFlagged) {
@@ -147,8 +149,8 @@ function Post({
       </div>
       {(topicContext || topic) && (
         <div
-          className={classNames('mt-14px mb-1 font-style font-size-12',
-            { 'w-100': enableInContextSidebar })}
+          className={classNames('mt-14px font-style font-size-12',
+            { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter })}
           style={{ lineHeight: '20px' }}
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
@@ -170,7 +172,7 @@ function Post({
           </Hyperlink>
         </div>
       )}
-      <PostFooter post={post} preview={preview} />
+      {displayPostFooter && <PostFooter post={post} userHasModerationPrivileges={userHasModerationPrivileges} />}
       <ClosePostReasonModal
         isOpen={isClosing}
         onCancel={hideClosePostModal}
@@ -186,12 +188,7 @@ function Post({
 Post.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
-  preview: PropTypes.bool,
   handleAddResponseButton: PropTypes.func.isRequired,
-};
-
-Post.defaultProps = {
-  preview: false,
 };
 
 export default injectIntl(Post);

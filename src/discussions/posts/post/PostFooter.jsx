@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
@@ -9,20 +10,19 @@ import {
 import { Locked, People } from '@edx/paragon/icons';
 
 import { StarFilled, StarOutline } from '../../../components/icons';
-import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
 import { postShape } from './proptypes';
 
 function PostFooter({
-  post,
   intl,
+  post,
+  userHasModerationPrivileges,
 }) {
   const dispatch = useDispatch();
-  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   return (
-    <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ lineHeight: '32px' }}>
+    <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }} data-testid="post-footer">
       {post.voteCount !== 0 && (
         <LikeButton
           count={post.voteCount}
@@ -83,6 +83,7 @@ function PostFooter({
             >
               <Icon
                 src={Locked}
+                className="text-primary-500"
                 style={{
                   width: '1rem',
                   height: '1rem',
@@ -99,7 +100,7 @@ function PostFooter({
 PostFooter.propTypes = {
   intl: intlShape.isRequired,
   post: postShape.isRequired,
-
+  userHasModerationPrivileges: PropTypes.bool.isRequired,
 };
 
 export default injectIntl(PostFooter);

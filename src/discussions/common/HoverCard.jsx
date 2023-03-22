@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
-import { Button, Icon, IconButton } from '@edx/paragon';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import {
+  Button, Icon, IconButton, OverlayTrigger, Tooltip,
+} from '@edx/paragon';
 
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
@@ -16,6 +18,7 @@ import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
 function HoverCard({
+  intl,
   commentOrPost,
   actionHandlers,
   handleResponseCommentButton,
@@ -49,17 +52,26 @@ function HoverCard({
       )}
       {endorseIcons && (
         <div className="hover-button">
-          <IconButton
-            src={endorseIcons.icon}
-            iconAs={Icon}
-            onClick={() => {
-              const actionFunction = actionHandlers[endorseIcons.action];
-              actionFunction();
-            }}
-            className={['endorse', 'unendorse'].includes(endorseIcons.id) ? 'text-dark-500' : 'text-success-500'}
-            size="sm"
-            alt="Endorse"
-          />
+          <OverlayTrigger
+            overlay={(
+              <Tooltip id="endorsed-icon-tooltip">
+                {intl.formatMessage(endorseIcons.label)}
+              </Tooltip>
+            )}
+            trigger={['hover', 'focus']}
+          >
+            <IconButton
+              src={endorseIcons.icon}
+              iconAs={Icon}
+              onClick={() => {
+                const actionFunction = actionHandlers[endorseIcons.action];
+                actionFunction();
+              }}
+              className={['endorse', 'unendorse'].includes(endorseIcons.id) ? 'text-dark-500' : 'text-success-500'}
+              size="sm"
+              alt="Endorse"
+            />
+          </OverlayTrigger>
         </div>
       )}
       <div className="hover-button">
@@ -98,6 +110,7 @@ function HoverCard({
 }
 
 HoverCard.propTypes = {
+  intl: intlShape.isRequired,
   commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,

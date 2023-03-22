@@ -14,11 +14,11 @@ import PostFooter from './PostFooter';
 
 let store;
 
-function renderComponent(post, preview = false, showNewCountLabel = false) {
+function renderComponent(post, userHasModerationPrivileges = false) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <PostFooter post={post} preview={preview} showNewCountLabel={showNewCountLabel} />
+        <PostFooter post={post} userHasModerationPrivileges={userHasModerationPrivileges} />
       </AppProvider>
     </IntlProvider>,
   );
@@ -64,23 +64,11 @@ describe('PostFooter', () => {
     });
   });
 
-  it("doesn't have 'new' badge when there are 0 new comments", () => {
-    renderComponent({ ...mockPost, unreadCommentCount: 0 });
-    expect(screen.queryByText('2 New')).toBeFalsy();
-    expect(screen.queryByText('0 New')).toBeFalsy();
-  });
-
-  it("doesn't has 'new' badge when the new-unread item is the post itself", () => {
-    // commentCount === 1 means it's just the post without any further comments
-    renderComponent({ ...mockPost, unreadCommentCount: 1, commentCount: 1 });
-    expect(screen.queryByText('1 New')).toBeFalsy();
-  });
-
   it('has the cohort icon only when group information is present', () => {
     renderComponent(mockPost);
     expect(screen.queryByTestId('cohort-icon')).toBeFalsy();
 
-    renderComponent({ ...mockPost, groupId: 5, groupName: 'Test Cohort' });
+    renderComponent({ ...mockPost, groupId: 5, groupName: 'Test Cohort' }, true);
     expect(screen.getByTestId('cohort-icon')).toBeTruthy();
   });
 
@@ -103,5 +91,25 @@ describe('PostFooter', () => {
   it('test follow button when following=false', async () => {
     renderComponent({ ...mockPost, following: false });
     expect(screen.queryByRole('button', { name: /follow/i })).not.toBeInTheDocument();
+  });
+
+  it('tests like button when voteCount is zero', async () => {
+    renderComponent({ ...mockPost, voteCount: 0 });
+    expect(screen.queryByRole('button', { name: /like/i })).not.toBeInTheDocument();
+  });
+
+  it('tests like button when voteCount is not zero', async () => {
+    renderComponent({ ...mockPost, voted: true, voteCount: 4 });
+    const likeButton = screen.getByRole('button', { name: /like/i });
+    await act(async () => {
+      fireEvent.mouseEnter(likeButton);
+    });
+
+    expect(screen.getByRole('tooltip')).toHaveTextContent(/unlike/i);
+    await act(async () => {
+      fireEvent.click(likeButton);
+    });
+    // clicking on the button triggers thread update.
+    expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
   });
 });
