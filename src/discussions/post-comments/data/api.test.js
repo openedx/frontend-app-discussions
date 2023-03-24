@@ -99,9 +99,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('failed to add comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(404);
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onPost(commentsApiUrl).reply(404);
     await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
 
@@ -109,9 +106,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('denied to add comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(403, {});
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onPost(commentsApiUrl).reply(403, {});
     await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
 
@@ -134,9 +128,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('failed to update comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(404);
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onPatch(`${commentsApiUrl}${commentId}/`).reply(404);
     await executeThunk(editComment(commentId, newComment), store.dispatch, store.getState);
 
@@ -144,9 +135,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('denied to update comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(403, {});
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onPatch(`${commentsApiUrl}${commentId}/`).reply(403, {});
     await executeThunk(editComment(commentId, newComment), store.dispatch, store.getState);
 
@@ -164,9 +152,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('failed to remove comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(404);
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(404);
     await executeThunk(removeComment(commentId, threadId), store.dispatch, store.getState);
 
@@ -174,9 +159,6 @@ describe('Post comments view api tests', () => {
   });
 
   it('denied to remove comment', async () => {
-    axiosMock.onGet(commentsApiUrl).reply(403, {});
-    await executeThunk(fetchCommentResponses(commentId), store.dispatch, store.getState);
-
     axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(403, {});
     await executeThunk(removeComment(commentId, threadId), store.dispatch, store.getState);
 
