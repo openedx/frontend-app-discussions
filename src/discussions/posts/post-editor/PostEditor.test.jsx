@@ -375,7 +375,7 @@ describe('PostEditor', () => {
       })).toHaveLength(2);
     });
 
-    it('should show Preview Pane', async () => {
+    it('should show Preview Panel', async () => {
       await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
 
       await act(() => fireEvent.click(container.querySelector('[data-testid="show-preview-button"]')));
@@ -385,7 +385,7 @@ describe('PostEditor', () => {
       });
     });
 
-    it('should hide Preview Pane', async () => {
+    it('should hide Preview Panel', async () => {
       await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
 
       await act(() => fireEvent.click(container.querySelector('[data-testid="show-preview-button"]')));

@@ -19,7 +19,7 @@ import { Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
-import PostPreviewPane from '../../../components/PostPreviewPane';
+import PostPreviewPanel from '../../../components/PostPreviewPanel';
 import { useDispatchWithState } from '../../../data/hooks';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
@@ -441,7 +441,7 @@ function PostEditor({
             <FormikErrorFeedback name="comment" />
           </div>
 
-          <PostPreviewPane htmlNode={values.comment} isPost editExisting={editExisting} />
+          <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
 
           <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
             {!editExisting && (

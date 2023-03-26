@@ -72,18 +72,11 @@ describe('In Context Topics Selector test cases', () => {
   it('should return topics list', async () => {
     const state = await setupMockData();
     const topics = selectTopics(state);
+    const topicsIds = topics.map(topic => topic.id);
 
-    expect(topics).not.toBeUndefined();
-    topics.forEach(data => {
-      const topicFunc = jest.fn((topic) => {
-        if (topic.id.includes('noncourseware-topic')) { return true; }
-        if (topic.id.includes('courseware-topic')) { return true; }
-        if (topic.id.includes('archived')) { return true; }
-        return false;
-      });
-      topicFunc(data);
-      expect(topicFunc).toHaveReturnedWith(true);
-    });
+    expect(topicsIds[0].includes('noncourseware-topic')).toBeTruthy();
+    expect(topicsIds[1].includes('courseware-topic')).toBeTruthy();
+    expect(topicsIds[3].includes('archived')).toBeTruthy();
   });
 
   it('should return courseware topics list', async () => {
@@ -148,22 +141,21 @@ describe('In Context Topics Selector test cases', () => {
     expect(selectTotalTopicsThreadsCount(state)).toEqual(18);
   });
 
-  it('should return course ware threads counts successful.', async () => {
+  it('should return courseware threads counts successful.', async () => {
     const state = await setupMockData();
 
-    expect(selectCourseWareThreadsCount(state.inContextTopics.coursewareTopics[0].children[0].id)(state))
-      .toEqual(8);
+    expect(selectCourseWareThreadsCount('section-topic-1')(state)).toEqual(8);
   });
 
   it('should return selected subsection.', async () => {
     const state = await setupMockData();
 
-    expect(selectSubsection(state.inContextTopics.coursewareTopics[0].children[0].id)(state)).not.toBeNull();
+    expect(selectSubsection('section-topic-1')(state)).not.toBeNull();
   });
 
   it('should return selected archived topic.', async () => {
     const state = await setupMockData();
 
-    expect(selectArchivedTopic(state.inContextTopics.archivedTopics[0].id)(state)).not.toBeNull();
+    expect(selectArchivedTopic('archived-1')(state)).not.toBeNull();
   });
 });

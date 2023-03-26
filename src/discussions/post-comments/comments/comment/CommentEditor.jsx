@@ -11,7 +11,7 @@ import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
-import PostPreviewPane from '../../../../components/PostPreviewPane';
+import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import { useDispatchWithState } from '../../../../data/hooks';
 import { DiscussionContext } from '../../../common/context';
 import {
@@ -150,7 +150,7 @@ function CommentEditor({
                 {intl.formatMessage(messages.commentError)}
               </Form.Control.Feedback>
             )}
-          <PostPreviewPane htmlNode={values.comment} />
+          <PostPreviewPanel htmlNode={values.comment} />
           <div className="d-flex py-2 justify-content-end">
             <Button
               variant="outline-primary"

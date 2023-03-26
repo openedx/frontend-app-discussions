@@ -132,17 +132,25 @@ describe('DiscussionsHome', () => {
   it.each([
     { searchByEndPoint: 'category/unit-1' },
     { searchByEndPoint: 'topics/topic-1' },
-  ])('should display add a post message for empty topics', async ({ searchByEndPoint }) => {
-    await renderComponent(`/${courseId}/${searchByEndPoint}?inContextSidebar`);
+  ])('should display add a post message for inContext empty topics %s', async ({ searchByEndPoint }) => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      enableInContext: true, provider: 'openedx', hasModerationPrivileges: true,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+    await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
     expect(screen.queryByText('Add a post')).toBeInTheDocument();
   });
 
   it.each([
-    { searchByEndPoint: 'category/section-topic-1' },
-    { searchByEndPoint: 'topics/topic-1' },
+    { searchByEndPoint: 'category/section-topic-1', result: 'Add a post' },
+    { searchByEndPoint: 'topics/topic-1', result: 'No post selected' },
   ])(`should display No post selected message on posts pages when user has yet to select a post to display
-  for topics`, async ({ searchByEndPoint }) => {
+  for incontext topics %s`, async ({ searchByEndPoint, result }) => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      enableInContext: true, provider: 'openedx', hasModerationPrivileges: true,
+    });
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     axiosMock.onGet(getThreadsApiUrl())
       .reply(() => {
         const threadAttrs = { previewBody: 'thread preview body' };
@@ -153,16 +161,20 @@ describe('DiscussionsHome', () => {
         })];
       });
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
-    await renderComponent(`/${courseId}/${searchByEndPoint}?inContextSidebar`);
+    await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    expect(screen.queryByText('No post selected')).toBeInTheDocument();
+    expect(screen.queryByText(result)).toBeInTheDocument();
   });
 
   it.each([
     { searchByEndPoint: 'category/section-topic-1' },
     { searchByEndPoint: 'topics' },
-  ])('should display No Topic selected message on topic pages when user has yet to select a topic',
+  ])('should display No Topic selected message on inContext topic pages when user has yet to select a topic %s',
     async ({ searchByEndPoint }) => {
+      axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+        enableInContext: true, provider: 'openedx', hasModerationPrivileges: true,
+      });
+      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
       axiosMock.onGet(`${getCourseTopicsApiUrl()}${courseId}`)
         .reply(200, (Factory.buildList('topic', 1, null, {
           topicPrefix: 'noncourseware-topic',
@@ -175,7 +187,7 @@ describe('DiscussionsHome', () => {
         }).concat(Factory.buildList('section', 2, null, { topicPrefix: 'courseware' })))
           .concat(Factory.buildList('archived-topics', 2, null)));
       await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
-      await renderComponent(`/${courseId}/${searchByEndPoint}?inContextSidebar`);
+      await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
       expect(screen.queryByText('No topic selected')).toBeInTheDocument();
     });
@@ -190,10 +202,7 @@ describe('DiscussionsHome', () => {
     expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
   });
 
-  it('should display post editor form when click on add a post button', async () => {
-    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      learners_tab_enabled: true,
-    });
+  it('should display post editor form when click on add a post button for posts', async () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/my-posts`);
     await act(async () => {
@@ -203,7 +212,7 @@ describe('DiscussionsHome', () => {
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
   });
 
-  it('should display post editor to add post.', async () => {
+  it('should display post editor to add post for legacy topic view', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
       enable_in_context: false,
     });
@@ -219,20 +228,20 @@ describe('DiscussionsHome', () => {
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
   });
 
-  it('should display Add a post button for V1 topics', async () => {
+  it('should display Add a post button for legacy topics view', async () => {
     await renderComponent(`/${courseId}/topics/topic-1`);
 
     expect(screen.queryByText('Add a post')).toBeInTheDocument();
   });
 
-  it('should display No post selected for V1 topics', async () => {
+  it('should display No post selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics/category-1-topic-1`);
 
     expect(screen.queryByText('No post selected')).toBeInTheDocument();
   });
 
-  it('should display No topic selected for V1 topics', async () => {
+  it('should display No topic selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics`);
 

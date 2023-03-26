@@ -172,8 +172,7 @@ describe('Legacy Topics View', () => {
     await setupMockResponse();
     renderComponent();
 
-    await waitFor(() => container.querySelector('.text-danger'));
-    const reportedIcon = container.querySelector('.text-danger');
+    const reportedIcon = await waitFor(() => container.querySelector('.text-danger'));
     await act(async () => fireEvent.mouseEnter(reportedIcon));
 
     expect(reportedIcon).toBeInTheDocument();
