@@ -10,7 +10,7 @@ import {
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectUserIsGroupTa,
-  selectUserIsStaff
+  selectUserIsStaff,
 } from '../data/selectors';
 
 export default function useFeedbackWrapper() {
