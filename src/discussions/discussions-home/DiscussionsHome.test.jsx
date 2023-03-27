@@ -212,7 +212,7 @@ describe('DiscussionsHome', () => {
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
   });
 
-  it('should display post editor to add post for legacy topic view', async () => {
+  it('should display post editor form when click on add a post button in legacy topics view', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
       enable_in_context: false,
     });
