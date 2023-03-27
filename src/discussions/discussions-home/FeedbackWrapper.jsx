@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 
 import { logError } from '@edx/frontend-platform/logging';
 
+import { RequestStatus } from '../../data/constants';
 import {
+  selectconfigLoadingStatus,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectUserIsGroupTa,
-  selectUserIsStaff,
-  selectconfigLoadingStatus
+  selectUserIsStaff
 } from '../data/selectors';
-import { RequestStatus } from '../../data/constants';
 
 export default function useFeedbackWrapper() {
   const isStaff = useSelector(selectUserIsStaff);
@@ -33,5 +33,5 @@ export default function useFeedbackWrapper() {
         logError(err);
       }
     }
-  }, [isStaff, isUserGroupTA, isCourseAdmin, isCourseStaff, configStatus]);
+  }, [configStatus]);
 }
