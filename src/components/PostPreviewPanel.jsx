@@ -8,7 +8,7 @@ import { Close } from '@edx/paragon/icons';
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPane({
+function PostPreviewPanel({
   htmlNode, intl, isPost, editExisting,
 }) {
   const [showPreviewPane, setShowPreviewPane] = useState(false);
@@ -28,6 +28,7 @@ function PostPreviewPane({
             size="inline"
             className="float-right p-3"
             iconClassNames="icon-size"
+            data-testid="hide-preview-button"
           />
           <HTMLLoader
             htmlNode={htmlNode}
@@ -46,6 +47,7 @@ function PostPreviewPane({
             onClick={() => setShowPreviewPane(true)}
             className={`text-primary-500 font-style p-0 ${editExisting && 'mb-4.5'}`}
             style={{ lineHeight: '26px' }}
+            data-testid="show-preview-button"
           >
             {intl.formatMessage(messages.showPreviewButton)}
           </Button>
@@ -55,16 +57,16 @@ function PostPreviewPane({
   );
 }
 
-PostPreviewPane.propTypes = {
+PostPreviewPanel.propTypes = {
   intl: intlShape.isRequired,
   htmlNode: PropTypes.node.isRequired,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
 };
 
-PostPreviewPane.defaultProps = {
+PostPreviewPanel.defaultProps = {
   isPost: false,
   editExisting: false,
 };
 
-export default injectIntl(PostPreviewPane);
+export default injectIntl(PostPreviewPanel);

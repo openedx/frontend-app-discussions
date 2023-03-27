@@ -233,6 +233,8 @@ describe('ThreadView', () => {
       renderComponent(discussionPostId);
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
+    });
+
     it('should not show post footer', async () => {
       Factory.resetAll();
       await getThreadAPIResponse({

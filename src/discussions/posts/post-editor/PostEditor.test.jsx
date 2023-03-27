@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -32,10 +34,11 @@ const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${cours
 const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
+let container;
 
 async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
   const path = editExisting ? Routes.POSTS.EDIT_POST : Routes.POSTS.NEW_POSTS;
-  await render(
+  const wrapper = await render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
@@ -50,6 +53,7 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
       </AppProvider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
 describe('PostEditor', () => {
@@ -369,6 +373,31 @@ describe('PostEditor', () => {
       expect(screen.getAllByRole('option', {
         name: /reason \d/i,
       })).toHaveLength(2);
+    });
+
+    it('should show Preview Panel', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      await act(() => fireEvent.click(container.querySelector('[data-testid="show-preview-button"]')));
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).toBeInTheDocument();
+        expect(container.querySelector('[data-testid="show-preview-button"]')).not.toBeInTheDocument();
+      });
+    });
+
+    it('should hide Preview Panel', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      await act(() => fireEvent.click(container.querySelector('[data-testid="show-preview-button"]')));
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).toBeInTheDocument();
+      });
+
+      await act(() => fireEvent.click(container.querySelector('[data-testid="hide-preview-button"]')));
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="show-preview-button"]')).toBeInTheDocument();
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).not.toBeInTheDocument();
+      });
     });
   });
 });

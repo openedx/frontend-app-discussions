@@ -8,10 +8,10 @@ import messages from '../messages';
 function NoResults({ intl }) {
   const topics = useSelector(selectTopics);
 
-  let title = messages.nothingHere;
-  const helpMessage = '';
+  const title = messages.nothingHere;
+  let helpMessage = '';
   if (topics.length === 0) {
-    title = messages.noTopicExists;
+    helpMessage = messages.noTopicExists;
   }
 
   return (

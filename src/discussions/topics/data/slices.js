@@ -54,6 +54,7 @@ export const {
   fetchCourseTopicsRequest,
   fetchCourseTopicsSuccess,
   fetchCourseTopicsFailed,
+  fetchCourseTopicsDenied,
   setFilter,
   setSortBy,
   setTopicsCount,
