@@ -21,15 +21,20 @@ function HTMLLoader({
 
   useEffect(() => {
     let promise = Promise.resolve(); // Used to hold chain of typesetting calls
+
     function typeset(code) {
-      promise = promise.then(() => window.MathJax?.typesetPromise(code()))
+      promise = promise.then(() => {
+        if (typeof window?.MathJax !== 'undefined') { return window.MathJax?.typesetPromise(code()); }
+        return null;
+      })
         .catch((err) => logError(`Typeset failed: ${err.message}`));
       return promise;
     }
 
     if (debouncedPostContent) {
       typeset(() => {
-        if (previewRef.current !== null) {
+        if (previewRef.current !== null && typeof window?.MathJax !== 'undefined') {
+          window.MathJax.typesetClear();
           previewRef.current.innerHTML = sanitizedMath;
         }
       });
