@@ -42,13 +42,39 @@
         loader: {
           load: ["input/asciimath", "[tex]/noerrors"],
         },
+         menuSettings: {
+      collapsible: true,
+      autocollapse: false,
+      explorer: true
+    },
       };
     </script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-      id="MathJax-script"
-    ></script>
+
+<script>
+  (function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js';
+    document.head.appendChild(script);
+    // var script2 = document.createElement('script');
+    // script2.innerHTML = "\
+    //   \
+    // let mathjax_promise = Promise.resolve();  // Used to hold chain of typesetting calls \
+    // function typeset(code) { \
+    // mathjax_promise = mathjax_promise.then(() => MathJax.typesetPromise(code())) \
+    //                .catch((err) => console.log('Typeset failed: ' + err.message)); \
+    // return mathjax_promise; \
+    // } "
+    // function typeset(code) { 
+    // mathjax_promise = mathjax_promise.then(() => MathJax.typesetPromise(code())) 
+    //                .catch((err) => console.log('Typeset failed: ' + err.message)); 
+    // return mathjax_promise; 
+    // }
+  mathjax.typeset(() => { 
+      const main = document.querySelector('#main'); 
+      return main; 
+  }); 
+</script>
+
   </head>
   <body>
     <div id="root" class="small"></div>
