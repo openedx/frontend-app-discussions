@@ -41,6 +41,8 @@ export const ActionItem = ({
     data-testid={value === selected ? 'selected' : null}
     style={{ cursor: 'pointer' }}
     aria-checked={value === selected}
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    tabIndex={value === selected ? '0' : '-1'}
   >
     <Icon src={Check} className={classNames('text-success mr-2', { invisible: value !== selected })} />
     <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex="0">
