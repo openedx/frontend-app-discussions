@@ -34,7 +34,6 @@ function HTMLLoader({
     if (debouncedPostContent) {
       typeset(() => {
         if (previewRef.current !== null && typeof window?.MathJax !== 'undefined') {
-          window.MathJax.typesetClear();
           previewRef.current.innerHTML = sanitizedMath;
         }
       });
