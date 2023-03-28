@@ -1,9 +1,5 @@
-/* eslint-disable import/prefer-default-export */
 import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
+  useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -153,17 +149,20 @@ export function useContainerSize(refContainer) {
   return height;
 }
 
-export const useAlertBannerVisible = (content) => {
+export const useAlertBannerVisible = (
+  {
+    author, abuseFlagged, lastEdit, closed,
+  } = {},
+) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
-  const userIsContentAuthor = getAuthenticatedUser().username === content.author;
+  const userIsContentAuthor = getAuthenticatedUser().username === author;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
-  const canSeeReportedBanner = content.abuseFlagged;
+  const canSeeReportedBanner = abuseFlagged;
 
   return (
-    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (content.lastEdit?.reason || content.closed))
-    || (content.abuseFlagged && canSeeReportedBanner)
+    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
   );
 };
 
@@ -193,14 +192,14 @@ export const useCurrentDiscussionTopic = () => {
 export const useUserCanAddThreadInBlackoutDate = () => {
   const blackoutDateRange = useSelector(selectBlackoutDate);
   const isUserAdmin = useSelector(selectUserIsStaff);
-  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
+  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
-  const isInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
+  const isPrivileged = isUserAdmin || userHasModerationPrivileges || isUserGroupTA || isCourseAdmin || isCourseStaff;
+  const isInBlackoutDateRange = useMemo(() => inBlackoutDateRange(blackoutDateRange), [blackoutDateRange]);
 
-  return (!(isInBlackoutDateRange)
-    || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
+  return (!(isInBlackoutDateRange) || (isPrivileged));
 };
 
 function camelToConstant(string) {

@@ -13,36 +13,42 @@ import { StarFilled, StarOutline } from '../../../components/icons';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
-import { postShape } from './proptypes';
 
 function PostFooter({
   intl,
-  post,
+  voteCount,
+  voted,
+  following,
+  id,
+  groupId,
+  groupName,
+  closed,
   userHasModerationPrivileges,
 }) {
   const dispatch = useDispatch();
+
   return (
     <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }} data-testid="post-footer">
-      {post.voteCount !== 0 && (
+      {voteCount !== 0 && (
         <LikeButton
-          count={post.voteCount}
-          onClick={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
-          voted={post.voted}
+          count={voteCount}
+          onClick={() => dispatch(updateExistingThread(id, { voted: !voted }))}
+          voted={voted}
         />
       )}
-      {post.following && (
+      {following && (
         <OverlayTrigger
           overlay={(
-            <Tooltip id={`follow-${post.id}-tooltip`}>
-              {intl.formatMessage(post.following ? messages.unFollow : messages.follow)}
+            <Tooltip id={`follow-${id}-tooltip`}>
+              {intl.formatMessage(following ? messages.unFollow : messages.follow)}
             </Tooltip>
           )}
         >
           <IconButton
-            src={post.following ? StarFilled : StarOutline}
+            src={following ? StarFilled : StarOutline}
             onClick={(e) => {
               e.preventDefault();
-              dispatch(updateExistingThread(post.id, { following: !post.following }));
+              dispatch(updateExistingThread(id, { following: !following }));
               return true;
             }}
             iconAs={Icon}
@@ -53,10 +59,10 @@ function PostFooter({
         </OverlayTrigger>
       )}
       <div className="d-flex flex-fill justify-content-end align-items-center">
-        {post.groupId && userHasModerationPrivileges && (
+        {groupId && userHasModerationPrivileges && (
           <OverlayTrigger
             overlay={(
-              <Tooltip id={`visibility-${post.id}-tooltip`}>{post.groupName}</Tooltip>
+              <Tooltip id={`visibility-${id}-tooltip`}>{groupName}</Tooltip>
             )}
           >
             <span data-testid="cohort-icon">
@@ -71,27 +77,24 @@ function PostFooter({
             </span>
           </OverlayTrigger>
         )}
-
-        {post.closed
-          && (
-            <OverlayTrigger
-              overlay={(
-                <Tooltip id={`closed-${post.id}-tooltip`}>
-                  {intl.formatMessage(messages.postClosed)}
-                </Tooltip>
-              )}
-            >
-              <Icon
-                src={Locked}
-                className="text-primary-500"
-                style={{
-                  width: '1rem',
-                  height: '1rem',
-                  marginLeft: '19.5px',
-                }}
-              />
-            </OverlayTrigger>
-          )}
+        {closed && (
+          <OverlayTrigger
+            overlay={(
+              <Tooltip id={`closed-${id}-tooltip`}>
+                {intl.formatMessage(messages.postClosed)}
+              </Tooltip>
+            )}
+          >
+            <Icon
+              src={Locked}
+              style={{
+                width: '1rem',
+                height: '1rem',
+                marginLeft: '19.5px',
+              }}
+            />
+          </OverlayTrigger>
+        )}
       </div>
     </div>
   );
@@ -99,8 +102,19 @@ function PostFooter({
 
 PostFooter.propTypes = {
   intl: intlShape.isRequired,
-  post: postShape.isRequired,
+  voteCount: PropTypes.number.isRequired,
+  voted: PropTypes.bool.isRequired,
+  following: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  groupId: PropTypes.string,
+  groupName: PropTypes.string,
+  closed: PropTypes.bool.isRequired,
   userHasModerationPrivileges: PropTypes.bool.isRequired,
 };
 
-export default injectIntl(PostFooter);
+PostFooter.defaultProps = {
+  groupId: null,
+  groupName: null,
+};
+
+export default injectIntl(React.memo(PostFooter));

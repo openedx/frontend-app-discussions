@@ -59,4 +59,4 @@ Confirmation.defaultProps = {
   confirmButtonText: '',
 };
 
-export default injectIntl(Confirmation);
+export default injectIntl(React.memo(Confirmation));

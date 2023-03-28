@@ -15,102 +15,121 @@ import { selectorForUnitSubsection, selectTopicContext } from '../../../data/sel
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
+import { contentType } from '../../data/constants';
 import { selectModerationSettings, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
+import { selectThread } from '../data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import ClosePostReasonModal from './ClosePostReasonModal';
 import messages from './messages';
 import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
-import { postShape } from './proptypes';
 
 function Post({
-  post,
   intl,
+  postId,
   handleAddResponseButton,
 }) {
+  const {
+    topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId,
+    groupName, closeReason, authorLabel, type, author, title, createdAt, renderedBody, lastEdit,
+  } = useSelector(selectThread(postId));
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseId = useSelector((state) => state.config.id);
-  const topic = useSelector(selectTopic(post.topicId));
+  const topic = useSelector(selectTopic(topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
-  const topicContext = useSelector(selectTopicContext(post.topicId));
+  const topicContext = useSelector(selectTopicContext(topicId));
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
-  const displayPostFooter = post.following || post.voteCount || post.closed
-  || (post.groupId && userHasModerationPrivileges);
+  const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
-  const handleAbusedFlag = useCallback(() => {
-    if (post.abuseFlagged) {
-      dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
-    } else {
-      showReportConfirmation();
-    }
-  }, [dispatch, post.abuseFlagged, post.id, showReportConfirmation]);
-
-  const handleDeleteConfirmation = async () => {
-    await dispatch(removeThread(post.id));
+  const handleDeleteConfirmation = useCallback(async () => {
+    await dispatch(removeThread(postId));
     history.push({
       pathname: '.',
       search: enableInContextSidebar && '?inContextSidebar',
     });
     hideDeleteConfirmation();
-  };
+  }, [enableInContextSidebar, postId]);
 
-  const handleReportConfirmation = () => {
-    dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged }));
+  const handleReportConfirmation = useCallback(() => {
+    dispatch(updateExistingThread(postId, { flagged: !abuseFlagged }));
     hideReportConfirmation();
-  };
+  }, [abuseFlagged, postId]);
+
+  const handlePostContentEdit = useCallback(() => history.push({
+    ...location,
+    pathname: `${location.pathname}/edit`,
+  }), []);
+
+  const handlePostClose = useCallback(() => {
+    if (closed) {
+      dispatch(updateExistingThread(postId, { closed: false }));
+    } else if (reasonCodesEnabled) {
+      showClosePostModal();
+    } else {
+      dispatch(updateExistingThread(postId, { closed: true }));
+    }
+  }, [closed, postId, reasonCodesEnabled]);
+
+  const handlePostCopyLink = useCallback(() => navigator.clipboard.writeText(
+    `${window.location.origin}/${courseId}/posts/${postId}`,
+  ), [window.location.origin, postId, courseId]);
+
+  const handlePostPin = useCallback(() => dispatch(updateExistingThread(
+    postId, { pinned: !pinned },
+  )), [postId, pinned]);
+
+  const handlePostReport = useCallback(() => {
+    if (abuseFlagged) {
+      dispatch(updateExistingThread(postId, { flagged: !abuseFlagged }));
+    } else {
+      showReportConfirmation();
+    }
+  }, [abuseFlagged, postId]);
 
   const actionHandlers = useMemo(() => ({
-    [ContentActions.EDIT_CONTENT]: () => history.push({
-      ...location,
-      pathname: `${location.pathname}/edit`,
-    }),
+    [ContentActions.EDIT_CONTENT]: handlePostContentEdit,
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.CLOSE]: () => {
-      if (post.closed) {
-        dispatch(updateExistingThread(post.id, { closed: false }));
-      } else if (reasonCodesEnabled) {
-        showClosePostModal();
-      } else {
-        dispatch(updateExistingThread(post.id, { closed: true }));
-      }
-    },
-    [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
-    [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
-    [ContentActions.REPORT]: () => handleAbusedFlag(),
+    [ContentActions.CLOSE]: handlePostClose,
+    [ContentActions.COPY_LINK]: handlePostCopyLink,
+    [ContentActions.PIN]: handlePostPin,
+    [ContentActions.REPORT]: handlePostReport,
   }), [
-    showDeleteConfirmation,
-    history,
-    location,
-    post.closed,
-    post.id,
-    post.pinned,
-    reasonCodesEnabled,
-    dispatch,
-    showClosePostModal,
-    courseId,
-    handleAbusedFlag,
+    handlePostClose, handlePostContentEdit, handlePostCopyLink, handlePostPin, handlePostReport, showDeleteConfirmation,
   ]);
 
-  const getTopicCategoryName = topicData => (
-    topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
-  );
+  const handleClosePostConfirmation = useCallback((closeReasonCode) => {
+    dispatch(updateExistingThread(postId, { closed: true, closeReasonCode }));
+    hideClosePostModal();
+  }, [postId]);
 
-  const getTopicInfo = topicData => (
+  const handlePostLike = useCallback(() => {
+    dispatch(updateExistingThread(postId, { voted: !voted }));
+  }, [postId, voted]);
+
+  const handlePostFollow = useCallback(() => {
+    dispatch(updateExistingThread(postId, { following: !following }));
+  }, [postId, following]);
+
+  const getTopicCategoryName = useCallback(topicData => (
+    topicData.usageKey ? getTopicSubsection(topicData.usageKey)?.displayName : topicData.categoryId
+  ), [getTopicSubsection]);
+
+  const getTopicInfo = useCallback(topicData => (
     getTopicCategoryName(topicData) ? `${getTopicCategoryName(topicData)} / ${topicData.name}` : `${topicData.name}`
-  );
+  ), [getTopicCategoryName]);
 
   return (
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment"
-      data-testid={`post-${post.id}`}
+      data-testid={`post-${postId}`}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex="0"
     >
@@ -123,7 +142,7 @@ function Post({
         closeButtonVaraint="tertiary"
         confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
-      {!post.abuseFlagged && (
+      {!abuseFlagged && (
         <Confirmation
           isOpen={isReporting}
           title={intl.formatMessage(messages.reportPostTitle)}
@@ -134,18 +153,38 @@ function Post({
         />
       )}
       <HoverCard
-        commentOrPost={post}
+        PostOrCommentId={postId}
+        type={contentType.POST}
         actionHandlers={actionHandlers}
         handleResponseCommentButton={handleAddResponseButton}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
-        onLike={() => dispatch(updateExistingThread(post.id, { voted: !post.voted }))}
-        onFollow={() => dispatch(updateExistingThread(post.id, { following: !post.following }))}
-        isClosedPost={post.closed}
+        onLike={handlePostLike}
+        onFollow={handlePostFollow}
+        isClosedPost={closed}
+        voted={voted}
+        following={following}
       />
-      <AlertBanner content={post} />
-      <PostHeader post={post} />
+      <AlertBanner
+        author={author}
+        abuseFlagged={abuseFlagged}
+        lastEdit={lastEdit}
+        closed={closed}
+        closedBy={closedBy}
+        closeReason={closeReason}
+      />
+      <PostHeader
+        hasEndorsed={hasEndorsed}
+        type={type}
+        authorLabel={authorLabel}
+        author={author}
+        title={title}
+        createdAt={createdAt}
+        abuseFlagged={abuseFlagged}
+        lastEdit={lastEdit}
+        closed={closed}
+      />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
-        <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
+        <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader" testId={postId} />
       </div>
       {(topicContext || topic) && (
         <div
@@ -153,33 +192,47 @@ function Post({
             { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter })}
           style={{ lineHeight: '20px' }}
         >
-          <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
+          <span className="text-gray-500" style={{ lineHeight: '20px' }}>
+            {intl.formatMessage(messages.relatedTo)}{' '}
+          </span>
           <Hyperlink
-            destination={topicContext ? topicContext.unitLink : `${getConfig().BASE_URL}/${courseId}/topics/${post.topicId}`}
             target="_top"
+            destination={topicContext ? (
+              topicContext.unitLink
+            ) : (
+              `${getConfig().BASE_URL}/${courseId}/topics/${topicId}`
+            )}
           >
-            {(topicContext && !topic)
-              ? (
-                <>
-                  <span className="w-auto">{topicContext.chapterName}</span>
-                  <span className="mx-1">/</span>
-                  <span className="w-auto">{topicContext.verticalName}</span>
-                  <span className="mx-1">/</span>
-                  <span className="w-auto">{topicContext.unitName}</span>
-                </>
-              )
-              : getTopicInfo(topic)}
+            {(topicContext && !topic) ? (
+              <>
+                <span className="w-auto">{topicContext.chapterName}</span>
+                <span className="mx-1">/</span>
+                <span className="w-auto">{topicContext.verticalName}</span>
+                <span className="mx-1">/</span>
+                <span className="w-auto">{topicContext.unitName}</span>
+              </>
+            ) : (
+              getTopicInfo(topic)
+            )}
           </Hyperlink>
         </div>
       )}
-      {displayPostFooter && <PostFooter post={post} userHasModerationPrivileges={userHasModerationPrivileges} />}
+      {displayPostFooter && (
+        <PostFooter
+          id={postId}
+          voteCount={voteCount}
+          voted={voted}
+          following={following}
+          groupId={groupId}
+          groupName={groupName}
+          closed={closed}
+          userHasModerationPrivileges={userHasModerationPrivileges}
+        />
+      )}
       <ClosePostReasonModal
         isOpen={isClosing}
         onCancel={hideClosePostModal}
-        onConfirm={closeReasonCode => {
-          dispatch(updateExistingThread(post.id, { closed: true, closeReasonCode }));
-          hideClosePostModal();
-        }}
+        onConfirm={handleClosePostConfirmation}
       />
     </div>
   );
@@ -187,7 +240,7 @@ function Post({
 
 Post.propTypes = {
   intl: intlShape.isRequired,
-  post: postShape.isRequired,
+  postId: PropTypes.string.isRequired,
   handleAddResponseButton: PropTypes.func.isRequired,
 };
 

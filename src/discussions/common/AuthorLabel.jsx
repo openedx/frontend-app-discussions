@@ -27,16 +27,17 @@ function AuthorLabel({
   authorToolTip,
   postOrComment,
 }) {
+  timeago.register('time-locale', timeLocale);
   const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
-  timeago.register('time-locale', timeLocale);
 
   if (authorLabel === 'Staff') {
     icon = Institution;
     authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
   }
+
   if (authorLabel === 'Community TA') {
     icon = School;
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
@@ -151,4 +152,4 @@ AuthorLabel.defaultProps = {
   postOrComment: false,
 };
 
-export default injectIntl(AuthorLabel);
+export default injectIntl(React.memo(AuthorLabel));

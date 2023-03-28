@@ -12,29 +12,31 @@ import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
 import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
-import { postShape } from '../posts/post/proptypes';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
 function HoverCard({
   intl,
-  commentOrPost,
+  type,
+  PostOrCommentId,
   actionHandlers,
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
   onLike,
   onFollow,
+  voted,
+  following,
   isClosedPost,
   endorseIcons,
 }) {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
-      data-testid={`hover-card-${commentOrPost.id}`}
-      id={`hover-card-${commentOrPost.id}`}
+      data-testid={`hover-card-${PostOrCommentId}`}
+      id={`hover-card-${PostOrCommentId}`}
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="d-flex">
@@ -76,7 +78,7 @@ function HoverCard({
       )}
       <div className="hover-button">
         <IconButton
-          src={commentOrPost.voted ? ThumbUpFilled : ThumbUpOutline}
+          src={voted ? ThumbUpFilled : ThumbUpOutline}
           iconAs={Icon}
           size="sm"
           alt="Like"
@@ -87,10 +89,10 @@ function HoverCard({
           }}
         />
       </div>
-      {commentOrPost.following !== undefined && (
+      {following !== undefined && (
         <div className="hover-button">
           <IconButton
-            src={commentOrPost.following ? StarFilled : StarOutline}
+            src={following ? StarFilled : StarOutline}
             iconAs={Icon}
             size="sm"
             alt="Follow"
@@ -103,7 +105,12 @@ function HoverCard({
         </div>
       )}
       <div className="hover-button ml-auto">
-        <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} dropDownIconSize />
+        <ActionsDropdown
+          PostOrCommentId={PostOrCommentId}
+          actionHandlers={actionHandlers}
+          dropDownIconSize
+          type={type}
+        />
       </div>
     </div>
   );
@@ -111,7 +118,8 @@ function HoverCard({
 
 HoverCard.propTypes = {
   intl: intlShape.isRequired,
-  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
+  PostOrCommentId: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,
   onLike: PropTypes.func.isRequired,
@@ -119,11 +127,14 @@ HoverCard.propTypes = {
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   isClosedPost: PropTypes.bool.isRequired,
   endorseIcons: PropTypes.objectOf(PropTypes.any),
+  voted: PropTypes.bool.isRequired,
+  following: PropTypes.bool,
 };
 
 HoverCard.defaultProps = {
   onFollow: () => null,
   endorseIcons: null,
+  following: undefined,
 };
 
-export default injectIntl(HoverCard);
+export default injectIntl(React.memo(HoverCard));

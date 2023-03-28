@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo, useState,
+} from 'react';
 
 import { useParams } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -24,17 +26,14 @@ import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
 
 function PostCommentsView({ intl }) {
-  const [isLoading, submitDispatch] = useDispatchWithState();
   const { postId } = useParams();
-  console.time('for thread');
-  const thread = usePost(postId);
-  console.timeEnd('for thread');
-  const commentsStatus = useSelector(selectCommentsStatus);
-  const commentsCount = useCommentsCount(postId);
   const history = useHistory();
   const location = useLocation();
-  const isOnDesktop = useIsOnDesktop();
   const [addingResponse, setAddingResponse] = useState(false);
+  const isOnDesktop = useIsOnDesktop();
+  const [isLoading, submitDispatch] = useDispatchWithState();
+  const thread = usePost(postId);
+  const commentsCount = useCommentsCount(postId);
   const {
     courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
@@ -43,6 +42,14 @@ function PostCommentsView({ intl }) {
     if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
     setAddingResponse(false);
   }, [postId]);
+
+  const handleAddResponseButton = useCallback(() => {
+    setAddingResponse(true);
+  }, []);
+
+  const handleCloseEditor = useCallback(() => {
+    setAddingResponse(false);
+  }, []);
 
   if (!thread) {
     if (!isLoading) {
@@ -60,6 +67,7 @@ function PostCommentsView({ intl }) {
       </div>
     );
   }
+
   console.log('PostCommentsView');
   return (
     <>
@@ -98,17 +106,17 @@ function PostCommentsView({ intl }) {
       <div
         className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
       >
-        <Post post={thread} handleAddResponseButton={() => setAddingResponse(true)} />
+        <Post postId={postId} handleAddResponseButton={handleAddResponseButton} />
         {!thread.closed && (
           <ResponseEditor
             postId={postId}
-            handleCloseEditor={() => setAddingResponse(false)}
+            handleCloseEditor={handleCloseEditor}
             addingResponse={addingResponse}
           />
         )}
       </div>
       {!!commentsCount && <CommentsSort />}
-      {thread.type === ThreadType.DISCUSSION && (
+      {/* {thread.type === ThreadType.DISCUSSION && (
         <CommentsView
           postId={postId}
           intl={intl}
@@ -134,7 +142,7 @@ function PostCommentsView({ intl }) {
             isClosed={thread.closed}
           />
         </>
-      )}
+      )} */}
     </>
   );
 }
@@ -143,4 +151,4 @@ PostCommentsView.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(PostCommentsView);
+export default injectIntl(React.memo(PostCommentsView));

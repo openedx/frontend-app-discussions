@@ -4,6 +4,11 @@ import { createSelector } from '@reduxjs/toolkit';
 const selectCommentsById = state => state.comments.commentsById;
 const mapIdToComment = (ids, comments) => ids.map(id => comments[id]);
 
+export const selectCommentOrResponseById = commentOrResponseId => createSelector(
+  selectCommentsById,
+  comments => comments[commentOrResponseId],
+);
+
 export const selectThreadComments = (threadId, endorsed = null) => createSelector(
   [
     state => state.comments.commentsInThreads[threadId]?.[endorsed] || [],

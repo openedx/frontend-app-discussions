@@ -60,7 +60,12 @@ function Reply({
   }), [dispatch, handleAbusedFlag, reply.endorsed, reply.id, showDeleteConfirmation]);
 
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
-  const hasAnyAlert = useAlertBannerVisible(reply);
+  const hasAnyAlert = useAlertBannerVisible({
+    author: reply.author,
+    abuseFlagged: reply.abuseFlagged,
+    lastEdit: reply.lastEdit,
+    closed: reply.closed,
+  });
 
   return (
     <div className="d-flex flex-column mt-2.5 " data-testid={`reply-${reply.id}`} role="listitem">
