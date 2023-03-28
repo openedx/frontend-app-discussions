@@ -1,4 +1,5 @@
-/* eslint-disable import/prefer-default-export */
+import { useCallback, useMemo } from 'react';
+
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
 import { generatePath, useRouteMatch } from 'react-router';
@@ -176,19 +177,22 @@ export const ACTIONS_LIST = [
 ];
 
 export function useActions(content) {
-  const checkConditions = (item, conditions) => (
+  const checkConditions = useCallback((item, conditions) => (
     conditions
       ? Object.keys(conditions)
         .map(key => item[key] === conditions[key])
         .every(condition => condition === true)
       : true
-  );
-  return ACTIONS_LIST.filter(
+  ), []);
+
+  const actions = useMemo(() => ACTIONS_LIST.filter(
     ({
       action,
       conditions = null,
     }) => checkPermissions(content, action) && checkConditions(content, conditions),
-  );
+  ), [content]);
+
+  return actions;
 }
 
 export const formikCompatibleHandler = (formikHandler, name) => (value) => formikHandler({

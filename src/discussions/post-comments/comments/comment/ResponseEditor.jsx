@@ -17,16 +17,15 @@ function ResponseEditor({
     handleCloseEditor();
   }, [postId]);
 
-  return addingResponse
-    && (
-      <div className={classNames({ 'bg-white p-4 mb-4 rounded mt-2': addWrappingDiv })}>
-        <CommentEditor
-          comment={{ threadId: postId }}
-          edit={false}
-          onCloseEditor={handleCloseEditor}
-        />
-      </div>
-    );
+  return addingResponse && (
+    <div className={classNames({ 'bg-white p-4 mb-4 rounded mt-2': addWrappingDiv })}>
+      <CommentEditor
+        comment={{ threadId: postId }}
+        edit={false}
+        onCloseEditor={handleCloseEditor}
+      />
+    </div>
+  );
 }
 
 ResponseEditor.propTypes = {
@@ -40,4 +39,4 @@ ResponseEditor.defaultProps = {
   addWrappingDiv: false,
 };
 
-export default injectIntl(ResponseEditor);
+export default injectIntl(React.memo(ResponseEditor));

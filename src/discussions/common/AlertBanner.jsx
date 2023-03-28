@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Report } from '@edx/paragon/icons';
 
@@ -12,26 +12,31 @@ import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
   selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
 } from '../data/selectors';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
 import messages from '../post-comments/messages';
-import { postShape } from '../posts/post/proptypes';
 import AlertBar from './AlertBar';
 
-function AlertBanner({
-  intl,
-  content,
-}) {
+const AlertBanner = ({
+  author,
+  abuseFlagged,
+  lastEdit,
+  closed,
+  closedBy,
+  closeReason,
+  editByLabel,
+  closedByLabel,
+}) => {
+  const intl = useIntl();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsGlobalStaff = useSelector(selectUserIsStaff);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
-  const userIsContentAuthor = getAuthenticatedUser().username === content.author;
-  const canSeeReportedBanner = content?.abuseFlagged;
+  const userIsContentAuthor = getAuthenticatedUser().username === author;
+  const canSeeReportedBanner = abuseFlagged;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
     || userIsGlobalStaff || userIsContentAuthor
   );
-  const editByLabelColor = AvatarOutlineAndLabelColors[content.editByLabel];
-  const closedByLabelColor = AvatarOutlineAndLabelColors[content.closedByLabel];
+  const editByLabelColor = AvatarOutlineAndLabelColors[editByLabel];
+  const closedByLabelColor = AvatarOutlineAndLabelColors[closedByLabel];
 
   return (
     <>
@@ -42,33 +47,49 @@ function AlertBanner({
       )}
       {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
         <>
-          {content.lastEdit?.reason && (
+          {lastEdit?.reason && (
             <AlertBar
               message={messages.editedBy}
-              author={content.lastEdit.editorUsername}
-              authorLabel={content.editByLabel}
+              author={lastEdit.editorUsername}
+              authorLabel={editByLabel}
               labelColor={editByLabelColor && `text-${editByLabelColor}`}
-              reason={content.lastEdit.reason}
+              reason={lastEdit.reason}
             />
           )}
-          {content.closed && (
-          <AlertBar
-            message={messages.closedBy}
-            author={content.closedBy}
-            authorLabel={content.closedByLabel}
-            labelColor={closedByLabelColor && `text-${closedByLabelColor}`}
-            reason={content.closeReason}
-          />
+          {closed && (
+            <AlertBar
+              message={messages.closedBy}
+              author={closedBy}
+              authorLabel={closedByLabel}
+              labelColor={closedByLabelColor && `text-${closedByLabelColor}`}
+              reason={closeReason}
+            />
           )}
         </>
       )}
     </>
   );
-}
-
-AlertBanner.propTypes = {
-  intl: intlShape.isRequired,
-  content: PropTypes.oneOfType([commentShape.isRequired, postShape.isRequired]).isRequired,
 };
 
-export default injectIntl(AlertBanner);
+AlertBanner.propTypes = {
+  author: PropTypes.string.isRequired,
+  abuseFlagged: PropTypes.bool,
+  lastEdit: PropTypes.shape({
+    editorUsername: PropTypes.string,
+    reason: PropTypes.string,
+  }),
+  closed: PropTypes.bool.isRequired,
+  closedBy: PropTypes.string,
+  closeReason: PropTypes.string,
+  editByLabel: PropTypes.string.isRequired,
+  closedByLabel: PropTypes.string.isRequired,
+};
+
+AlertBanner.defaultProps = {
+  lastEdit: {},
+  abuseFlagged: false,
+  closedBy: undefined,
+  closeReason: undefined,
+};
+
+export default React.memo(AlertBanner);

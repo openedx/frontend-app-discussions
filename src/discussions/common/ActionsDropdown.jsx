@@ -11,15 +11,15 @@ import {
 import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
+import { contentSelector } from '../data/constants';
 import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
-import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
 
 function ActionsDropdown({
   intl,
-  commentOrPost,
+  type,
+  PostOrCommentId,
   disabled,
   actionHandlers,
   iconSize,
@@ -28,6 +28,7 @@ function ActionsDropdown({
   const buttonRef = useRef();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
+  const commentOrPost = useSelector(contentSelector[type](PostOrCommentId));
   const actions = useActions(commentOrPost);
 
   const handleActions = useCallback((action) => {
@@ -80,9 +81,7 @@ function ActionsDropdown({
           >
             {actions.map(action => (
               <React.Fragment key={action.id}>
-                {(action.action === ContentActions.DELETE)
-                  && <Dropdown.Divider />}
-
+                {(action.action === ContentActions.DELETE) && <Dropdown.Divider />}
                 <Dropdown.Item
                   as={Button}
                   variant="tertiary"
@@ -112,11 +111,12 @@ function ActionsDropdown({
 
 ActionsDropdown.propTypes = {
   intl: intlShape.isRequired,
-  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
+  PostOrCommentId: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
+  type: PropTypes.oneOf(['post', 'comment']).isRequired,
 };
 
 ActionsDropdown.defaultProps = {

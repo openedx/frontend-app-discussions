@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -31,6 +31,9 @@ function CommentEditor({
   edit,
   formClasses,
 }) {
+  const {
+    id, threadId, parentId, rawBody, author, lastEdit,
+  } = comment;
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -42,7 +45,7 @@ function CommentEditor({
 
   const canDisplayEditReason = (reasonCodesEnabled && edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
-    && comment?.author !== authenticatedUser.username
+    && author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -56,8 +59,8 @@ function CommentEditor({
   });
 
   const initialValues = {
-    comment: comment.rawBody,
-    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
+    comment: rawBody,
+    editReasonCode: lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
   const handleCloseEditor = (resetForm) => {
@@ -66,14 +69,14 @@ function CommentEditor({
   };
 
   const saveUpdatedComment = async (values, { resetForm }) => {
-    if (comment.id) {
+    if (id) {
       const payload = {
         ...values,
         editReasonCode: values.editReasonCode || undefined,
       };
-      await dispatch(editComment(comment.id, payload));
+      await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(values.comment, comment.threadId, comment.parentId, enableInContextSidebar));
+      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
@@ -83,7 +86,7 @@ function CommentEditor({
   };
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
-  const editorId = `comment-editor-${comment.id || comment.parentId || comment.threadId}`;
+  const editorId = `comment-editor-${id || parentId || threadId}`;
 
   return (
     <Formik
@@ -183,7 +186,7 @@ CommentEditor.propTypes = {
     rawBody: PropTypes.string,
     author: PropTypes.string,
     lastEdit: PropTypes.object,
-  }).isRequired,
+  }),
   onCloseEditor: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
   edit: PropTypes.bool,
@@ -193,6 +196,13 @@ CommentEditor.propTypes = {
 CommentEditor.defaultProps = {
   edit: true,
   formClasses: '',
+  comment: {
+    id: null,
+    parentId: null,
+    rawBody: '',
+    author: null,
+    lastEdit: null,
+  },
 };
 
-export default injectIntl(CommentEditor);
+export default injectIntl(React.memo(CommentEditor));

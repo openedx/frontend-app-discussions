@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 
 import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';
 
-function AlertBar({
-  intl,
+const AlertBar = ({
   message,
   author,
   authorLabel,
   labelColor,
   reason,
-}) {
+}) => {
+  const intl = useIntl();
+
   return (
     <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
       <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
@@ -38,10 +39,9 @@ function AlertBar({
       </div>
     </Alert>
   );
-}
+};
 
 AlertBar.propTypes = {
-  intl: intlShape.isRequired,
   message: PropTypes.string,
   author: PropTypes.string,
   authorLabel: PropTypes.string,
@@ -57,4 +57,4 @@ AlertBar.defaultProps = {
   reason: '',
 };
 
-export default injectIntl(AlertBar);
+export default React.memo(AlertBar);

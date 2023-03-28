@@ -1,4 +1,6 @@
-import { useContext, useEffect } from 'react';
+import {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -14,15 +16,15 @@ import {
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
-function trackLoadMoreEvent(postId, params) {
+const trackLoadMoreEvent = (postId, params) => (
   sendTrackEvent(
     'edx.forum.responses.loadMore',
     {
       postId,
       params,
     },
-  );
-}
+  )
+);
 
 export function usePost(postId) {
   const dispatch = useDispatch();
@@ -77,5 +79,9 @@ export function useCommentsCount(postId) {
   const endorsedQuestions = useSelector(selectThreadComments(postId, EndorsementStatus.ENDORSED));
   const unendorsedQuestions = useSelector(selectThreadComments(postId, EndorsementStatus.UNENDORSED));
 
-  return [...discussions, ...endorsedQuestions, ...unendorsedQuestions].length;
+  const commentsLength = useMemo(() => (
+    [...discussions, ...endorsedQuestions, ...unendorsedQuestions].length
+  ), [discussions, endorsedQuestions, unendorsedQuestions]);
+
+  return commentsLength;
 }

@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
@@ -22,16 +24,15 @@ function ClosePostReasonModal({
 }) {
   const scrollTo = useRef(null);
   const [reasonCode, setReasonCode] = useState(null);
-
   const { postCloseReasons } = useSelector(selectModerationSettings);
 
-  const onChange = event => {
+  const onChange = useCallback(event => {
     if (event.target.value) {
       setReasonCode(event.target.value);
     } else {
       setReasonCode(null);
     }
-  };
+  }, []);
 
   useEffect(() => {
     /* istanbul ignore if: This API is not available in the test environment. */
@@ -96,4 +97,4 @@ ClosePostReasonModal.propTypes = {
   onConfirm: PropTypes.func.isRequired,
 };
 
-export default injectIntl(ClosePostReasonModal);
+export default injectIntl(React.memo(ClosePostReasonModal));

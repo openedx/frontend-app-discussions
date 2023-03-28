@@ -14,7 +14,12 @@ function CommentHeader({
   comment,
 }) {
   const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
-  const hasAnyAlert = useAlertBannerVisible(comment);
+  const hasAnyAlert = useAlertBannerVisible({
+    author: comment.author,
+    abuseFlagged: comment.abuseFlagged,
+    lastEdit: comment.lastEdit,
+    closed: comment.closed,
+  });
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
