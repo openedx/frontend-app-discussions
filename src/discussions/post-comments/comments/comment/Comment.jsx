@@ -110,7 +110,7 @@ function Comment({
       {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
       <div
         tabIndex="0"
-        className="d-flex flex-column card on-focus"
+        className="d-flex flex-column card on-focus border-0"
         data-testid={`comment-${comment.id}`}
         role="listitem"
       >
