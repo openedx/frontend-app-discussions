@@ -4,6 +4,8 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { getApiBaseUrl } from '../../../data/constants';
 
+export const getCourseMetadataApiUrl = (courseId) => `${getApiBaseUrl()}/api/course_home/course_metadata/${courseId}`;
+
 function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
   const data = camelCaseObject(metadata);
   return {
@@ -21,7 +23,7 @@ function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
 }
 
 export async function getCourseHomeCourseMetadata(courseId, rootSlug) {
-  const url = `${getApiBaseUrl()}/api/course_home/course_metadata/${courseId}`;
+  const url = getCourseMetadataApiUrl(courseId);
   // don't know the context of adding timezone in url. hence omitting it
   // url = appendBrowserTimezoneToUrl(url);
   const { data } = await getAuthenticatedHttpClient().get(url);

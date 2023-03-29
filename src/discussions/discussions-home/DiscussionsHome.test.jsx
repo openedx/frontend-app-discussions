@@ -12,6 +12,8 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getCourseMetadataApiUrl } from '../../components/NavigationBar/data/api';
+import { fetchTab } from '../../components/NavigationBar/data/thunks';
 import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
@@ -28,6 +30,7 @@ import DiscussionsHome from './DiscussionsHome';
 import '../posts/data/__factories__/threads.factory';
 import '../in-context-topics/data/__factories__/inContextTopics.factory';
 import '../topics/data/__factories__/topics.factory';
+import '../../components/NavigationBar/data/__factories__/navigationBar.factory';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
@@ -246,5 +249,13 @@ describe('DiscussionsHome', () => {
     await renderComponent(`/${courseId}/topics`);
 
     expect(screen.queryByText('No topic selected')).toBeInTheDocument();
+  });
+
+  it('should display navigation tabs', async () => {
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+    renderComponent(`/${courseId}/topics`);
+
+    expect(screen.queryByText('Discussion')).toBeInTheDocument();
   });
 });
