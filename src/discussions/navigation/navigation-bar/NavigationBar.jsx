@@ -38,13 +38,12 @@ function NavigationBar({ intl }) {
   }
 
   return (
-    <Nav variant="pills" className="py-2">
+    <Nav variant="button-group" className="py-2">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
           <Nav.Link
             as={NavLink}
             to={discussionsPath(link.route, { courseId })}
-            className="border"
             isActive={link.isActive}
           >
             {intl.formatMessage(link.labelMessage)}
