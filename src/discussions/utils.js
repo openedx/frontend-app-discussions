@@ -5,7 +5,7 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  CheckCircle, CheckCircleOutline, Delete, Edit, Pin, QuestionAnswer, Report, Verified, VerifiedOutline,
+  CheckCircle, CheckCircleOutline, Delete, Edit, Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
 import { InsertLink } from '../components/icons';
@@ -141,14 +141,14 @@ export const ACTIONS_LIST = [
   {
     id: 'close',
     action: ContentActions.CLOSE,
-    icon: QuestionAnswer,
+    icon: Lock,
     label: messages.closeAction,
     conditions: { closed: false },
   },
   {
     id: 'reopen',
     action: ContentActions.CLOSE,
-    icon: QuestionAnswer,
+    icon: LockOpen,
     label: messages.reopenAction,
     conditions: { closed: true },
   },
