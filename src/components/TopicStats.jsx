@@ -26,6 +26,7 @@ function TopicStats({
   return (
     <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
       <OverlayTrigger
+        placement="right"
         overlay={(
           <Tooltip>
             <div className="d-flex flex-column align-items-start">
@@ -42,6 +43,7 @@ function TopicStats({
         </div>
       </OverlayTrigger>
       <OverlayTrigger
+        placement="right"
         overlay={(
           <Tooltip>
             <div className="d-flex flex-column align-items-start">
@@ -59,6 +61,7 @@ function TopicStats({
       </OverlayTrigger>
       {Boolean(canSeeReportedStats) && (
         <OverlayTrigger
+          placement="right"
           overlay={(
             <Tooltip>
               <div className="d-flex flex-column align-items-start">
