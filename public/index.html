@@ -42,13 +42,25 @@
         loader: {
           load: ["input/asciimath", "[tex]/noerrors"],
         },
+        menuSettings: {
+           collapsible: true,
+           autocollapse: false,
+           explorer: true
+         },
       };
     </script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-      id="MathJax-script"
-    ></script>
+    <script>
+   (function () {
+     var script = document.createElement('script');
+     script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js';
+     document.head.appendChild(script);
+     //ManpraX
+   mathjax.typeset(() => { 
+       const main = document.querySelector('#main'); 
+       return main; 
+   }); 
+   })();
+ </script>
   </head>
   <body>
     <div id="root" class="small"></div>
