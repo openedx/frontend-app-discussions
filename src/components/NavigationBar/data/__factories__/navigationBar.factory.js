@@ -8,15 +8,17 @@ Factory.define('navigationBar')
   .attr('celebrations', null, {
     first_section: false, streak_discount_enabled: false, streak_length_to_celebrate: null, weekly_goal: false,
   })
-  .attr('course_access', null, {
+  .option('hasCourseAccess', null, true)
+
+  .attr('course_access', ['hasCourseAccess'], (hasCourseAccess) => ({
     additional_context_user_message: null,
     developer_message: null,
     error_code: null,
-    has_access: true,
+    has_access: hasCourseAccess,
     user_fragment: null,
     user_message: null,
-  })
-  .sequence('course_id', (idx) => `course-v1-${idx}`)
+  }))
+  .option('course_id', null, 'course-v1:edX+DemoX+Demo_Course')
   .attr('is_enrolled', null, false)
   .attr('is_self_paced', null, false)
   .attr('is_staff', null, true)
@@ -25,9 +27,7 @@ Factory.define('navigationBar')
   .attr('original_user_is_staff', null, true)
   .attr('title', null, 'Demonstration Course')
   .attr('username', null, 'edx')
-  .option('courseId', null, 'course-v1:edX+DemoX+Demo_Course')
-
-  .attr('tabs', ['courseId'], (idx, courseId) => [
+  .attr('tabs', ['course_id'], (idx, courseId) => [
     {
       tab_id: 'courseware',
       title: 'Course',

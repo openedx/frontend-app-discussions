@@ -12,7 +12,6 @@ import { fetchTab } from './thunks';
 import './__factories__';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
-
 let axiosMock = null;
 let store;
 
@@ -34,7 +33,7 @@ describe('Navigation bar api tests', () => {
     axiosMock.reset();
   });
 
-  it('successfully get navigation tabs', async () => {
+  it('Successfully get navigation tabs', async () => {
     axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
 
@@ -42,15 +41,23 @@ describe('Navigation bar api tests', () => {
     expect(store.getState().courseTabs.courseStatus).toEqual('loaded');
   });
 
-  it('failed to get navigation tabs', async () => {
+  it('Failed to get navigation tabs', async () => {
     axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(404);
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
 
     expect(store.getState().courseTabs.courseStatus).toEqual('failed');
   });
 
-  it('denied to get navigation tabs', async () => {
+  it('Denied to get navigation tabs', async () => {
     axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(403, {});
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+
+    expect(store.getState().courseTabs.courseStatus).toEqual('denied');
+  });
+
+  it('Denied to get navigation bar when user has no access on course', async () => {
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200,
+      (Factory.build('navigationBar', 1, { hasCourseAccess: false })));
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
 
     expect(store.getState().courseTabs.courseStatus).toEqual('denied');

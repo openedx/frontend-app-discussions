@@ -15,13 +15,17 @@ export function fetchTab(courseId, rootSlug) {
     dispatch(fetchTabRequest({ courseId }));
     try {
       const courseHomeCourseMetadata = await getCourseHomeCourseMetadata(courseId, rootSlug);
-      dispatch(fetchTabSuccess({
-        courseId,
-        tabs: courseHomeCourseMetadata.tabs,
-        org: courseHomeCourseMetadata.org,
-        courseNumber: courseHomeCourseMetadata.number,
-        courseTitle: courseHomeCourseMetadata.title,
-      }));
+      if (!courseHomeCourseMetadata.courseAccess.hasAccess) {
+        dispatch(fetchTabDenied({ courseId }));
+      } else {
+        dispatch(fetchTabSuccess({
+          courseId,
+          tabs: courseHomeCourseMetadata.tabs,
+          org: courseHomeCourseMetadata.org,
+          courseNumber: courseHomeCourseMetadata.number,
+          courseTitle: courseHomeCourseMetadata.title,
+        }));
+      }
     } catch (e) {
       if (getHttpErrorStatus(e) === 403) {
         dispatch(fetchTabDenied({ courseId }));
