@@ -24,7 +24,10 @@ function HTMLLoader({
 
     function typeset(code) {
       promise = promise.then(() => {
-        if (typeof window?.MathJax !== 'undefined') { return window.MathJax?.typesetPromise(code()); }
+        if (typeof window?.MathJax !== 'undefined') {
+          window.MathJax.typesetClear();
+          return window.MathJax?.typesetPromise(code());
+        }
         return null;
       })
         .catch((err) => logError(`Typeset failed: ${err.message}`));
