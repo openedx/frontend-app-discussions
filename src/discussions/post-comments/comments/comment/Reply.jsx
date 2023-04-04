@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -14,7 +14,6 @@ import {
 } from '../../../common';
 import timeLocale from '../../../common/time-locale';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { selectAuthorAvatars } from '../../../posts/data/selectors';
 import { editComment, removeComment } from '../../data/thunks';
 import messages from '../../messages';
 import CommentEditor from './CommentEditor';
@@ -60,7 +59,6 @@ function Reply({
     [ContentActions.REPORT]: () => handleAbusedFlag(),
   }), [dispatch, handleAbusedFlag, reply.endorsed, reply.id, showDeleteConfirmation]);
 
-  const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(reply);
 
@@ -101,7 +99,6 @@ function Reply({
           <Avatar
             className={`ml-0.5 mt-0.5 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             alt={reply.author}
-            src={authorAvatars?.imageUrlSmall}
             style={{
               width: '32px',
               height: '32px',

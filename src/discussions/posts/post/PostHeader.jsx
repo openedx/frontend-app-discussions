@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
@@ -11,14 +10,12 @@ import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
-import { selectAuthorAvatars } from '../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
 export function PostAvatar({
   post, authorLabel, fromPostLink, read,
 }) {
-  const authorAvatars = useSelector(selectAuthorAvatars(post.author));
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
   const avatarSize = useMemo(() => {
@@ -63,7 +60,6 @@ export function PostAvatar({
           width: avatarSize,
         }}
         alt={post.author}
-        src={authorAvatars?.imageUrlSmall}
       />
     </div>
   );
