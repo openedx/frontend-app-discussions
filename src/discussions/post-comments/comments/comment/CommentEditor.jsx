@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
@@ -25,11 +25,11 @@ import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
 function CommentEditor({
-  intl,
   comment,
-  onCloseEditor,
   edit,
   formClasses,
+  intl,
+  onCloseEditor,
 }) {
   const {
     id, threadId, parentId, rawBody, author, lastEdit,
@@ -63,12 +63,12 @@ function CommentEditor({
     editReasonCode: lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
-  const handleCloseEditor = (resetForm) => {
+  const handleCloseEditor = useCallback((resetForm) => {
     resetForm({ values: initialValues });
     onCloseEditor();
-  };
+  }, [onCloseEditor, initialValues]);
 
-  const saveUpdatedComment = async (values, { resetForm }) => {
+  const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {
       const payload = {
         ...values,
@@ -83,7 +83,7 @@ function CommentEditor({
       editorRef.current.plugins.autosave.removeDraft();
     }
     handleCloseEditor(resetForm);
-  };
+  }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
   const editorId = `comment-editor-${id || parentId || threadId}`;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { useDispatch } from 'react-redux';
@@ -15,24 +15,28 @@ import LikeButton from './LikeButton';
 import messages from './messages';
 
 function PostFooter({
-  intl,
-  voteCount,
-  voted,
+  closed,
   following,
-  id,
   groupId,
   groupName,
-  closed,
+  id,
+  intl,
   userHasModerationPrivileges,
+  voted,
+  voteCount,
 }) {
   const dispatch = useDispatch();
+
+  const handlePostLike = useCallback(() => {
+    dispatch(updateExistingThread(id, { voted: !voted }));
+  }, [id, voted]);
 
   return (
     <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }} data-testid="post-footer">
       {voteCount !== 0 && (
         <LikeButton
           count={voteCount}
-          onClick={() => dispatch(updateExistingThread(id, { voted: !voted }))}
+          onClick={handlePostLike}
           voted={voted}
         />
       )}

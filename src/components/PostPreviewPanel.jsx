@@ -59,14 +59,15 @@ function PostPreviewPanel({
 
 PostPreviewPanel.propTypes = {
   intl: intlShape.isRequired,
-  htmlNode: PropTypes.node.isRequired,
+  htmlNode: PropTypes.node,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
 };
 
 PostPreviewPanel.defaultProps = {
+  htmlNode: '',
   isPost: false,
   editExisting: false,
 };
 
-export default injectIntl(PostPreviewPanel);
+export default injectIntl(React.memo(PostPreviewPanel));

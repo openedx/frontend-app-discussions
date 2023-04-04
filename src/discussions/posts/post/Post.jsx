@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
+import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -32,7 +33,7 @@ function Post({
 }) {
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId,
-    groupName, closeReason, authorLabel, type, author, title, createdAt, renderedBody, lastEdit,
+    groupName, closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit,
   } = useSelector(selectThread(postId));
   const location = useLocation();
   const history = useHistory();
@@ -66,7 +67,7 @@ function Post({
   const handlePostContentEdit = useCallback(() => history.push({
     ...location,
     pathname: `${location.pathname}/edit`,
-  }), []);
+  }), [location.pathname]);
 
   const handlePostClose = useCallback(() => {
     if (closed) {
@@ -153,8 +154,8 @@ function Post({
         />
       )}
       <HoverCard
-        PostOrCommentId={postId}
-        type={contentType.POST}
+        id={postId}
+        contentType={contentType.POST}
         actionHandlers={actionHandlers}
         handleResponseCommentButton={handleAddResponseButton}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
@@ -173,15 +174,15 @@ function Post({
         closeReason={closeReason}
       />
       <PostHeader
-        hasEndorsed={hasEndorsed}
-        type={type}
-        authorLabel={authorLabel}
-        author={author}
-        title={title}
-        createdAt={createdAt}
         abuseFlagged={abuseFlagged}
-        lastEdit={lastEdit}
+        author={author}
+        authorLabel={authorLabel}
         closed={closed}
+        createdAt={createdAt}
+        hasEndorsed={hasEndorsed}
+        lastEdit={lastEdit}
+        postType={postType}
+        title={title}
       />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader" testId={postId} />
@@ -223,7 +224,7 @@ function Post({
           voteCount={voteCount}
           voted={voted}
           following={following}
-          groupId={groupId}
+          groupId={toString(groupId)}
           groupName={groupName}
           closed={closed}
           userHasModerationPrivileges={userHasModerationPrivileges}

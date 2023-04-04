@@ -18,8 +18,8 @@ import { inBlackoutDateRange, useActions } from '../utils';
 
 function ActionsDropdown({
   intl,
-  type,
-  PostOrCommentId,
+  contentType,
+  id,
   disabled,
   actionHandlers,
   iconSize,
@@ -28,7 +28,7 @@ function ActionsDropdown({
   const buttonRef = useRef();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const commentOrPost = useSelector(contentSelector[type](PostOrCommentId));
+  const commentOrPost = useSelector(contentSelector[contentType](id));
   const actions = useActions(commentOrPost);
 
   const handleActions = useCallback((action) => {
@@ -111,12 +111,12 @@ function ActionsDropdown({
 
 ActionsDropdown.propTypes = {
   intl: intlShape.isRequired,
-  PostOrCommentId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
-  type: PropTypes.oneOf(['post', 'comment']).isRequired,
+  contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
 };
 
 ActionsDropdown.defaultProps = {

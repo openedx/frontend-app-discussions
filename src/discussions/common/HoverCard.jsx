@@ -17,8 +17,8 @@ import { DiscussionContext } from './context';
 
 function HoverCard({
   intl,
-  type,
-  PostOrCommentId,
+  id,
+  contentType,
   actionHandlers,
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
@@ -35,8 +35,8 @@ function HoverCard({
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
-      data-testid={`hover-card-${PostOrCommentId}`}
-      id={`hover-card-${PostOrCommentId}`}
+      data-testid={`hover-card-${id}`}
+      id={`hover-card-${id}`}
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="d-flex">
@@ -106,10 +106,10 @@ function HoverCard({
       )}
       <div className="hover-button ml-auto">
         <ActionsDropdown
-          PostOrCommentId={PostOrCommentId}
+          id={id}
+          contentType={contentType}
           actionHandlers={actionHandlers}
           dropDownIconSize
-          type={type}
         />
       </div>
     </div>
@@ -118,16 +118,16 @@ function HoverCard({
 
 HoverCard.propTypes = {
   intl: intlShape.isRequired,
-  PostOrCommentId: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  contentType: PropTypes.string.isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,
-  onLike: PropTypes.func.isRequired,
-  onFollow: PropTypes.func,
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
+  onLike: PropTypes.func.isRequired,
   isClosedPost: PropTypes.bool.isRequired,
-  endorseIcons: PropTypes.objectOf(PropTypes.any),
   voted: PropTypes.bool.isRequired,
+  endorseIcons: PropTypes.objectOf(PropTypes.any),
+  onFollow: PropTypes.func,
   following: PropTypes.bool,
 };
 

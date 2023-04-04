@@ -73,12 +73,12 @@ const AlertBanner = ({
 
 AlertBanner.propTypes = {
   author: PropTypes.string.isRequired,
-  abuseFlagged: PropTypes.bool,
+  closed: PropTypes.bool.isRequired,
   lastEdit: PropTypes.shape({
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-  closed: PropTypes.bool.isRequired,
+  abuseFlagged: PropTypes.bool,
   closedBy: PropTypes.string,
   closeReason: PropTypes.string,
   editByLabel: PropTypes.string.isRequired,

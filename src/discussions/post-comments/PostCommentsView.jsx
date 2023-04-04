@@ -115,7 +115,7 @@ function PostCommentsView({ intl }) {
           />
         )}
       </div>
-      {!!commentsCount && <CommentsSort />}
+      {/* {!!commentsCount && <CommentsSort />} */}
       {/* {thread.type === ThreadType.DISCUSSION && (
         <CommentsView
           postId={postId}

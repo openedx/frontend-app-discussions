@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
+import { generatePath } from 'react-router';
+import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -12,7 +13,6 @@ import { Institution, School } from '@edx/paragon/icons';
 import { Routes } from '../../data/constants';
 import { useShowLearnersTab } from '../data/hooks';
 import messages from '../messages';
-import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
 
@@ -28,10 +28,10 @@ function AuthorLabel({
   postOrComment,
 }) {
   timeago.register('time-locale', timeLocale);
-  const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
+  console.log('AuthorLabel');
 
   if (authorLabel === 'Staff') {
     icon = Institution;
@@ -118,7 +118,7 @@ function AuthorLabel({
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
-          to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
+          to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
           className="text-decoration-none"
           style={{ width: 'fit-content' }}
         >
