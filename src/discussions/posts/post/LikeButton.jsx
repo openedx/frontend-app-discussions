@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -15,13 +15,13 @@ function LikeButton({
   onClick,
   voted,
 }) {
-  const handleClick = (e) => {
+  const handleClick = useCallback((e) => {
     e.preventDefault();
     if (onClick) {
       onClick();
     }
     return false;
-  };
+  }, []);
 
   return (
     <div className="d-flex align-items-center mr-36px text-primary-500">
@@ -61,4 +61,4 @@ LikeButton.defaultProps = {
   onClick: undefined,
 };
 
-export default injectIntl(LikeButton);
+export default injectIntl(React.memo(LikeButton));

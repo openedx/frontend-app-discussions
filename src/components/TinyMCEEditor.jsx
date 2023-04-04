@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Editor } from '@tinymce/tinymce-react';
 import { useParams } from 'react-router';
@@ -42,22 +42,6 @@ import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.c
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
 
 /* istanbul ignore next */
-const setup = (editor) => {
-  editor.ui.registry.addButton('openedx_code', {
-    icon: 'sourcecode',
-    onAction: () => {
-      editor.execCommand('CodeSample');
-    },
-  });
-  editor.ui.registry.addButton('openedx_html', {
-    text: 'HTML',
-    onAction: () => {
-      editor.execCommand('mceCodeEditor');
-    },
-  });
-};
-
-/* istanbul ignore next */
 export default function TinyMCEEditor(props) {
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
@@ -65,7 +49,24 @@ export default function TinyMCEEditor(props) {
   const { courseId, postId } = useParams();
   const [showImageWarning, setShowImageWarning] = useState(false);
   const intl = useIntl();
-  const uploadHandler = async (blobInfo, success, failure) => {
+
+  /* istanbul ignore next */
+  const setup = useCallback((editor) => {
+    editor.ui.registry.addButton('openedx_code', {
+      icon: 'sourcecode',
+      onAction: () => {
+        editor.execCommand('CodeSample');
+      },
+    });
+    editor.ui.registry.addButton('openedx_html', {
+      text: 'HTML',
+      onAction: () => {
+        editor.execCommand('mceCodeEditor');
+      },
+    });
+  }, []);
+
+  const uploadHandler = useCallback(async (blobInfo, success, failure) => {
     try {
       const blob = blobInfo.blob();
       const imageSize = blobInfo.blob().size / 1024;
@@ -76,7 +77,7 @@ export default function TinyMCEEditor(props) {
       const filename = blobInfo.filename();
       const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
       const img = new Image();
-      img.onload = function () {
+      img.onload = () => {
         if (img.height > 999 || img.width > 999) { setShowImageWarning(true); }
       };
       img.src = location;
@@ -84,7 +85,11 @@ export default function TinyMCEEditor(props) {
     } catch (e) {
       failure(e.toString(), { remove: true });
     }
-  };
+  }, [courseId, postId]);
+
+  const handleClose = useCallback(() => {
+    setShowImageWarning(false);
+  }, []);
 
   let contentStyle;
   // In the test environment this causes an error so set styles to empty since they aren't needed for testing.
@@ -131,21 +136,20 @@ export default function TinyMCEEditor(props) {
       <AlertModal
         title={intl.formatMessage(messages.imageWarningModalTitle)}
         isOpen={showImageWarning}
-        onClose={() => setShowImageWarning(false)}
+        onClose={handleClose}
         isBlocking
         footerNode={(
           <ActionRow>
-            <Button variant="danger" onClick={() => setShowImageWarning(false)}>
+            <Button variant="danger" onClick={handleClose}>
               {intl.formatMessage(messages.imageWarningDismissButton)}
             </Button>
           </ActionRow>
-                )}
+        )}
       >
         <p>
           {intl.formatMessage(messages.imageWarningMessage)}
         </p>
       </AlertModal>
     </>
-
   );
 }

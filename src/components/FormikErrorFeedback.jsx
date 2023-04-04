@@ -32,4 +32,4 @@ FormikErrorFeedback.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-export default FormikErrorFeedback;
+export default React.memo(FormikErrorFeedback);

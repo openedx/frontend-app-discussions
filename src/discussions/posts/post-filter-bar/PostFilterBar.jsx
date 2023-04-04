@@ -284,7 +284,7 @@ function PostFilterBar({
                     {cohorts.map(cohort => (
                       <ActionItem
                         key={cohort.id}
-                        id={cohort.id}
+                        id={toString(cohort.id)}
                         label={capitalize(cohort.name)}
                         value={toString(cohort.id)}
                         selected={currentFilters.cohort}

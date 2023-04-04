@@ -13,33 +13,33 @@ import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
-  author, type, authorLabel, fromPostLink, read,
+  author, postType, authorLabel, fromPostLink, read,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
   const avatarSize = useMemo(() => {
     let size = '2rem';
-    if (type === ThreadType.DISCUSSION && !fromPostLink) {
+    if (postType === ThreadType.DISCUSSION && !fromPostLink) {
       size = '2rem';
-    } else if (type === ThreadType.QUESTION) {
+    } else if (postType === ThreadType.QUESTION) {
       size = '1.5rem';
     }
     return size;
-  }, [type]);
+  }, [postType]);
 
   const avatarSpacing = useMemo(() => {
     let spacing = 'mr-3 ';
-    if (type === ThreadType.DISCUSSION && fromPostLink) {
+    if (postType === ThreadType.DISCUSSION && fromPostLink) {
       spacing += 'pt-2 ml-0.5';
-    } else if (type === ThreadType.DISCUSSION) {
+    } else if (postType === ThreadType.DISCUSSION) {
       spacing += 'ml-0.5 mt-0.5';
     }
     return spacing;
-  }, [type]);
+  }, [postType]);
 
   return (
     <div className={avatarSpacing}>
-      {type === ThreadType.QUESTION && (
+      {postType === ThreadType.QUESTION && (
         <Icon
           src={read ? Issue : Question}
           className={classNames('position-absolute bg-white rounded-circle question-icon-size', {
@@ -51,8 +51,8 @@ export const PostAvatar = React.memo(({
         className={classNames('border-0 mt-1', {
           [`outline-${outlineColor}`]: outlineColor,
           'outline-anonymous': !outlineColor,
-          'mt-3 ml-2': type === ThreadType.QUESTION && fromPostLink,
-          'avarat-img-position mt-17px': type === ThreadType.QUESTION,
+          'mt-3 ml-2': postType === ThreadType.QUESTION && fromPostLink,
+          'avarat-img-position mt-17px': postType === ThreadType.QUESTION,
         })}
         style={{
           height: avatarSize,
@@ -66,7 +66,7 @@ export const PostAvatar = React.memo(({
 
 PostAvatar.propTypes = {
   author: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
+  postType: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   fromPostLink: PropTypes.bool,
   read: PropTypes.bool,
@@ -79,19 +79,19 @@ PostAvatar.defaultProps = {
 };
 
 function PostHeader({
-  intl,
-  preview,
-  hasEndorsed,
-  type,
-  authorLabel,
-  author,
-  title,
-  createdAt,
   abuseFlagged,
-  lastEdit,
+  author,
+  authorLabel,
   closed,
+  createdAt,
+  hasEndorsed,
+  intl,
+  lastEdit,
+  title,
+  postType,
+  preview,
 }) {
-  const showAnsweredBadge = preview && hasEndorsed && type === ThreadType.QUESTION;
+  const showAnsweredBadge = preview && hasEndorsed && postType === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
     author, abuseFlagged, lastEdit, closed,
@@ -100,7 +100,7 @@ function PostHeader({
   return (
     <div className={classNames('d-flex flex-fill mw-100', { 'mt-10px': hasAnyAlert && !preview })}>
       <div className="flex-shrink-0">
-        <PostAvatar type={type} author={author} authorLabel={authorLabel} />
+        <PostAvatar postType={postType} author={author} authorLabel={authorLabel} />
       </div>
       <div className="align-items-center d-flex flex-row">
         <div className="d-flex flex-column justify-content-start mw-100">
@@ -141,7 +141,7 @@ PostHeader.propTypes = {
   intl: intlShape.isRequired,
   preview: PropTypes.bool,
   hasEndorsed: PropTypes.bool.isRequired,
-  type: PropTypes.string.isRequired,
+  postType: PropTypes.string.isRequired,
   authorLabel: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
