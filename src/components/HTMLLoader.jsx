@@ -24,7 +24,7 @@ function HTMLLoader({
 
     function typeset(code) {
       promise = promise.then(() => {
-        if (typeof window?.MathJax !== 'undefined') {
+        if (typeof window?.MathJax !== 'undefined' && typeof window?.MathJax.startup !== 'undefined') {
           window.MathJax.startup.defaultPageReady().then((window.MathJax?.typesetPromise(code())));
         }
         return null;
