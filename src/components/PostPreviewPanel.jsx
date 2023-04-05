@@ -30,13 +30,15 @@ function PostPreviewPanel({
             iconClassNames="icon-size"
             data-testid="hide-preview-button"
           />
-          <HTMLLoader
-            htmlNode={htmlNode}
-            cssClassName="text-primary"
-            componentId="post-preview"
-            testId="post-preview"
-            delay={500}
-          />
+          {htmlNode && (
+            <HTMLLoader
+              htmlNode={htmlNode}
+              cssClassName="text-primary"
+              componentId="post-preview"
+              testId="post-preview"
+              delay={500}
+            />
+          )}
         </div>
       )}
       <div className="d-flex justify-content-end">

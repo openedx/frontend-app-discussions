@@ -31,7 +31,6 @@ function AuthorLabel({
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
-  console.log('AuthorLabel');
 
   if (authorLabel === 'Staff') {
     icon = Institution;

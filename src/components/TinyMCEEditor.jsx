@@ -42,7 +42,7 @@ import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.c
 import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
 
 /* istanbul ignore next */
-export default function TinyMCEEditor(props) {
+function TinyMCEEditor(props) {
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
 
@@ -153,3 +153,5 @@ export default function TinyMCEEditor(props) {
     </>
   );
 }
+
+export default React.memo(TinyMCEEditor);

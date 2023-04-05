@@ -6,24 +6,19 @@ import { getIn, useFormikContext } from 'formik';
 import { Form, TransitionReplace } from '@edx/paragon';
 
 function FormikErrorFeedback({ name }) {
-  const {
-    touched,
-    errors,
-  } = useFormikContext();
+  const { touched, errors } = useFormikContext();
   const fieldTouched = getIn(touched, name);
   const fieldError = getIn(errors, name);
 
   return (
     <TransitionReplace>
-      {fieldTouched && fieldError
-        ? (
-          <Form.Control.Feedback type="invalid" hasIcon={false} key={`${name}-error-feedback`}>
-            {fieldError}
-          </Form.Control.Feedback>
-        )
-        : (
-          <React.Fragment key={`${name}-no-error-feedback`} />
-        )}
+      {fieldTouched && fieldError ? (
+        <Form.Control.Feedback type="invalid" hasIcon={false} key={`${name}-error-feedback`}>
+          {fieldError}
+        </Form.Control.Feedback>
+      ) : (
+        <React.Fragment key={`${name}-no-error-feedback`} />
+      )}
     </TransitionReplace>
   );
 }
