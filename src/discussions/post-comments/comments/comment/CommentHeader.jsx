@@ -1,7 +1,6 @@
 import React from 'react';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 
 import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar } from '@edx/paragon';
@@ -9,13 +8,11 @@ import { Avatar } from '@edx/paragon';
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { selectAuthorAvatars } from '../../../posts/data/selectors';
 import { commentShape } from './proptypes';
 
 function CommentHeader({
   comment,
 }) {
-  const authorAvatars = useSelector(selectAuthorAvatars(comment.author));
   const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(comment);
 
@@ -28,7 +25,6 @@ function CommentHeader({
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
           alt={comment.author}
-          src={authorAvatars?.imageUrlSmall}
           style={{
             width: '32px',
             height: '32px',
