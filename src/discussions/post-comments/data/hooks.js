@@ -12,7 +12,8 @@ import { DiscussionContext } from '../../common/context';
 import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
 import {
-  selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
+  selectCommentSortOrder, selectThreadComments, selectThreadCommentsIds,
+  selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
@@ -41,13 +42,13 @@ export function usePost(postId) {
 
 export function usePostComments(postId, endorsed = null) {
   const [isLoading, dispatch] = useDispatchWithState();
-  const comments = useSelector(selectThreadComments(postId, endorsed));
+  const commentsIds = useSelector(selectThreadCommentsIds(postId, endorsed));
   const reverseOrder = useSelector(selectCommentSortOrder);
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
   const { enableInContextSidebar } = useContext(DiscussionContext);
 
-  const handleLoadMoreResponses = async () => {
+  const handleLoadMoreResponses = useCallback(async () => {
     const params = {
       endorsed,
       page: currentPage + 1,
@@ -55,7 +56,7 @@ export function usePostComments(postId, endorsed = null) {
     };
     await dispatch(fetchThreadComments(postId, params));
     trackLoadMoreEvent(postId, params);
-  };
+  }, [currentPage, endorsed, postId, reverseOrder]);
 
   useEffect(() => {
     dispatch(fetchThreadComments(postId, {
@@ -67,7 +68,7 @@ export function usePostComments(postId, endorsed = null) {
   }, [postId, reverseOrder]);
 
   return {
-    comments,
+    commentsIds,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,

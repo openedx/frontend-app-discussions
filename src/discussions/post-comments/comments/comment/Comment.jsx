@@ -33,26 +33,27 @@ import { commentShape } from './proptypes';
 import Reply from './Reply';
 
 function Comment({
-  postType,
   comment,
-  showFullThread = true,
-  isClosedPost,
   intl,
+  isClosedPost,
   marginBottom,
+  postType,
+  showFullThread = true,
 }) {
-  const dispatch = useDispatch();
   const hasChildren = comment.childCount > 0;
   const isNested = Boolean(comment.parentId);
-  const inlineReplies = useSelector(selectCommentResponses(comment.id));
+  const dispatch = useDispatch();
+  const { courseId } = useContext(DiscussionContext);
   const [isEditing, setEditing] = useState(false);
+  const [isReplying, setReplying] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
-  const [isReplying, setReplying] = useState(false);
+  const inlineReplies = useSelector(selectCommentResponses(comment.id));
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const { courseId } = useContext(DiscussionContext);
   const sortedOrder = useSelector(selectCommentSortOrder);
+  const actions = useActions({ ...comment, postType });
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -64,11 +65,9 @@ function Comment({
     }
   }, [comment.id, sortedOrder]);
 
-  const actions = useActions({
-    ...comment,
-    postType,
-  });
-  const endorseIcons = actions.find(({ action }) => action === EndorsementStatus.ENDORSED);
+  const endorseIcons = useMemo(() => (
+    actions.find(({ action }) => action === EndorsementStatus.ENDORSED)
+  ), [actions]);
 
   const handleAbusedFlag = useCallback(() => {
     if (comment.abuseFlagged) {
@@ -76,12 +75,12 @@ function Comment({
     } else {
       showReportConfirmation();
     }
-  }, [comment.abuseFlagged, comment.id, dispatch, showReportConfirmation]);
+  }, [comment.abuseFlagged, comment.id, showReportConfirmation]);
 
-  const handleDeleteConfirmation = () => {
+  const handleDeleteConfirmation = useCallback(() => {
     dispatch(removeComment(comment.id));
     hideDeleteConfirmation();
-  };
+  }, [comment.id, hideDeleteConfirmation]);
 
   const handleReportConfirmation = () => {
     dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
@@ -237,4 +236,4 @@ Comment.defaultProps = {
   marginBottom: true,
 };
 
-export default injectIntl(Comment);
+export default injectIntl(React.memo(Comment));

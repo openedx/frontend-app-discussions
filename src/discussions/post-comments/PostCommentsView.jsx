@@ -32,14 +32,14 @@ function PostCommentsView({ intl }) {
   const [addingResponse, setAddingResponse] = useState(false);
   const isOnDesktop = useIsOnDesktop();
   const [isLoading, submitDispatch] = useDispatchWithState();
-  const thread = usePost(postId);
   const commentsCount = useCommentsCount(postId);
+  const { closed, id: threadId, type } = usePost(postId);
   const {
     courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
   } = useContext(DiscussionContext);
 
   useEffect(() => {
-    if (!thread) { submitDispatch(fetchThread(postId, courseId, true)); }
+    if (!threadId) { submitDispatch(fetchThread(postId, courseId, true)); }
     setAddingResponse(false);
   }, [postId]);
 
@@ -51,7 +51,7 @@ function PostCommentsView({ intl }) {
     setAddingResponse(false);
   }, []);
 
-  if (!thread) {
+  if (!threadId) {
     if (!isLoading) {
       return (
         <EmptyPage title={intl.formatMessage(messages.noThreadFound)} />
@@ -107,7 +107,7 @@ function PostCommentsView({ intl }) {
         className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
       >
         <Post postId={postId} handleAddResponseButton={handleAddResponseButton} />
-        {!thread.closed && (
+        {!closed && (
           <ResponseEditor
             postId={postId}
             handleCloseEditor={handleCloseEditor}
@@ -115,17 +115,16 @@ function PostCommentsView({ intl }) {
           />
         )}
       </div>
-      {/* {!!commentsCount && <CommentsSort />} */}
-      {/* {thread.type === ThreadType.DISCUSSION && (
+      {!!commentsCount && <CommentsSort />}
+      {type === ThreadType.DISCUSSION && (
         <CommentsView
-          postId={postId}
-          intl={intl}
-          postType={thread.type}
           endorsed={EndorsementStatus.DISCUSSION}
-          isClosed={thread.closed}
+          isClosed={closed}
+          postId={postId}
+          postType={type}
         />
       )}
-      {thread.type === ThreadType.QUESTION && (
+      {/* {thread.type === ThreadType.QUESTION && (
         <>
           <CommentsView
             postId={postId}

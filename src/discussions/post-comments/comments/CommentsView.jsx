@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -12,11 +12,11 @@ import messages from '../messages';
 import { Comment, ResponseEditor } from './comment';
 
 function CommentsView({
-  postType,
-  postId,
-  intl,
   endorsed,
+  intl,
   isClosed,
+  postId,
+  postType,
 }) {
   const {
     comments,
@@ -30,7 +30,15 @@ function CommentsView({
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const [addingResponse, setAddingResponse] = useState(false);
 
-  const handleDefinition = (message, commentsLength) => (
+  const handleAddResponse = useCallback(() => {
+    setAddingResponse(true);
+  }, []);
+
+  const handleCloseResponseEditor = useCallback(() => {
+    setAddingResponse(false);
+  }, []);
+
+  const handleDefinition = useCallback((message, commentsLength) => (
     <div
       className="mx-4 my-14px text-gray-700 font-style"
       role="heading"
@@ -38,9 +46,9 @@ function CommentsView({
     >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
-  );
+  ), []);
 
-  const handleComments = (postComments, showLoadMoreResponses = false) => (
+  const handleComments = useCallback((postComments, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
       {postComments.map((comment) => (
         <Comment
@@ -68,7 +76,7 @@ function CommentsView({
         </div>
       )}
     </div>
-  );
+  ), [hasMorePages, isLoading, handleLoadMoreResponses]);
 
   return (
     <>
@@ -95,7 +103,7 @@ function CommentsView({
                       block="true"
                       className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
                       line-height-24 font-size-14 text-primary-500"
-                      onClick={() => setAddingResponse(true)}
+                      onClick={handleAddResponse}
                       data-testid="add-response"
                     >
                       {intl.formatMessage(messages.addResponse)}
@@ -103,7 +111,7 @@ function CommentsView({
                   )}
                   <ResponseEditor
                     postId={postId}
-                    handleCloseEditor={() => setAddingResponse(false)}
+                    handleCloseEditor={handleCloseResponseEditor}
                     addWrappingDiv
                     addingResponse={addingResponse}
                   />
@@ -127,4 +135,4 @@ CommentsView.propTypes = {
   ]).isRequired,
 };
 
-export default injectIntl(CommentsView);
+export default injectIntl(React.memo(CommentsView));
