@@ -9,6 +9,10 @@ export const selectCommentOrResponseById = commentOrResponseId => createSelector
   comments => comments[commentOrResponseId],
 );
 
+export const selectThreadCommentsIds = (threadId, endorsed = null) => (
+  state => state.comments.commentsInThreads[threadId]?.[endorsed] || []
+);
+
 export const selectThreadComments = (threadId, endorsed = null) => createSelector(
   [
     state => state.comments.commentsInThreads[threadId]?.[endorsed] || [],

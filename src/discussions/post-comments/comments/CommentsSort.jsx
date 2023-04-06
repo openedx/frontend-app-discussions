@@ -18,10 +18,11 @@ function CommentSortDropdown({ intl }) {
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const handleActions = (reverseOrder) => {
+
+  const handleActions = useCallback((reverseOrder) => {
     close();
     dispatch(setCommentSortOrder(reverseOrder));
-  };
+  }, []);
 
   const enableCommentsSortTour = useCallback((enabled) => {
     const data = {
@@ -101,4 +102,4 @@ CommentSortDropdown.propTypes = {
 
 };
 
-export default injectIntl(CommentSortDropdown);
+export default injectIntl(React.memo(CommentSortDropdown));

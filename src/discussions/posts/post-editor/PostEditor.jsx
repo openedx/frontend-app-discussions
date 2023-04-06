@@ -78,7 +78,6 @@ function PostEditor({
   const userIsStaff = useSelector(selectUserIsStaff);
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
-  console.log('PostEditor', editExisting, submitting);
 
   const canDisplayEditReason = (reasonCodesEnabled && editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -137,7 +136,6 @@ function PostEditor({
   []);
 
   const submitForm = useCallback(async (values, { resetForm }) => {
-    console.log('PostEditor submitForm', values);
     if (editExisting) {
       await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
