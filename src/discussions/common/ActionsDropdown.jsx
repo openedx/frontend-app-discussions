@@ -75,7 +75,7 @@ function ActionsDropdown({
           placement="bottom-end"
         >
           <div
-            className="bg-white p-1 shadow d-flex flex-column"
+            className="bg-white shadow d-flex flex-column"
             data-testid="actions-dropdown-modal-popup"
           >
             {actions.map(action => (
@@ -91,9 +91,15 @@ function ActionsDropdown({
                     close();
                     handleActions(action.action);
                   }}
-                  className="d-flex justify-content-start py-1.5 mr-4"
+                  className="d-flex justify-content-start actions-dropdown-item"
                 >
-                  <Icon src={action.icon} className="mr-1" /> {intl.formatMessage(action.label)}
+                  <Icon
+                    src={action.icon}
+                    className="icon-size-24"
+                  />
+                  <span className="font-weight-normal font-xl ml-2">
+                    {intl.formatMessage(action.label)}
+                  </span>
                 </Dropdown.Item>
               </React.Fragment>
             ))}
