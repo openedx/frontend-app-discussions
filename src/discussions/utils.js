@@ -173,6 +173,20 @@ export const ACTIONS_LIST = [
     label: messages.deleteAction,
     conditions: { canDelete: true },
   },
+  {
+    id: 'accept-review',
+    action: ContentActions.ACCEPT_REVIEW,
+    icon: Delete, // TODO: update this later
+    label: messages.acceptReview,
+    conditions: { reviewStatus: "PENDING" },
+  },
+  {
+    id: 'reject-review',
+    action: ContentActions.REJECT_REVIEW,
+    icon: Delete, // TODO: update this later
+    label: messages.rejectReview,
+    conditions: { reviewStatus: "PENDING" },
+  },
 ];
 
 export function useActions(content) {

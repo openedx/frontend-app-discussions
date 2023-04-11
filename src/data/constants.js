@@ -55,6 +55,8 @@ export const ContentActions = {
   CHANGE_TOPIC: 'topic_id',
   CHANGE_TYPE: 'type',
   VOTE: 'voted',
+  ACCEPT_REVIEW: 'accept_review',
+  REJECT_REVIEW: 'reject_review',
 };
 
 /**

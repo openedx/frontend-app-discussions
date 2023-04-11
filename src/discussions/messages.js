@@ -26,6 +26,16 @@ const messages = defineMessages({
     defaultMessage: 'Unpin',
     description: 'Action to unpin a post',
   },
+  acceptReview: {
+    id: 'discussions.actions.reviewAccept',
+    defaultMessage: 'Accept Review',
+    description: 'Action to accept content flagged for review',
+  },
+  rejectReview: {
+    id: 'discussions.actions.reviewReject',
+    defaultMessage: 'Reject Review',
+    description: 'Action to reject content flagged for review',
+  },
   deleteAction: {
     id: 'discussions.actions.delete',
     defaultMessage: 'Delete',

@@ -85,6 +85,8 @@ function Post({
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => handleAbusedFlag(),
+    [ContentActions.ACCEPT_REVIEW]: () => dispatch(updateExistingThread(post.id, { reviewStatus: "ACCEPTED" })),
+    [ContentActions.REJECT_REVIEW]: () => dispatch(updateExistingThread(post.id, { reviewStatus: "REJECTED" })),
   }), [
     showDeleteConfirmation,
     history,
