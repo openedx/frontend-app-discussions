@@ -45,7 +45,7 @@ function PostLink({
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const canSeeReportedBadge = post.abuseFlagged || post.abuseFlaggedCount;
   const read = post.read || (!post.read && post.commentCount !== post.unreadCommentCount);
-
+  console.log('postlink', post.type);
   return (
     <>
       <Link
@@ -67,7 +67,13 @@ function PostLink({
               { 'post-summary-card-selected': post.id === postId })
           }
         >
-          <PostAvatar type={post.type} author={post.author} authorLabel={post.authorLabel} fromPostLink read={read} />
+          <PostAvatar
+            postType={post.type}
+            author={post.author}
+            authorLabel={post.authorLabel}
+            fromPostLink
+            read={read}
+          />
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">

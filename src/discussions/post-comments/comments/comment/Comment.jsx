@@ -40,17 +40,22 @@ function Comment({
   postType,
   showFullThread = true,
 }) {
-  const hasChildren = comment.childCount > 0;
-  const isNested = Boolean(comment.parentId);
+  const {
+    id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel,
+    pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId,
+    groupName, closeReason, authorLabel, author, title, createdAt, renderedBody, lastEdit,
+  } = comment;
+  const hasChildren = childCount > 0;
+  const isNested = Boolean(parentId);
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
   const [isEditing, setEditing] = useState(false);
   const [isReplying, setReplying] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
-  const inlineReplies = useSelector(selectCommentResponses(comment.id));
-  const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
-  const currentPage = useSelector(selectCommentCurrentPage(comment.id));
+  const inlineReplies = useSelector(selectCommentResponses(id));
+  const hasMorePages = useSelector(selectCommentHasMorePages(id));
+  const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
   const actions = useActions({ ...comment, postType });
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
@@ -58,51 +63,57 @@ function Comment({
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
     if (hasChildren && showFullThread) {
-      dispatch(fetchCommentResponses(comment.id, {
+      dispatch(fetchCommentResponses(id, {
         page: 1,
         reverseOrder: sortedOrder,
       }));
     }
-  }, [comment.id, sortedOrder]);
+  }, [id, sortedOrder]);
 
   const endorseIcons = useMemo(() => (
     actions.find(({ action }) => action === EndorsementStatus.ENDORSED)
   ), [actions]);
 
+  const handleEditContent = useCallback(() => {
+    setEditing(true);
+  }, []);
+
+  const handleCommentEndorse = useCallback(async () => {
+    await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    await dispatch(fetchThread(threadId, courseId));
+  }, [id, endorsed, threadId]);
+
   const handleAbusedFlag = useCallback(() => {
-    if (comment.abuseFlagged) {
-      dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+    if (abuseFlagged) {
+      dispatch(editComment(id, { flagged: !abuseFlagged }));
     } else {
       showReportConfirmation();
     }
-  }, [comment.abuseFlagged, comment.id, showReportConfirmation]);
+  }, [abuseFlagged, id, showReportConfirmation]);
 
   const handleDeleteConfirmation = useCallback(() => {
-    dispatch(removeComment(comment.id));
+    dispatch(removeComment(id));
     hideDeleteConfirmation();
-  }, [comment.id, hideDeleteConfirmation]);
+  }, [id, hideDeleteConfirmation]);
 
-  const handleReportConfirmation = () => {
-    dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged }));
+  const handleReportConfirmation = useCallback(() => {
+    dispatch(editComment(id, { flagged: !abuseFlagged }));
     hideReportConfirmation();
-  };
+  }, [abuseFlagged, id, hideReportConfirmation]);
 
   const actionHandlers = useMemo(() => ({
-    [ContentActions.EDIT_CONTENT]: () => setEditing(true),
-    [ContentActions.ENDORSE]: async () => {
-      await dispatch(editComment(comment.id, { endorsed: !comment.endorsed }, ContentActions.ENDORSE));
-      await dispatch(fetchThread(comment.threadId, courseId));
-    },
+    [ContentActions.EDIT_CONTENT]: handleEditContent,
+    [ContentActions.ENDORSE]: handleCommentEndorse,
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => handleAbusedFlag(),
-  }), [showDeleteConfirmation, dispatch, comment.id, comment.endorsed, comment.threadId, courseId, handleAbusedFlag]);
+    [ContentActions.REPORT]: handleAbusedFlag,
+  }), [handleEditContent, handleCommentEndorse, showDeleteConfirmation, handleAbusedFlag]);
 
-  const handleLoadMoreComments = () => (
-    dispatch(fetchCommentResponses(comment.id, {
+  const handleLoadMoreComments = useCallback(() => (
+    dispatch(fetchCommentResponses(id, {
       page: currentPage + 1,
       reverseOrder: sortedOrder,
     }))
-  );
+  ), [id, currentPage, sortedOrder]);
 
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
@@ -110,7 +121,7 @@ function Comment({
       <div
         tabIndex="0"
         className="d-flex flex-column card on-focus border-0"
-        data-testid={`comment-${comment.id}`}
+        data-testid={`comment-${id}`}
         role="listitem"
       >
         <Confirmation
@@ -122,7 +133,7 @@ function Comment({
           closeButtonVaraint="tertiary"
           confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
         />
-        {!comment.abuseFlagged && (
+        {!abuseFlagged && (
           <Confirmation
             isOpen={isReporting}
             title={intl.formatMessage(messages.reportResponseTitle)}
@@ -132,7 +143,13 @@ function Comment({
             confirmButtonVariant="danger"
           />
         )}
-        <EndorsedAlertBanner postType={postType} content={comment} />
+        <EndorsedAlertBanner
+          endorsed={endorsed}
+          endorsedAt={endorsedAt}
+          endorsedBy={endorsedBy}
+          endorsedByLabel={endorsedByLabel}
+          postType={postType}
+        />
         <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" tabIndex="0">
           <HoverCard
             commentOrPost={comment}
@@ -233,7 +250,7 @@ Comment.propTypes = {
 Comment.defaultProps = {
   showFullThread: true,
   isClosedPost: false,
-  marginBottom: true,
+  marginBottom: false,
 };
 
 export default injectIntl(React.memo(Comment));

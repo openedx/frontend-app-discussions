@@ -8,14 +8,16 @@ import { Alert, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
 import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
 function EndorsedAlertBanner({
+  endorsed,
+  endorsedAt,
+  endorsedBy,
+  endorsedByLabel,
   intl,
-  content,
   postType,
 }) {
   timeago.register('time-locale', timeLocale);
@@ -24,7 +26,7 @@ function EndorsedAlertBanner({
   const iconClass = isQuestion ? CheckCircle : Verified;
 
   return (
-    content.endorsed && (
+    endorsed && (
       <Alert
         variant="plain"
         className={`px-2.5 mb-0 py-8px align-items-center shadow-none ${classes}`}
@@ -45,11 +47,11 @@ function EndorsedAlertBanner({
           </div>
           <span className="d-flex align-items-center align-items-center flex-wrap" style={{ marginRight: '-1px' }}>
             <AuthorLabel
-              author={content.endorsedBy}
-              authorLabel={content.endorsedByLabel}
+              author={endorsedBy}
+              authorLabel={endorsedByLabel}
               linkToProfile
-              alert={content.endorsed}
-              postCreatedAt={content.endorsedAt}
+              alert={endorsed}
+              postCreatedAt={endorsedAt}
               authorToolTip
               postOrComment
             />
@@ -62,7 +64,10 @@ function EndorsedAlertBanner({
 
 EndorsedAlertBanner.propTypes = {
   intl: intlShape.isRequired,
-  content: PropTypes.oneOfType([commentShape.isRequired]).isRequired,
+  endorsed: PropTypes.string.isRequired,
+  endorsedAt: PropTypes.string.isRequired,
+  endorsedBy: PropTypes.string.isRequired,
+  endorsedByLabel: PropTypes.string.isRequired,
   postType: PropTypes.string,
 };
 
@@ -70,4 +75,4 @@ EndorsedAlertBanner.defaultProps = {
   postType: null,
 };
 
-export default injectIntl(EndorsedAlertBanner);
+export default injectIntl(React.memo(EndorsedAlertBanner));

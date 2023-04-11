@@ -12,8 +12,7 @@ import { DiscussionContext } from '../../common/context';
 import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
 import {
-  selectCommentSortOrder, selectThreadComments, selectThreadCommentsIds,
-  selectThreadCurrentPage, selectThreadHasMorePages,
+  selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
@@ -37,12 +36,12 @@ export function usePost(postId) {
     }
   }, [postId]);
 
-  return thread;
+  return thread || {};
 }
 
 export function usePostComments(postId, endorsed = null) {
   const [isLoading, dispatch] = useDispatchWithState();
-  const commentsIds = useSelector(selectThreadCommentsIds(postId, endorsed));
+  const comments = useSelector(selectThreadComments(postId, endorsed));
   const reverseOrder = useSelector(selectCommentSortOrder);
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
@@ -68,7 +67,7 @@ export function usePostComments(postId, endorsed = null) {
   }, [postId, reverseOrder]);
 
   return {
-    commentsIds,
+    comments,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
