@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -49,7 +49,7 @@ function AuthorLabel({
   const showUserNameAsLink = useShowLearnersTab()
     && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
 
-  const authorName = (
+  const authorName = useMemo(() => (
     <span
       className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
         'text-gray-700': isRetiredUser,
@@ -60,8 +60,9 @@ function AuthorLabel({
     >
       {isRetiredUser ? '[Deactivated]' : author}
     </span>
-  );
-  const labelContents = (
+  ), [author, authorLabelMessage, isRetiredUser]);
+
+  const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
         overlay={(
@@ -109,7 +110,7 @@ function AuthorLabel({
         </span>
       )}
     </>
-  );
+  ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
   return showUserNameAsLink
     ? (

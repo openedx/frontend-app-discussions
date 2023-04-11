@@ -18,6 +18,8 @@ function CommentsView({
   postId,
   postType,
 }) {
+  const [addingResponse, setAddingResponse] = useState(false);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
     comments,
     hasMorePages,
@@ -25,10 +27,13 @@ function CommentsView({
     handleLoadMoreResponses,
   } = usePostComments(postId, endorsed);
 
-  const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
-  const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const [addingResponse, setAddingResponse] = useState(false);
+  const endorsedComments = useMemo(() => (
+    [...filterPosts(comments, 'endorsed')]
+  ), [comments]);
+
+  const unEndorsedComments = useMemo(() => (
+    [...filterPosts(comments, 'unendorsed')]
+  ), [comments]);
 
   const handleAddResponse = useCallback(() => {
     setAddingResponse(true);
