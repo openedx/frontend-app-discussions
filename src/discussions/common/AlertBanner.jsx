@@ -8,6 +8,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Report } from '@edx/paragon/icons';
 
+import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
   selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
 } from '../data/selectors';
@@ -29,6 +30,7 @@ function AlertBanner({
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
     || userIsGlobalStaff || userIsContentAuthor
   );
+  const authorLabelColor = AvatarOutlineAndLabelColors[content.authorLabel];
 
   return (
     <>
@@ -44,7 +46,13 @@ function AlertBanner({
               <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
                 {intl.formatMessage(messages.editedBy)}
                 <span className="ml-1 mr-3">
-                  <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile postOrComment />
+                  <AuthorLabel
+                    author={content.lastEdit.editorUsername}
+                    authorLabel={content.authorLabel}
+                    labelColor={authorLabelColor && `text-${authorLabelColor}`}
+                    linkToProfile
+                    postOrComment
+                  />
                 </span>
                 <span
                   className="mx-1.5 font-size-8 font-style text-light-700"
@@ -61,7 +69,13 @@ function AlertBanner({
               <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
                 {intl.formatMessage(messages.closedBy)}
                 <span className="ml-1 ">
-                  <AuthorLabel author={content.closedBy} linkToProfile postOrComment />
+                  <AuthorLabel
+                    author={content.closedBy}
+                    authorLabel={content.authorLabel}
+                    labelColor={authorLabelColor && `text-${authorLabelColor}`}
+                    linkToProfile
+                    postOrComment
+                  />
                 </span>
                 <span
                   className="mx-1.5 font-size-8 font-style text-light-700"
