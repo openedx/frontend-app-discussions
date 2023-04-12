@@ -1,4 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback, useMemo, useRef, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
@@ -17,19 +19,21 @@ import messages from '../messages';
 import { inBlackoutDateRange, useActions } from '../utils';
 
 function ActionsDropdown({
-  intl,
-  contentType,
-  id,
-  disabled,
   actionHandlers,
-  iconSize,
+  contentType,
+  disabled,
   dropDownIconSize,
+  iconSize,
+  id,
+  intl,
+  postType,
 }) {
   const buttonRef = useRef();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
   const commentOrPost = useSelector(contentSelector[contentType](id));
-  const actions = useActions(commentOrPost);
+  const blackoutDateRange = useSelector(selectBlackoutDate);
+  const actions = useActions({ ...commentOrPost, postType });
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
@@ -40,11 +44,12 @@ function ActionsDropdown({
     }
   }, [actionHandlers]);
 
-  const blackoutDateRange = useSelector(selectBlackoutDate);
   // Find and remove edit action if in blackout date range.
-  if (inBlackoutDateRange(blackoutDateRange)) {
-    actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
-  }
+  useMemo(() => {
+    if (inBlackoutDateRange(blackoutDateRange)) {
+      actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
+    }
+  }, [actions, blackoutDateRange]);
 
   const onClickButton = useCallback(() => {
     setTarget(buttonRef.current);
@@ -117,6 +122,7 @@ ActionsDropdown.propTypes = {
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
   contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
+  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
 };
 
 ActionsDropdown.defaultProps = {

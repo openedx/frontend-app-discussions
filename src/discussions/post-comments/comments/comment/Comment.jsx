@@ -15,6 +15,7 @@ import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import { DiscussionContext } from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
+import { contentType } from '../../../data/constants';
 import { useUserCanAddThreadInBlackoutDate } from '../../../data/hooks';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
@@ -40,10 +41,10 @@ function Comment({
   postType,
   showFullThread = true,
 }) {
+  console.log('commnet', comment, postType);
   const {
-    id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel,
-    pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId,
-    groupName, closeReason, authorLabel, author, title, createdAt, renderedBody, lastEdit,
+    id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
+    voted, following, voteCount, authorLabel, author, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
   } = comment;
   const hasChildren = childCount > 0;
   const isNested = Boolean(parentId);
@@ -115,6 +116,28 @@ function Comment({
     }))
   ), [id, currentPage, sortedOrder]);
 
+  const handleAddCommentButton = useCallback(() => {
+    if (userCanAddThreadInBlackoutDate) {
+      setReplying(true);
+    }
+  }, [userCanAddThreadInBlackoutDate]);
+
+  const handleCommentLike = useCallback(async () => {
+    await dispatch(editComment(id, { voted: !voted }));
+  }, [id, voted]);
+
+  const handleCloseEditor = useCallback(() => {
+    setEditing(false);
+  }, []);
+
+  const handleAddCommentReply = useCallback(() => {
+    setReplying(true);
+  }, []);
+
+  const handleCloseReplyEditor = useCallback(() => {
+    setReplying(false);
+  }, []);
+
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
       {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
@@ -152,34 +175,63 @@ function Comment({
         />
         <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" tabIndex="0">
           <HoverCard
-            commentOrPost={comment}
+            id={id}
+            contentType={contentType.COMMENT}
+            postType={postType}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={() => setReplying(true)}
-            onLike={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
+            handleResponseCommentButton={handleAddCommentButton}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
+            onLike={handleCommentLike}
+            voted={voted}
+            following={following}
             isClosedPost={isClosedPost}
             endorseIcons={endorseIcons}
           />
-          <AlertBanner content={comment} />
-          <CommentHeader comment={comment} />
+          <AlertBanner
+            author={author}
+            abuseFlagged={abuseFlagged}
+            lastEdit={lastEdit}
+            closed={closed}
+            closedBy={closedBy}
+            closeReason={closeReason}
+          />
+          <CommentHeader
+            author={author}
+            authorLabel={authorLabel}
+            abuseFlagged={abuseFlagged}
+            closed={closed}
+            createdAt={createdAt}
+            lastEdit={lastEdit}
+          />
           {isEditing
             ? (
-              <CommentEditor comment={comment} onCloseEditor={() => setEditing(false)} formClasses="pt-3" />
+              <CommentEditor
+                comment={{
+                  id,
+                  threadId,
+                  parentId,
+                  author,
+                  lastEdit,
+                  rawBody,
+                }}
+                onCloseEditor={handleCloseEditor}
+                formClasses="pt-3"
+              />
             )
             : (
               <HTMLLoader
                 cssClassName="comment-body html-loader text-break mt-14px font-style text-primary-500"
                 componentId="comment"
-                htmlNode={comment.renderedBody}
-                testId={comment.id}
+                htmlNode={renderedBody}
+                testId={id}
               />
             )}
-          {comment.voted && (
+          {voted && (
             <div className="ml-n1.5 mt-10px">
               <LikeButton
-                count={comment.voteCount}
-                onClick={() => dispatch(editComment(comment.id, { voted: !comment.voted }))}
-                voted={comment.voted}
+                count={voteCount}
+                onClick={handleCommentLike}
+                voted={voted}
               />
             </div>
           )}
@@ -188,10 +240,9 @@ function Comment({
               {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
               {inlineReplies.map(inlineReply => (
                 <Reply
-                  reply={inlineReply}
                   postType={postType}
+                  reply={inlineReply}
                   key={inlineReply.id}
-                  intl={intl}
                 />
               ))}
             </div>
@@ -211,9 +262,9 @@ function Comment({
             isReplying ? (
               <div className="mt-2.5">
                 <CommentEditor
-                  comment={{ threadId: comment.threadId, parentId: comment.id }}
+                  comment={{ threadId, parentId: id }}
                   edit={false}
-                  onCloseEditor={() => setReplying(false)}
+                  onCloseEditor={handleCloseReplyEditor}
                 />
               </div>
             ) : (
@@ -224,7 +275,7 @@ function Comment({
                       className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
                       variant="plain"
                       style={{ height: '36px' }}
-                      onClick={() => setReplying(true)}
+                      onClick={handleAddCommentReply}
                     >
                       {intl.formatMessage(messages.addComment)}
                     </Button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
@@ -8,17 +9,21 @@ import { Avatar } from '@edx/paragon';
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { commentShape } from './proptypes';
 
 function CommentHeader({
-  comment,
+  author,
+  authorLabel,
+  abuseFlagged,
+  closed,
+  createdAt,
+  lastEdit,
 }) {
-  const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
+  const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
-    author: comment.author,
-    abuseFlagged: comment.abuseFlagged,
-    lastEdit: comment.lastEdit,
-    closed: comment.closed,
+    author,
+    abuseFlagged,
+    lastEdit,
+    closed,
   });
 
   return (
@@ -29,18 +34,18 @@ function CommentHeader({
       <div className="align-items-center d-flex flex-row">
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
-          alt={comment.author}
+          alt={author}
           style={{
             width: '32px',
             height: '32px',
           }}
         />
         <AuthorLabel
-          author={comment.author}
-          authorLabel={comment.authorLabel}
+          author={author}
+          authorLabel={authorLabel}
           labelColor={colorClass && `text-${colorClass}`}
           linkToProfile
-          postCreatedAt={comment.createdAt}
+          postCreatedAt={createdAt}
           postOrComment
         />
       </div>
@@ -49,7 +54,12 @@ function CommentHeader({
 }
 
 CommentHeader.propTypes = {
-  comment: commentShape.isRequired,
+  author: PropTypes.string.isRequired,
+  authorLabel: PropTypes.string.isRequired,
+  abuseFlagged: PropTypes.bool.isRequired,
+  closed: PropTypes.bool.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  lastEdit: PropTypes.string.isRequired,
 };
 
-export default injectIntl(CommentHeader);
+export default injectIntl(React.memo(CommentHeader));
