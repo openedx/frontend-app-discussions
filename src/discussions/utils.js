@@ -5,7 +5,8 @@ import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  CheckCircle, CheckCircleOutline, Delete, Edit, Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
+  CheckCircle, CheckCircleOutline, Close, Delete, Done,
+  Edit, Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
 import { InsertLink } from '../components/icons';
@@ -176,16 +177,16 @@ export const ACTIONS_LIST = [
   {
     id: 'accept-review',
     action: ContentActions.ACCEPT_REVIEW,
-    icon: Delete, // TODO: update this later
+    icon: Done,
     label: messages.acceptReview,
-    conditions: { reviewStatus: "PENDING" },
+    conditions: { reviewStatus: 'PENDING' },
   },
   {
     id: 'reject-review',
     action: ContentActions.REJECT_REVIEW,
-    icon: Delete, // TODO: update this later
+    icon: Close,
     label: messages.rejectReview,
-    conditions: { reviewStatus: "PENDING" },
+    conditions: { reviewStatus: 'PENDING' },
   },
 ];
 
