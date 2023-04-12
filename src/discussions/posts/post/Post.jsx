@@ -156,6 +156,7 @@ function Post({
       <HoverCard
         id={postId}
         contentType={contentType.POST}
+        postType={postType}
         actionHandlers={actionHandlers}
         handleResponseCommentButton={handleAddResponseButton}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
