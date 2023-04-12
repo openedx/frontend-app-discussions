@@ -44,6 +44,7 @@ function Post({
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const displayPostFooter = post.following || post.voteCount || post.closed
   || (post.groupId && userHasModerationPrivileges);
+  const displayReviewContentLabel = post.reviewStatus === "PENDING";
 
   const handleAbusedFlag = useCallback(() => {
     if (post.abuseFlagged) {
@@ -146,6 +147,8 @@ function Post({
       />
       <AlertBanner content={post} />
       <PostHeader post={post} />
+      {displayReviewContentLabel && <p style= {{ background: "yellow" }}> This content is under review </p>}
+
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={post.renderedBody} componentId="post" cssClassName="html-loader" testId={post.id} />
       </div>
