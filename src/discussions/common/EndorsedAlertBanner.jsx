@@ -64,14 +64,17 @@ function EndorsedAlertBanner({
 
 EndorsedAlertBanner.propTypes = {
   intl: intlShape.isRequired,
-  endorsed: PropTypes.string.isRequired,
-  endorsedAt: PropTypes.string.isRequired,
-  endorsedBy: PropTypes.string.isRequired,
-  endorsedByLabel: PropTypes.string.isRequired,
+  endorsed: PropTypes.bool.isRequired,
+  endorsedAt: PropTypes.string,
+  endorsedBy: PropTypes.string,
+  endorsedByLabel: PropTypes.string,
   postType: PropTypes.string,
 };
 
 EndorsedAlertBanner.defaultProps = {
+  endorsedAt: null,
+  endorsedBy: null,
+  endorsedByLabel: null,
   postType: null,
 };
 
