@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useMemo, useState,
+  useCallback, useContext, useEffect, useState,
 } from 'react';
 
 import { useParams } from 'react-router';
@@ -124,24 +124,22 @@ function PostCommentsView({ intl }) {
           postType={type}
         />
       )}
-      {/* {thread.type === ThreadType.QUESTION && (
+      {type === ThreadType.QUESTION && (
         <>
           <CommentsView
-            postId={postId}
-            intl={intl}
-            postType={thread.type}
             endorsed={EndorsementStatus.ENDORSED}
-            isClosed={thread.closed}
+            isClosed={closed}
+            postId={postId}
+            postType={type}
           />
           <CommentsView
-            postId={postId}
-            intl={intl}
-            postType={thread.type}
             endorsed={EndorsementStatus.UNENDORSED}
-            isClosed={thread.closed}
+            isClosed={closed}
+            postId={postId}
+            postType={type}
           />
         </>
-      )} */}
+      )}
     </>
   );
 }

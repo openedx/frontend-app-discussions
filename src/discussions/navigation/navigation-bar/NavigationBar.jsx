@@ -38,7 +38,7 @@ function NavigationBar({ intl }) {
   }
 
   return (
-    <Nav variant="button-group" className="py-2">
+    <Nav variant="pills" className="py-2 nav-button-group">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
           <Nav.Link
