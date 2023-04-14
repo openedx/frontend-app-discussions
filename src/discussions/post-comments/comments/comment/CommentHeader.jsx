@@ -55,11 +55,17 @@ function CommentHeader({
 
 CommentHeader.propTypes = {
   author: PropTypes.string.isRequired,
-  authorLabel: PropTypes.string.isRequired,
   abuseFlagged: PropTypes.bool.isRequired,
-  closed: PropTypes.bool.isRequired,
+  closed: PropTypes.bool,
   createdAt: PropTypes.string.isRequired,
-  lastEdit: PropTypes.string.isRequired,
+  lastEdit: PropTypes.string,
+  authorLabel: PropTypes.string,
+};
+
+CommentHeader.defaultProps = {
+  authorLabel: null,
+  closed: undefined,
+  lastEdit: null,
 };
 
 export default injectIntl(React.memo(CommentHeader));

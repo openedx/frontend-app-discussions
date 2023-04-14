@@ -36,11 +36,12 @@ import Reply from './Reply';
 function Comment({
   comment,
   intl,
-  isClosedPost,
+  isClosed,
   marginBottom,
   postType,
   showFullThread = true,
 }) {
+  console.log('Comments isClosed', isClosed);
   console.log('commnet', comment, postType);
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
@@ -80,6 +81,7 @@ function Comment({
   }, []);
 
   const handleCommentEndorse = useCallback(async () => {
+    console.log('handleCommentEndorse', id, endorsed, threadId);
     await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
     await dispatch(fetchThread(threadId, courseId));
   }, [id, endorsed, threadId]);
@@ -184,7 +186,7 @@ function Comment({
             onLike={handleCommentLike}
             voted={voted}
             following={following}
-            isClosedPost={isClosedPost}
+            isClosedPost={isClosed}
             endorseIcons={endorseIcons}
           />
           <AlertBanner
@@ -269,7 +271,7 @@ function Comment({
               </div>
             ) : (
               <>
-                {!isClosedPost && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
+                {!isClosed && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
                   && (
                     <Button
                       className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
@@ -293,14 +295,14 @@ Comment.propTypes = {
   postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   comment: commentShape.isRequired,
   showFullThread: PropTypes.bool,
-  isClosedPost: PropTypes.bool,
+  isClosed: PropTypes.bool,
   intl: intlShape.isRequired,
   marginBottom: PropTypes.bool,
 };
 
 Comment.defaultProps = {
   showFullThread: true,
-  isClosedPost: false,
+  isClosed: false,
   marginBottom: false,
 };
 
