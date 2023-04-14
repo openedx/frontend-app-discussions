@@ -18,6 +18,7 @@ function CommentsView({
   postId,
   postType,
 }) {
+  console.log('CommentsView isClosed', isClosed);
   const [addingResponse, setAddingResponse] = useState(false);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
@@ -60,7 +61,7 @@ function CommentsView({
           comment={comment}
           key={comment.id}
           postType={postType}
-          isClosedPost={isClosed}
+          isClosed={isClosed}
           marginBottom={isLastElementOfList(postComments, comment)}
         />
       ))}
@@ -81,7 +82,7 @@ function CommentsView({
         </div>
       )}
     </div>
-  ), [hasMorePages, isLoading, handleLoadMoreResponses]);
+  ), [hasMorePages, isLoading, handleLoadMoreResponses, isClosed, postType]);
 
   return (
     <>
