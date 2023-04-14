@@ -30,7 +30,8 @@ function AlertBanner({
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
     || userIsGlobalStaff || userIsContentAuthor
   );
-  const authorLabelColor = AvatarOutlineAndLabelColors[content.authorLabel];
+  const editByLabelColor = AvatarOutlineAndLabelColors[content.editByLabel];
+  const closedByLabelColor = AvatarOutlineAndLabelColors[content.closedByLabel];
 
   return (
     <>
@@ -45,11 +46,11 @@ function AlertBanner({
             <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
               <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
                 {intl.formatMessage(messages.editedBy)}
-                <span className="ml-1 mr-3">
+                <span className="ml-1">
                   <AuthorLabel
                     author={content.lastEdit.editorUsername}
-                    authorLabel={content.authorLabel}
-                    labelColor={authorLabelColor && `text-${authorLabelColor}`}
+                    authorLabel={content.editByLabel}
+                    labelColor={editByLabelColor && `text-${editByLabelColor}`}
                     linkToProfile
                     postOrComment
                   />
@@ -71,8 +72,8 @@ function AlertBanner({
                 <span className="ml-1 ">
                   <AuthorLabel
                     author={content.closedBy}
-                    authorLabel={content.authorLabel}
-                    labelColor={authorLabelColor && `text-${authorLabelColor}`}
+                    authorLabel={content.closedByLabel}
+                    labelColor={closedByLabelColor && `text-${closedByLabelColor}`}
                     linkToProfile
                     postOrComment
                   />
