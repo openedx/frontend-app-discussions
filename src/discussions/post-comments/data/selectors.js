@@ -17,6 +17,10 @@ export const selectThreadComments = (threadId, endorsed = null) => createSelecto
   mapIdToComment,
 );
 
+export const selectCommentResponsesIds = commentId => (
+  state => state.comments.commentsInComments[commentId] || []
+);
+
 export const selectCommentResponses = commentId => createSelector(
   [
     state => state.comments.commentsInComments[commentId] || [],

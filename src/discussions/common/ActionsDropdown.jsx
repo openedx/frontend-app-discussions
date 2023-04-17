@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
   Button, Dropdown, Icon, IconButton, ModalPopup, useToggle,
@@ -13,7 +13,6 @@ import {
 import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
-import { contentSelector } from '../data/constants';
 import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { inBlackoutDateRange, useActions } from '../utils';
@@ -25,15 +24,13 @@ function ActionsDropdown({
   dropDownIconSize,
   iconSize,
   id,
-  intl,
-  postType,
 }) {
   const buttonRef = useRef();
+  const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const commentOrPost = useSelector(contentSelector[contentType](id));
   const blackoutDateRange = useSelector(selectBlackoutDate);
-  const actions = useActions({ ...commentOrPost, postType });
+  const actions = useActions(contentType, id);
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
@@ -115,14 +112,12 @@ function ActionsDropdown({
 }
 
 ActionsDropdown.propTypes = {
-  intl: intlShape.isRequired,
   id: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
   contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
-  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
 };
 
 ActionsDropdown.defaultProps = {
@@ -131,4 +126,4 @@ ActionsDropdown.defaultProps = {
   dropDownIconSize: false,
 };
 
-export default injectIntl(ActionsDropdown);
+export default ActionsDropdown;

@@ -1,13 +1,12 @@
 import React, {
-  useCallback,
-  useContext, useEffect, useMemo, useState,
+  useCallback, useContext, useEffect, useMemo, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
@@ -15,7 +14,7 @@ import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import { DiscussionContext } from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
-import { contentType } from '../../../data/constants';
+import { ContentTypes } from '../../../data/constants';
 import { useUserCanAddThreadInBlackoutDate } from '../../../data/hooks';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
@@ -23,43 +22,46 @@ import { useActions } from '../../../utils';
 import {
   selectCommentCurrentPage,
   selectCommentHasMorePages,
+  selectCommentOrResponseById,
   selectCommentResponses,
+  selectCommentResponsesIds,
   selectCommentSortOrder,
 } from '../../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../../data/thunks';
 import messages from '../../messages';
+import { PostCommentsContext } from '../../postCommentsContext';
 import CommentEditor from './CommentEditor';
 import CommentHeader from './CommentHeader';
-import { commentShape } from './proptypes';
 import Reply from './Reply';
 
-function Comment({
-  comment,
-  intl,
-  isClosed,
+const Comment = ({
+  commentId,
   marginBottom,
-  postType,
   showFullThread = true,
-}) {
-  console.log('Comments isClosed', isClosed);
-  console.log('commnet', comment, postType);
+}) => {
+  console.log('Comment', commentId);
+  const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
     voted, following, voteCount, authorLabel, author, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
+    editByLabel, closedByLabel,
   } = comment;
+  const intl = useIntl();
   const hasChildren = childCount > 0;
   const isNested = Boolean(parentId);
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
+  const { isClosed } = useContext(PostCommentsContext);
   const [isEditing, setEditing] = useState(false);
   const [isReplying, setReplying] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const inlineReplies = useSelector(selectCommentResponses(id));
+  const inlineRepliesIds = useSelector(selectCommentResponsesIds(id));
   const hasMorePages = useSelector(selectCommentHasMorePages(id));
   const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
-  const actions = useActions({ ...comment, postType });
+  const actions = useActions(ContentTypes.COMMENT, id);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
 
   useEffect(() => {
@@ -81,7 +83,6 @@ function Comment({
   }, []);
 
   const handleCommentEndorse = useCallback(async () => {
-    console.log('handleCommentEndorse', id, endorsed, threadId);
     await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
     await dispatch(fetchThread(threadId, courseId));
   }, [id, endorsed, threadId]);
@@ -173,20 +174,17 @@ function Comment({
           endorsedAt={endorsedAt}
           endorsedBy={endorsedBy}
           endorsedByLabel={endorsedByLabel}
-          postType={postType}
         />
         <div className="d-flex flex-column post-card-comment px-4 pt-3.5 pb-10px" tabIndex="0">
           <HoverCard
             id={id}
-            contentType={contentType.COMMENT}
-            postType={postType}
+            contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
             handleResponseCommentButton={handleAddCommentButton}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
             following={following}
-            isClosedPost={isClosed}
             endorseIcons={endorseIcons}
           />
           <AlertBanner
@@ -196,6 +194,8 @@ function Comment({
             closed={closed}
             closedBy={closedBy}
             closeReason={closeReason}
+            editByLabel={editByLabel}
+            closedByLabel={closedByLabel}
           />
           <CommentHeader
             author={author}
@@ -205,29 +205,27 @@ function Comment({
             createdAt={createdAt}
             lastEdit={lastEdit}
           />
-          {isEditing
-            ? (
-              <CommentEditor
-                comment={{
-                  id,
-                  threadId,
-                  parentId,
-                  author,
-                  lastEdit,
-                  rawBody,
-                }}
-                onCloseEditor={handleCloseEditor}
-                formClasses="pt-3"
-              />
-            )
-            : (
-              <HTMLLoader
-                cssClassName="comment-body html-loader text-break mt-14px font-style text-primary-500"
-                componentId="comment"
-                htmlNode={renderedBody}
-                testId={id}
-              />
-            )}
+          {isEditing ? (
+            <CommentEditor
+              comment={{
+                author,
+                id,
+                lastEdit,
+                threadId,
+                parentId,
+                rawBody,
+              }}
+              onCloseEditor={handleCloseEditor}
+              formClasses="pt-3"
+            />
+          ) : (
+            <HTMLLoader
+              cssClassName="comment-body html-loader text-break mt-14px font-style text-primary-500"
+              componentId="comment"
+              htmlNode={renderedBody}
+              testId={id}
+            />
+          )}
           {voted && (
             <div className="ml-n1.5 mt-10px">
               <LikeButton
@@ -237,14 +235,12 @@ function Comment({
               />
             </div>
           )}
-          {inlineReplies.length > 0 && (
+          {inlineRepliesIds.length > 0 && (
             <div className="d-flex flex-column mt-0.5" role="list">
-              {/* Pass along intl since component used here is the one before it's injected with `injectIntl` */}
-              {inlineReplies.map(inlineReply => (
+              {inlineRepliesIds.map(replyId => (
                 <Reply
-                  postType={postType}
-                  reply={inlineReply}
-                  key={inlineReply.id}
+                  responseId={replyId}
+                  key={replyId}
                 />
               ))}
             </div>
@@ -270,40 +266,33 @@ function Comment({
                 />
               </div>
             ) : (
-              <>
-                {!isClosed && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
-                  && (
-                    <Button
-                      className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
-                      variant="plain"
-                      style={{ height: '36px' }}
-                      onClick={handleAddCommentReply}
-                    >
-                      {intl.formatMessage(messages.addComment)}
-                    </Button>
-                  )}
-              </>
+              !isClosed && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5) && (
+                <Button
+                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
+                  variant="plain"
+                  style={{ height: '36px' }}
+                  onClick={handleAddCommentReply}
+                >
+                  {intl.formatMessage(messages.addComment)}
+                </Button>
+              )
             )
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 Comment.propTypes = {
-  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
-  comment: commentShape.isRequired,
-  showFullThread: PropTypes.bool,
-  isClosed: PropTypes.bool,
-  intl: intlShape.isRequired,
+  commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
+  showFullThread: PropTypes.bool,
 };
 
 Comment.defaultProps = {
-  showFullThread: true,
-  isClosed: false,
   marginBottom: false,
+  showFullThread: true,
 };
 
-export default injectIntl(React.memo(Comment));
+export default React.memo(Comment);

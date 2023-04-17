@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Dropdown, ModalPopup, useToggle,
 } from '@edx/paragon';
@@ -13,7 +13,8 @@ import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
 
-function CommentSortDropdown({ intl }) {
+const CommentSortDropdown = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
@@ -95,11 +96,6 @@ function CommentSortDropdown({ intl }) {
       </div>
     </>
   );
-}
-
-CommentSortDropdown.propTypes = {
-  intl: intlShape.isRequired,
-
 };
 
-export default injectIntl(React.memo(CommentSortDropdown));
+export default React.memo(CommentSortDropdown);

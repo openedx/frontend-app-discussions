@@ -20,7 +20,9 @@ import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView as LegacyTopicsView } from '../topics';
 
-export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
+const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
+  console.log('DiscussionSidebar');
+
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
@@ -42,7 +44,6 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, enableInContextSidebar]);
 
-  console.log('DiscussionSidebar');
   return (
     <div
       ref={sidebarRef}
@@ -99,11 +100,6 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
       </Switch>
     </div>
   );
-}
-
-DiscussionSidebar.defaultProps = {
-  displaySidebar: false,
-  postActionBarRef: null,
 };
 
 DiscussionSidebar.propTypes = {
@@ -113,3 +109,10 @@ DiscussionSidebar.propTypes = {
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]),
 };
+
+DiscussionSidebar.defaultProps = {
+  displaySidebar: false,
+  postActionBarRef: null,
+};
+
+export default React.memo(DiscussionSidebar);

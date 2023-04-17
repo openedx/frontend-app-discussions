@@ -2,10 +2,9 @@ import React, {
   useCallback, useContext, useEffect, useState,
 } from 'react';
 
-import { useParams } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, Spinner,
 } from '@edx/paragon';
@@ -24,19 +23,22 @@ import CommentsSort from './comments/CommentsSort';
 import CommentsView from './comments/CommentsView';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
+import { PostCommentsContext } from './postCommentsContext';
 
-function PostCommentsView({ intl }) {
-  const { postId } = useParams();
+const PostCommentsView = () => {
+  console.log('PostCommentsView');
+
+  const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
-  const [addingResponse, setAddingResponse] = useState(false);
   const isOnDesktop = useIsOnDesktop();
+  const [addingResponse, setAddingResponse] = useState(false);
   const [isLoading, submitDispatch] = useDispatchWithState();
+  const {
+    courseId, learnerUsername, category, topicId, page, enableInContextSidebar, postId,
+  } = useContext(DiscussionContext);
   const commentsCount = useCommentsCount(postId);
   const { closed, id: threadId, type } = usePost(postId);
-  const {
-    courseId, learnerUsername, category, topicId, page, enableInContextSidebar,
-  } = useContext(DiscussionContext);
 
   useEffect(() => {
     if (!threadId) { submitDispatch(fetchThread(postId, courseId, true)); }
@@ -68,9 +70,13 @@ function PostCommentsView({ intl }) {
     );
   }
 
-  console.log('PostCommentsView');
   return (
-    <>
+    <PostCommentsContext.Provider value={{
+      isClosed: closed,
+      postType: type,
+      postId,
+    }}
+    >
       {!isOnDesktop && (
         enableInContextSidebar ? (
           <>
@@ -106,10 +112,9 @@ function PostCommentsView({ intl }) {
       <div
         className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
       >
-        <Post postId={postId} handleAddResponseButton={handleAddResponseButton} />
+        <Post handleAddResponseButton={handleAddResponseButton} />
         {!closed && (
           <ResponseEditor
-            postId={postId}
             handleCloseEditor={handleCloseEditor}
             addingResponse={addingResponse}
           />
@@ -117,35 +122,16 @@ function PostCommentsView({ intl }) {
       </div>
       {!!commentsCount && <CommentsSort />}
       {type === ThreadType.DISCUSSION && (
-        <CommentsView
-          endorsed={EndorsementStatus.DISCUSSION}
-          isClosed={closed}
-          postId={postId}
-          postType={type}
-        />
+        <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
       )}
       {type === ThreadType.QUESTION && (
         <>
-          <CommentsView
-            endorsed={EndorsementStatus.ENDORSED}
-            isClosed={closed}
-            postId={postId}
-            postType={type}
-          />
-          <CommentsView
-            endorsed={EndorsementStatus.UNENDORSED}
-            isClosed={closed}
-            postId={postId}
-            postType={type}
-          />
+          <CommentsView endorsed={EndorsementStatus.ENDORSED} />
+          <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
         </>
       )}
-    </>
+    </PostCommentsContext.Provider>
   );
-}
-
-PostCommentsView.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(React.memo(PostCommentsView));
+export default React.memo(PostCommentsView);

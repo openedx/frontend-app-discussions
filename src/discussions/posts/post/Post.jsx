@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
@@ -16,7 +16,7 @@ import { selectorForUnitSubsection, selectTopicContext } from '../../../data/sel
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
-import { contentType } from '../../data/constants';
+import { ContentTypes } from '../../data/constants';
 import { selectModerationSettings, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { selectThread } from '../data/selectors';
@@ -26,19 +26,18 @@ import messages from './messages';
 import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
 
-function Post({
-  intl,
-  postId,
-  handleAddResponseButton,
-}) {
+const Post = ({ handleAddResponseButton }) => {
+  const { enableInContextSidebar, postId } = useContext(DiscussionContext);
+  console.log('post', postId);
   const {
-    topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId,
-    groupName, closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit,
+    topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
+    closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,
+    closedByLabel,
   } = useSelector(selectThread(postId));
+  const intl = useIntl();
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseId = useSelector((state) => state.config.id);
   const topic = useSelector(selectTopic(topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
@@ -57,12 +56,12 @@ function Post({
       search: enableInContextSidebar && '?inContextSidebar',
     });
     hideDeleteConfirmation();
-  }, [enableInContextSidebar, postId]);
+  }, [enableInContextSidebar, postId, hideDeleteConfirmation]);
 
   const handleReportConfirmation = useCallback(() => {
     dispatch(updateExistingThread(postId, { flagged: !abuseFlagged }));
     hideReportConfirmation();
-  }, [abuseFlagged, postId]);
+  }, [abuseFlagged, postId, hideReportConfirmation]);
 
   const handlePostContentEdit = useCallback(() => history.push({
     ...location,
@@ -77,7 +76,7 @@ function Post({
     } else {
       dispatch(updateExistingThread(postId, { closed: true }));
     }
-  }, [closed, postId, reasonCodesEnabled]);
+  }, [closed, postId, reasonCodesEnabled, showClosePostModal]);
 
   const handlePostCopyLink = useCallback(() => navigator.clipboard.writeText(
     `${window.location.origin}/${courseId}/posts/${postId}`,
@@ -93,7 +92,7 @@ function Post({
     } else {
       showReportConfirmation();
     }
-  }, [abuseFlagged, postId]);
+  }, [abuseFlagged, postId, showReportConfirmation]);
 
   const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: handlePostContentEdit,
@@ -109,7 +108,7 @@ function Post({
   const handleClosePostConfirmation = useCallback((closeReasonCode) => {
     dispatch(updateExistingThread(postId, { closed: true, closeReasonCode }));
     hideClosePostModal();
-  }, [postId]);
+  }, [postId, hideClosePostModal]);
 
   const handlePostLike = useCallback(() => {
     dispatch(updateExistingThread(postId, { voted: !voted }));
@@ -155,14 +154,12 @@ function Post({
       )}
       <HoverCard
         id={postId}
-        contentType={contentType.POST}
-        postType={postType}
+        contentType={ContentTypes.POST}
         actionHandlers={actionHandlers}
         handleResponseCommentButton={handleAddResponseButton}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
         onLike={handlePostLike}
         onFollow={handlePostFollow}
-        isClosedPost={closed}
         voted={voted}
         following={following}
       />
@@ -173,6 +170,8 @@ function Post({
         closed={closed}
         closedBy={closedBy}
         closeReason={closeReason}
+        editByLabel={editByLabel}
+        closedByLabel={closedByLabel}
       />
       <PostHeader
         abuseFlagged={abuseFlagged}
@@ -238,12 +237,10 @@ function Post({
       />
     </div>
   );
-}
+};
 
 Post.propTypes = {
-  intl: intlShape.isRequired,
-  postId: PropTypes.string.isRequired,
   handleAddResponseButton: PropTypes.func.isRequired,
 };
 
-export default injectIntl(Post);
+export default React.memo(Post);

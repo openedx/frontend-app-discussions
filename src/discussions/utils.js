@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
+import { useSelector } from 'react-redux';
 import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -11,6 +12,8 @@ import {
 
 import { InsertLink } from '../components/icons';
 import { ContentActions, Routes, ThreadType } from '../data/constants';
+import { ContentSelectors } from './data/constants';
+import { PostCommentsContext } from './post-comments/postCommentsContext';
 import messages from './messages';
 
 /**
@@ -176,7 +179,10 @@ export const ACTIONS_LIST = [
   },
 ];
 
-export function useActions(content) {
+export function useActions(contentType, id) {
+  const postType = useContext(PostCommentsContext);
+  const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
+
   const checkConditions = useCallback((item, conditions) => (
     conditions
       ? Object.keys(conditions)

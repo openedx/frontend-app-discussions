@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar } from '@edx/paragon';
 
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
@@ -55,11 +54,11 @@ function CommentHeader({
 
 CommentHeader.propTypes = {
   author: PropTypes.string.isRequired,
+  authorLabel: PropTypes.string,
   abuseFlagged: PropTypes.bool.isRequired,
   closed: PropTypes.bool,
   createdAt: PropTypes.string.isRequired,
   lastEdit: PropTypes.string,
-  authorLabel: PropTypes.string,
 };
 
 CommentHeader.defaultProps = {
@@ -68,4 +67,4 @@ CommentHeader.defaultProps = {
   lastEdit: null,
 };
 
-export default injectIntl(React.memo(CommentHeader));
+export default React.memo(CommentHeader);

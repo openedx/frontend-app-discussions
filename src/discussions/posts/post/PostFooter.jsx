@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useDispatch } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
@@ -14,18 +14,18 @@ import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';
 
-function PostFooter({
+const PostFooter = ({
   closed,
   following,
   groupId,
   groupName,
   id,
-  intl,
   userHasModerationPrivileges,
   voted,
   voteCount,
-}) {
+}) => {
   const dispatch = useDispatch();
+  const intl = useIntl();
 
   const handlePostLike = useCallback(() => {
     dispatch(updateExistingThread(id, { voted: !voted }));
@@ -102,10 +102,9 @@ function PostFooter({
       </div>
     </div>
   );
-}
+};
 
 PostFooter.propTypes = {
-  intl: intlShape.isRequired,
   voteCount: PropTypes.number.isRequired,
   voted: PropTypes.bool.isRequired,
   following: PropTypes.bool.isRequired,
@@ -121,4 +120,4 @@ PostFooter.defaultProps = {
   groupName: null,
 };
 
-export default injectIntl(React.memo(PostFooter));
+export default React.memo(PostFooter);
