@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
@@ -28,12 +28,12 @@ function CommentEditor({
   comment,
   edit,
   formClasses,
-  intl,
   onCloseEditor,
 }) {
   const {
     id, threadId, parentId, rawBody, author, lastEdit,
   } = comment;
+  const intl = useIntl();
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -180,29 +180,28 @@ function CommentEditor({
 
 CommentEditor.propTypes = {
   comment: PropTypes.shape({
+    author: PropTypes.string,
     id: PropTypes.string,
-    threadId: PropTypes.string.isRequired,
+    lastEdit: PropTypes.object,
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
-    author: PropTypes.string,
-    lastEdit: PropTypes.object,
+    threadId: PropTypes.string.isRequired,
   }),
-  onCloseEditor: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
+  onCloseEditor: PropTypes.func.isRequired,
 };
 
 CommentEditor.defaultProps = {
   edit: true,
-  formClasses: '',
   comment: {
+    author: null,
     id: null,
+    lastEdit: null,
     parentId: null,
     rawBody: '',
-    author: null,
-    lastEdit: null,
   },
+  formClasses: '',
 };
 
-export default injectIntl(React.memo(CommentEditor));
+export default React.memo(CommentEditor);

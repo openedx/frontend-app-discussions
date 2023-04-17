@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
@@ -12,14 +12,13 @@ import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
 import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
+import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
-function HoverCard({
-  intl,
+const HoverCard = ({
   id,
   contentType,
-  postType,
   actionHandlers,
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
@@ -27,12 +26,15 @@ function HoverCard({
   onFollow,
   voted,
   following,
-  isClosedPost,
   endorseIcons,
-}) {
+}) => {
+  console.log('HoverCard');
+
+  const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
+  const { isClosed } = useContext(PostCommentsContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  console.log('HoverCard', contentType);
+
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
@@ -46,7 +48,7 @@ function HoverCard({
             className={classNames('px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
               { 'w-100': enableInContextSidebar })}
             onClick={() => handleResponseCommentButton()}
-            disabled={isClosedPost}
+            disabled={isClosed}
             style={{ lineHeight: '20px' }}
           >
             {addResponseCommentButtonMessage}
@@ -109,25 +111,21 @@ function HoverCard({
         <ActionsDropdown
           id={id}
           contentType={contentType}
-          postType={postType}
           actionHandlers={actionHandlers}
           dropDownIconSize
         />
       </div>
     </div>
   );
-}
+};
 
 HoverCard.propTypes = {
-  intl: intlShape.isRequired,
   id: PropTypes.string.isRequired,
   contentType: PropTypes.string.isRequired,
-  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   onLike: PropTypes.func.isRequired,
-  isClosedPost: PropTypes.bool.isRequired,
   voted: PropTypes.bool.isRequired,
   endorseIcons: PropTypes.objectOf(PropTypes.any),
   onFollow: PropTypes.func,
@@ -140,4 +138,4 @@ HoverCard.defaultProps = {
   following: undefined,
 };
 
-export default injectIntl(React.memo(HoverCard));
+export default React.memo(HoverCard);

@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
-
+import { DiscussionContext } from '../../../common/context';
 import CommentEditor from './CommentEditor';
 
 function ResponseEditor({
-  postId,
   addWrappingDiv,
   handleCloseEditor,
   addingResponse,
 }) {
+  const { postId } = useContext(DiscussionContext);
+
   useEffect(() => {
     handleCloseEditor();
   }, [postId]);
@@ -29,7 +29,6 @@ function ResponseEditor({
 }
 
 ResponseEditor.propTypes = {
-  postId: PropTypes.string.isRequired,
   addWrappingDiv: PropTypes.bool,
   handleCloseEditor: PropTypes.func.isRequired,
   addingResponse: PropTypes.bool.isRequired,
@@ -39,4 +38,4 @@ ResponseEditor.defaultProps = {
   addWrappingDiv: false,
 };
 
-export default injectIntl(React.memo(ResponseEditor));
+export default React.memo(ResponseEditor);

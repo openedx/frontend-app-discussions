@@ -11,6 +11,7 @@ import { useDispatchWithState } from '../../../data/hooks';
 import { DiscussionContext } from '../../common/context';
 import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
+import { filterPosts } from '../../utils';
 import {
   selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
@@ -39,13 +40,21 @@ export function usePost(postId) {
   return thread || {};
 }
 
-export function usePostComments(postId, endorsed = null) {
+export function usePostComments(endorsed = null) {
+  const { enableInContextSidebar, postId } = useContext(DiscussionContext);
   const [isLoading, dispatch] = useDispatchWithState();
   const comments = useSelector(selectThreadComments(postId, endorsed));
   const reverseOrder = useSelector(selectCommentSortOrder);
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
-  const { enableInContextSidebar } = useContext(DiscussionContext);
+
+  const endorsedCommentsIds = useMemo(() => (
+    [...filterPosts(comments, 'endorsed')].map(comment => comment.id)
+  ), [comments]);
+
+  const unEndorsedCommentsIds = useMemo(() => (
+    [...filterPosts(comments, 'unendorsed')].map(comment => comment.id)
+  ), [comments]);
 
   const handleLoadMoreResponses = useCallback(async () => {
     const params = {
@@ -67,7 +76,8 @@ export function usePostComments(postId, endorsed = null) {
   }, [postId, reverseOrder]);
 
   return {
-    comments,
+    endorsedCommentsIds,
+    unEndorsedCommentsIds,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,

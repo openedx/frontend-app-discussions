@@ -3,13 +3,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
-
 import { Routes } from '../../data/constants';
 import { PostCommentsView } from '../post-comments';
 import { PostEditor } from '../posts';
 
-function DiscussionContent() {
+const DiscussionContent = () => {
   const postEditorVisible = useSelector((state) => state.threads.postEditorVisible);
   console.log('DiscussionSidebar');
 
@@ -33,6 +31,6 @@ function DiscussionContent() {
       </div>
     </div>
   );
-}
+};
 
-export default injectIntl(DiscussionContent);
+export default DiscussionContent;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Avatar, Badge, Icon } from '@edx/paragon';
 
 import { Issue, Question } from '../../../components/icons';
@@ -78,19 +78,19 @@ PostAvatar.defaultProps = {
   read: false,
 };
 
-function PostHeader({
+const PostHeader = ({
   abuseFlagged,
   author,
   authorLabel,
   closed,
   createdAt,
   hasEndorsed,
-  intl,
   lastEdit,
   title,
   postType,
   preview,
-}) {
+}) => {
+  const intl = useIntl();
   const showAnsweredBadge = preview && hasEndorsed && postType === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
@@ -135,10 +135,9 @@ function PostHeader({
       </div>
     </div>
   );
-}
+};
 
 PostHeader.propTypes = {
-  intl: intlShape.isRequired,
   preview: PropTypes.bool,
   hasEndorsed: PropTypes.bool.isRequired,
   postType: PropTypes.string.isRequired,
@@ -160,4 +159,4 @@ PostHeader.defaultProps = {
   closed: false,
 };
 
-export default injectIntl(React.memo(PostHeader));
+export default React.memo(PostHeader);

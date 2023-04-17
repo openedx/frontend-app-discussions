@@ -6,7 +6,7 @@ import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
@@ -16,8 +16,7 @@ import messages from '../messages';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
 
-function AuthorLabel({
-  intl,
+const AuthorLabel = ({
   author,
   authorLabel,
   linkToProfile,
@@ -26,8 +25,9 @@ function AuthorLabel({
   postCreatedAt,
   authorToolTip,
   postOrComment,
-}) {
+}) => {
   timeago.register('time-locale', timeLocale);
+  const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
@@ -128,10 +128,9 @@ function AuthorLabel({
       </div>
     )
     : <div className={className}>{authorName}{labelContents}</div>;
-}
+};
 
 AuthorLabel.propTypes = {
-  intl: intlShape.isRequired,
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
@@ -152,4 +151,4 @@ AuthorLabel.defaultProps = {
   postOrComment: false,
 };
 
-export default injectIntl(React.memo(AuthorLabel));
+export default React.memo(AuthorLabel);

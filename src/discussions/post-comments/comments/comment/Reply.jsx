@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Avatar, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
@@ -13,24 +13,23 @@ import {
   ActionsDropdown, AlertBanner, AuthorLabel, Confirmation,
 } from '../../../common';
 import timeLocale from '../../../common/time-locale';
-import { contentType } from '../../../data/constants';
+import { ContentTypes } from '../../../data/constants';
 import { useAlertBannerVisible } from '../../../data/hooks';
+import { selectCommentOrResponseById } from '../../data/selectors';
 import { editComment, removeComment } from '../../data/thunks';
 import messages from '../../messages';
 import CommentEditor from './CommentEditor';
-import { commentShape } from './proptypes';
 
-function Reply({
-  postType,
-  intl,
-  reply,
-}) {
-  console.log('reply', reply);
-  const {
-    id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy, closeReason,
-    createdAt, threadId, parentId, rawBody, renderedBody,
-  } = reply;
+const Reply = ({ responseId }) => {
+  console.log('reply', responseId);
+
   timeago.register('time-locale', timeLocale);
+
+  const {
+    id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy,
+    closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,
+  } = useSelector(selectCommentOrResponseById(responseId));
+  const intl = useIntl();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
@@ -110,15 +109,16 @@ function Reply({
             <AlertBanner
               author={author}
               abuseFlagged={abuseFlagged}
-              lastEdit={lastEdit}
               closed={closed}
               closedBy={closedBy}
               closeReason={closeReason}
+              lastEdit={lastEdit}
+              editByLabel={editByLabel}
+              closedByLabel={closedByLabel}
             />
           </div>
         </div>
       )}
-
       <div className="d-flex">
         <div className="d-flex mr-3 mt-2.5">
           <Avatar
@@ -146,10 +146,9 @@ function Reply({
             <div className="ml-auto d-flex">
               <ActionsDropdown
                 actionHandlers={actionHandlers}
-                contentType={contentType.COMMENT}
+                contentType={ContentTypes.COMMENT}
                 iconSize="inline"
                 id={id}
-                postType={postType}
               />
             </div>
           </div>
@@ -177,12 +176,10 @@ function Reply({
       </div>
     </div>
   );
-}
-
-Reply.propTypes = {
-  postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
-  reply: commentShape.isRequired,
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(Reply);
+Reply.propTypes = {
+  responseId: PropTypes.string.isRequired,
+};
+
+export default React.memo(Reply);

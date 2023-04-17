@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
 import messages from '../post-comments/messages';
+import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
@@ -17,10 +18,11 @@ function EndorsedAlertBanner({
   endorsedAt,
   endorsedBy,
   endorsedByLabel,
-  intl,
-  postType,
 }) {
   timeago.register('time-locale', timeLocale);
+
+  const intl = useIntl();
+  const { postType } = useContext(PostCommentsContext);
   const isQuestion = postType === ThreadType.QUESTION;
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
   const iconClass = isQuestion ? CheckCircle : Verified;
@@ -63,19 +65,16 @@ function EndorsedAlertBanner({
 }
 
 EndorsedAlertBanner.propTypes = {
-  intl: intlShape.isRequired,
   endorsed: PropTypes.bool.isRequired,
   endorsedAt: PropTypes.string,
   endorsedBy: PropTypes.string,
   endorsedByLabel: PropTypes.string,
-  postType: PropTypes.string,
 };
 
 EndorsedAlertBanner.defaultProps = {
   endorsedAt: null,
   endorsedBy: null,
   endorsedByLabel: null,
-  postType: null,
 };
 
-export default injectIntl(React.memo(EndorsedAlertBanner));
+export default React.memo(EndorsedAlertBanner);

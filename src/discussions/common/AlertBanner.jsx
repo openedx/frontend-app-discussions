@@ -73,7 +73,10 @@ const AlertBanner = ({
 
 AlertBanner.propTypes = {
   author: PropTypes.string.isRequired,
+  abuseFlagged: PropTypes.bool,
   closed: PropTypes.bool,
+  closedBy: PropTypes.string,
+  closeReason: PropTypes.string,
   lastEdit: PropTypes.shape({
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
@@ -86,11 +89,11 @@ AlertBanner.propTypes = {
 };
 
 AlertBanner.defaultProps = {
-  lastEdit: {},
   abuseFlagged: false,
   closed: undefined,
   closedBy: undefined,
   closeReason: undefined,
+  lastEdit: {},
 };
 
 export default React.memo(AlertBanner);
