@@ -56,7 +56,7 @@ function AlertBanner({
                   />
                 </span>
                 <span
-                  className="mx-1.5 font-size-8 font-style text-light-700"
+                  className="mr-1.5 font-size-8 font-style text-light-700"
                   style={{ lineHeight: '15px' }}
                 >
                   {intl.formatMessage(messages.fullStop)}
@@ -79,14 +79,12 @@ function AlertBanner({
                   />
                 </span>
                 <span
-                  className="mx-1.5 font-size-8 font-style text-light-700"
+                  className="mr-1.5 font-size-8 font-style text-light-700"
                   style={{ lineHeight: '15px' }}
                 >
                   {intl.formatMessage(messages.fullStop)}
                 </span>
-
                 {content.closeReason && (`${intl.formatMessage(messages.reason)}: ${content.closeReason}`)}
-
               </div>
             </Alert>
           )}
