@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Spinner } from '@edx/paragon';
 
@@ -22,9 +22,10 @@ import { fetchThreads } from './data/thunks';
 import NoResults from './NoResults';
 import { PostLink } from './post';
 
-function PostsList({
-  posts, topics, intl, isTopicTab, parentIsLoading,
-}) {
+const PostsList = ({
+  postsIds, topicsIds, isTopicTab, parentIsLoading,
+}) => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const {
     courseId,
@@ -101,24 +102,20 @@ function PostsList({
       )}
     </>
   );
-}
+};
 
 PostsList.propTypes = {
-  posts: PropTypes.arrayOf(PropTypes.shape({
-    pinned: PropTypes.bool.isRequired,
-    id: PropTypes.string.isRequired,
-  })),
-  topics: PropTypes.arrayOf(PropTypes.string),
+  postsIds: PropTypes.arrayOf(PropTypes.string),
+  topicsIds: PropTypes.arrayOf(PropTypes.string),
   isTopicTab: PropTypes.bool,
   parentIsLoading: PropTypes.bool,
-  intl: intlShape.isRequired,
 };
 
 PostsList.defaultProps = {
-  posts: [],
-  topics: undefined,
+  postsIds: [],
+  topicsIds: [],
   isTopicTab: false,
   parentIsLoading: undefined,
 };
 
-export default injectIntl(PostsList);
+export default React.memo(PostsList);

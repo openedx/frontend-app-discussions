@@ -1,11 +1,14 @@
+import React from 'react';
+
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { selectTopics } from '../data/selectors';
 import messages from '../messages';
 
-function NoResults({ intl }) {
+const NoResults = () => {
+  const intl = useIntl();
   const topics = useSelector(selectTopics);
 
   const title = messages.nothingHere;
@@ -20,10 +23,6 @@ function NoResults({ intl }) {
       { helpMessage && <small className="font-weight-normal text-gray-700">{intl.formatMessage(helpMessage)}</small>}
     </div>
   );
-}
-
-NoResults.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(NoResults);
+export default React.memo(NoResults);

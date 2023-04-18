@@ -7,13 +7,13 @@ import { Button } from '@edx/paragon';
 
 import { ReactComponent as EmptyIcon } from '../../assets/empty.svg';
 
-function EmptyPage({
+const EmptyPage = ({
   title,
   subTitle = null,
   action = null,
   actionText = null,
   fullWidth = false,
-}) {
+}) => {
   const containerClasses = classNames(
     'min-content-height justify-content-center align-items-center d-flex w-100 flex-column',
     { 'bg-light-400': !fullWidth },
@@ -33,7 +33,7 @@ function EmptyPage({
       </div>
     </div>
   );
-}
+};
 
 EmptyPage.propTypes = {
   title: propTypes.string.isRequired,
@@ -50,4 +50,4 @@ EmptyPage.defaultProps = {
   actionText: null,
 };
 
-export default EmptyPage;
+export default React.memo(EmptyPage);

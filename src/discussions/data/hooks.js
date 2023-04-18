@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
@@ -6,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
@@ -38,16 +40,14 @@ import { fetchCourseConfig } from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
-
-  if (!topics) {
-    return 0;
-  }
-
-  return Object.keys(topics)
-    .reduce((total, topicId) => {
+  const count = useMemo(() => (
+    Object.keys(topics)?.reduce((total, topicId) => {
       const topic = topics[topicId];
       return total + topic.threadCounts.discussion + topic.threadCounts.question;
-    }, 0);
+    }, 0)),
+  []);
+
+  return count;
 }
 
 export const useSidebarVisible = () => {
@@ -83,13 +83,14 @@ export function useCourseDiscussionData(courseId) {
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
-  const redirectToThread = useSelector(
-    (state) => state.threads.redirectToThread,
-  );
   const history = useHistory();
   const location = useLocation();
 
-  return useEffect(() => {
+  const redirectToThread = useSelector(
+    (state) => state.threads.redirectToThread,
+  );
+
+  useEffect(() => {
     // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
     // stored in redirectToThread
     if (redirectToThread) {
@@ -206,24 +207,36 @@ function camelToConstant(string) {
   return string.replace(/[A-Z]/g, (match) => `_${match}`).toUpperCase();
 }
 
-export const useTourConfiguration = (intl) => {
+export const useTourConfiguration = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
-
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const tours = useSelector(selectTours);
 
-  return tours.map((tour) => (
-    {
-      tourId: tour.tourName,
-      advanceButtonText: intl.formatMessage(messages.advanceButtonText),
-      dismissButtonText: intl.formatMessage(messages.dismissButtonText),
-      endButtonText: intl.formatMessage(messages.endButtonText),
-      enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
-      onDismiss: () => dispatch(updateTourShowStatus(tour.id)),
-      onEnd: () => dispatch(updateTourShowStatus(tour.id)),
-      checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
-    }
-  ));
+  const handleOnDismiss = useCallback((id) => (
+    dispatch(updateTourShowStatus(id))
+  ), []);
+
+  const handleOnEnd = useCallback((id) => (
+    dispatch(updateTourShowStatus(id))
+  ), []);
+
+  const toursConfig = useMemo(() => (
+    tours.map((tour) => (
+      {
+        tourId: tour.tourName,
+        advanceButtonText: intl.formatMessage(messages.advanceButtonText),
+        dismissButtonText: intl.formatMessage(messages.dismissButtonText),
+        endButtonText: intl.formatMessage(messages.endButtonText),
+        enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
+        onDismiss: handleOnDismiss(tour.id),
+        onEnd: handleOnEnd(tour.id),
+        checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
+      }
+    ))
+  ), [tours, enableInContextSidebar]);
+
+  return toursConfig;
 };
 
 export const useDebounce = (value, delay) => {

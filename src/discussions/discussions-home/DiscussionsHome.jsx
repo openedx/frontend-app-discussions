@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -25,7 +25,6 @@ import messages from '../messages';
 import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { selectPostEditorVisible } from '../posts/data/selectors';
 import DiscussionsProductTour from '../tours/DiscussionsProductTour';
-import { postMessageToParent } from '../utils';
 import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
@@ -59,12 +58,6 @@ const DiscussionsHome = () => {
   However, for smaller screens or embeds, onlyshow the sidebar if the content area isn't displayed. */
   const displayContentArea = (postId || postEditorVisible || (learnerUsername && postId));
   if (displayContentArea) { displaySidebar = isOnDesktop; }
-
-  useEffect(() => {
-    if (path && path !== 'undefined') {
-      postMessageToParent('discussions.navigate', { path });
-    }
-  }, [path]);
 
   return (
     <DiscussionContext.Provider value={{
@@ -132,4 +125,4 @@ const DiscussionsHome = () => {
   );
 };
 
-export default DiscussionsHome;
+export default React.memo(DiscussionsHome);

@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, PageBanner } from '@edx/paragon';
 
 import { selectUserIsStaff, selectUserRoles } from '../data/selectors';
 import messages from '../messages';
 
-function InformationBanner({
-  intl,
-}) {
+const InformationBanner = () => {
+  const intl = useIntl();
   const [showBanner, setShowBanner] = useState(true);
   const userRoles = useSelector(selectUserRoles);
   const isAdmin = useSelector(selectUserIsStaff);
@@ -20,12 +19,16 @@ function InformationBanner({
   const hideLearnMoreButton = ((userRoles.includes('Student') && userRoles.length === 1) || !userRoles.length) && !isAdmin;
   const showStaffLink = isAdmin || userRoles.includes('Moderator') || userRoles.includes('Administrator');
 
+  const handleDismiss = useCallback(() => {
+    setShowBanner(false);
+  }, []);
+
   return (
     <PageBanner
       variant="light"
       show={showBanner}
       dismissible
-      onDismiss={() => setShowBanner(false)}
+      onDismiss={handleDismiss}
     >
       <div className="font-weight-500">
         {intl.formatMessage(messages.bannerMessage)}
@@ -55,10 +58,6 @@ function InformationBanner({
       </div>
     </PageBanner>
   );
-}
-
-InformationBanner.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(InformationBanner);
+export default React.memo(InformationBanner);
