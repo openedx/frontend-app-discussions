@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ALL_ROUTES } from '../../data/constants';
 import { useIsOnDesktop, useTotalTopicThreadCount } from '../data/hooks';
@@ -12,18 +12,17 @@ import messages from '../messages';
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyTopics({ intl }) {
+const EmptyTopics = () => {
+  const intl = useIntl();
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
-
+  const isOnDesktop = useIsOnDesktop();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(match.params.topicId));
 
-  function addPost() {
-    return dispatch(showPostEditor());
-  }
-
-  const isOnDesktop = useIsOnDesktop();
+  const addPost = useCallback(() => (
+    dispatch(showPostEditor())
+  ), []);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -62,10 +61,6 @@ function EmptyTopics({ intl }) {
       fullWidth={fullWidth}
     />
   );
-}
-
-EmptyTopics.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(EmptyTopics);
+export default React.memo(EmptyTopics);

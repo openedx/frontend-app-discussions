@@ -33,4 +33,4 @@ const DiscussionContent = () => {
   );
 };
 
-export default DiscussionContent;
+export default React.memo(DiscussionContent);

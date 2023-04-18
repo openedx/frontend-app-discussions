@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { matchPath, useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
@@ -11,11 +11,12 @@ import { useShowLearnersTab } from '../../data/hooks';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
 
-function NavigationBar({ intl }) {
+const NavigationBar = () => {
+  const intl = useIntl();
   const { courseId } = useParams();
   const showLearnersTab = useShowLearnersTab();
 
-  const navLinks = [
+  const navLinks = useMemo(() => ([
     {
       route: Routes.POSTS.MY_POSTS,
       labelMessage: messages.myPosts,
@@ -29,7 +30,8 @@ function NavigationBar({ intl }) {
       isActive: (match, location) => Boolean(matchPath(location.pathname, { path: Routes.TOPICS.PATH })),
       labelMessage: messages.allTopics,
     },
-  ];
+  ]), []);
+
   if (showLearnersTab) {
     navLinks.push({
       route: Routes.LEARNERS.PATH,
@@ -52,10 +54,6 @@ function NavigationBar({ intl }) {
       ))}
     </Nav>
   );
-}
-
-NavigationBar.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(NavigationBar);
+export default React.memo(NavigationBar);

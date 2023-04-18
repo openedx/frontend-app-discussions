@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch } from 'react-router';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ALL_ROUTES } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
@@ -14,20 +14,20 @@ import messages from '../../messages';
 import { messages as postMessages, showPostEditor } from '../../posts';
 import { selectCourseWareThreadsCount, selectTotalTopicsThreadsCount } from '../data/selectors';
 
-function EmptyTopics({ intl }) {
+const EmptyTopics = () => {
+  const intl = useIntl();
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
+  const isOnDesktop = useIsOnDesktop();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(match.params.category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
   // hasGlobalThreads is used to determine if there are any post available in courseware and non-courseware topics
   const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
 
-  function addPost() {
-    return dispatch(showPostEditor());
-  }
-
-  const isOnDesktop = useIsOnDesktop();
+  const addPost = useCallback(() => (
+    dispatch(showPostEditor())
+  ), []);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -74,10 +74,6 @@ function EmptyTopics({ intl }) {
       fullWidth={fullWidth}
     />
   );
-}
-
-EmptyTopics.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(EmptyTopics);
+export default React.memo(EmptyTopics);
