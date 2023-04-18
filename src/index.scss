@@ -315,6 +315,8 @@ header {
 #courseTabsNavigation {
   font-size: 18px;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
+  z-index: 2;
+  background-color: #fff;
 
   .container-xl {
     padding-left: 31px;
@@ -491,7 +493,6 @@ header {
 
 .comments-sort {
   margin-bottom: -44px;
-  z-index: 1;
 }
 
 .post-preview,
@@ -521,4 +522,10 @@ header {
 
 .usabilla_live_button_container{
   right: 0px !important;
+}
+
+.learning-header{
+  z-index: 3;
+  position: relative;
+  background-color: #fff;
 }
