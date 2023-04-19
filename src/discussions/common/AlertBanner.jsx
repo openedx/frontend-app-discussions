@@ -8,13 +8,14 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Report } from '@edx/paragon/icons';
 
+import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
   selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
 } from '../data/selectors';
 import { commentShape } from '../post-comments/comments/comment/proptypes';
 import messages from '../post-comments/messages';
 import { postShape } from '../posts/post/proptypes';
-import AuthorLabel from './AuthorLabel';
+import AlertBar from './AlertBar';
 
 function AlertBanner({
   intl,
@@ -29,6 +30,8 @@ function AlertBanner({
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
     || userIsGlobalStaff || userIsContentAuthor
   );
+  const editByLabelColor = AvatarOutlineAndLabelColors[content.editByLabel];
+  const closedByLabelColor = AvatarOutlineAndLabelColors[content.closedByLabel];
 
   return (
     <>
@@ -40,40 +43,22 @@ function AlertBanner({
       {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
         <>
           {content.lastEdit?.reason && (
-            <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
-                {intl.formatMessage(messages.editedBy)}
-                <span className="ml-1 mr-3">
-                  <AuthorLabel author={content.lastEdit.editorUsername} linkToProfile postOrComment />
-                </span>
-                <span
-                  className="mx-1.5 font-size-8 font-style text-light-700"
-                  style={{ lineHeight: '15px' }}
-                >
-                  {intl.formatMessage(messages.fullStop)}
-                </span>
-                {intl.formatMessage(messages.reason)}:&nbsp;{content.lastEdit.reason}
-              </div>
-            </Alert>
+            <AlertBar
+              message={messages.editedBy}
+              author={content.lastEdit.editorUsername}
+              authorLabel={content.editByLabel}
+              labelColor={editByLabelColor && `text-${editByLabelColor}`}
+              reason={content.lastEdit.reason}
+            />
           )}
           {content.closed && (
-            <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
-              <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
-                {intl.formatMessage(messages.closedBy)}
-                <span className="ml-1 ">
-                  <AuthorLabel author={content.closedBy} linkToProfile postOrComment />
-                </span>
-                <span
-                  className="mx-1.5 font-size-8 font-style text-light-700"
-                  style={{ lineHeight: '15px' }}
-                >
-                  {intl.formatMessage(messages.fullStop)}
-                </span>
-
-                {content.closeReason && (`${intl.formatMessage(messages.reason)}: ${content.closeReason}`)}
-
-              </div>
-            </Alert>
+          <AlertBar
+            message={messages.closedBy}
+            author={content.closedBy}
+            authorLabel={content.closedByLabel}
+            labelColor={closedByLabelColor && `text-${closedByLabelColor}`}
+            reason={content.closeReason}
+          />
           )}
         </>
       )}
