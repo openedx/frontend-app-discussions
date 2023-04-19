@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useMemo, useState,
+  useCallback, useContext, useEffect, useMemo, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Collapsible, Form, Icon, Spinner,
 } from '@edx/paragon';
@@ -29,7 +29,7 @@ import {
 import { selectThreadFilters, selectThreadSorting } from '../data/selectors';
 import messages from './messages';
 
-export const ActionItem = ({
+export const ActionItem = React.memo(({
   id,
   label,
   value,
@@ -52,7 +52,7 @@ export const ActionItem = ({
       {label}
     </span>
   </label>
-);
+));
 
 ActionItem.propTypes = {
   id: PropTypes.string.isRequired,
@@ -61,9 +61,8 @@ ActionItem.propTypes = {
   selected: PropTypes.string.isRequired,
 };
 
-function PostFilterBar({
-  intl,
-}) {
+const PostFilterBar = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const { courseId } = useParams();
   const { page } = useContext(DiscussionContext);
@@ -75,11 +74,13 @@ function PostFilterBar({
   const cohorts = useSelector(selectCourseCohorts);
   const [isOpen, setOpen] = useState(false);
 
-  const selectedCohort = useMemo(() => cohorts.find(cohort => (
-    toString(cohort.id) === currentFilters.cohort)),
-  [currentFilters.cohort]);
+  const selectedCohort = useMemo(() => (
+    cohorts.find(cohort => (
+      toString(cohort.id) === currentFilters.cohort
+    ))
+  ), [cohorts, currentFilters.cohort]);
 
-  const handleSortFilterChange = (event) => {
+  const handleSortFilterChange = useCallback((event) => {
     const currentType = currentFilters.postType;
     const currentStatus = currentFilters.status;
     const {
@@ -93,6 +94,7 @@ function PostFilterBar({
       cohortFilter: selectedCohort,
       triggeredBy: name,
     };
+
     if (name === 'type') {
       dispatch(setPostsTypeFilter(value));
       if (
@@ -103,6 +105,7 @@ function PostFilterBar({
       }
       filterContentEventProperties.threadTypeFilter = value;
     }
+
     if (name === 'status') {
       dispatch(setStatusFilter(value));
       if (value === PostsStatusFilter.UNANSWERED && currentType !== ThreadType.QUESTION) {
@@ -115,16 +118,23 @@ function PostFilterBar({
       }
       filterContentEventProperties.statusFilter = value;
     }
+
     if (name === 'sort') {
       dispatch(setSortedBy(value));
       filterContentEventProperties.sortFilter = value;
     }
+
     if (name === 'cohort') {
       dispatch(setCohortFilter(value));
       filterContentEventProperties.cohortFilter = value;
     }
+
     sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
-  };
+  }, [currentFilters, currentSorting, dispatch, selectedCohort]);
+
+  const handleToggle = useCallback(() => {
+    setOpen(!isOpen);
+  }, [isOpen]);
 
   useEffect(() => {
     if (userHasModerationPrivileges && isEmpty(cohorts)) {
@@ -132,10 +142,48 @@ function PostFilterBar({
     }
   }, [courseId, userHasModerationPrivileges]);
 
+  const renderCohortFilter = useMemo(() => (
+    userHasModerationPrivileges && (
+      <>
+        <div className="border-bottom my-2" />
+        {status === RequestStatus.IN_PROGRESS ? (
+          <div className="d-flex justify-content-center p-4">
+            <Spinner animation="border" variant="primary" size="lg" />
+          </div>
+        ) : (
+          <div className="d-flex flex-row pt-2">
+            <Form.RadioSet
+              name="cohort"
+              className="d-flex flex-column list-group list-group-flush w-100"
+              value={currentFilters.cohort}
+              onChange={handleSortFilterChange}
+            >
+              <ActionItem
+                id="all-groups"
+                label="All groups"
+                value=""
+                selected={currentFilters.cohort}
+              />
+              {cohorts.map(cohort => (
+                <ActionItem
+                  key={cohort.id}
+                  id={toString(cohort.id)}
+                  label={capitalize(cohort.name)}
+                  value={toString(cohort.id)}
+                  selected={currentFilters.cohort}
+                />
+              ))}
+            </Form.RadioSet>
+          </div>
+        )}
+      </>
+    )
+  ), [cohorts, currentFilters.cohort, handleSortFilterChange, status, userHasModerationPrivileges]);
+
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={() => setOpen(!isOpen)}
+      onToggle={handleToggle}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
@@ -157,7 +205,6 @@ function PostFilterBar({
             <Icon src={Tune} />
           </Collapsible.Visible>
         </span>
-
       </Collapsible.Trigger>
       <Collapsible.Body className="collapsible-body px-4 pb-3 pt-0">
         <Form>
@@ -260,49 +307,11 @@ function PostFilterBar({
               />
             </Form.RadioSet>
           </div>
-          {userHasModerationPrivileges && (
-            <>
-              <div className="border-bottom my-2" />
-              {status === RequestStatus.IN_PROGRESS ? (
-                <div className="d-flex justify-content-center p-4">
-                  <Spinner animation="border" variant="primary" size="lg" />
-                </div>
-              ) : (
-                <div className="d-flex flex-row pt-2">
-                  <Form.RadioSet
-                    name="cohort"
-                    className="d-flex flex-column list-group list-group-flush w-100"
-                    value={currentFilters.cohort}
-                    onChange={handleSortFilterChange}
-                  >
-                    <ActionItem
-                      id="all-groups"
-                      label="All groups"
-                      value=""
-                      selected={currentFilters.cohort}
-                    />
-                    {cohorts.map(cohort => (
-                      <ActionItem
-                        key={cohort.id}
-                        id={toString(cohort.id)}
-                        label={capitalize(cohort.name)}
-                        value={toString(cohort.id)}
-                        selected={currentFilters.cohort}
-                      />
-                    ))}
-                  </Form.RadioSet>
-                </div>
-              )}
-            </>
-          )}
+          {renderCohortFilter}
         </Form>
       </Collapsible.Body>
     </Collapsible.Advanced>
   );
-}
-
-PostFilterBar.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(PostFilterBar);
+export default React.memo(PostFilterBar);
