@@ -315,7 +315,7 @@ header {
 #courseTabsNavigation {
   font-size: 18px;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
-  z-index: 2;
+  z-index: 3;
   background-color: #fff;
 
   .container-xl {
@@ -338,7 +338,7 @@ header {
 
 .header-action-bar {
   background-color: #fff;
-  z-index: 2;
+  z-index: 3;
   box-shadow: 0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%);
   position: sticky;
   top: 0;
@@ -416,7 +416,7 @@ header {
   max-width: fit-content;
   margin-left: auto;
   margin-top: -2.063rem;
-  z-index: 1;
+  z-index: 2;
   right: 32px;
 }
 
@@ -493,6 +493,7 @@ header {
 
 .comments-sort {
   margin-bottom: -44px;
+  z-index: 1;
 }
 
 .post-preview,
@@ -525,7 +526,7 @@ header {
 }
 
 .learning-header{
-  z-index: 3;
+  z-index: 4;
   position: relative;
   background-color: #fff;
 }
