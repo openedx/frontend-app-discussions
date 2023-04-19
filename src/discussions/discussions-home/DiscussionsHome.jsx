@@ -39,7 +39,6 @@ const DiscussionsHome = () => {
   const enableInContext = useSelector(selectEnableInContext);
   const { courseNumber, courseTitle, org } = useSelector(selectCourseTabs);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
-  const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();

@@ -20,6 +20,14 @@ export const selectTopicThreadsIds = topicIds => state => (
   (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || [])
 );
 
+export const selectThreadsByIds = ids => createSelector(
+  [
+    ids || [],
+    selectThreads,
+  ],
+  mapIdsToThreads,
+);
+
 export const selectThread = threadId => createSelector(
   [selectThreads],
   (threads) => threads?.[threadId],
@@ -39,6 +47,11 @@ export const selectAllThreads = createSelector(
     selectThreads,
   ],
   (pages, threads) => pages.flatMap(ids => mapIdsToThreads(ids, threads)),
+);
+
+export const selectAllThreadsIds = createSelector(
+  [state => state.threads.pages],
+  pages => pages.flatMap(ids => ids),
 );
 
 export const threadsLoadingStatus = () => state => state.threads.status;

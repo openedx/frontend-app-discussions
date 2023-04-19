@@ -30,13 +30,13 @@ const TopicPostsView = () => {
   const { courseId, topicId, category } = useContext(DiscussionContext);
   const provider = useSelector(selectDiscussionProvider);
   const topicsStatus = useSelector(selectLoadingStatus);
-  const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
   const postsIds = useSelector(selectTopicThreadsIds([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
   const selectedSubsection = useSelector(selectSubsection(category));
   const units = useSelector(selectUnits);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
+  const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
 
   const selectedUnit = useMemo(() => (
     units?.find(unit => unit.id === topicId)

@@ -14,7 +14,7 @@ import { DiscussionContext } from '../common/context';
 import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import { fetchUserPosts } from '../learners/data/thunks';
 import messages from '../messages';
-import { filterPosts } from '../utils';
+import { usePostList } from './data/hooks';
 import {
   selectThreadFilters, selectThreadNextPage, selectThreadSorting, threadsLoadingStatus,
 } from './data/selectors';
@@ -27,21 +27,19 @@ const PostsList = ({
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const {
-    courseId,
-    page,
-  } = useContext(DiscussionContext);
-  const loadingStatus = useSelector(threadsLoadingStatus());
   const { authenticatedUser } = useContext(AppContext);
+  const { courseId, page } = useContext(DiscussionContext);
+  const loadingStatus = useSelector(threadsLoadingStatus());
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
-  const showOwnPosts = page === 'my-posts';
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
+  const sortedPostsIds = usePostList(postsIds);
+  const showOwnPosts = page === 'my-posts';
 
-  const loadThreads = (topicIds, pageNum = undefined, isFilterChanged = false) => {
+  const loadThreads = useCallback((topicIds, pageNum = undefined, isFilterChanged = false) => {
     const params = {
       orderBy,
       filters,
@@ -56,46 +54,45 @@ const PostsList = ({
     } else {
       dispatch(fetchThreads(courseId, params));
     }
-  };
+  }, [courseId, orderBy, filters, showOwnPosts, authenticatedUser.username, userHasModerationPrivileges, userIsStaff]);
 
   useEffect(() => {
-    if (topics !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
-      loadThreads(topics);
+    if (topicsIds !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
+      loadThreads(topicsIds);
     }
-  }, [courseId, filters, orderBy, page, JSON.stringify(topics), configStatus]);
+  }, [courseId, filters, orderBy, page, JSON.stringify(topicsIds), configStatus]);
 
   useEffect(() => {
-    if (isTopicTab) { loadThreads(topics, 1, true); }
+    if (isTopicTab) { loadThreads(topicsIds, 1, true); }
   }, [filters]);
 
-  const checkIsSelected = (id) => window.location.pathname.includes(id);
-  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
-  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
+  const checkIsSelected = useCallback((id) => (
+    window.location.pathname.includes(id)),
+  []);
 
-  const postInstances = useCallback((sortedPosts) => (
-    sortedPosts.map((post, idx) => (
+  const postInstances = useMemo(() => (
+    sortedPostsIds?.map((postId, idx) => (
       <PostLink
-        post={post}
-        key={post.id}
-        isSelected={checkIsSelected}
+        postId={postId}
         idx={idx}
-        showDivider={(sortedPosts.length - 1) !== idx}
+        key={postId}
+        isSelected={checkIsSelected}
+        showDivider={(sortedPostsIds.length - 1) !== idx}
       />
     ))
-  ), []);
+  ), [sortedPostsIds, checkIsSelected]);
 
   return (
     <>
-      {!parentIsLoading && postInstances(pinnedPosts)}
-      {!parentIsLoading && postInstances(unpinnedPosts)}
-      {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
+      {!parentIsLoading && postInstances}
+      {sortedPostsIds?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading ? (
         <div className="d-flex justify-content-center p-4 mx-auto my-auto">
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
       ) : (
         nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
-          <Button onClick={() => loadThreads(topics, nextPage)} variant="primary" size="md">
+          <Button onClick={() => loadThreads(topicsIds, nextPage)} variant="primary" size="md">
             {intl.formatMessage(messages.loadMorePosts)}
           </Button>
         )
