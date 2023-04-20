@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -16,49 +18,57 @@ import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import Topic from './topic-group/topic/Topic';
 import countFilteredTopics from './utils';
 
-function CourseWideTopics() {
+const CourseWideTopics = () => {
   const { category } = useParams();
   const filter = useSelector(selectTopicFilter);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
-  const filteredNonCoursewareTopics = nonCoursewareTopics.filter(item => (filter
-    ? item.name.toLowerCase().includes(filter)
-    : true
-  ));
+
+  const filteredNonCoursewareTopics = useMemo(() => (
+    nonCoursewareTopics.filter(item => (
+      filter ? item.name.toLowerCase().includes(filter) : true
+    ))), [nonCoursewareTopics, filter]);
 
   return (nonCoursewareTopics && category === undefined)
     && filteredNonCoursewareTopics.map((topic, index) => (
       <Topic
-        topic={topic}
+        topicId={topic.id}
         key={topic.id}
         index={index}
         showDivider={(filteredNonCoursewareTopics.length - 1) !== index}
       />
     ));
-}
+};
 
-function LegacyCoursewareTopics() {
+const LegacyCoursewareTopics = () => {
   const { category } = useParams();
-  const categories = useSelector(selectCategories)
-    .filter(cat => (category ? cat === category : true));
-  return categories?.map(
-    topicGroup => (
+  const categories = useSelector(selectCategories);
+
+  const filteredCategories = useMemo(() => (
+    categories.filter(cat => (category ? cat === category : true))
+  ), [categories, category]);
+
+  return filteredCategories?.map(
+    categoryId => (
       <LegacyTopicGroup
-        id={topicGroup}
-        category={topicGroup}
-        key={topicGroup}
+        categoryId={categoryId}
+        key={categoryId}
       />
     ),
   );
-}
+};
 
-function TopicsView() {
+const TopicsView = () => {
+  const dispatch = useDispatch();
   const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
   const topicsSelector = useSelector(({ topics }) => topics);
   const filteredTopicsCount = useSelector(({ topics }) => topics.results.count);
   const loadingStatus = useSelector(({ topics }) => topics.status);
   const { courseId } = useContext(DiscussionContext);
-  const dispatch = useDispatch();
+
+  const handleOnClear = useCallback(() => {
+    dispatch(setFilter(''));
+  }, []);
 
   useEffect(() => {
     // Don't load till the provider information is available
@@ -79,7 +89,7 @@ function TopicsView() {
           text={topicFilter}
           count={filteredTopicsCount}
           loadingStatus={loadingStatus}
-          onClear={() => dispatch(setFilter(''))}
+          onClear={handleOnClear}
         />
       )}
       <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
@@ -94,8 +104,6 @@ function TopicsView() {
       }
     </div>
   );
-}
+};
 
-TopicsView.propTypes = {};
-
-export default TopicsView;
+export default React.memo(TopicsView);
