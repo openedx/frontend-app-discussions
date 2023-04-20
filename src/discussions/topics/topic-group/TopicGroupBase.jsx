@@ -1,43 +1,63 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath } from '../../utils';
-import { selectTopicFilter } from '../data/selectors';
+import { selectTopicFilter, selectTopicsById } from '../data/selectors';
 import messages from '../messages';
-import Topic, { topicShape } from './topic/Topic';
+import Topic from './topic/Topic';
 
-function TopicGroupBase({
+const TopicGroupBase = ({
   groupId,
   groupTitle,
   linkToGroup,
-  topics,
-  intl,
-}) {
+  topicsIds,
+}) => {
+  const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
   const filter = useSelector(selectTopicFilter);
+  const topics = useSelector(selectTopicsById(topicsIds));
   const hasTopics = topics.length > 0;
-  const matchesFilter = filter
-    ? groupTitle?.toLowerCase().includes(filter)
-    : true;
 
-  const filteredTopicElements = topics.filter(
-    topic => (filter
-      ? (topic.name.toLowerCase().includes(filter) || matchesFilter)
-      : true
-    ),
-  );
+  const matchesFilter = useMemo(() => (
+    filter ? groupTitle?.toLowerCase().includes(filter) : true
+  ), [filter, groupTitle]);
+
+  const filteredTopicElements = useMemo(() => (
+    topics.filter(topic => (
+      filter ? (topic.name.toLowerCase().includes(filter) || matchesFilter) : true
+    ))
+  ), [topics, filter, matchesFilter]);
 
   const hasFilteredSubtopics = (filteredTopicElements.length > 0);
+
+  const renderFilteredTopics = useMemo(() => {
+    if (!hasFilteredSubtopics) {
+      return <></>;
+    }
+
+    return (
+      filteredTopicElements.map((topic, index) => (
+        <Topic
+          topicId={topic.id}
+          key={topic.id}
+          index={index}
+          showDivider={(filteredTopicElements.length - 1) !== index}
+        />
+      ))
+    );
+  }, [filteredTopicElements]);
+
   if (!hasTopics || (!matchesFilter && !hasFilteredSubtopics)) {
     return null;
   }
+
   return (
     <div
       className="discussion-topic-group d-flex flex-column text-primary-500"
@@ -45,43 +65,34 @@ function TopicGroupBase({
       data-testid="topic-group"
     >
       <div className="pt-2.5 px-4 font-weight-bold">
-        {linkToGroup && groupId
-          ? (
-            <Link
-              className="text-decoration-none text-primary-500"
-              to={discussionsPath(Routes.TOPICS.CATEGORY, {
-                courseId,
-                category: groupId,
-              })}
-            >
-              {groupTitle}
-            </Link>
-          ) : (
-            groupTitle || intl.formatMessage(messages.unnamedTopicCategories)
-          )}
+        {linkToGroup && groupId ? (
+          <Link
+            className="text-decoration-none text-primary-500"
+            to={discussionsPath(Routes.TOPICS.CATEGORY, {
+              courseId,
+              category: groupId,
+            })}
+          >
+            {groupTitle}
+          </Link>
+        ) : (
+          groupTitle || intl.formatMessage(messages.unnamedTopicCategories)
+        )}
       </div>
-      {filteredTopicElements.map((topic, index) => (
-        <Topic
-          topic={topic}
-          key={topic.id}
-          index={index}
-          showDivider={(filteredTopicElements.length - 1) !== index}
-        />
-      ))}
+      {renderFilteredTopics}
     </div>
   );
-}
+};
 
 TopicGroupBase.propTypes = {
   groupId: PropTypes.string.isRequired,
   groupTitle: PropTypes.string.isRequired,
-  topics: PropTypes.arrayOf(topicShape).isRequired,
+  topicsIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   linkToGroup: PropTypes.bool,
-  intl: intlShape.isRequired,
 };
 
 TopicGroupBase.defaultProps = {
   linkToGroup: true,
 };
 
-export default injectIntl(TopicGroupBase);
+export default React.memo(TopicGroupBase);

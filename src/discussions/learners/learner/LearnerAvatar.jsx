@@ -1,26 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Avatar } from '@edx/paragon';
 
-import { learnerShape } from './proptypes';
-
-function LearnerAvatar({ learner }) {
-  return (
-    <div className="mr-3 mt-1">
-      <Avatar
-        size="sm"
-        alt={learner.username}
-        style={{
-          height: '2rem',
-          width: '2rem',
-        }}
-      />
-    </div>
-  );
-}
+const LearnerAvatar = ({ username }) => (
+  <div className="mr-3 mt-1">
+    <Avatar
+      size="sm"
+      alt={username}
+      style={{
+        height: '2rem',
+        width: '2rem',
+      }}
+    />
+  </div>
+);
 
 LearnerAvatar.propTypes = {
-  learner: learnerShape.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
-export default LearnerAvatar;
+export default React.memo(LearnerAvatar);
