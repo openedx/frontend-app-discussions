@@ -25,6 +25,7 @@ import { PostLink } from './post';
 const PostsList = ({
   postsIds, topicsIds, isTopicTab, parentIsLoading,
 }) => {
+  console.log('PostsList', postsIds);
   const intl = useIntl();
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
@@ -49,6 +50,7 @@ const PostsList = ({
       topicIds,
       isFilterChanged,
     };
+
     if (showOwnPosts && filters.search === '') {
       dispatch(fetchUserPosts(courseId, params));
     } else {
@@ -68,7 +70,7 @@ const PostsList = ({
 
   const checkIsSelected = useCallback((id) => (
     window.location.pathname.includes(id)),
-  []);
+  [window.location.pathname]);
 
   const postInstances = useMemo(() => (
     sortedPostsIds?.map((postId, idx) => (

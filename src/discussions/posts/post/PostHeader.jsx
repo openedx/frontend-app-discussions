@@ -12,7 +12,7 @@ import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 
-export const PostAvatar = ({
+export const PostAvatar = React.memo(({
   author, postType, authorLabel, fromPostLink, read,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
@@ -62,7 +62,7 @@ export const PostAvatar = ({
       />
     </div>
   );
-};
+});
 
 PostAvatar.propTypes = {
   author: PropTypes.string.isRequired,

@@ -76,16 +76,13 @@ AlertBanner.propTypes = {
   abuseFlagged: PropTypes.bool,
   closed: PropTypes.bool,
   closedBy: PropTypes.string,
+  closedByLabel: PropTypes.string.isRequired,
   closeReason: PropTypes.string,
+  editByLabel: PropTypes.string.isRequired,
   lastEdit: PropTypes.shape({
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-  abuseFlagged: PropTypes.bool,
-  closedBy: PropTypes.string,
-  closeReason: PropTypes.string,
-  editByLabel: PropTypes.string.isRequired,
-  closedByLabel: PropTypes.string.isRequired,
 };
 
 AlertBanner.defaultProps = {

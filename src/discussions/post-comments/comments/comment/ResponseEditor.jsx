@@ -6,11 +6,11 @@ import classNames from 'classnames';
 import { DiscussionContext } from '../../../common/context';
 import CommentEditor from './CommentEditor';
 
-function ResponseEditor({
+const ResponseEditor = ({
   addWrappingDiv,
   handleCloseEditor,
   addingResponse,
-}) {
+}) => {
   const { postId } = useContext(DiscussionContext);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function ResponseEditor({
       />
     </div>
   );
-}
+};
 
 ResponseEditor.propTypes = {
   addWrappingDiv: PropTypes.bool,

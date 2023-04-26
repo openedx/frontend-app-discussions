@@ -50,9 +50,9 @@ import { createNewThread, fetchThread, updateExistingThread } from '../data/thun
 import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
-function PostEditor({
+const PostEditor = ({
   editExisting,
-}) {
+}) => {
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
@@ -465,7 +465,7 @@ function PostEditor({
     )}
     </Formik>
   );
-}
+};
 
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,

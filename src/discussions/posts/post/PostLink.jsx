@@ -30,6 +30,7 @@ const PostLink = ({
 
   const intl = useIntl();
   const {
+    postId: selectedPostId,
     page,
     enableInContextSidebar,
     category,
@@ -70,7 +71,7 @@ const PostLink = ({
           className={
             classNames('d-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
               { 'bg-light-300': isPostRead },
-              { 'post-summary-card-selected': id === postId })
+              { 'post-summary-card-selected': id === selectedPostId })
           }
         >
           <PostAvatar

@@ -113,4 +113,4 @@ const LegacyBreadcrumbMenu = () => {
   );
 };
 
-export default React.memo(LegacyBreadcrumbMenu);
+export default LegacyBreadcrumbMenu;

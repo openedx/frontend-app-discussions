@@ -12,6 +12,7 @@ import { discussionsPath } from '../../utils';
 import messages from './messages';
 
 const NavigationBar = () => {
+  console.log('NavigationBar');
   const intl = useIntl();
   const { courseId } = useParams();
   const showLearnersTab = useShowLearnersTab();
@@ -32,18 +33,21 @@ const NavigationBar = () => {
     },
   ]), []);
 
-  if (showLearnersTab) {
-    navLinks.push({
-      route: Routes.LEARNERS.PATH,
-      labelMessage: messages.learners,
-    });
-  }
+  useMemo(() => {
+    if (showLearnersTab) {
+      navLinks.push({
+        route: Routes.LEARNERS.PATH,
+        labelMessage: messages.learners,
+      });
+    }
+  }, [showLearnersTab]);
 
   return (
     <Nav variant="pills" className="py-2 nav-button-group">
       {navLinks.map(link => (
         <Nav.Item key={link.route}>
           <Nav.Link
+            key={link.route}
             as={NavLink}
             to={discussionsPath(link.route, { courseId })}
             isActive={link.isActive}
@@ -56,4 +60,4 @@ const NavigationBar = () => {
   );
 };
 
-export default React.memo(NavigationBar);
+export default NavigationBar;

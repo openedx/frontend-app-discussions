@@ -23,7 +23,7 @@ import { setFilter } from './data/slices';
 import { fetchCourseTopicsV3 } from './data/thunks';
 import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
-const TopicsList = React.memo(() => {
+const TopicsList = () => {
   const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
@@ -68,7 +68,7 @@ const TopicsList = React.memo(() => {
       )}
     </>
   );
-});
+};
 
 const TopicsView = () => {
   const dispatch = useDispatch();
@@ -132,4 +132,4 @@ const TopicsView = () => {
   );
 };
 
-export default React.memo(TopicsView);
+export default TopicsView;

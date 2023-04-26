@@ -108,4 +108,4 @@ const LearnersView = () => {
   );
 };
 
-export default React.memo(LearnersView);
+export default LearnersView;

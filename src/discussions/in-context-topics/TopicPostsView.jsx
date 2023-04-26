@@ -37,6 +37,7 @@ const TopicPostsView = () => {
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
   const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
+  console.log('TopicPostsView', postsIds, topicId);
 
   const selectedUnit = useMemo(() => (
     units?.find(unit => unit.id === topicId)
@@ -46,17 +47,17 @@ const TopicPostsView = () => {
     nonCoursewareTopics?.find(topic => topic.id === topicId)
   ), [nonCoursewareTopics, topicId]);
 
-  useEffect(() => {
-    if (provider && topicsStatus === RequestStatus.IDLE) {
-      dispatch(fetchCourseTopicsV3(courseId));
-    }
-  }, [provider]);
-
   const backButtonPath = useCallback(() => {
     const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
     const params = selectedUnit ? { courseId, category: selectedUnit?.parentId } : { courseId };
     return discussionsPath(path, params)(location);
   }, [selectedUnit]);
+
+  useEffect(() => {
+    if (provider && topicsStatus === RequestStatus.IDLE) {
+      dispatch(fetchCourseTopicsV3(courseId));
+    }
+  }, [provider]);
 
   return (
     <div className="discussion-posts d-flex flex-column h-100">
@@ -103,4 +104,4 @@ const TopicPostsView = () => {
   );
 };
 
-export default React.memo(TopicPostsView);
+export default TopicPostsView;

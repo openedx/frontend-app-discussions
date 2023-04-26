@@ -57,4 +57,4 @@ const TopicSearchBar = () => {
   );
 };
 
-export default React.memo(TopicSearchBar);
+export default TopicSearchBar;

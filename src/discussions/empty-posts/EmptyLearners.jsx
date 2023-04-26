@@ -19,4 +19,4 @@ const EmptyLearners = () => {
   );
 };
 
-export default React.memo(EmptyLearners);
+export default EmptyLearners;

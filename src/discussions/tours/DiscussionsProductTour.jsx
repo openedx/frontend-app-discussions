@@ -27,4 +27,4 @@ const DiscussionsProductTour = () => {
   );
 };
 
-export default React.memo(DiscussionsProductTour);
+export default DiscussionsProductTour;

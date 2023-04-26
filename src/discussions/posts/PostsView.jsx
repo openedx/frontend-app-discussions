@@ -20,11 +20,11 @@ import { setSearchQuery } from './data/slices';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import PostsList from './PostsList';
 
-const AllPostsList = React.memo(() => {
+const AllPostsList = () => {
   const postsIds = useSelector(selectAllThreadsIds);
 
   return <PostsList postsIds={postsIds} topics={null} />;
-});
+};
 
 const TopicPostsList = React.memo(({ topicId }) => {
   const postsIds = useSelector(selectTopicThreadsIds([topicId]));
@@ -107,4 +107,4 @@ const PostsView = () => {
   );
 };
 
-export default React.memo(PostsView);
+export default PostsView;

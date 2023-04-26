@@ -63,4 +63,4 @@ const EmptyTopics = () => {
   );
 };
 
-export default React.memo(EmptyTopics);
+export default EmptyTopics;

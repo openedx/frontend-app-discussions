@@ -124,4 +124,4 @@ const DiscussionsHome = () => {
   );
 };
 
-export default React.memo(DiscussionsHome);
+export default DiscussionsHome;

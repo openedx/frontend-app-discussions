@@ -129,4 +129,4 @@ const LearnerFilterBar = () => {
   );
 };
 
-export default React.memo(LearnerFilterBar);
+export default LearnerFilterBar;

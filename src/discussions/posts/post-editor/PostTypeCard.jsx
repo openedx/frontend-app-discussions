@@ -7,12 +7,12 @@ import { Card, Form } from '@edx/paragon';
 
 import { DiscussionContext } from '../../common/context';
 
-function PostTypeCard({
+const PostTypeCard = ({
   value,
   type,
   selected,
   icon,
-}) {
+}) => {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
@@ -32,7 +32,7 @@ function PostTypeCard({
       </Card>
     </label>
   );
-}
+};
 
 PostTypeCard.propTypes = {
   value: PropTypes.string.isRequired,
