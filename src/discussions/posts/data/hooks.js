@@ -9,8 +9,9 @@ export const usePostList = (ids) => {
   const posts = useSelector(selectThreadsByIds(ids));
   const pinnedPostsIds = [];
   const unpinnedPostsIds = [];
+  console.log('usePostList posts', posts, ids);
 
-  useMemo(() => {
+  const sortedIds = useMemo(() => {
     posts.forEach((post) => {
       if (post.pinned) {
         pinnedPostsIds.push(post.id);
@@ -18,7 +19,10 @@ export const usePostList = (ids) => {
         unpinnedPostsIds.push(post.id);
       }
     });
+
+    return [...pinnedPostsIds, ...unpinnedPostsIds];
   }, [posts]);
 
-  return [...pinnedPostsIds, ...unpinnedPostsIds];
+  console.log('usePostList', sortedIds);
+  return sortedIds;
 };

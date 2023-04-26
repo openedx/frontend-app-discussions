@@ -121,7 +121,7 @@ PostSummaryFooter.propTypes = {
   following: PropTypes.bool.isRequired,
   commentCount: PropTypes.number.isRequired,
   unreadCommentCount: PropTypes.number.isRequired,
-  groupId: PropTypes.string,
+  groupId: PropTypes.number,
   groupName: PropTypes.string,
   createdAt: PropTypes.string.isRequired,
   preview: PropTypes.bool,

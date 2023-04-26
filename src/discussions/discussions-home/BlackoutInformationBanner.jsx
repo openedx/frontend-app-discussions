@@ -36,4 +36,4 @@ const BlackoutInformationBanner = () => {
   );
 };
 
-export default React.memo(BlackoutInformationBanner);
+export default BlackoutInformationBanner;

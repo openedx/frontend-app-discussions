@@ -60,4 +60,4 @@ const InformationBanner = () => {
   );
 };
 
-export default React.memo(InformationBanner);
+export default InformationBanner;

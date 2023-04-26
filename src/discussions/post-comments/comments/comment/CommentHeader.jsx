@@ -9,14 +9,14 @@ import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
 
-function CommentHeader({
+const CommentHeader = ({
   author,
   authorLabel,
   abuseFlagged,
   closed,
   createdAt,
   lastEdit,
-}) {
+}) => {
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
     author,
@@ -50,7 +50,7 @@ function CommentHeader({
       </div>
     </div>
   );
-}
+};
 
 CommentHeader.propTypes = {
   author: PropTypes.string.isRequired,

@@ -25,4 +25,4 @@ const NoResults = () => {
   );
 };
 
-export default React.memo(NoResults);
+export default NoResults;

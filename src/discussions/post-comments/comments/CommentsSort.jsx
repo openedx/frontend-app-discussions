@@ -98,4 +98,4 @@ const CommentSortDropdown = () => {
   );
 };
 
-export default React.memo(CommentSortDropdown);
+export default CommentSortDropdown;

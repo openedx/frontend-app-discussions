@@ -82,4 +82,4 @@ const PostActionsBar = () => {
   );
 };
 
-export default React.memo(PostActionsBar);
+export default PostActionsBar;

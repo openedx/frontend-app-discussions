@@ -21,11 +21,8 @@ export const selectTopicThreadsIds = topicIds => state => (
 );
 
 export const selectThreadsByIds = ids => createSelector(
-  [
-    ids || [],
-    selectThreads,
-  ],
-  mapIdsToThreads,
+  [selectThreads],
+  (threads) => mapIdsToThreads(ids, threads),
 );
 
 export const selectThread = threadId => createSelector(

@@ -134,4 +134,4 @@ const PostCommentsView = () => {
   );
 };
 
-export default React.memo(PostCommentsView);
+export default PostCommentsView;

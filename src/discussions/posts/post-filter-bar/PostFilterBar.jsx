@@ -314,4 +314,4 @@ const PostFilterBar = () => {
   );
 };
 
-export default React.memo(PostFilterBar);
+export default PostFilterBar;

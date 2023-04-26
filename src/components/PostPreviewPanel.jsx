@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPanel({
-  htmlNode, intl, isPost, editExisting,
-}) {
+const PostPreviewPanel = ({
+  htmlNode, isPost, editExisting,
+}) => {
+  const intl = useIntl();
   const [showPreviewPane, setShowPreviewPane] = useState(false);
 
   return (
@@ -57,10 +58,9 @@ function PostPreviewPanel({
       </div>
     </>
   );
-}
+};
 
 PostPreviewPanel.propTypes = {
-  intl: intlShape.isRequired,
   htmlNode: PropTypes.node,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
@@ -72,4 +72,4 @@ PostPreviewPanel.defaultProps = {
   editExisting: false,
 };
 
-export default injectIntl(React.memo(PostPreviewPanel));
+export default React.memo(PostPreviewPanel);
