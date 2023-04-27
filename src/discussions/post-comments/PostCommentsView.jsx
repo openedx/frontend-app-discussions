@@ -42,7 +42,10 @@ const PostCommentsView = () => {
 
   useEffect(() => {
     if (!threadId) { submitDispatch(fetchThread(postId, courseId, true)); }
-    setAddingResponse(false);
+
+    return () => {
+      setAddingResponse(false);
+    };
   }, [postId]);
 
   const handleAddResponseButton = useCallback(() => {

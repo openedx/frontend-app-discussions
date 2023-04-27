@@ -15,7 +15,10 @@ const mergeThreadsInTopics = (dataFromState, dataFromPayload) => {
     const values = Object.values(obj);
     keys.forEach((key, index) => {
       if (!acc[key]) { acc[key] = []; }
-      if (Array.isArray(acc[key])) { acc[key] = acc[key].concat(values[index]); } else { acc[key].push(values[index]); }
+      if (Array.isArray(acc[key])) {
+        const uniqueValues = [...new Set(acc[key].concat(values[index]))];
+        acc[key] = uniqueValues;
+      } else { acc[key].push(values[index]); }
       return acc;
     });
     return acc;
@@ -68,29 +71,29 @@ const threadsSlice = createSlice({
       state.status = RequestStatus.IN_PROGRESS;
     },
     fetchThreadsSuccess: (state, { payload }) => {
-      if (state.author !== payload.author) {
+      const {
+        author, page, ids, threadsById, isFilterChanged, threadsInTopic, avatars, pagination, textSearchRewrite,
+      } = payload;
+
+      if (state.author !== author) {
         state.pages = [];
-        state.author = payload.author;
+        state.author = author;
       }
-      if (state.pages[payload.page - 1]) {
-        state.pages[payload.page - 1] = [...state.pages[payload.page - 1], ...payload.ids];
+      if (!state.pages[page - 1]) {
+        state.pages[page - 1] = ids;
       } else {
-        state.pages[payload.page - 1] = payload.ids;
+        state.pages[page - 1] = [...state.pages[page - 1], ...ids];
       }
       state.status = RequestStatus.SUCCESSFUL;
-      state.threadsById = { ...state.threadsById, ...payload.threadsById };
-      // filter
-      if (payload.isFilterChanged) {
-        state.threadsInTopic = { ...payload.threadsInTopic };
-      } else {
-        state.threadsInTopic = mergeThreadsInTopics(state.threadsInTopic, payload.threadsInTopic);
-      }
-
-      state.avatars = { ...state.avatars, ...payload.avatars };
-      state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
-      state.totalPages = payload.pagination.numPages;
-      state.totalThreads = payload.pagination.count;
-      state.textSearchRewrite = payload.textSearchRewrite;
+      state.threadsById = { ...state.threadsById, ...threadsById };
+      state.threadsInTopic = (isFilterChanged || page === 1)
+        ? { ...threadsInTopic }
+        : mergeThreadsInTopics(state.threadsInTopic, threadsInTopic);
+      state.avatars = { ...state.avatars, ...avatars };
+      state.nextPage = (page < pagination.numPages) ? page + 1 : null;
+      state.totalPages = pagination.numPages;
+      state.totalThreads = pagination.count;
+      state.textSearchRewrite = textSearchRewrite;
     },
     fetchThreadsFailed: (state) => {
       state.status = RequestStatus.FAILED;

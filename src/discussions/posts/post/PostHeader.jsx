@@ -141,7 +141,7 @@ PostHeader.propTypes = {
   preview: PropTypes.bool,
   hasEndorsed: PropTypes.bool.isRequired,
   postType: PropTypes.string.isRequired,
-  authorLabel: PropTypes.string.isRequired,
+  authorLabel: PropTypes.string,
   author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
@@ -153,6 +153,7 @@ PostHeader.propTypes = {
 };
 
 PostHeader.defaultProps = {
+  authorLabel: null,
   preview: false,
   abuseFlagged: false,
   lastEdit: {},

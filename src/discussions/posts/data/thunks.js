@@ -141,6 +141,7 @@ export function fetchThreads(courseId, {
       dispatch(fetchThreadsRequest({ courseId }));
       const data = await getThreads(courseId, options);
       const normalisedData = normaliseThreads(camelCaseObject(data), topicIds);
+      console.log('normalisedData', normalisedData);
       dispatch(fetchThreadsSuccess({
         ...normalisedData, page, author, textSearchRewrite: data.text_search_rewrite, isFilterChanged,
       }));

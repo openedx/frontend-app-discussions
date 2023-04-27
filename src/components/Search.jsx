@@ -1,4 +1,6 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +24,7 @@ const Search = () => {
   const learnerSearch = useSelector(({ learners }) => learners.usernameSearch);
   const isPostSearch = ['posts', 'my-posts'].includes(page);
   const isTopicSearch = 'topics'.includes(page);
-  let searchValue = '';
+  const [searchValue, setSearchValue] = useState('');
   let currentValue = '';
 
   if (isPostSearch) {
@@ -40,13 +42,14 @@ const Search = () => {
   }, []);
 
   const onChange = useCallback((query) => {
-    searchValue = query;
+    setSearchValue(query);
   }, []);
 
   const onSubmit = useCallback((query) => {
     if (query === '') {
       return;
     }
+
     if (isPostSearch) {
       dispatch(setSearchQuery(query));
     } else if (page === 'topics') {
@@ -54,7 +57,12 @@ const Search = () => {
     } else if (page === 'learners') {
       dispatch(setUsernameSearch(query));
     }
-  }, [isPostSearch, page]);
+  }, [page, searchValue]);
+
+  const handleIconClick = useCallback((e) => {
+    e.preventDefault();
+    onSubmit(searchValue);
+  }, [searchValue]);
 
   useEffect(() => onClear(), [page]);
 
@@ -70,10 +78,10 @@ const Search = () => {
         style={{ paddingRight: '1rem' }}
         placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
       />
-      <span className="mt-auto mb-auto mr-2.5 pointer-cursor-hover">
+      <span className="py-auto px-2.5 pointer-cursor-hover">
         <Icon
           src={SearchIcon}
-          onClick={() => onSubmit(searchValue)}
+          onClick={handleIconClick}
           data-testid="search-icon"
         />
       </span>

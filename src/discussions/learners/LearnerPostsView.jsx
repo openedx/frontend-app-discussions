@@ -6,7 +6,7 @@ import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, Spinner,
 } from '@edx/paragon';
@@ -18,33 +18,36 @@ import {
 } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
+import { usePostList } from '../posts/data/hooks';
 import {
-  selectAllThreads,
+  selectAllThreadsIds,
   selectThreadNextPage,
   threadsLoadingStatus,
 } from '../posts/data/selectors';
 import { clearPostsPages } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
-import { discussionsPath, filterPosts } from '../utils';
+import { discussionsPath } from '../utils';
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import messages from './messages';
 
-function LearnerPostsView({ intl }) {
+const LearnerPostsView = () => {
+  const intl = useIntl();
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const posts = useSelector(selectAllThreads);
+  const postsIds = useSelector(selectAllThreadsIds);
   const loadingStatus = useSelector(threadsLoadingStatus());
   const postFilter = useSelector(state => state.learners.postFilter);
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
+  const sortedPostsIds = usePostList(postsIds);
 
-  const loadMorePosts = (pageNum = undefined) => {
+  const loadMorePosts = useCallback((pageNum = undefined) => {
     const params = {
       author: username,
       page: pageNum,
@@ -54,28 +57,28 @@ function LearnerPostsView({ intl }) {
     };
 
     dispatch(fetchUserPosts(courseId, params));
-  };
+  }, [courseId, postFilter, username, userHasModerationPrivileges, userIsStaff]);
+
+  const checkIsSelected = useCallback((id) => (
+    window.location.pathname.includes(id)),
+  [window.location.pathname]);
+
+  const postInstances = useMemo(() => (
+    sortedPostsIds?.map((postId, idx) => (
+      <PostLink
+        postId={postId}
+        idx={idx}
+        key={postId}
+        isSelected={checkIsSelected}
+        showDivider={(sortedPostsIds.length - 1) !== idx}
+      />
+    ))
+  ), [sortedPostsIds, checkIsSelected]);
 
   useEffect(() => {
     dispatch(clearPostsPages());
     loadMorePosts();
   }, [courseId, postFilter, username]);
-
-  const checkIsSelected = (id) => window.location.pathname.includes(id);
-  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
-  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
-
-  const postInstances = useCallback((sortedPosts) => (
-    sortedPosts.map((post, idx) => (
-      <PostLink
-        post={post}
-        key={post.id}
-        isSelected={checkIsSelected}
-        idx={idx}
-        showDivider={(sortedPosts.length - 1) !== idx}
-      />
-    ))
-  ), []);
 
   return (
     <div className="discussion-posts d-flex flex-column">
@@ -97,9 +100,8 @@ function LearnerPostsView({ intl }) {
       <LearnerPostFilterBar />
       <div className="border-bottom border-light-400" />
       <div className="list-group list-group-flush">
-        {postInstances(pinnedPosts)}
-        {postInstances(unpinnedPosts)}
-        {loadingStatus !== RequestStatus.IN_PROGRESS && posts?.length === 0 && <NoResults />}
+        {postInstances}
+        {loadingStatus !== RequestStatus.IN_PROGRESS && sortedPostsIds?.length === 0 && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
@@ -114,10 +116,6 @@ function LearnerPostsView({ intl }) {
       </div>
     </div>
   );
-}
-
-LearnerPostsView.propTypes = {
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(LearnerPostsView);
+export default LearnerPostsView;

@@ -19,7 +19,7 @@ const AlertBar = ({
   return (
     <Alert variant="info" className="px-3 shadow-none mb-1 py-10px bg-light-200">
       <div className="d-flex align-items-center flex-wrap text-gray-700 font-style">
-        {intl.formatMessage(message)}
+        {message}
         <span className="ml-1">
           <AuthorLabel
             author={author}

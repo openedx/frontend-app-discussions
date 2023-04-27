@@ -26,10 +26,11 @@ const PostLink = ({
   postId,
   showDivider,
 }) => {
-  console.log('postlink');
+  console.log('postlink', useSelector(selectThread(postId)));
 
   const intl = useIntl();
   const {
+    courseId,
     postId: selectedPostId,
     page,
     enableInContextSidebar,
@@ -37,7 +38,7 @@ const PostLink = ({
     learnerUsername,
   } = useContext(DiscussionContext);
   const {
-    courseId, topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
+    topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
     unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
   } = useSelector(selectThread(postId));
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
