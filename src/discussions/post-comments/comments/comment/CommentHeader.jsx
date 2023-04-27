@@ -58,7 +58,10 @@ CommentHeader.propTypes = {
   abuseFlagged: PropTypes.bool.isRequired,
   closed: PropTypes.bool,
   createdAt: PropTypes.string.isRequired,
-  lastEdit: PropTypes.string,
+  lastEdit: PropTypes.shape({
+    editorUsername: PropTypes.string,
+    reason: PropTypes.string,
+  }),
 };
 
 CommentHeader.defaultProps = {
