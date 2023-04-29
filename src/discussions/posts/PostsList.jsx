@@ -25,7 +25,7 @@ import { PostLink } from './post';
 const PostsList = ({
   postsIds, topicsIds, isTopicTab, parentIsLoading,
 }) => {
-  console.log('PostsList', postsIds);
+  console.log('PostsList');
   const intl = useIntl();
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);

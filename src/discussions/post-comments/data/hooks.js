@@ -67,13 +67,20 @@ export function usePostComments(endorsed = null) {
   }, [currentPage, endorsed, postId, reverseOrder]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     dispatch(fetchThreadComments(postId, {
       endorsed,
       page: 1,
       reverseOrder,
       enableInContextSidebar,
+      signal: abortController.signal,
     }));
-  }, [postId, reverseOrder]);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [postId, endorsed, reverseOrder, enableInContextSidebar]);
 
   return {
     endorsedCommentsIds,
