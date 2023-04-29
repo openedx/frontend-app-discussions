@@ -104,4 +104,4 @@ const TopicPostsView = () => {
   );
 };
 
-export default TopicPostsView;
+export default React.memo(TopicPostsView);

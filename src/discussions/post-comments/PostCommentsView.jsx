@@ -25,6 +25,9 @@ import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
 import { PostCommentsContext } from './postCommentsContext';
 
+// const CommentsSort = React.lazy(() => import('./comments/CommentsSort'));
+// const CommentsView = React.lazy(() => import('./comments/CommentsView'));
+
 const PostCommentsView = () => {
   console.log('PostCommentsView');
 
@@ -41,12 +44,14 @@ const PostCommentsView = () => {
   const { closed, id: threadId, type } = usePost(postId);
 
   useEffect(() => {
-    if (!threadId) { submitDispatch(fetchThread(postId, courseId, true)); }
+    if (!postId) {
+      submitDispatch(fetchThread(postId, courseId, true));
+    }
 
     return () => {
       setAddingResponse(false);
     };
-  }, [postId]);
+  }, [postId, courseId]);
 
   const handleAddResponseButton = useCallback(() => {
     setAddingResponse(true);
@@ -125,13 +130,13 @@ const PostCommentsView = () => {
       </div>
       {!!commentsCount && <CommentsSort />}
       {type === ThreadType.DISCUSSION && (
-        <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
+      <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
       )}
       {type === ThreadType.QUESTION && (
-        <>
-          <CommentsView endorsed={EndorsementStatus.ENDORSED} />
-          <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
-        </>
+      <>
+        <CommentsView endorsed={EndorsementStatus.ENDORSED} />
+        <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
+      </>
       )}
     </PostCommentsContext.Provider>
   );
