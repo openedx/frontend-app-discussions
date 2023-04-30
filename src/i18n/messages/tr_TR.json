@@ -80,7 +80,7 @@
   "discussions.comments.comment.endorsedResponseCount": "{num, plural,\n      =0 {No endorsed responses}\n      one {Showing # endorsed response}\n      other {Showing # endorsed responses}\n    }",
   "discussions.comments.comment.loadMoreComments": "Daha fazla yorum yükle",
   "discussions.comments.comment.loadMoreResponses": "Daha fazla yanıt yükle",
-  "discussions.comments.comment.visibility": "This post is visible to {group, select,\n         null {Everyone}\n         other {{group}}\n    }.",
+  "discussions.comments.comment.visibility": "Bu gönderi {group, select,\n         null {Everyone}\n         other {{group}}\n    } tarafından görülebilir.",
   "discussions.comments.comment.postedTime": "{postType, select,\n      discussion {Discussion}\n      question {Question}\n      other {{postType}}\n    } posted {relativeTime} by",
   "discussions.comments.comment.commentTime": "{relativeTime} önce gönderildi",
   "discussions.comments.comment.answer": "Cevap",
