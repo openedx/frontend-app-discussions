@@ -60,17 +60,18 @@ const PostsList = ({
 
   useEffect(() => {
     if (topicsIds !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
+      console.log('loadThreads', topicsIds, typeof topicsIds, configStatus);
       loadThreads(topicsIds);
     }
   }, [courseId, filters, orderBy, page, JSON.stringify(topicsIds), configStatus]);
 
   useEffect(() => {
-    if (isTopicTab) { loadThreads(topicsIds, 1, true); }
-  }, [filters]);
+    if (isTopicTab) {
+      console.log('loadThreads isTopicTab', topicsIds, configStatus);
 
-  const checkIsSelected = useCallback((id) => (
-    window.location.pathname.includes(id)),
-  [window.location.pathname]);
+      loadThreads(topicsIds, 1, true);
+    }
+  }, [filters]);
 
   const postInstances = useMemo(() => (
     sortedPostsIds?.map((postId, idx) => (
@@ -78,11 +79,10 @@ const PostsList = ({
         postId={postId}
         idx={idx}
         key={postId}
-        isSelected={checkIsSelected}
         showDivider={(sortedPostsIds.length - 1) !== idx}
       />
     ))
-  ), [sortedPostsIds, checkIsSelected]);
+  ), [sortedPostsIds]);
 
   return (
     <>
@@ -112,7 +112,7 @@ PostsList.propTypes = {
 
 PostsList.defaultProps = {
   postsIds: [],
-  topicsIds: [],
+  topicsIds: undefined,
   isTopicTab: false,
   parentIsLoading: undefined,
 };

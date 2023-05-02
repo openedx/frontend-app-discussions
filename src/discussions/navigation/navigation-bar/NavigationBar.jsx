@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 
-import { matchPath, useParams } from 'react-router';
+import { matchPath } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
+import { DiscussionContext } from '../../common/context';
 import { useShowLearnersTab } from '../../data/hooks';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
@@ -14,7 +15,7 @@ import messages from './messages';
 const NavigationBar = () => {
   console.log('NavigationBar');
   const intl = useIntl();
-  const { courseId } = useParams();
+  const { courseId } = useContext(DiscussionContext);
   const showLearnersTab = useShowLearnersTab();
 
   const navLinks = useMemo(() => ([
@@ -60,4 +61,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default React.memo(NavigationBar);

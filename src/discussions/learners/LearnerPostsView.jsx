@@ -33,6 +33,7 @@ import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar
 import messages from './messages';
 
 const LearnerPostsView = () => {
+  console.log('LearnerPostsView');
   const intl = useIntl();
   const location = useLocation();
   const history = useHistory();
@@ -59,21 +60,16 @@ const LearnerPostsView = () => {
     dispatch(fetchUserPosts(courseId, params));
   }, [courseId, postFilter, username, userHasModerationPrivileges, userIsStaff]);
 
-  const checkIsSelected = useCallback((id) => (
-    window.location.pathname.includes(id)),
-  [window.location.pathname]);
-
   const postInstances = useMemo(() => (
     sortedPostsIds?.map((postId, idx) => (
       <PostLink
         postId={postId}
         idx={idx}
         key={postId}
-        isSelected={checkIsSelected}
         showDivider={(sortedPostsIds.length - 1) !== idx}
       />
     ))
-  ), [sortedPostsIds, checkIsSelected]);
+  ), [sortedPostsIds]);
 
   useEffect(() => {
     dispatch(clearPostsPages());

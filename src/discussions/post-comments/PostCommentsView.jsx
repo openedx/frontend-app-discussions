@@ -130,7 +130,7 @@ const PostCommentsView = () => {
       </div>
       {!!commentsCount && <CommentsSort />}
       {type === ThreadType.DISCUSSION && (
-      <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
+        <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
       )}
       {type === ThreadType.QUESTION && (
       <>
