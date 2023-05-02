@@ -9,7 +9,6 @@ export const usePostList = (ids) => {
   const posts = useSelector(selectThreadsByIds(ids));
   const pinnedPostsIds = [];
   const unpinnedPostsIds = [];
-  console.log('usePostList posts', posts, ids);
 
   const sortedIds = useMemo(() => {
     posts.forEach((post) => {
@@ -23,6 +22,5 @@ export const usePostList = (ids) => {
     return [...pinnedPostsIds, ...unpinnedPostsIds];
   }, [posts]);
 
-  console.log('usePostList', sortedIds);
   return sortedIds;
 };

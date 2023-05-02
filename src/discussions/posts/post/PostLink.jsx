@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unknown-property */
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -22,11 +22,10 @@ import PostSummaryFooter from './PostSummaryFooter';
 
 const PostLink = ({
   idx,
-  isSelected,
   postId,
   showDivider,
 }) => {
-  console.log('postlink', useSelector(selectThread(postId)));
+  console.log('postlink');
 
   const intl = useIntl();
   const {
@@ -54,6 +53,10 @@ const PostLink = ({
   const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;
   const isPostRead = read || (!read && commentCount !== unreadCommentCount);
 
+  const checkIsSelected = useMemo(() => (
+    window.location.pathname.includes(postId)),
+  [window.location.pathname]);
+
   return (
     <>
       <Link
@@ -63,10 +66,9 @@ const PostLink = ({
           })
         }
         to={linkUrl}
-        onClick={() => isSelected(id)}
-        aria-current={isSelected(id) ? 'page' : undefined}
+        aria-current={checkIsSelected ? 'page' : undefined}
         role="option"
-        tabIndex={(isSelected(id) || idx === 0) ? 0 : -1}
+        tabIndex={(checkIsSelected || idx === 0) ? 0 : -1}
       >
         <div
           className={
@@ -155,7 +157,6 @@ const PostLink = ({
 
 PostLink.propTypes = {
   idx: PropTypes.number,
-  isSelected: PropTypes.func.isRequired,
   postId: PropTypes.string.isRequired,
   showDivider: PropTypes.bool,
 };

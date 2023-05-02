@@ -136,7 +136,6 @@ const commentsSlice = createSlice({
       state.commentDraft = null;
     },
     updateCommentsList: (state, { payload }) => {
-      console.log('updateCommentsList', payload);
       const { id: commentId, threadId, endorsed } = payload;
       const commentAddListtype = endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
       const commentRemoveListType = !endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;

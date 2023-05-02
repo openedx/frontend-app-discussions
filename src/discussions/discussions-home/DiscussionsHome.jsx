@@ -32,6 +32,7 @@ import useFeedbackWrapper from './FeedbackWrapper';
 import InformationBanner from './InformationBanner';
 
 const DiscussionsHome = () => {
+  console.log('DiscussionsHome');
   const location = useLocation();
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(selectPostEditorVisible);
@@ -83,7 +84,7 @@ const DiscussionsHome = () => {
               'pl-4 pr-3 py-0': enableInContextSidebar,
             })}
           >
-            {!enableInContextSidebar && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
+            {!enableInContextSidebar && <NavigationBar />}
             <PostActionsBar />
           </div>
           {isFeedbackBannerVisible && <InformationBanner />}
