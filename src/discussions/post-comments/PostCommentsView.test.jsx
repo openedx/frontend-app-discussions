@@ -384,12 +384,16 @@ describe('ThreadView', () => {
       expect(screen.queryByRole('combobox', { name: /reason for editing/i })).toBeInTheDocument();
       expect(screen.getAllByRole('option', { name: /reason \d/i })).toHaveLength(2);
       await act(async () => {
-        fireEvent.change(screen.queryByRole('combobox', { name: /reason for editing/i }),
-          { target: { value: null } });
+        fireEvent.change(
+          screen.queryByRole('combobox', { name: /reason for editing/i }),
+          { target: { value: null } },
+        );
       });
       await act(async () => {
-        fireEvent.change(screen.queryByRole('combobox',
-          { name: /reason for editing/i }), { target: { value: 'reason-1' } });
+        fireEvent.change(screen.queryByRole(
+          'combobox',
+          { name: /reason for editing/i },
+        ), { target: { value: 'reason-1' } });
       });
       await act(async () => {
         fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } });

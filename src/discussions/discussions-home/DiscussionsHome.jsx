@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -32,7 +32,7 @@ import DiscussionSidebar from './DiscussionSidebar';
 import useFeedbackWrapper from './FeedbackWrapper';
 import InformationBanner from './InformationBanner';
 
-export default function DiscussionsHome() {
+const DiscussionsHome = () => {
   const location = useLocation();
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(selectPostEditorVisible);
@@ -66,17 +66,18 @@ export default function DiscussionsHome() {
     }
   }, [path]);
 
+  const contextValue = useMemo(() => ({
+    page,
+    courseId,
+    postId,
+    topicId,
+    enableInContextSidebar,
+    category,
+    learnerUsername,
+  }), []);
+
   return (
-    <DiscussionContext.Provider value={{
-      page,
-      courseId,
-      postId,
-      topicId,
-      enableInContextSidebar,
-      category,
-      learnerUsername,
-    }}
-    >
+    <DiscussionContext.Provider value={contextValue}>
       {!enableInContextSidebar && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
       <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
         {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
@@ -130,4 +131,6 @@ export default function DiscussionsHome() {
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>
   );
-}
+};
+
+export default DiscussionsHome;

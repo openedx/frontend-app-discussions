@@ -9,7 +9,7 @@ import { ProductTour } from '@edx/paragon';
 import { useTourConfiguration } from '../data/hooks';
 import { fetchDiscussionTours } from './data/thunks';
 
-function DiscussionsProductTour({ intl }) {
+const DiscussionsProductTour = ({ intl }) => {
   const dispatch = useDispatch();
   const config = useTourConfiguration(intl);
   useEffect(() => {
@@ -17,6 +17,7 @@ function DiscussionsProductTour({ intl }) {
   }, []);
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {!isEmpty(config) && (
         <ProductTour
@@ -25,7 +26,7 @@ function DiscussionsProductTour({ intl }) {
       )}
     </>
   );
-}
+};
 
 DiscussionsProductTour.propTypes = {
   intl: intlShape.isRequired,

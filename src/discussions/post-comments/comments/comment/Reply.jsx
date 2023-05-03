@@ -19,11 +19,11 @@ import messages from '../../messages';
 import CommentEditor from './CommentEditor';
 import { commentShape } from './proptypes';
 
-function Reply({
+const Reply = ({
   reply,
   postType,
   intl,
-}) {
+}) => {
   timeago.register('time-locale', timeLocale);
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
@@ -143,7 +143,7 @@ function Reply({
       </div>
     </div>
   );
-}
+};
 Reply.propTypes = {
   postType: PropTypes.oneOf(['discussion', 'question']).isRequired,
   reply: commentShape.isRequired,

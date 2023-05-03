@@ -5,7 +5,7 @@ import { getIn, useFormikContext } from 'formik';
 
 import { Form, TransitionReplace } from '@edx/paragon';
 
-function FormikErrorFeedback({ name }) {
+const FormikErrorFeedback = ({ name }) => {
   const {
     touched,
     errors,
@@ -26,7 +26,7 @@ function FormikErrorFeedback({ name }) {
         )}
     </TransitionReplace>
   );
-}
+};
 
 FormikErrorFeedback.propTypes = {
   name: PropTypes.string.isRequired,

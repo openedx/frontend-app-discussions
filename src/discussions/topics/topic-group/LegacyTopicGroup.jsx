@@ -6,15 +6,15 @@ import { useSelector } from 'react-redux';
 import { selectTopicsInCategory } from '../data/selectors';
 import TopicGroupBase from './TopicGroupBase';
 
-function LegacyTopicGroup({
+const LegacyTopicGroup = ({
   id,
   category,
-}) {
+}) => {
   const topics = useSelector(selectTopicsInCategory(category));
   return (
     <TopicGroupBase groupId={id} groupTitle={category} topics={topics} />
   );
-}
+};
 
 LegacyTopicGroup.propTypes = {
   id: PropTypes.string,

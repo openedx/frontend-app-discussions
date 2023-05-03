@@ -17,10 +17,10 @@ import messages from '../post-comments/messages';
 import { postShape } from '../posts/post/proptypes';
 import AlertBar from './AlertBar';
 
-function AlertBanner({
+const AlertBanner = ({
   intl,
   content,
-}) {
+}) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsGlobalStaff = useSelector(selectUserIsStaff);
@@ -64,7 +64,7 @@ function AlertBanner({
       )}
     </>
   );
-}
+};
 
 AlertBanner.propTypes = {
   intl: intlShape.isRequired,

@@ -51,7 +51,7 @@ function LegacyCoursewareTopics() {
   );
 }
 
-function TopicsView() {
+const TopicsView = () => {
   const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
   const topicsSelector = useSelector(({ topics }) => topics);
@@ -94,7 +94,7 @@ function TopicsView() {
       }
     </div>
   );
-}
+};
 
 TopicsView.propTypes = {};
 

@@ -16,7 +16,7 @@ import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
 
-function AuthorLabel({
+const AuthorLabel = ({
   intl,
   author,
   authorLabel,
@@ -26,7 +26,7 @@ function AuthorLabel({
   postCreatedAt,
   authorToolTip,
   postOrComment,
-}) {
+}) => {
   const location = useLocation();
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
@@ -127,7 +127,7 @@ function AuthorLabel({
       </div>
     )
     : <div className={className}>{authorName}{labelContents}</div>;
-}
+};
 
 AuthorLabel.propTypes = {
   intl: intlShape.isRequired,

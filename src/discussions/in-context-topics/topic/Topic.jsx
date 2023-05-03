@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars, react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -17,12 +18,12 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
-function Topic({
+const Topic = ({
   topic,
   showDivider,
   index,
   intl,
-}) {
+}) => {
   const { courseId } = useParams();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
@@ -70,7 +71,7 @@ function Topic({
       )}
     </>
   );
-}
+};
 
 export const topicShape = PropTypes.shape({
   id: PropTypes.string,

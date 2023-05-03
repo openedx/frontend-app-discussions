@@ -12,7 +12,7 @@ import messages from '../messages';
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyTopics({ intl }) {
+const EmptyTopics = ({ intl }) => {
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
 
@@ -62,7 +62,7 @@ function EmptyTopics({ intl }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyTopics.propTypes = {
   intl: intlShape.isRequired,

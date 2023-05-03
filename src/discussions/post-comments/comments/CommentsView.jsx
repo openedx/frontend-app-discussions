@@ -11,13 +11,13 @@ import { usePostComments } from '../data/hooks';
 import messages from '../messages';
 import { Comment, ResponseEditor } from './comment';
 
-function CommentsView({
+const CommentsView = ({
   postType,
   postId,
   intl,
   endorsed,
   isClosed,
-}) {
+}) => {
   const {
     comments,
     hasMorePages,
@@ -71,6 +71,7 @@ function CommentsView({
   );
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {((hasMorePages && isLoading) || !isLoading) && (
         <>
@@ -115,7 +116,7 @@ function CommentsView({
       )}
     </>
   );
-}
+};
 
 CommentsView.propTypes = {
   postId: PropTypes.string.isRequired,

@@ -7,12 +7,12 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 
 import CommentEditor from './CommentEditor';
 
-function ResponseEditor({
+const ResponseEditor = ({
   postId,
   addWrappingDiv,
   handleCloseEditor,
   addingResponse,
-}) {
+}) => {
   useEffect(() => {
     handleCloseEditor();
   }, [postId]);
@@ -27,7 +27,7 @@ function ResponseEditor({
         />
       </div>
     );
-}
+};
 
 ResponseEditor.propTypes = {
   postId: PropTypes.string.isRequired,

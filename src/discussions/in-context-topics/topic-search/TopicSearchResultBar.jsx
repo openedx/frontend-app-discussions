@@ -8,7 +8,7 @@ import { SearchField } from '@edx/paragon';
 import { setFilter } from '../data';
 import messages from '../messages';
 
-function TopicSearchResultBar({ intl }) {
+const TopicSearchResultBar = ({ intl }) => {
   const dispatch = useDispatch();
 
   return (
@@ -21,7 +21,7 @@ function TopicSearchResultBar({ intl }) {
       />
     </div>
   );
-}
+};
 
 TopicSearchResultBar.propTypes = {
   intl: intlShape.isRequired,

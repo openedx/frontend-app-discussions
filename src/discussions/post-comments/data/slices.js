@@ -141,7 +141,7 @@ const commentsSlice = createSlice({
       const commentRemoveListType = !endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
 
       state.commentsInThreads[threadId][commentRemoveListType] = (
-          state.commentsInThreads[threadId]?.[commentRemoveListType]?.filter(item => item !== commentId)
+        state.commentsInThreads[threadId]?.[commentRemoveListType]?.filter(item => item !== commentId)
       );
       state.commentsInThreads[threadId][commentAddListtype] = [
         ...state.commentsInThreads[threadId][commentAddListtype], payload.id,

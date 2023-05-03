@@ -9,12 +9,12 @@ import {
 import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
 import messages from './messages';
 
-function LikeButton({
+const LikeButton = ({
   count,
   intl,
   onClick,
   voted,
-}) {
+}) => {
   const handleClick = (e) => {
     e.preventDefault();
     if (onClick) {
@@ -47,7 +47,7 @@ function LikeButton({
 
     </div>
   );
-}
+};
 
 LikeButton.propTypes = {
   count: PropTypes.number.isRequired,

@@ -19,19 +19,21 @@ import { selectCourseCohorts } from '../discussions/cohorts/data/selectors';
 import messages from '../discussions/posts/post-filter-bar/messages';
 import { ActionItem } from '../discussions/posts/post-filter-bar/PostFilterBar';
 
-function FilterBar({
+const FilterBar = ({
   intl,
   filters,
   selectedFilters,
   onFilterChange,
   showCohortsFilter,
-}) {
+}) => {
   const [isOpen, setOpen] = useState(false);
   const cohorts = useSelector(selectCourseCohorts);
   const { status } = useSelector(state => state.cohorts);
-  const selectedCohort = useMemo(() => cohorts.find(cohort => (
-    toString(cohort.id) === selectedFilters.cohort)),
-  [selectedFilters.cohort]);
+  const selectedCohort = useMemo(
+    () => cohorts.find(cohort => (
+      toString(cohort.id) === selectedFilters.cohort)),
+    [selectedFilters.cohort],
+  );
 
   const allFilters = [
     {
@@ -183,7 +185,7 @@ function FilterBar({
       </Collapsible.Body>
     </Collapsible.Advanced>
   );
-}
+};
 
 FilterBar.propTypes = {
   intl: intlShape.isRequired,

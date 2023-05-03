@@ -14,12 +14,12 @@ import {
 import { selectModerationSettings } from '../../data/selectors';
 import messages from './messages';
 
-function ClosePostReasonModal({
+const ClosePostReasonModal = ({
   intl,
   isOpen,
   onCancel,
   onConfirm,
-}) {
+}) => {
   const scrollTo = useRef(null);
   const [reasonCode, setReasonCode] = useState(null);
 
@@ -87,7 +87,7 @@ function ClosePostReasonModal({
       </ModalDialog.Footer>
     </ModalDialog>
   );
-}
+};
 
 ClosePostReasonModal.propTypes = {
   intl: intlShape.isRequired,

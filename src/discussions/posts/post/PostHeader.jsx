@@ -13,9 +13,9 @@ import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-export function PostAvatar({
+export const PostAvatar = ({
   post, authorLabel, fromPostLink, read,
-}) {
+}) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
   const avatarSize = useMemo(() => {
@@ -63,7 +63,7 @@ export function PostAvatar({
       />
     </div>
   );
-}
+};
 
 PostAvatar.propTypes = {
   post: postShape.isRequired,
@@ -78,11 +78,11 @@ PostAvatar.defaultProps = {
   read: false,
 };
 
-function PostHeader({
+const PostHeader = ({
   intl,
   post,
   preview,
-}) {
+}) => {
   const showAnsweredBadge = preview && post.hasEndorsed && post.type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(post);
@@ -127,7 +127,7 @@ function PostHeader({
       </div>
     </div>
   );
-}
+};
 
 PostHeader.propTypes = {
   intl: intlShape.isRequired,

@@ -17,7 +17,7 @@ import { postShape } from '../posts/post/proptypes';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
-function HoverCard({
+const HoverCard = ({
   intl,
   commentOrPost,
   actionHandlers,
@@ -27,7 +27,7 @@ function HoverCard({
   onFollow,
   isClosedPost,
   endorseIcons,
-}) {
+}) => {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   return (
@@ -40,8 +40,10 @@ function HoverCard({
         <div className="d-flex">
           <Button
             variant="tertiary"
-            className={classNames('px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
-              { 'w-100': enableInContextSidebar })}
+            className={classNames(
+              'px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
+              { 'w-100': enableInContextSidebar },
+            )}
             onClick={() => handleResponseCommentButton()}
             disabled={isClosedPost}
             style={{ lineHeight: '20px' }}
@@ -107,7 +109,7 @@ function HoverCard({
       </div>
     </div>
   );
-}
+};
 
 HoverCard.propTypes = {
   intl: intlShape.isRequired,
@@ -118,7 +120,7 @@ HoverCard.propTypes = {
   onFollow: PropTypes.func,
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   isClosedPost: PropTypes.bool.isRequired,
-  endorseIcons: PropTypes.objectOf(PropTypes.any),
+  endorseIcons: PropTypes.objectOf(PropTypes.shape({})),
 };
 
 HoverCard.defaultProps = {

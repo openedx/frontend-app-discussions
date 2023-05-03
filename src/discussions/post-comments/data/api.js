@@ -20,15 +20,13 @@ export const getCommentsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussi
  * @param enableInContextSidebar
  * @returns {Promise<{}>}
  */
-export async function getThreadComments(
-  threadId, {
-    endorsed,
-    page,
-    pageSize,
-    reverseOrder,
-    enableInContextSidebar = false,
-  } = {},
-) {
+export async function getThreadComments(threadId, {
+  endorsed,
+  page,
+  pageSize,
+  reverseOrder,
+  enableInContextSidebar = false,
+} = {}) {
   const params = snakeCaseObject({
     threadId,
     endorsed: EndorsementValue[endorsed],
@@ -51,13 +49,11 @@ export async function getThreadComments(
  * @param {number=} pageSize
  * @returns {Promise<{}>}
  */
-export async function getCommentResponses(
-  commentId, {
-    page,
-    pageSize,
-    reverseOrder,
-  } = {},
-) {
+export async function getCommentResponses(commentId, {
+  page,
+  pageSize,
+  reverseOrder,
+} = {}) {
   const url = `${getCommentsApiUrl()}${commentId}/`;
   const params = snakeCaseObject({
     page,

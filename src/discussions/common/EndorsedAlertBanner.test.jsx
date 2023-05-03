@@ -21,9 +21,7 @@ function buildTestContent(type, buildParams) {
   return camelCaseObject(Factory.build(type, { ...buildParamsSnakeCase }, null));
 }
 
-function renderComponent(
-  content, postType,
-) {
+function renderComponent(content, postType) {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>

@@ -10,7 +10,7 @@ import { DiscussionContext } from '../../common/context';
 import postsMessages from '../../posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../data/slices';
 
-function TopicSearchBar({ intl }) {
+const TopicSearchBar = ({ intl }) => {
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
   const topicSearch = useSelector(({ inContextTopics }) => inContextTopics.filter);
@@ -34,29 +34,27 @@ function TopicSearchBar({ intl }) {
   useEffect(() => onClear(), [page]);
 
   return (
-    <>
-      <SearchField.Advanced
-        onClear={onClear}
-        onChange={onChange}
-        onSubmit={onSubmit}
-        value={topicSearch}
-      >
-        <SearchField.Label />
-        <SearchField.Input
-          style={{ paddingRight: '1rem' }}
-          placeholder={intl.formatMessage(postsMessages.search, { page: 'topics' })}
+    <SearchField.Advanced
+      onClear={onClear}
+      onChange={onChange}
+      onSubmit={onSubmit}
+      value={topicSearch}
+    >
+      <SearchField.Label />
+      <SearchField.Input
+        style={{ paddingRight: '1rem' }}
+        placeholder={intl.formatMessage(postsMessages.search, { page: 'topics' })}
+      />
+      <span className="mt-auto mb-auto mr-2.5 pointer-cursor-hover">
+        <Icon
+          src={SearchIcon}
+          onClick={() => onSubmit(searchValue)}
+          data-testid="search-icon"
         />
-        <span className="mt-auto mb-auto mr-2.5 pointer-cursor-hover">
-          <Icon
-            src={SearchIcon}
-            onClick={() => onSubmit(searchValue)}
-            data-testid="search-icon"
-          />
-        </span>
-      </SearchField.Advanced>
-    </>
+      </span>
+    </SearchField.Advanced>
   );
-}
+};
 
 TopicSearchBar.propTypes = {
   intl: intlShape.isRequired,

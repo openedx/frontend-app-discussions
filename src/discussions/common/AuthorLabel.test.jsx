@@ -66,19 +66,20 @@ describe('Author label', () => {
     ['retired__user', null, false, ''],
     ['staff_user', 'Staff', true, 'text-staff-color'],
     ['learner_user', null, false, ''],
-  ])('for %s', (
-    author, authorLabel, linkToProfile, labelColor,
-  ) => {
-    it('it has author name text',
+  ])('for %s', (author, authorLabel, linkToProfile, labelColor) => {
+    it(
+      'it has author name text',
       async () => {
         renderComponent(author, authorLabel, linkToProfile, labelColor);
         const authorElement = container.querySelector('[role=heading]');
         const authorName = author.startsWith('retired__user') ? '[Deactivated]' : author;
 
         expect(authorElement).toHaveTextContent(authorName);
-      });
+      },
+    );
 
-    it(`it is "${!linkToProfile && 'not'}" clickable when linkToProfile is ${!!linkToProfile}`,
+    it(
+      `it is "${!linkToProfile && 'not'}" clickable when linkToProfile is ${!!linkToProfile}`,
       async () => {
         renderComponent(author, authorLabel, linkToProfile, labelColor);
 
@@ -87,9 +88,11 @@ describe('Author label', () => {
         } else {
           expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
         }
-      });
+      },
+    );
 
-    it(`it has "${!linkToProfile && 'not'}" label text and label color when linkToProfile is ${!!linkToProfile}`,
+    it(
+      `it has "${!linkToProfile && 'not'}" label text and label color when linkToProfile is ${!!linkToProfile}`,
       async () => {
         renderComponent(author, authorLabel, linkToProfile, labelColor);
         const authorElement = container.querySelector('[role=heading]');
@@ -104,6 +107,7 @@ describe('Author label', () => {
           expect(authorElement.parentNode.lastChild).not.toHaveTextContent(label, { exact: true });
           expect(authorElement.parentNode).not.toHaveClass(labelColor, { exact: true });
         }
-      });
+      },
+    );
   });
 });

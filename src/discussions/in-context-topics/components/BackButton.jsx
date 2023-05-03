@@ -9,9 +9,9 @@ import { ArrowBack } from '@edx/paragon/icons';
 
 import messages from '../messages';
 
-function BackButton({
+const BackButton = ({
   intl, path, title, loading,
-}) {
+}) => {
   const history = useHistory();
 
   return (
@@ -32,7 +32,7 @@ function BackButton({
       <div className="border-bottom border-light-400" />
     </>
   );
-}
+};
 
 BackButton.propTypes = {
   intl: intlShape.isRequired,

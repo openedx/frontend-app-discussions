@@ -13,13 +13,13 @@ import { selectTopicFilter } from '../data/selectors';
 import messages from '../messages';
 import Topic, { topicShape } from './topic/Topic';
 
-function TopicGroupBase({
+const TopicGroupBase = ({
   groupId,
   groupTitle,
   linkToGroup,
   topics,
   intl,
-}) {
+}) => {
   const { courseId } = useContext(DiscussionContext);
   const filter = useSelector(selectTopicFilter);
   const hasTopics = topics.length > 0;
@@ -70,7 +70,7 @@ function TopicGroupBase({
       ))}
     </div>
   );
-}
+};
 
 TopicGroupBase.propTypes = {
   groupId: PropTypes.string.isRequired,

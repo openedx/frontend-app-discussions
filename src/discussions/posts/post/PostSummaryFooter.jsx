@@ -18,12 +18,12 @@ import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-function PostSummaryFooter({
+const PostSummaryFooter = ({
   post,
   intl,
   preview,
   showNewCountLabel,
-}) {
+}) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   timeago.register('time-locale', timeLocale);
   return (
@@ -104,7 +104,7 @@ function PostSummaryFooter({
       </div>
     </div>
   );
-}
+};
 
 PostSummaryFooter.propTypes = {
   intl: intlShape.isRequired,

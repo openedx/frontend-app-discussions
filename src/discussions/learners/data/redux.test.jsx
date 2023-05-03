@@ -37,7 +37,8 @@ describe('Learner redux test cases', () => {
   test('Successfully load initial states in redux', async () => {
     executeThunk(
       fetchLearners('course-v1:edX+DemoX+Demo_Course', { usernameSearch: 'learner-1' }),
-      store.dispatch, store.getState,
+      store.dispatch,
+      store.getState,
     );
     const { learners } = store.getState();
 
@@ -55,7 +56,8 @@ describe('Learner redux test cases', () => {
     expect(learners.postFilter.cohort).toEqual('');
   });
 
-  test('Successfully store a learner posts stats data as pages object in redux',
+  test(
+    'Successfully store a learner posts stats data as pages object in redux',
     async () => {
       const learners = await setupLearnerMockResponse();
       const page = learners.pages[0];
@@ -65,9 +67,11 @@ describe('Learner redux test cases', () => {
       expect(statsObject.responses).toEqual(3);
       expect(statsObject.threads).toEqual(1);
       expect(statsObject.replies).toEqual(0);
-    });
+    },
+  );
 
-  test('Successfully store the nextPage, totalPages, totalLearners, and sortedBy data in redux',
+  test(
+    'Successfully store the nextPage, totalPages, totalLearners, and sortedBy data in redux',
     async () => {
       const learners = await setupLearnerMockResponse();
 
@@ -75,7 +79,8 @@ describe('Learner redux test cases', () => {
       expect(learners.totalPages).toEqual(2);
       expect(learners.totalLearners).toEqual(3);
       expect(learners.sortedBy).toEqual('activity');
-    });
+    },
+  );
 
   test('Successfully updated the learner\'s sort data in redux', async () => {
     const learners = await setupLearnerMockResponse();
@@ -106,7 +111,8 @@ describe('Learner redux test cases', () => {
     expect(updatedLearners.pages).toHaveLength(0);
   });
 
-  test('Successfully update the learner\'s search query in redux when searching for a learner',
+  test(
+    'Successfully update the learner\'s search query in redux when searching for a learner',
     async () => {
       const learners = await setupLearnerMockResponse();
 
@@ -116,5 +122,6 @@ describe('Learner redux test cases', () => {
       const updatedLearners = store.getState().learners;
 
       expect(updatedLearners.usernameSearch).toEqual('learner-2');
-    });
+    },
+  );
 });

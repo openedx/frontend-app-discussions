@@ -11,7 +11,7 @@ import messages from '../messages';
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyPosts({ intl, subTitleMessage }) {
+const EmptyPosts = ({ intl, subTitleMessage }) => {
   const dispatch = useDispatch();
 
   const isFiltered = useSelector(selectAreThreadsFiltered);
@@ -49,7 +49,7 @@ function EmptyPosts({ intl, subTitleMessage }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyPosts.propTypes = {
   subTitleMessage: propTypes.shape({
