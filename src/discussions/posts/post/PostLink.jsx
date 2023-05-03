@@ -25,8 +25,6 @@ const PostLink = ({
   postId,
   showDivider,
 }) => {
-  console.log('postlink');
-
   const intl = useIntl();
   const {
     courseId,

@@ -82,7 +82,7 @@ const threadsSlice = createSlice({
       if (!state.pages[page - 1]) {
         state.pages[page - 1] = ids;
       } else {
-        state.pages[page - 1] = [...state.pages[page - 1], ...ids];
+        state.pages[page - 1] = [...new Set([...state.pages[page - 1], ...ids])];
       }
       state.status = RequestStatus.SUCCESSFUL;
       state.threadsById = { ...state.threadsById, ...threadsById };

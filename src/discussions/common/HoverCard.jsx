@@ -28,8 +28,6 @@ const HoverCard = ({
   following,
   endorseIcons,
 }) => {
-  console.log('HoverCard');
-
   const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);

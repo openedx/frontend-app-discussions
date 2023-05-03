@@ -37,7 +37,6 @@ const TopicPostsView = () => {
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
   const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
-  console.log('TopicPostsView', postsIds, topicId);
 
   const selectedUnit = useMemo(() => (
     units?.find(unit => unit.id === topicId)

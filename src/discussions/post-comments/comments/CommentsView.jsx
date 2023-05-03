@@ -13,8 +13,6 @@ import { PostCommentsContext } from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
 const CommentsView = ({ endorsed }) => {
-  console.log('CommentsView');
-
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
