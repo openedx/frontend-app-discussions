@@ -21,10 +21,7 @@ import messages from '../../messages';
 import CommentEditor from './CommentEditor';
 
 const Reply = ({ responseId }) => {
-  console.log('reply', responseId);
-
   timeago.register('time-locale', timeLocale);
-
   const {
     id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy,
     closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,

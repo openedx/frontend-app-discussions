@@ -25,7 +25,6 @@ import { PostLink } from './post';
 const PostsList = ({
   postsIds, topicsIds, isTopicTab, parentIsLoading,
 }) => {
-  console.log('PostsList');
   const intl = useIntl();
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
@@ -60,15 +59,12 @@ const PostsList = ({
 
   useEffect(() => {
     if (topicsIds !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
-      console.log('loadThreads', topicsIds, typeof topicsIds, configStatus);
       loadThreads(topicsIds);
     }
   }, [courseId, filters, orderBy, page, JSON.stringify(topicsIds), configStatus]);
 
   useEffect(() => {
     if (isTopicTab) {
-      console.log('loadThreads isTopicTab', topicsIds, configStatus);
-
       loadThreads(topicsIds, 1, true);
     }
   }, [filters]);

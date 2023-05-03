@@ -33,7 +33,6 @@ import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar
 import messages from './messages';
 
 const LearnerPostsView = () => {
-  console.log('LearnerPostsView');
   const intl = useIntl();
   const location = useLocation();
   const history = useHistory();

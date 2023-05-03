@@ -13,7 +13,6 @@ import { discussionsPath } from '../../utils';
 import messages from './messages';
 
 const NavigationBar = () => {
-  console.log('NavigationBar');
   const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
   const showLearnersTab = useShowLearnersTab();

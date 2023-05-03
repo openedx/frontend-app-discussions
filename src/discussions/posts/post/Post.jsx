@@ -28,7 +28,6 @@ import PostHeader from './PostHeader';
 
 const Post = ({ handleAddResponseButton }) => {
   const { enableInContextSidebar, postId } = useContext(DiscussionContext);
-  console.log('post', postId);
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
     closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,

@@ -23,7 +23,7 @@ import PostsList from './PostsList';
 const AllPostsList = () => {
   const postsIds = useSelector(selectAllThreadsIds);
 
-  return <PostsList postsIds={postsIds} topics={null} />;
+  return <PostsList postsIds={postsIds} topicsIds={null} />;
 };
 
 const TopicPostsList = React.memo(({ topicId }) => {

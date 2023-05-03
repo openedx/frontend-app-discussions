@@ -1,15 +1,14 @@
 import React, {
-  useCallback, useContext, useEffect, useState,
+  Suspense, useCallback, useContext, useEffect, useState,
 } from 'react';
 
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton, Spinner,
-} from '@edx/paragon';
+import { Button, Icon, IconButton } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
+import Spinner from '../../components/Spinner';
 import { EndorsementStatus, PostsPages, ThreadType } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
@@ -19,18 +18,14 @@ import { Post } from '../posts';
 import { fetchThread } from '../posts/data/thunks';
 import { discussionsPath } from '../utils';
 import { ResponseEditor } from './comments/comment';
-import CommentsSort from './comments/CommentsSort';
-import CommentsView from './comments/CommentsView';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
 import { PostCommentsContext } from './postCommentsContext';
 
-// const CommentsSort = React.lazy(() => import('./comments/CommentsSort'));
-// const CommentsView = React.lazy(() => import('./comments/CommentsView'));
+const CommentsSort = React.lazy(() => import('./comments/CommentsSort'));
+const CommentsView = React.lazy(() => import('./comments/CommentsView'));
 
 const PostCommentsView = () => {
-  console.log('PostCommentsView');
-
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
@@ -128,16 +123,18 @@ const PostCommentsView = () => {
           />
         )}
       </div>
-      {!!commentsCount && <CommentsSort />}
-      {type === ThreadType.DISCUSSION && (
-        <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
-      )}
-      {type === ThreadType.QUESTION && (
-      <>
-        <CommentsView endorsed={EndorsementStatus.ENDORSED} />
-        <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
-      </>
-      )}
+      <Suspense fallback={(<Spinner />)}>
+        {!!commentsCount && <CommentsSort />}
+        {type === ThreadType.DISCUSSION && (
+          <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
+        )}
+        {type === ThreadType.QUESTION && (
+          <>
+            <CommentsView endorsed={EndorsementStatus.ENDORSED} />
+            <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
+          </>
+        )}
+      </Suspense>
     </PostCommentsContext.Provider>
   );
 };

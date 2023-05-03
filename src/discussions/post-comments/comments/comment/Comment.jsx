@@ -39,7 +39,6 @@ const Comment = ({
   marginBottom,
   showFullThread = true,
 }) => {
-  console.log('Comment', commentId);
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
