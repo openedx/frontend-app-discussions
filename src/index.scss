@@ -178,18 +178,18 @@ $fa-font-path: "~font-awesome/fonts";
   background-color: unset !important;
 }
 
-.learner>a:hover {
+.learner > a:hover {
   background-color: #F2F0EF;
 }
 
 .py-10px {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 .py-8px {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 .pb-10px {
