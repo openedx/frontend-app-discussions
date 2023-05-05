@@ -1,7 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
+import React, { Profiler } from 'react';
 import ReactDOM from 'react-dom';
 
 import { messages as footerMessages } from '@edx/frontend-component-footer';
@@ -20,11 +20,32 @@ import store from './store';
 import './assets/favicon.ico';
 import './index.scss';
 
+function onRenderCallback(
+  id, // the "id" prop of the Profiler tree that has just committed
+  phase, // either "mount" (if the tree just mounted) or "update" (if it re-rendered)
+  actualDuration, // time spent rendering the committed update
+  baseDuration, // estimated time to render the entire subtree without memoization
+  startTime, // when React began rendering this update
+  commitTime, // when React committed this update
+  interactions, // the Set of interactions belonging to this update
+) {
+  // Aggregate or log render timings...
+  console.log(`Profiler ID: ${id}`);
+  console.log(`Phase: ${phase}`);
+  console.log(`Actual duration: ${actualDuration}`);
+  console.log(`Base duration: ${baseDuration}`);
+  console.log(`Start time: ${startTime}`);
+  console.log(`Commit time: ${commitTime}`);
+  console.log(`Interactions: ${interactions}`);
+}
+
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <AppProvider store={store}>
-      <DiscussionsHome />
-    </AppProvider>,
+    <Profiler id="app" onRender={onRenderCallback}>
+      <AppProvider store={store}>
+        <DiscussionsHome />
+      </AppProvider>
+    </Profiler>,
     document.getElementById('root'),
   );
 });
