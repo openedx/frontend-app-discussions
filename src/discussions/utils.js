@@ -180,7 +180,7 @@ export const ACTIONS_LIST = [
 ];
 
 export function useActions(contentType, id) {
-  const postType = useContext(PostCommentsContext);
+  const { postType } = useContext(PostCommentsContext);
   const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
 
   const checkConditions = useCallback((item, conditions) => (
