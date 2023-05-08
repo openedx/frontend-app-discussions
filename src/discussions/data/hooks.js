@@ -222,15 +222,15 @@ export const useTourConfiguration = () => {
   ), []);
 
   const toursConfig = useMemo(() => (
-    tours.map((tour) => (
+    tours?.map((tour) => (
       {
         tourId: tour.tourName,
         advanceButtonText: intl.formatMessage(messages.advanceButtonText),
         dismissButtonText: intl.formatMessage(messages.dismissButtonText),
         endButtonText: intl.formatMessage(messages.endButtonText),
         enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
-        onDismiss: handleOnDismiss(tour.id),
-        onEnd: handleOnEnd(tour.id),
+        onDismiss: () => handleOnDismiss(tour.id),
+        onEnd: () => handleOnEnd(tour.id),
         checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
       }
     ))
