@@ -81,13 +81,14 @@ export function fetchThreadComments(
     reverseOrder,
     endorsed = EndorsementStatus.DISCUSSION,
     enableInContextSidebar,
+    signal,
   } = {},
 ) {
   return async (dispatch) => {
     try {
       dispatch(fetchCommentsRequest());
       const data = await getThreadComments(threadId, {
-        page, reverseOrder, endorsed, enableInContextSidebar,
+        page, reverseOrder, endorsed, enableInContextSidebar, signal,
       });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),

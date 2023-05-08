@@ -12,9 +12,9 @@ const defaultSanitizeOptions = {
   ADD_ATTR: ['columnalign'],
 };
 
-function HTMLLoader({
+const HTMLLoader = ({
   htmlNode, componentId, cssClassName, testId, delay,
-}) {
+}) => {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef(null);
   const debouncedPostContent = useDebounce(htmlNode, delay);
@@ -45,7 +45,7 @@ function HTMLLoader({
   return (
     <div ref={previewRef} className={cssClassName} id={componentId} data-testid={testId} />
   );
-}
+};
 
 HTMLLoader.propTypes = {
   htmlNode: PropTypes.node,
@@ -63,4 +63,4 @@ HTMLLoader.defaultProps = {
   delay: 0,
 };
 
-export default HTMLLoader;
+export default React.memo(HTMLLoader);
