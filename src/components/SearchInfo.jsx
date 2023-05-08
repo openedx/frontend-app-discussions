@@ -1,36 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Icon } from '@edx/paragon';
 import { Search } from '@edx/paragon/icons';
 
 import { RequestStatus } from '../data/constants';
 import messages from '../discussions/posts/post-actions-bar/messages';
 
-const SearchInfo = ({
+function SearchInfo({
+  intl,
   count,
   text,
   loadingStatus,
   onClear,
   textSearchRewrite,
-}) => {
-  const intl = useIntl();
-
+}) {
   return (
     <div className="d-flex flex-row border-bottom border-light-400">
       <Icon src={Search} className="justify-content-start ml-3.5 mr-2 mb-2 mt-2.5" />
       <Button variant="" size="inline" className="text-justify p-2">
         {loadingStatus === RequestStatus.SUCCESSFUL && (
-          textSearchRewrite ? (
-            intl.formatMessage(messages.searchRewriteInfo, {
-              searchString: text,
-              count,
-              textSearchRewrite,
-            })
-          ) : (
-            intl.formatMessage(messages.searchInfo, { count, text })
-          )
+          textSearchRewrite ? intl.formatMessage(messages.searchRewriteInfo, {
+            searchString: text,
+            count,
+            textSearchRewrite,
+          })
+            : intl.formatMessage(messages.searchInfo, { count, text })
         )}
         {loadingStatus !== RequestStatus.SUCCESSFUL && intl.formatMessage(messages.searchInfoSearching)}
       </Button>
@@ -39,9 +35,10 @@ const SearchInfo = ({
       </Button>
     </div>
   );
-};
+}
 
 SearchInfo.propTypes = {
+  intl: intlShape.isRequired,
   count: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   loadingStatus: PropTypes.string.isRequired,
@@ -54,4 +51,4 @@ SearchInfo.defaultProps = {
   textSearchRewrite: null,
 };
 
-export default React.memo(SearchInfo);
+export default injectIntl(SearchInfo);

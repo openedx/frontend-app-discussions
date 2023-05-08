@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
+
+import { injectIntl } from '@edx/frontend-platform/i18n';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
@@ -9,11 +12,11 @@ import LearnerAvatar from './LearnerAvatar';
 import LearnerFooter from './LearnerFooter';
 import { learnerShape } from './proptypes';
 
-const LearnerCard = ({ learner }) => {
-  const {
-    username, threads, inactiveFlags, activeFlags, responses, replies,
-  } = learner;
-  const { enableInContextSidebar, learnerUsername, courseId } = useContext(DiscussionContext);
+function LearnerCard({
+  learner,
+  courseId,
+}) {
+  const { enableInContextSidebar, learnerUsername } = useContext(DiscussionContext);
   const linkUrl = discussionsPath(Routes.LEARNERS.POSTS, {
     0: enableInContextSidebar ? 'in-context' : undefined,
     learnerUsername: learner.username,
@@ -27,40 +30,32 @@ const LearnerCard = ({ learner }) => {
     >
       <div
         className="d-flex flex-row flex-fill mw-100 py-3 px-4 border-primary-500"
-        style={username === learnerUsername ? {
+        style={learner.username === learnerUsername ? {
           borderRightWidth: '4px',
           borderRightStyle: 'solid',
         } : null}
       >
-        <LearnerAvatar username={username} />
+        <LearnerAvatar learner={learner} />
         <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
             <div className="d-flex align-items-center flex-fill">
               <div
                 className="text-truncate font-weight-500 font-size-14 text-primary-500 font-style"
               >
-                {username}
+                {learner.username}
               </div>
             </div>
-            {threads !== null && (
-              <LearnerFooter
-                inactiveFlags={inactiveFlags}
-                activeFlags={activeFlags}
-                threads={threads}
-                responses={responses}
-                replies={replies}
-                username={username}
-              />
-            )}
+            {learner.threads === null ? null : <LearnerFooter learner={learner} /> }
           </div>
         </div>
       </div>
     </Link>
   );
-};
+}
 
 LearnerCard.propTypes = {
   learner: learnerShape.isRequired,
+  courseId: PropTypes.string.isRequired,
 };
 
-export default React.memo(LearnerCard);
+export default injectIntl(LearnerCard);

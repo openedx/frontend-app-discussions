@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -6,10 +6,12 @@ import {
   Route, Switch, useLocation, useRouteMatch,
 } from 'react-router';
 
+import Footer from '@edx/frontend-component-footer';
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 import { getConfig } from '@edx/frontend-platform';
 
-import { Spinner } from '../../components';
+import { PostActionsBar } from '../../components';
+import { CourseTabsNavigation } from '../../components/NavigationBar';
 import { selectCourseTabs } from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
@@ -20,21 +22,17 @@ import { selectDiscussionProvider, selectEnableInContext } from '../data/selecto
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
 import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
 import messages from '../messages';
+import { LegacyBreadcrumbMenu, NavigationBar } from '../navigation';
 import { selectPostEditorVisible } from '../posts/data/selectors';
+import DiscussionsProductTour from '../tours/DiscussionsProductTour';
+import { postMessageToParent } from '../utils';
+import BlackoutInformationBanner from './BlackoutInformationBanner';
+import DiscussionContent from './DiscussionContent';
+import DiscussionSidebar from './DiscussionSidebar';
 import useFeedbackWrapper from './FeedbackWrapper';
+import InformationBanner from './InformationBanner';
 
-const Footer = lazy(() => import('@edx/frontend-component-footer'));
-const PostActionsBar = lazy(() => import('../posts/post-actions-bar/PostActionsBar'));
-const CourseTabsNavigation = lazy(() => import('../../components/NavigationBar/CourseTabsNavigation'));
-const LegacyBreadcrumbMenu = lazy(() => import('../navigation/breadcrumb-menu/LegacyBreadcrumbMenu'));
-const NavigationBar = lazy(() => import('../navigation/navigation-bar/NavigationBar'));
-const DiscussionsProductTour = lazy(() => import('../tours/DiscussionsProductTour'));
-const BlackoutInformationBanner = lazy(() => import('./BlackoutInformationBanner'));
-const DiscussionContent = lazy(() => import('./DiscussionContent'));
-const DiscussionSidebar = lazy(() => import('./DiscussionSidebar'));
-const InformationBanner = lazy(() => import('./InformationBanner'));
-
-const DiscussionsHome = () => {
+export default function DiscussionsHome() {
   const location = useLocation();
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(selectPostEditorVisible);
@@ -42,6 +40,7 @@ const DiscussionsHome = () => {
   const enableInContext = useSelector(selectEnableInContext);
   const { courseNumber, courseTitle, org } = useSelector(selectCourseTabs);
   const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
+  const { params: { path } } = useRouteMatch(`${Routes.DISCUSSIONS.PATH}/:path*`);
   const { params } = useRouteMatch(ALL_ROUTES);
   const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();
@@ -61,60 +60,54 @@ const DiscussionsHome = () => {
   const displayContentArea = (postId || postEditorVisible || (learnerUsername && postId));
   if (displayContentArea) { displaySidebar = isOnDesktop; }
 
+  useEffect(() => {
+    if (path && path !== 'undefined') {
+      postMessageToParent('discussions.navigate', { path });
+    }
+  }, [path]);
+
   return (
-    <Suspense fallback={(<Spinner />)}>
-      <DiscussionContext.Provider value={{
-        page,
-        courseId,
-        postId,
-        topicId,
-        enableInContextSidebar,
-        category,
-        learnerUsername,
-      }}
-      >
-        {!enableInContextSidebar && (
-          <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
-        )}
-        <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
-          {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+    <DiscussionContext.Provider value={{
+      page,
+      courseId,
+      postId,
+      topicId,
+      enableInContextSidebar,
+      category,
+      learnerUsername,
+    }}
+    >
+      {!enableInContextSidebar && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
+      <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
+        {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
+        <div
+          className={classNames('header-action-bar', {
+            'shadow-none border-light-300 border-bottom': enableInContextSidebar,
+          })}
+          ref={postActionBarRef}
+        >
           <div
-            className={classNames('header-action-bar', {
-              'shadow-none border-light-300 border-bottom': enableInContextSidebar,
+            className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
+              'pl-4 pr-3 py-0': enableInContextSidebar,
             })}
-            ref={postActionBarRef}
           >
-            <div
-              className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
-                'pl-4 pr-3 py-0': enableInContextSidebar,
-              })}
-            >
-              {!enableInContextSidebar && (
-                <NavigationBar />
-              )}
-              <PostActionsBar />
-            </div>
-            {isFeedbackBannerVisible && <InformationBanner />}
-            <BlackoutInformationBanner />
+            {!enableInContextSidebar && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
+            <PostActionsBar />
           </div>
-          {provider === DiscussionProvider.LEGACY && (
-          <Suspense fallback={(<Spinner />)}>
-            <Route
-              path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-              component={LegacyBreadcrumbMenu}
-            />
-          </Suspense>
-          )}
-          <div className="d-flex flex-row position-relative">
-            <Suspense fallback={(<Spinner />)}>
-              <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
-            </Suspense>
-            {displayContentArea && (
-              <Suspense fallback={(<Spinner />)}>
-                <DiscussionContent />
-              </Suspense>
-            )}
-            {!displayContentArea && (
+          {isFeedbackBannerVisible && <InformationBanner />}
+          <BlackoutInformationBanner />
+        </div>
+        {provider === DiscussionProvider.LEGACY && (
+          <Route
+            path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
+            component={LegacyBreadcrumbMenu}
+          />
+        )}
+
+        <div className="d-flex flex-row">
+          <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
+          {displayContentArea && <DiscussionContent />}
+          {!displayContentArea && (
             <Switch>
               <Route
                 path={Routes.TOPICS.PATH}
@@ -130,16 +123,11 @@ const DiscussionsHome = () => {
               />
               {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />}
             </Switch>
-            )}
-          </div>
-          {!enableInContextSidebar && (
-            <DiscussionsProductTour />
           )}
-        </main>
-        {!enableInContextSidebar && <Footer />}
-      </DiscussionContext.Provider>
-    </Suspense>
+        </div>
+        {!enableInContextSidebar && <DiscussionsProductTour />}
+      </main>
+      {!enableInContextSidebar && <Footer />}
+    </DiscussionContext.Provider>
   );
-};
-
-export default React.memo(DiscussionsHome);
+}

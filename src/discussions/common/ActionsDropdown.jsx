@@ -1,11 +1,9 @@
-import React, {
-  useCallback, useMemo, useRef, useState,
-} from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
   Button, Dropdown, Icon, IconButton, ModalPopup, useToggle,
@@ -15,22 +13,22 @@ import { MoreHoriz } from '@edx/paragon/icons';
 import { ContentActions } from '../../data/constants';
 import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
+import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
 
 function ActionsDropdown({
-  actionHandlers,
-  contentType,
+  intl,
+  commentOrPost,
   disabled,
-  dropDownIconSize,
+  actionHandlers,
   iconSize,
-  id,
+  dropDownIconSize,
 }) {
   const buttonRef = useRef();
-  const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const blackoutDateRange = useSelector(selectBlackoutDate);
-  const actions = useActions(contentType, id);
+  const actions = useActions(commentOrPost);
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
@@ -41,12 +39,11 @@ function ActionsDropdown({
     }
   }, [actionHandlers]);
 
+  const blackoutDateRange = useSelector(selectBlackoutDate);
   // Find and remove edit action if in blackout date range.
-  useMemo(() => {
-    if (inBlackoutDateRange(blackoutDateRange)) {
-      actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
-    }
-  }, [actions, blackoutDateRange]);
+  if (inBlackoutDateRange(blackoutDateRange)) {
+    actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
+  }
 
   const onClickButton = useCallback(() => {
     setTarget(buttonRef.current);
@@ -83,7 +80,9 @@ function ActionsDropdown({
           >
             {actions.map(action => (
               <React.Fragment key={action.id}>
-                {(action.action === ContentActions.DELETE) && <Dropdown.Divider />}
+                {(action.action === ContentActions.DELETE)
+                  && <Dropdown.Divider />}
+
                 <Dropdown.Item
                   as={Button}
                   variant="tertiary"
@@ -112,12 +111,12 @@ function ActionsDropdown({
 }
 
 ActionsDropdown.propTypes = {
-  id: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
+  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
   disabled: PropTypes.bool,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
-  contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
 };
 
 ActionsDropdown.defaultProps = {
@@ -126,4 +125,4 @@ ActionsDropdown.defaultProps = {
   dropDownIconSize: false,
 };
 
-export default ActionsDropdown;
+export default injectIntl(ActionsDropdown);

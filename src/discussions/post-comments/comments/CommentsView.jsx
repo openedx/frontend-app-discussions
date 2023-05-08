@@ -1,39 +1,36 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import { EndorsementStatus } from '../../../data/constants';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
-import { isLastElementOfList } from '../../utils';
+import { filterPosts, isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
-import { PostCommentsContext } from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
-const CommentsView = ({ endorsed }) => {
-  const intl = useIntl();
-  const [addingResponse, setAddingResponse] = useState(false);
-  const { isClosed } = useContext(PostCommentsContext);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+function CommentsView({
+  postType,
+  postId,
+  intl,
+  endorsed,
+  isClosed,
+}) {
   const {
-    endorsedCommentsIds,
-    unEndorsedCommentsIds,
+    comments,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
-  } = usePostComments(endorsed);
+  } = usePostComments(postId, endorsed);
 
-  const handleAddResponse = useCallback(() => {
-    setAddingResponse(true);
-  }, []);
+  const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
+  const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const [addingResponse, setAddingResponse] = useState(false);
 
-  const handleCloseResponseEditor = useCallback(() => {
-    setAddingResponse(false);
-  }, []);
-
-  const handleDefinition = useCallback((message, commentsLength) => (
+  const handleDefinition = (message, commentsLength) => (
     <div
       className="mx-4 my-14px text-gray-700 font-style"
       role="heading"
@@ -41,15 +38,17 @@ const CommentsView = ({ endorsed }) => {
     >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
-  ), []);
+  );
 
-  const handleComments = useCallback((postCommentsIds, showLoadMoreResponses = false) => (
+  const handleComments = (postComments, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
-      {postCommentsIds.map((commentId) => (
+      {postComments.map((comment) => (
         <Comment
-          commentId={commentId}
-          key={commentId}
-          marginBottom={isLastElementOfList(postCommentsIds, commentId)}
+          comment={comment}
+          key={comment.id}
+          postType={postType}
+          isClosedPost={isClosed}
+          marginBottom={isLastElementOfList(postComments, comment)}
         />
       ))}
       {hasMorePages && !isLoading && !showLoadMoreResponses && (
@@ -69,26 +68,26 @@ const CommentsView = ({ endorsed }) => {
         </div>
       )}
     </div>
-  ), [hasMorePages, isLoading, handleLoadMoreResponses]);
+  );
 
   return (
     <>
       {((hasMorePages && isLoading) || !isLoading) && (
         <>
-          {endorsedCommentsIds.length > 0 && (
+          {endorsedComments.length > 0 && (
             <>
-              {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
+              {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
               {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedCommentsIds, true)
-                : handleComments(endorsedCommentsIds, false)}
+                ? handleComments(endorsedComments, true)
+                : handleComments(endorsedComments, false)}
             </>
           )}
           {endorsed !== EndorsementStatus.ENDORSED && (
             <>
-              {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
-              {unEndorsedCommentsIds.length === 0 && <br />}
-              {handleComments(unEndorsedCommentsIds, false)}
-              {(userCanAddThreadInBlackoutDate && !!unEndorsedCommentsIds.length && !isClosed) && (
+              {handleDefinition(messages.responseCount, unEndorsedComments.length)}
+              {unEndorsedComments.length === 0 && <br />}
+              {handleComments(unEndorsedComments, false)}
+              {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
                     <Button
@@ -96,16 +95,17 @@ const CommentsView = ({ endorsed }) => {
                       block="true"
                       className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
                       line-height-24 font-size-14 text-primary-500"
-                      onClick={handleAddResponse}
+                      onClick={() => setAddingResponse(true)}
                       data-testid="add-response"
                     >
                       {intl.formatMessage(messages.addResponse)}
                     </Button>
                   )}
                   <ResponseEditor
+                    postId={postId}
+                    handleCloseEditor={() => setAddingResponse(false)}
                     addWrappingDiv
                     addingResponse={addingResponse}
-                    handleCloseEditor={handleCloseResponseEditor}
                   />
                 </div>
               )}
@@ -115,12 +115,16 @@ const CommentsView = ({ endorsed }) => {
       )}
     </>
   );
-};
+}
 
 CommentsView.propTypes = {
+  postId: PropTypes.string.isRequired,
+  postType: PropTypes.string.isRequired,
+  isClosed: PropTypes.bool.isRequired,
+  intl: intlShape.isRequired,
   endorsed: PropTypes.oneOf([
     EndorsementStatus.ENDORSED, EndorsementStatus.UNENDORSED, EndorsementStatus.DISCUSSION,
   ]).isRequired,
 };
 
-export default React.memo(CommentsView);
+export default injectIntl(CommentsView);

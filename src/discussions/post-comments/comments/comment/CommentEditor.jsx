@@ -1,11 +1,11 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
@@ -25,15 +25,12 @@ import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
 function CommentEditor({
+  intl,
   comment,
+  onCloseEditor,
   edit,
   formClasses,
-  onCloseEditor,
 }) {
-  const {
-    id, threadId, parentId, rawBody, author, lastEdit,
-  } = comment;
-  const intl = useIntl();
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -45,7 +42,7 @@ function CommentEditor({
 
   const canDisplayEditReason = (reasonCodesEnabled && edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
-    && author !== authenticatedUser.username
+    && comment?.author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -59,34 +56,34 @@ function CommentEditor({
   });
 
   const initialValues = {
-    comment: rawBody,
-    editReasonCode: lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
+    comment: comment.rawBody,
+    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
-  const handleCloseEditor = useCallback((resetForm) => {
+  const handleCloseEditor = (resetForm) => {
     resetForm({ values: initialValues });
     onCloseEditor();
-  }, [onCloseEditor, initialValues]);
+  };
 
-  const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
-    if (id) {
+  const saveUpdatedComment = async (values, { resetForm }) => {
+    if (comment.id) {
       const payload = {
         ...values,
         editReasonCode: values.editReasonCode || undefined,
       };
-      await dispatch(editComment(id, payload));
+      await dispatch(editComment(comment.id, payload));
     } else {
-      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
+      await dispatch(addComment(values.comment, comment.threadId, comment.parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
       editorRef.current.plugins.autosave.removeDraft();
     }
     handleCloseEditor(resetForm);
-  }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
+  };
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
-  const editorId = `comment-editor-${id || parentId || threadId}`;
+  const editorId = `comment-editor-${comment.id || comment.parentId || comment.threadId}`;
 
   return (
     <Formik
@@ -180,28 +177,22 @@ function CommentEditor({
 
 CommentEditor.propTypes = {
   comment: PropTypes.shape({
-    author: PropTypes.string,
     id: PropTypes.string,
-    lastEdit: PropTypes.object,
+    threadId: PropTypes.string.isRequired,
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
-    threadId: PropTypes.string.isRequired,
-  }),
+    author: PropTypes.string,
+    lastEdit: PropTypes.object,
+  }).isRequired,
+  onCloseEditor: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
-  onCloseEditor: PropTypes.func.isRequired,
 };
 
 CommentEditor.defaultProps = {
   edit: true,
-  comment: {
-    author: null,
-    id: null,
-    lastEdit: null,
-    parentId: null,
-    rawBody: '',
-  },
   formClasses: '',
 };
 
-export default React.memo(CommentEditor);
+export default injectIntl(CommentEditor);

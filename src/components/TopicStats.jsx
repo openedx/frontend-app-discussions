@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
@@ -14,16 +14,15 @@ import {
 } from '../discussions/data/selectors';
 import messages from '../discussions/in-context-topics/messages';
 
-const TopicStats = ({
+function TopicStats({
   threadCounts,
   activeFlags,
   inactiveFlags,
-}) => {
-  const intl = useIntl();
+  intl,
+}) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
-
   return (
     <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
       <OverlayTrigger
@@ -88,7 +87,7 @@ const TopicStats = ({
       )}
     </div>
   );
-};
+}
 
 TopicStats.propTypes = {
   threadCounts: PropTypes.shape({
@@ -97,6 +96,7 @@ TopicStats.propTypes = {
   }),
   activeFlags: PropTypes.number,
   inactiveFlags: PropTypes.number,
+  intl: intlShape.isRequired,
 };
 
 TopicStats.defaultProps = {
@@ -108,4 +108,4 @@ TopicStats.defaultProps = {
   inactiveFlags: null,
 };
 
-export default React.memo(TopicStats);
+export default injectIntl(TopicStats);

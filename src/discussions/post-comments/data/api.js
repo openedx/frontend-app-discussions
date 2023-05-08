@@ -27,7 +27,6 @@ export async function getThreadComments(
     pageSize,
     reverseOrder,
     enableInContextSidebar = false,
-    signal,
   } = {},
 ) {
   const params = snakeCaseObject({
@@ -41,7 +40,7 @@ export async function getThreadComments(
   });
 
   const { data } = await getAuthenticatedHttpClient()
-    .get(getCommentsApiUrl(), { params: { ...params, signal } });
+    .get(getCommentsApiUrl(), { params });
   return data;
 }
 

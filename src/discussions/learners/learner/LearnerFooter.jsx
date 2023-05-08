@@ -1,22 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { Edit, Report, ReportGmailerrorred } from '@edx/paragon/icons';
 
 import { QuestionAnswerOutline } from '../../../components/icons';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';
+import { learnerShape } from './proptypes';
 
-const LearnerFooter = ({
-  inactiveFlags, activeFlags, threads, responses, replies, username,
-}) => {
-  const intl = useIntl();
+function LearnerFooter({
+  learner,
+  intl,
+}) {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
+  const { inactiveFlags } = learner;
+  const { activeFlags } = learner;
   const canSeeLearnerReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
 
   return (
@@ -33,7 +35,7 @@ const LearnerFooter = ({
       >
         <div className="d-flex align-items-center">
           <Icon src={QuestionAnswerOutline} className="icon-size mr-2" />
-          {threads + responses + replies}
+          {learner.threads + learner.responses + learner.replies}
         </div>
       </OverlayTrigger>
       <OverlayTrigger
@@ -48,14 +50,14 @@ const LearnerFooter = ({
       >
         <div className="d-flex align-items-center">
           <Icon src={Edit} className="icon-size mr-2 ml-4" />
-          {threads}
+          {learner.threads}
         </div>
       </OverlayTrigger>
       {Boolean(canSeeLearnerReportedStats) && (
         <OverlayTrigger
           placement="right"
           overlay={(
-            <Tooltip id={`learner-${username}`}>
+            <Tooltip id={`learner-${learner.username}`}>
               <div className="d-flex flex-column align-items-start">
                 {Boolean(activeFlags)
                   && (
@@ -81,24 +83,11 @@ const LearnerFooter = ({
       )}
     </div>
   );
-};
+}
 
 LearnerFooter.propTypes = {
-  inactiveFlags: PropTypes.number,
-  activeFlags: PropTypes.number,
-  threads: PropTypes.number,
-  responses: PropTypes.number,
-  replies: PropTypes.number,
-  username: PropTypes.string,
+  intl: intlShape.isRequired,
+  learner: learnerShape.isRequired,
 };
 
-LearnerFooter.defaultProps = {
-  inactiveFlags: 0,
-  activeFlags: 0,
-  threads: 0,
-  responses: 0,
-  replies: 0,
-  username: '',
-};
-
-export default React.memo(LearnerFooter);
+export default injectIntl(LearnerFooter);

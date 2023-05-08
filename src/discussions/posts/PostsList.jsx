@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Spinner } from '@edx/paragon';
 
@@ -14,7 +14,7 @@ import { DiscussionContext } from '../common/context';
 import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import { fetchUserPosts } from '../learners/data/thunks';
 import messages from '../messages';
-import { usePostList } from './data/hooks';
+import { filterPosts } from '../utils';
 import {
   selectThreadFilters, selectThreadNextPage, selectThreadSorting, threadsLoadingStatus,
 } from './data/selectors';
@@ -22,24 +22,25 @@ import { fetchThreads } from './data/thunks';
 import NoResults from './NoResults';
 import { PostLink } from './post';
 
-const PostsList = ({
-  postsIds, topicsIds, isTopicTab, parentIsLoading,
-}) => {
-  const intl = useIntl();
+function PostsList({
+  posts, topics, intl, isTopicTab, parentIsLoading,
+}) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
-  const { courseId, page } = useContext(DiscussionContext);
+  const {
+    courseId,
+    page,
+  } = useContext(DiscussionContext);
   const loadingStatus = useSelector(threadsLoadingStatus());
+  const { authenticatedUser } = useContext(AppContext);
   const orderBy = useSelector(selectThreadSorting());
   const filters = useSelector(selectThreadFilters());
   const nextPage = useSelector(selectThreadNextPage());
+  const showOwnPosts = page === 'my-posts';
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const configStatus = useSelector(selectconfigLoadingStatus);
-  const sortedPostsIds = usePostList(postsIds);
-  const showOwnPosts = page === 'my-posts';
 
-  const loadThreads = useCallback((topicIds, pageNum = undefined, isFilterChanged = false) => {
+  const loadThreads = (topicIds, pageNum = undefined, isFilterChanged = false) => {
     const params = {
       orderBy,
       filters,
@@ -49,68 +50,75 @@ const PostsList = ({
       topicIds,
       isFilterChanged,
     };
-
     if (showOwnPosts && filters.search === '') {
       dispatch(fetchUserPosts(courseId, params));
     } else {
       dispatch(fetchThreads(courseId, params));
     }
-  }, [courseId, orderBy, filters, showOwnPosts, authenticatedUser.username, userHasModerationPrivileges, userIsStaff]);
+  };
 
   useEffect(() => {
-    if (topicsIds !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
-      loadThreads(topicsIds);
+    if (topics !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
+      loadThreads(topics);
     }
-  }, [courseId, filters, orderBy, page, JSON.stringify(topicsIds), configStatus]);
+  }, [courseId, filters, orderBy, page, JSON.stringify(topics), configStatus]);
 
   useEffect(() => {
-    if (isTopicTab) {
-      loadThreads(topicsIds, 1, true);
-    }
+    if (isTopicTab) { loadThreads(topics, 1, true); }
   }, [filters]);
 
-  const postInstances = useMemo(() => (
-    sortedPostsIds?.map((postId, idx) => (
+  const checkIsSelected = (id) => window.location.pathname.includes(id);
+  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
+  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
+
+  const postInstances = useCallback((sortedPosts) => (
+    sortedPosts.map((post, idx) => (
       <PostLink
-        postId={postId}
+        post={post}
+        key={post.id}
+        isSelected={checkIsSelected}
         idx={idx}
-        key={postId}
-        showDivider={(sortedPostsIds.length - 1) !== idx}
+        showDivider={(sortedPosts.length - 1) !== idx}
       />
     ))
-  ), [sortedPostsIds]);
+  ), []);
 
   return (
     <>
-      {!parentIsLoading && postInstances}
-      {sortedPostsIds?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
+      {!parentIsLoading && postInstances(pinnedPosts)}
+      {!parentIsLoading && postInstances(unpinnedPosts)}
+      {posts?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       {loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading ? (
         <div className="d-flex justify-content-center p-4 mx-auto my-auto">
           <Spinner animation="border" variant="primary" size="lg" />
         </div>
       ) : (
         nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
-          <Button onClick={() => loadThreads(topicsIds, nextPage)} variant="primary" size="md">
+          <Button onClick={() => loadThreads(topics, nextPage)} variant="primary" size="md">
             {intl.formatMessage(messages.loadMorePosts)}
           </Button>
         )
       )}
     </>
   );
-};
+}
 
 PostsList.propTypes = {
-  postsIds: PropTypes.arrayOf(PropTypes.string),
-  topicsIds: PropTypes.arrayOf(PropTypes.string),
+  posts: PropTypes.arrayOf(PropTypes.shape({
+    pinned: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+  })),
+  topics: PropTypes.arrayOf(PropTypes.string),
   isTopicTab: PropTypes.bool,
   parentIsLoading: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 
 PostsList.defaultProps = {
-  postsIds: [],
-  topicsIds: undefined,
+  posts: [],
+  topics: undefined,
   isTopicTab: false,
   parentIsLoading: undefined,
 };
 
-export default React.memo(PostsList);
+export default injectIntl(PostsList);

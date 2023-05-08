@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
@@ -17,12 +17,12 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
-const Topic = ({
+function Topic({
   topic,
   showDivider,
   index,
-}) => {
-  const intl = useIntl();
+  intl,
+}) {
   const { courseId } = useParams();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
@@ -70,7 +70,7 @@ const Topic = ({
       )}
     </>
   );
-};
+}
 
 export const topicShape = PropTypes.shape({
   id: PropTypes.string,
@@ -85,6 +85,7 @@ export const topicShape = PropTypes.shape({
 });
 
 Topic.propTypes = {
+  intl: intlShape.isRequired,
   topic: topicShape,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
@@ -98,4 +99,4 @@ Topic.defaultProps = {
   },
 };
 
-export default React.memo(Topic);
+export default injectIntl(Topic);

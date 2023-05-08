@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { fetchTab } from './data/thunks';
 import Tabs from './tabs/Tabs';
@@ -12,13 +12,12 @@ import messages from './messages';
 
 import './navBar.scss';
 
-const CourseTabsNavigation = ({
-  activeTab, className, courseId, rootSlug,
-}) => {
+function CourseTabsNavigation({
+  activeTab, className, intl, courseId, rootSlug,
+}) {
   const dispatch = useDispatch();
-  const intl = useIntl();
-  const tabs = useSelector(state => state.courseTabs.tabs);
 
+  const tabs = useSelector(state => state.courseTabs.tabs);
   useEffect(() => {
     dispatch(fetchTab(courseId, rootSlug));
   }, [courseId]);
@@ -26,7 +25,8 @@ const CourseTabsNavigation = ({
   return (
     <div id="courseTabsNavigation" className={classNames('course-tabs-navigation', className)}>
       <div className="container-xl">
-        {!!tabs.length && (
+        {!!tabs.length
+          && (
           <Tabs
             className="nav-underline-tabs"
             aria-label={intl.formatMessage(messages.courseMaterial)}
@@ -41,17 +41,18 @@ const CourseTabsNavigation = ({
               </a>
             ))}
           </Tabs>
-        )}
+          )}
       </div>
     </div>
   );
-};
+}
 
 CourseTabsNavigation.propTypes = {
   activeTab: PropTypes.string,
   className: PropTypes.string,
   rootSlug: PropTypes.string,
   courseId: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
 };
 
 CourseTabsNavigation.defaultProps = {
@@ -60,4 +61,4 @@ CourseTabsNavigation.defaultProps = {
   rootSlug: 'outline',
 };
 
-export default React.memo(CourseTabsNavigation);
+export default injectIntl(CourseTabsNavigation);

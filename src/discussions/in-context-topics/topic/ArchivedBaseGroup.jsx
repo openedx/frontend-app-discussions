@@ -1,27 +1,16 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import messages from '../messages';
 import Topic, { topicShape } from './Topic';
 
-const ArchivedBaseGroup = ({
+function ArchivedBaseGroup({
   archivedTopics,
   showDivider,
-}) => {
-  const intl = useIntl();
-
-  const renderArchivedTopics = useMemo(() => (
-    archivedTopics?.map((topic, index) => (
-      <Topic
-        key={topic.id}
-        topic={topic}
-        showDivider={(archivedTopics.length - 1) !== index}
-      />
-    ))
-  ), [archivedTopics]);
-
+  intl,
+}) {
   return (
     <>
       {showDivider && (
@@ -35,18 +24,25 @@ const ArchivedBaseGroup = ({
         data-testid="archived-group"
       >
         <div className="pt-3 px-4 font-weight-bold">{intl.formatMessage(messages.archivedTopics)}</div>
-        {renderArchivedTopics}
+        {archivedTopics?.map((topic, index) => (
+          <Topic
+            key={topic.id}
+            topic={topic}
+            showDivider={(archivedTopics.length - 1) !== index}
+          />
+        ))}
       </div>
     </>
   );
-};
+}
 
 ArchivedBaseGroup.propTypes = {
   archivedTopics: PropTypes.arrayOf(topicShape).isRequired,
   showDivider: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 
 ArchivedBaseGroup.defaultProps = {
   showDivider: false,
 };
-export default React.memo(ArchivedBaseGroup);
+export default injectIntl(ArchivedBaseGroup);

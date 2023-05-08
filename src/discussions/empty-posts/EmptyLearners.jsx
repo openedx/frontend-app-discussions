@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { useIsOnDesktop } from '../data/hooks';
 import messages from '../messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyLearners = () => {
-  const intl = useIntl();
+function EmptyLearners({ intl }) {
   const isOnDesktop = useIsOnDesktop();
 
   if (!isOnDesktop) {
@@ -17,6 +16,10 @@ const EmptyLearners = () => {
   return (
     <EmptyPage title={intl.formatMessage(messages.emptyTitle)} />
   );
+}
+
+EmptyLearners.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default EmptyLearners;
+export default injectIntl(EmptyLearners);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
@@ -12,32 +12,29 @@ import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
 import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import { commentShape } from '../post-comments/comments/comment/proptypes';
+import { postShape } from '../posts/post/proptypes';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
-const HoverCard = ({
-  id,
-  contentType,
+function HoverCard({
+  intl,
+  commentOrPost,
   actionHandlers,
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
   onLike,
   onFollow,
-  voted,
-  following,
+  isClosedPost,
   endorseIcons,
-}) => {
-  const intl = useIntl();
+}) {
   const { enableInContextSidebar } = useContext(DiscussionContext);
-  const { isClosed } = useContext(PostCommentsContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
-      data-testid={`hover-card-${id}`}
-      id={`hover-card-${id}`}
+      data-testid={`hover-card-${commentOrPost.id}`}
+      id={`hover-card-${commentOrPost.id}`}
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="d-flex">
@@ -46,7 +43,7 @@ const HoverCard = ({
             className={classNames('px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
               { 'w-100': enableInContextSidebar })}
             onClick={() => handleResponseCommentButton()}
-            disabled={isClosed}
+            disabled={isClosedPost}
             style={{ lineHeight: '20px' }}
           >
             {addResponseCommentButtonMessage}
@@ -79,7 +76,7 @@ const HoverCard = ({
       )}
       <div className="hover-button">
         <IconButton
-          src={voted ? ThumbUpFilled : ThumbUpOutline}
+          src={commentOrPost.voted ? ThumbUpFilled : ThumbUpOutline}
           iconAs={Icon}
           size="sm"
           alt="Like"
@@ -90,10 +87,10 @@ const HoverCard = ({
           }}
         />
       </div>
-      {following !== undefined && (
+      {commentOrPost.following !== undefined && (
         <div className="hover-button">
           <IconButton
-            src={following ? StarFilled : StarOutline}
+            src={commentOrPost.following ? StarFilled : StarOutline}
             iconAs={Icon}
             size="sm"
             alt="Follow"
@@ -106,34 +103,27 @@ const HoverCard = ({
         </div>
       )}
       <div className="hover-button ml-auto">
-        <ActionsDropdown
-          id={id}
-          contentType={contentType}
-          actionHandlers={actionHandlers}
-          dropDownIconSize
-        />
+        <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} dropDownIconSize />
       </div>
     </div>
   );
-};
+}
 
 HoverCard.propTypes = {
-  id: PropTypes.string.isRequired,
-  contentType: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
+  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,
-  addResponseCommentButtonMessage: PropTypes.string.isRequired,
   onLike: PropTypes.func.isRequired,
-  voted: PropTypes.bool.isRequired,
-  endorseIcons: PropTypes.objectOf(PropTypes.any),
   onFollow: PropTypes.func,
-  following: PropTypes.bool,
+  addResponseCommentButtonMessage: PropTypes.string.isRequired,
+  isClosedPost: PropTypes.bool.isRequired,
+  endorseIcons: PropTypes.objectOf(PropTypes.any),
 };
 
 HoverCard.defaultProps = {
   onFollow: () => null,
   endorseIcons: null,
-  following: undefined,
 };
 
-export default React.memo(HoverCard);
+export default injectIntl(HoverCard);
