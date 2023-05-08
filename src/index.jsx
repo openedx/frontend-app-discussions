@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
@@ -39,14 +40,31 @@ function onRenderCallback(
   console.log(`Interactions: ${interactions}`);
 }
 
+function enableProfiler() {
+  console.log('Enabling React Profiler');
+  if (
+    process.env.NODE_ENV === 'production'
+    && typeof window !== 'undefined'
+    && window.__REACT_DEVTOOLS_GLOBAL_HOOK__
+    && typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject === 'function'
+  ) {
+    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject({
+      onRender: onRenderCallback,
+    });
+  }
+}
+
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <Profiler id="app" onRender={onRenderCallback}>
+    <Profiler id="discussions" onRender={onRenderCallback}>
       <AppProvider store={store}>
         <DiscussionsHome />
       </AppProvider>
     </Profiler>,
     document.getElementById('root'),
+    () => {
+      enableProfiler();
+    },
   );
 });
 
