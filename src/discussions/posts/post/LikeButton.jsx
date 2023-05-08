@@ -17,8 +17,7 @@ const LikeButton = ({ count, onClick, voted }) => {
     if (onClick) {
       onClick();
     }
-    return false;
-  }, []);
+  }, [onClick]);
 
   return (
     <div className="d-flex align-items-center mr-36px text-primary-500">
