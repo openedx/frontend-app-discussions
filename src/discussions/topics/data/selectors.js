@@ -13,6 +13,10 @@ export const selectTopicsInCategory = (categoryId) => state => (
   state.topics.topicsInCategory[categoryId]?.map(id => state.topics.topics[id]) || []
 );
 
+export const selectTopicsInCategoryIds = (categoryId) => state => (
+  state.topics.topicsInCategory[categoryId] || []
+);
+
 export const selectTopics = state => state.topics.topics;
 export const selectCoursewareTopics = createSelector(
   selectCategories,

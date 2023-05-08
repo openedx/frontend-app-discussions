@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPanel({
-  htmlNode, intl, isPost, editExisting,
-}) {
+const PostPreviewPanel = ({
+  htmlNode, isPost, editExisting,
+}) => {
+  const intl = useIntl();
   const [showPreviewPane, setShowPreviewPane] = useState(false);
 
   return (
@@ -30,13 +31,15 @@ function PostPreviewPanel({
             iconClassNames="icon-size"
             data-testid="hide-preview-button"
           />
-          <HTMLLoader
-            htmlNode={htmlNode}
-            cssClassName="text-primary"
-            componentId="post-preview"
-            testId="post-preview"
-            delay={500}
-          />
+          {htmlNode && (
+            <HTMLLoader
+              htmlNode={htmlNode}
+              cssClassName="text-primary"
+              componentId="post-preview"
+              testId="post-preview"
+              delay={500}
+            />
+          )}
         </div>
       )}
       <div className="d-flex justify-content-end">
@@ -55,18 +58,18 @@ function PostPreviewPanel({
       </div>
     </>
   );
-}
+};
 
 PostPreviewPanel.propTypes = {
-  intl: intlShape.isRequired,
-  htmlNode: PropTypes.node.isRequired,
+  htmlNode: PropTypes.node,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
 };
 
 PostPreviewPanel.defaultProps = {
+  htmlNode: '',
   isPost: false,
   editExisting: false,
 };
 
-export default injectIntl(PostPreviewPanel);
+export default React.memo(PostPreviewPanel);

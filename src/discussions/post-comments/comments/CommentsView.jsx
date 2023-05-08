@@ -1,36 +1,39 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import { EndorsementStatus } from '../../../data/constants';
 import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
-import { filterPosts, isLastElementOfList } from '../../utils';
+import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
+import { PostCommentsContext } from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
-function CommentsView({
-  postType,
-  postId,
-  intl,
-  endorsed,
-  isClosed,
-}) {
+const CommentsView = ({ endorsed }) => {
+  const intl = useIntl();
+  const [addingResponse, setAddingResponse] = useState(false);
+  const { isClosed } = useContext(PostCommentsContext);
+  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const {
-    comments,
+    endorsedCommentsIds,
+    unEndorsedCommentsIds,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
-  } = usePostComments(postId, endorsed);
+  } = usePostComments(endorsed);
 
-  const endorsedComments = useMemo(() => [...filterPosts(comments, 'endorsed')], [comments]);
-  const unEndorsedComments = useMemo(() => [...filterPosts(comments, 'unendorsed')], [comments]);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
-  const [addingResponse, setAddingResponse] = useState(false);
+  const handleAddResponse = useCallback(() => {
+    setAddingResponse(true);
+  }, []);
 
-  const handleDefinition = (message, commentsLength) => (
+  const handleCloseResponseEditor = useCallback(() => {
+    setAddingResponse(false);
+  }, []);
+
+  const handleDefinition = useCallback((message, commentsLength) => (
     <div
       className="mx-4 my-14px text-gray-700 font-style"
       role="heading"
@@ -38,17 +41,15 @@ function CommentsView({
     >
       {intl.formatMessage(message, { num: commentsLength })}
     </div>
-  );
+  ), []);
 
-  const handleComments = (postComments, showLoadMoreResponses = false) => (
+  const handleComments = useCallback((postCommentsIds, showLoadMoreResponses = false) => (
     <div className="mx-4" role="list">
-      {postComments.map((comment) => (
+      {postCommentsIds.map((commentId) => (
         <Comment
-          comment={comment}
-          key={comment.id}
-          postType={postType}
-          isClosedPost={isClosed}
-          marginBottom={isLastElementOfList(postComments, comment)}
+          commentId={commentId}
+          key={commentId}
+          marginBottom={isLastElementOfList(postCommentsIds, commentId)}
         />
       ))}
       {hasMorePages && !isLoading && !showLoadMoreResponses && (
@@ -68,26 +69,26 @@ function CommentsView({
         </div>
       )}
     </div>
-  );
+  ), [hasMorePages, isLoading, handleLoadMoreResponses]);
 
   return (
     <>
       {((hasMorePages && isLoading) || !isLoading) && (
         <>
-          {endorsedComments.length > 0 && (
+          {endorsedCommentsIds.length > 0 && (
             <>
-              {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
+              {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
               {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, true)
-                : handleComments(endorsedComments, false)}
+                ? handleComments(endorsedCommentsIds, true)
+                : handleComments(endorsedCommentsIds, false)}
             </>
           )}
           {endorsed !== EndorsementStatus.ENDORSED && (
             <>
-              {handleDefinition(messages.responseCount, unEndorsedComments.length)}
-              {unEndorsedComments.length === 0 && <br />}
-              {handleComments(unEndorsedComments, false)}
-              {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
+              {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
+              {unEndorsedCommentsIds.length === 0 && <br />}
+              {handleComments(unEndorsedCommentsIds, false)}
+              {(userCanAddThreadInBlackoutDate && !!unEndorsedCommentsIds.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
                     <Button
@@ -95,17 +96,16 @@ function CommentsView({
                       block="true"
                       className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
                       line-height-24 font-size-14 text-primary-500"
-                      onClick={() => setAddingResponse(true)}
+                      onClick={handleAddResponse}
                       data-testid="add-response"
                     >
                       {intl.formatMessage(messages.addResponse)}
                     </Button>
                   )}
                   <ResponseEditor
-                    postId={postId}
-                    handleCloseEditor={() => setAddingResponse(false)}
                     addWrappingDiv
                     addingResponse={addingResponse}
+                    handleCloseEditor={handleCloseResponseEditor}
                   />
                 </div>
               )}
@@ -115,16 +115,12 @@ function CommentsView({
       )}
     </>
   );
-}
+};
 
 CommentsView.propTypes = {
-  postId: PropTypes.string.isRequired,
-  postType: PropTypes.string.isRequired,
-  isClosed: PropTypes.bool.isRequired,
-  intl: intlShape.isRequired,
   endorsed: PropTypes.oneOf([
     EndorsementStatus.ENDORSED, EndorsementStatus.UNENDORSED, EndorsementStatus.DISCUSSION,
   ]).isRequired,
 };
 
-export default injectIntl(CommentsView);
+export default React.memo(CommentsView);

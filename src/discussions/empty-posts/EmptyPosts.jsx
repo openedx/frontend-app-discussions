@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { useIsOnDesktop } from '../data/hooks';
 import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';
@@ -11,16 +11,16 @@ import messages from '../messages';
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyPosts({ intl, subTitleMessage }) {
+const EmptyPosts = ({ subTitleMessage }) => {
+  const intl = useIntl();
   const dispatch = useDispatch();
-
+  const isOnDesktop = useIsOnDesktop();
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
-  const isOnDesktop = useIsOnDesktop();
 
-  function addPost() {
-    return dispatch(showPostEditor());
-  }
+  const addPost = useCallback(() => (
+    dispatch(showPostEditor())
+  ), []);
 
   let title = messages.noPostSelected;
   let subTitle = null;
@@ -49,7 +49,7 @@ function EmptyPosts({ intl, subTitleMessage }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyPosts.propTypes = {
   subTitleMessage: propTypes.shape({
@@ -57,7 +57,6 @@ EmptyPosts.propTypes = {
     defaultMessage: propTypes.string,
     description: propTypes.string,
   }).isRequired,
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(EmptyPosts);
+export default React.memo(EmptyPosts);

@@ -1,6 +1,8 @@
-/* eslint-disable import/prefer-default-export */
+import { useCallback, useContext, useMemo } from 'react';
+
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
+import { useSelector } from 'react-redux';
 import { generatePath, useRouteMatch } from 'react-router';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -10,6 +12,8 @@ import {
 
 import { InsertLink } from '../components/icons';
 import { ContentActions, Routes, ThreadType } from '../data/constants';
+import { ContentSelectors } from './data/constants';
+import { PostCommentsContext } from './post-comments/postCommentsContext';
 import messages from './messages';
 
 /**
@@ -175,20 +179,26 @@ export const ACTIONS_LIST = [
   },
 ];
 
-export function useActions(content) {
-  const checkConditions = (item, conditions) => (
+export function useActions(contentType, id) {
+  const postType = useContext(PostCommentsContext);
+  const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
+
+  const checkConditions = useCallback((item, conditions) => (
     conditions
       ? Object.keys(conditions)
         .map(key => item[key] === conditions[key])
         .every(condition => condition === true)
       : true
-  );
-  return ACTIONS_LIST.filter(
+  ), []);
+
+  const actions = useMemo(() => ACTIONS_LIST.filter(
     ({
       action,
       conditions = null,
     }) => checkPermissions(content, action) && checkConditions(content, conditions),
-  );
+  ), [content]);
+
+  return actions;
 }
 
 export const formikCompatibleHandler = (formikHandler, name) => (value) => formikHandler({
