@@ -1,8 +1,7 @@
-/* eslint-disable no-underscore-dangle */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React, { Profiler } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { messages as footerMessages } from '@edx/frontend-component-footer';
@@ -21,51 +20,12 @@ import store from './store';
 import './assets/favicon.ico';
 import './index.scss';
 
-function onRenderCallback(
-  id, // the "id" prop of the Profiler tree that has just committed
-  phase, // either "mount" (if the tree just mounted) or "update" (if it re-rendered)
-  actualDuration, // time spent rendering the committed update
-  baseDuration, // estimated time to render the entire subtree without memoization
-  startTime, // when React began rendering this update
-  commitTime, // when React committed this update
-  interactions, // the Set of interactions belonging to this update
-) {
-  // Aggregate or log render timings...
-  console.log(`Profiler ID: ${id}`);
-  console.log(`Phase: ${phase}`);
-  console.log(`Actual duration: ${actualDuration}`);
-  console.log(`Base duration: ${baseDuration}`);
-  console.log(`Start time: ${startTime}`);
-  console.log(`Commit time: ${commitTime}`);
-  console.log(`Interactions: ${interactions}`);
-}
-
-function enableProfiler() {
-  console.log('Enabling React Profiler');
-  console.log('React versoion: ', React.version);
-  if (
-    process.env.NODE_ENV === 'production'
-    && typeof window !== 'undefined'
-    && window.__REACT_DEVTOOLS_GLOBAL_HOOK__
-    && typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject === 'function'
-  ) {
-    window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject({
-      onRender: onRenderCallback,
-    });
-  }
-}
-
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <Profiler id="discussions" onRender={onRenderCallback}>
-      <AppProvider store={store}>
-        <DiscussionsHome />
-      </AppProvider>
-    </Profiler>,
+    <AppProvider store={store}>
+      <DiscussionsHome />
+    </AppProvider>,
     document.getElementById('root'),
-    () => {
-      enableProfiler();
-    },
   );
 });
 
