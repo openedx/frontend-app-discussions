@@ -1,17 +1,15 @@
-import React, {
-  useCallback, useContext, useEffect, useMemo,
-} from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Spinner } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
-import { selectTopicThreadsIds } from '../posts/data/selectors';
+import { selectTopicThreads } from '../posts/data/selectors';
 import PostsList from '../posts/PostsList';
 import { discussionsPath, handleKeyDown } from '../utils';
 import {
@@ -23,40 +21,31 @@ import { BackButton, NoResults } from './components';
 import messages from './messages';
 import { Topic } from './topic';
 
-const TopicPostsView = () => {
-  const intl = useIntl();
+function TopicPostsView({ intl }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { courseId, topicId, category } = useContext(DiscussionContext);
   const provider = useSelector(selectDiscussionProvider);
   const topicsStatus = useSelector(selectLoadingStatus);
-  const postsIds = useSelector(selectTopicThreadsIds([topicId]));
+  const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
+  const posts = useSelector(selectTopicThreads([topicId]));
   const selectedSubsectionUnits = useSelector(selectSubsectionUnits(category));
   const selectedSubsection = useSelector(selectSubsection(category));
-  const units = useSelector(selectUnits);
-  const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
+  const selectedUnit = useSelector(selectUnits)?.find(unit => unit.id === topicId);
+  const selectedNonCoursewareTopic = useSelector(selectNonCoursewareTopics)?.find(topic => topic.id === topicId);
   const selectedArchivedTopic = useSelector(selectArchivedTopic(topicId));
-  const topicsInProgress = topicsStatus === RequestStatus.IN_PROGRESS;
-
-  const selectedUnit = useMemo(() => (
-    units?.find(unit => unit.id === topicId)
-  ), [units, topicId]);
-
-  const selectedNonCoursewareTopic = useMemo(() => (
-    nonCoursewareTopics?.find(topic => topic.id === topicId)
-  ), [nonCoursewareTopics, topicId]);
-
-  const backButtonPath = useCallback(() => {
-    const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
-    const params = selectedUnit ? { courseId, category: selectedUnit?.parentId } : { courseId };
-    return discussionsPath(path, params)(location);
-  }, [selectedUnit]);
 
   useEffect(() => {
     if (provider && topicsStatus === RequestStatus.IDLE) {
       dispatch(fetchCourseTopicsV3(courseId));
     }
   }, [provider]);
+
+  const backButtonPath = () => {
+    const path = selectedUnit ? Routes.TOPICS.CATEGORY : Routes.TOPICS.ALL;
+    const params = selectedUnit ? { courseId, category: selectedUnit?.parentId } : { courseId };
+    return discussionsPath(path, params)(location);
+  };
 
   return (
     <div className="discussion-posts d-flex flex-column h-100">
@@ -78,8 +67,8 @@ const TopicPostsView = () => {
       <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
         {topicId ? (
           <PostsList
-            postsIds={postsIds}
-            topicsIds={[topicId]}
+            posts={posts}
+            topics={[topicId]}
             parentIsLoading={topicsInProgress}
           />
         ) : (
@@ -101,6 +90,10 @@ const TopicPostsView = () => {
       </div>
     </div>
   );
+}
+
+TopicPostsView.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default React.memo(TopicPostsView);
+export default injectIntl(TopicPostsView);

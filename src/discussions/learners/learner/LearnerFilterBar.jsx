@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Collapsible, Form, Icon } from '@edx/paragon';
 import { Check, Tune } from '@edx/paragon/icons';
 
@@ -15,7 +15,7 @@ import { setSortedBy } from '../data';
 import { selectLearnerSorting } from '../data/selectors';
 import messages from '../messages';
 
-const ActionItem = React.memo(({
+const ActionItem = ({
   id,
   label,
   value,
@@ -38,7 +38,7 @@ const ActionItem = React.memo(({
       {label}
     </span>
   </label>
-));
+);
 
 ActionItem.propTypes = {
   id: PropTypes.string.isRequired,
@@ -47,15 +47,16 @@ ActionItem.propTypes = {
   selected: PropTypes.string.isRequired,
 };
 
-const LearnerFilterBar = () => {
-  const intl = useIntl();
+function LearnerFilterBar({
+  intl,
+}) {
   const dispatch = useDispatch();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const currentSorting = useSelector(selectLearnerSorting());
   const [isOpen, setOpen] = useState(false);
 
-  const handleSortFilterChange = useCallback((event) => {
+  const handleSortFilterChange = (event) => {
     const { name, value } = event.currentTarget;
 
     if (name === 'sort') {
@@ -67,16 +68,12 @@ const LearnerFilterBar = () => {
         },
       );
     }
-  }, []);
-
-  const handleOnToggle = useCallback(() => {
-    setOpen(!isOpen);
-  }, [isOpen]);
+  };
 
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={handleOnToggle}
+      onToggle={() => setOpen(!isOpen)}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
@@ -127,6 +124,10 @@ const LearnerFilterBar = () => {
       </Collapsible.Body>
     </Collapsible.Advanced>
   );
+}
+
+LearnerFilterBar.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default LearnerFilterBar;
+export default injectIntl(LearnerFilterBar);

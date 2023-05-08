@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
 import messages from '../messages';
 
 function Confirmation({
+  intl,
   isOpen,
   title,
   description,
@@ -16,8 +17,6 @@ function Confirmation({
   confirmButtonVariant,
   confirmButtonText,
 }) {
-  const intl = useIntl();
-
   return (
     <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
       <ModalDialog.Header>
@@ -43,6 +42,7 @@ function Confirmation({
 }
 
 Confirmation.propTypes = {
+  intl: intlShape.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   comfirmAction: PropTypes.func.isRequired,
@@ -59,4 +59,4 @@ Confirmation.defaultProps = {
   confirmButtonText: '',
 };
 
-export default React.memo(Confirmation);
+export default injectIntl(Confirmation);

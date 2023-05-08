@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Dropdown, ModalPopup, useToggle,
 } from '@edx/paragon';
@@ -13,17 +13,15 @@ import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
 
-const CommentSortDropdown = () => {
-  const intl = useIntl();
+function CommentSortDropdown({ intl }) {
   const dispatch = useDispatch();
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-
-  const handleActions = useCallback((reverseOrder) => {
+  const handleActions = (reverseOrder) => {
     close();
     dispatch(setCommentSortOrder(reverseOrder));
-  }, []);
+  };
 
   const enableCommentsSortTour = useCallback((enabled) => {
     const data = {
@@ -96,6 +94,11 @@ const CommentSortDropdown = () => {
       </div>
     </>
   );
+}
+
+CommentSortDropdown.propTypes = {
+  intl: intlShape.isRequired,
+
 };
 
-export default CommentSortDropdown;
+export default injectIntl(CommentSortDropdown);

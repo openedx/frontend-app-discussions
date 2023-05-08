@@ -1,9 +1,8 @@
 /* eslint-disable react/no-unknown-property */
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -15,45 +14,37 @@ import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/c
 import AuthorLabel from '../../common/AuthorLabel';
 import { DiscussionContext } from '../../common/context';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
-import { selectThread } from '../data/selectors';
 import messages from './messages';
 import { PostAvatar } from './PostHeader';
 import PostSummaryFooter from './PostSummaryFooter';
+import { postShape } from './proptypes';
 
-const PostLink = ({
-  idx,
-  postId,
+function PostLink({
+  post,
+  isSelected,
   showDivider,
-}) => {
+  idx,
+}) {
   const intl = useIntl();
   const {
-    courseId,
-    postId: selectedPostId,
     page,
+    postId,
     enableInContextSidebar,
     category,
     learnerUsername,
   } = useContext(DiscussionContext);
-  const {
-    topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
-    unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
-  } = useSelector(selectThread(postId));
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
-    courseId,
-    topicId,
-    postId,
+    courseId: post.courseId,
+    topicId: post.topicId,
+    postId: post.id,
     category,
     learnerUsername,
   });
-  const showAnsweredBadge = hasEndorsed && type === ThreadType.QUESTION;
-  const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
-  const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;
-  const isPostRead = read || (!read && commentCount !== unreadCommentCount);
-
-  const checkIsSelected = useMemo(() => (
-    window.location.pathname.includes(postId)),
-  [window.location.pathname]);
+  const showAnsweredBadge = post.hasEndorsed && post.type === ThreadType.QUESTION;
+  const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
+  const canSeeReportedBadge = post.abuseFlagged || post.abuseFlaggedCount;
+  const read = post.read || (!post.read && post.commentCount !== post.unreadCommentCount);
 
   return (
     <>
@@ -64,24 +55,19 @@ const PostLink = ({
           })
         }
         to={linkUrl}
-        aria-current={checkIsSelected ? 'page' : undefined}
+        onClick={() => isSelected(post.id)}
+        aria-current={isSelected(post.id) ? 'page' : undefined}
         role="option"
-        tabIndex={(checkIsSelected || idx === 0) ? 0 : -1}
+        tabIndex={(isSelected(post.id) || idx === 0) ? 0 : -1}
       >
         <div
           className={
             classNames('d-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
-              { 'bg-light-300': isPostRead },
-              { 'post-summary-card-selected': id === selectedPostId })
+              { 'bg-light-300': read },
+              { 'post-summary-card-selected': post.id === postId })
           }
         >
-          <PostAvatar
-            postType={type}
-            author={author}
-            authorLabel={authorLabel}
-            fromPostLink
-            read={isPostRead}
-          />
+          <PostAvatar post={post} authorLabel={post.authorLabel} fromPostLink read={read} />
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
             <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
               <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
@@ -92,14 +78,14 @@ const PostLink = ({
                         { 'font-weight-bolder': !read })
                     }
                   >
-                    {title}
+                    {post.title}
                   </span>
                   <span class="align-bottom"> </span>
                   <span
                     class="text-gray-700 font-weight-normal font-size-14 font-style align-bottom"
                   >
-                    {isPostPreviewAvailable(previewBody)
-                      ? previewBody
+                    {isPostPreviewAvailable(post.previewBody)
+                      ? post.previewBody
                       : intl.formatMessage(messages.postWithoutPreview)}
                   </span>
                 </Truncate>
@@ -108,6 +94,7 @@ const PostLink = ({
                     <span className="sr-only">{' '}answered</span>
                   </Icon>
                 )}
+
                 {canSeeReportedBadge && (
                   <Badge
                     variant="danger"
@@ -118,7 +105,8 @@ const PostLink = ({
                     <span className="sr-only">{' '}reported</span>
                   </Badge>
                 )}
-                {pinned && (
+
+                {post.pinned && (
                   <Icon
                     src={PushPin}
                     className={`post-summary-icons-dimensions text-gray-700
@@ -128,40 +116,29 @@ const PostLink = ({
               </div>
             </div>
             <AuthorLabel
-              author={author || intl.formatMessage(messages.anonymous)}
-              authorLabel={authorLabel}
+              author={post.author || intl.formatMessage(messages.anonymous)}
+              authorLabel={post.authorLabel}
               labelColor={authorLabelColor && `text-${authorLabelColor}`}
             />
-            <PostSummaryFooter
-              postId={id}
-              voted={voted}
-              voteCount={voteCount}
-              following={following}
-              commentCount={commentCount}
-              unreadCommentCount={unreadCommentCount}
-              groupId={groupId}
-              groupName={groupName}
-              createdAt={createdAt}
-              preview
-              showNewCountLabel={isPostRead}
-            />
+            <PostSummaryFooter post={post} preview showNewCountLabel={read} />
           </div>
         </div>
-        {!showDivider && pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
+        {!showDivider && post.pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
       </Link>
     </>
   );
-};
+}
 
 PostLink.propTypes = {
-  idx: PropTypes.number,
-  postId: PropTypes.string.isRequired,
+  post: postShape.isRequired,
+  isSelected: PropTypes.func.isRequired,
   showDivider: PropTypes.bool,
+  idx: PropTypes.number,
 };
 
 PostLink.defaultProps = {
-  idx: -1,
   showDivider: true,
+  idx: -1,
 };
 
-export default React.memo(PostLink);
+export default PostLink;

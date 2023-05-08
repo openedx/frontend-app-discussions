@@ -1,9 +1,9 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton,
 } from '@edx/paragon';
@@ -21,21 +21,18 @@ import messages from './messages';
 
 import './actionBar.scss';
 
-const PostActionsBar = () => {
-  const intl = useIntl();
+function PostActionsBar({
+  intl,
+}) {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
-  const handleCloseInContext = useCallback(() => {
+  const handleCloseInContext = () => {
     postMessageToParent('learning.events.sidebar.close');
-  }, []);
-
-  const handleAddPost = useCallback(() => {
-    dispatch(showPostEditor());
-  }, []);
+  };
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
@@ -56,7 +53,7 @@ const PostActionsBar = () => {
             variant={enableInContextSidebar ? 'plain' : 'brand'}
             className={classNames('my-0 font-style border-0 line-height-24',
               { 'px-3 py-10px border-0': enableInContextSidebar })}
-            onClick={handleAddPost}
+            onClick={() => dispatch(showPostEditor())}
             size={enableInContextSidebar ? 'md' : 'sm'}
           >
             {intl.formatMessage(messages.addAPost)}
@@ -80,6 +77,10 @@ const PostActionsBar = () => {
       )}
     </div>
   );
+}
+
+PostActionsBar.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default PostActionsBar;
+export default injectIntl(PostActionsBar);

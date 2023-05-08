@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Redirect, useLocation, useParams,
 } from 'react-router';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
@@ -24,8 +24,7 @@ import { fetchLearners } from './data/thunks';
 import { LearnerCard, LearnerFilterBar } from './learner';
 import messages from './messages';
 
-const LearnersView = () => {
-  const intl = useIntl();
+function LearnersView({ intl }) {
   const { courseId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -47,7 +46,7 @@ const LearnersView = () => {
     }
   }, [courseId, orderBy, learnersTabEnabled, usernameSearch]);
 
-  const loadPage = useCallback(async () => {
+  const loadPage = async () => {
     if (nextPage) {
       dispatch(fetchLearners(courseId, {
         orderBy,
@@ -55,19 +54,7 @@ const LearnersView = () => {
         usernameSearch,
       }));
     }
-  }, [courseId, orderBy, nextPage, usernameSearch]);
-
-  const handleOnClear = useCallback(() => {
-    dispatch(setUsernameSearch(''));
-  }, []);
-
-  const renderLearnersList = useMemo(() => (
-    (
-      courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learnersTabEnabled && learners.map((learner) => (
-        <LearnerCard learner={learner} key={learner.username} />
-      ))
-    ) || <></>
-  ), [courseConfigLoadingStatus, learnersTabEnabled, learners]);
+  };
 
   return (
     <div className="d-flex flex-column border-right border-light-400">
@@ -78,7 +65,7 @@ const LearnersView = () => {
           text={usernameSearch}
           count={learners.length}
           loadingStatus={loadingStatus}
-          onClear={handleOnClear}
+          onClear={() => dispatch(setUsernameSearch(''))}
         />
       )}
       <div className="list-group list-group-flush learner" role="list">
@@ -90,7 +77,12 @@ const LearnersView = () => {
           }}
         />
         )}
-        {renderLearnersList}
+        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL
+          && learnersTabEnabled
+          && learners.map((learner, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <LearnerCard learner={learner} key={index} courseId={courseId} />
+          ))}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
@@ -106,6 +98,10 @@ const LearnersView = () => {
       </div>
     </div>
   );
+}
+
+LearnersView.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default LearnersView;
+export default injectIntl(LearnersView);

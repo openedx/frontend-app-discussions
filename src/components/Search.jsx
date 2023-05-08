@@ -1,11 +1,9 @@
-import React, {
-  useCallback, useContext, useEffect, useState,
-} from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
@@ -15,8 +13,7 @@ import { setSearchQuery } from '../discussions/posts/data';
 import postsMessages from '../discussions/posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../discussions/topics/data/slices';
 
-const Search = () => {
-  const intl = useIntl();
+function Search({ intl }) {
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
   const postSearch = useSelector(({ threads }) => threads.filters.search);
@@ -24,9 +21,8 @@ const Search = () => {
   const learnerSearch = useSelector(({ learners }) => learners.usernameSearch);
   const isPostSearch = ['posts', 'my-posts'].includes(page);
   const isTopicSearch = 'topics'.includes(page);
-  const [searchValue, setSearchValue] = useState('');
+  let searchValue = '';
   let currentValue = '';
-
   if (isPostSearch) {
     currentValue = postSearch;
   } else if (isTopicSearch) {
@@ -35,21 +31,20 @@ const Search = () => {
     currentValue = learnerSearch;
   }
 
-  const onClear = useCallback(() => {
+  const onClear = () => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
     dispatch(setUsernameSearch(''));
-  }, []);
+  };
 
-  const onChange = useCallback((query) => {
-    setSearchValue(query);
-  }, []);
+  const onChange = (query) => {
+    searchValue = query;
+  };
 
-  const onSubmit = useCallback((query) => {
+  const onSubmit = (query) => {
     if (query === '') {
       return;
     }
-
     if (isPostSearch) {
       dispatch(setSearchQuery(query));
     } else if (page === 'topics') {
@@ -57,36 +52,36 @@ const Search = () => {
     } else if (page === 'learners') {
       dispatch(setUsernameSearch(query));
     }
-  }, [page, searchValue]);
-
-  const handleIconClick = useCallback((e) => {
-    e.preventDefault();
-    onSubmit(searchValue);
-  }, [searchValue]);
+  };
 
   useEffect(() => onClear(), [page]);
-
   return (
-    <SearchField.Advanced
-      onClear={onClear}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      value={currentValue}
-    >
-      <SearchField.Label />
-      <SearchField.Input
-        style={{ paddingRight: '1rem' }}
-        placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
-      />
-      <span className="py-auto px-2.5 pointer-cursor-hover">
-        <Icon
-          src={SearchIcon}
-          onClick={handleIconClick}
-          data-testid="search-icon"
+    <>
+      <SearchField.Advanced
+        onClear={onClear}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        value={currentValue}
+      >
+        <SearchField.Label />
+        <SearchField.Input
+          style={{ paddingRight: '1rem' }}
+          placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
         />
-      </span>
-    </SearchField.Advanced>
+        <span className="mt-auto mb-auto mr-2.5 pointer-cursor-hover">
+          <Icon
+            src={SearchIcon}
+            onClick={() => onSubmit(searchValue)}
+            data-testid="search-icon"
+          />
+        </span>
+      </SearchField.Advanced>
+    </>
   );
+}
+
+Search.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default React.memo(Search);
+export default injectIntl(Search);

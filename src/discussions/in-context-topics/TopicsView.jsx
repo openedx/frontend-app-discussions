@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useContext, useEffect, useMemo,
-} from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import classNames from 'classnames';
 import isEmpty from 'lodash/isEmpty';
@@ -23,38 +21,30 @@ import { setFilter } from './data/slices';
 import { fetchCourseTopicsV3 } from './data/thunks';
 import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
-const TopicsList = () => {
+function TopicsList() {
   const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const archivedTopics = useSelector(selectArchivedTopics);
 
-  const renderNonCoursewareTopics = useMemo(() => (
-    nonCoursewareTopics?.map((topic, index) => (
-      <Topic
-        key={topic.id}
-        topic={topic}
-        showDivider={(nonCoursewareTopics.length - 1) !== index}
-      />
-    ))
-  ), [nonCoursewareTopics]);
-
-  const renderCoursewareTopics = useMemo(() => (
-    coursewareTopics?.map((topic, index) => (
-      <SectionBaseGroup
-        key={topic.id}
-        section={topic?.children}
-        sectionId={topic.id}
-        sectionTitle={topic.displayName}
-        showDivider={(coursewareTopics.length - 1) !== index}
-      />
-    ))
-  ), [coursewareTopics]);
-
   return (
     <>
-      {renderNonCoursewareTopics}
-      {renderCoursewareTopics}
+      {nonCoursewareTopics?.map((topic, index) => (
+        <Topic
+          key={topic.id}
+          topic={topic}
+          showDivider={(nonCoursewareTopics.length - 1) !== index}
+        />
+      ))}
+      {coursewareTopics?.map((topic, index) => (
+        <SectionBaseGroup
+          key={topic.id}
+          section={topic?.children}
+          sectionId={topic.id}
+          sectionTitle={topic.displayName}
+          showDivider={(coursewareTopics.length - 1) !== index}
+        />
+      ))}
       {!isEmpty(archivedTopics) && (
         <ArchivedBaseGroup
           archivedTopics={archivedTopics}
@@ -68,9 +58,9 @@ const TopicsList = () => {
       )}
     </>
   );
-};
+}
 
-const TopicsView = () => {
+function TopicsView() {
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
   const provider = useSelector(selectDiscussionProvider);
@@ -93,10 +83,6 @@ const TopicsView = () => {
     }
   }, [isPostsFiltered]);
 
-  const handleOnClear = useCallback(() => {
-    dispatch(setFilter(''));
-  }, []);
-
   return (
     <div className="d-flex flex-column h-100" data-testid="inContext-topics-view">
       {topicFilter && (
@@ -105,7 +91,7 @@ const TopicsView = () => {
             text={topicFilter}
             count={filteredTopics.length}
             loadingStatus={loadingStatus}
-            onClear={handleOnClear}
+            onClear={() => dispatch(setFilter(''))}
           />
           {filteredTopics.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
         </>
@@ -130,6 +116,6 @@ const TopicsView = () => {
       </div>
     </div>
   );
-};
+}
 
 export default TopicsView;

@@ -3,23 +3,27 @@ import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { selectTopicsInCategoryIds } from '../data/selectors';
+import { selectTopicsInCategory } from '../data/selectors';
 import TopicGroupBase from './TopicGroupBase';
 
-const LegacyTopicGroup = ({ categoryId }) => {
-  const topicsIds = useSelector(selectTopicsInCategoryIds(categoryId));
-
+function LegacyTopicGroup({
+  id,
+  category,
+}) {
+  const topics = useSelector(selectTopicsInCategory(category));
   return (
-    <TopicGroupBase groupId={categoryId} groupTitle={categoryId} topicsIds={topicsIds} />
+    <TopicGroupBase groupId={id} groupTitle={category} topics={topics} />
   );
-};
+}
 
 LegacyTopicGroup.propTypes = {
-  categoryId: PropTypes.string,
+  id: PropTypes.string,
+  category: PropTypes.string,
 };
 
 LegacyTopicGroup.defaultProps = {
-  categoryId: null,
+  id: null,
+  category: null,
 };
 
-export default React.memo(LegacyTopicGroup);
+export default LegacyTopicGroup;

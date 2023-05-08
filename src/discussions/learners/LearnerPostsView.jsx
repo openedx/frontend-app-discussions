@@ -6,7 +6,7 @@ import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, Spinner,
 } from '@edx/paragon';
@@ -18,36 +18,33 @@ import {
 } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
-import { usePostList } from '../posts/data/hooks';
 import {
-  selectAllThreadsIds,
+  selectAllThreads,
   selectThreadNextPage,
   threadsLoadingStatus,
 } from '../posts/data/selectors';
 import { clearPostsPages } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
-import { discussionsPath } from '../utils';
+import { discussionsPath, filterPosts } from '../utils';
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import messages from './messages';
 
-const LearnerPostsView = () => {
-  const intl = useIntl();
+function LearnerPostsView({ intl }) {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const postsIds = useSelector(selectAllThreadsIds);
+  const posts = useSelector(selectAllThreads);
   const loadingStatus = useSelector(threadsLoadingStatus());
   const postFilter = useSelector(state => state.learners.postFilter);
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const sortedPostsIds = usePostList(postsIds);
 
-  const loadMorePosts = useCallback((pageNum = undefined) => {
+  const loadMorePosts = (pageNum = undefined) => {
     const params = {
       author: username,
       page: pageNum,
@@ -57,23 +54,28 @@ const LearnerPostsView = () => {
     };
 
     dispatch(fetchUserPosts(courseId, params));
-  }, [courseId, postFilter, username, userHasModerationPrivileges, userIsStaff]);
-
-  const postInstances = useMemo(() => (
-    sortedPostsIds?.map((postId, idx) => (
-      <PostLink
-        postId={postId}
-        idx={idx}
-        key={postId}
-        showDivider={(sortedPostsIds.length - 1) !== idx}
-      />
-    ))
-  ), [sortedPostsIds]);
+  };
 
   useEffect(() => {
     dispatch(clearPostsPages());
     loadMorePosts();
   }, [courseId, postFilter, username]);
+
+  const checkIsSelected = (id) => window.location.pathname.includes(id);
+  const pinnedPosts = useMemo(() => filterPosts(posts, 'pinned'), [posts]);
+  const unpinnedPosts = useMemo(() => filterPosts(posts, 'unpinned'), [posts]);
+
+  const postInstances = useCallback((sortedPosts) => (
+    sortedPosts.map((post, idx) => (
+      <PostLink
+        post={post}
+        key={post.id}
+        isSelected={checkIsSelected}
+        idx={idx}
+        showDivider={(sortedPosts.length - 1) !== idx}
+      />
+    ))
+  ), []);
 
   return (
     <div className="discussion-posts d-flex flex-column">
@@ -95,8 +97,9 @@ const LearnerPostsView = () => {
       <LearnerPostFilterBar />
       <div className="border-bottom border-light-400" />
       <div className="list-group list-group-flush">
-        {postInstances}
-        {loadingStatus !== RequestStatus.IN_PROGRESS && sortedPostsIds?.length === 0 && <NoResults />}
+        {postInstances(pinnedPosts)}
+        {postInstances(unpinnedPosts)}
+        {loadingStatus !== RequestStatus.IN_PROGRESS && posts?.length === 0 && <NoResults />}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
@@ -111,6 +114,10 @@ const LearnerPostsView = () => {
       </div>
     </div>
   );
+}
+
+LearnerPostsView.propTypes = {
+  intl: intlShape.isRequired,
 };
 
-export default LearnerPostsView;
+export default injectIntl(LearnerPostsView);

@@ -1,11 +1,9 @@
-import React, {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   ActionRow,
   Button,
@@ -16,23 +14,24 @@ import {
 import { selectModerationSettings } from '../../data/selectors';
 import messages from './messages';
 
-const ClosePostReasonModal = ({
+function ClosePostReasonModal({
+  intl,
   isOpen,
   onCancel,
   onConfirm,
-}) => {
-  const intl = useIntl();
+}) {
   const scrollTo = useRef(null);
   const [reasonCode, setReasonCode] = useState(null);
+
   const { postCloseReasons } = useSelector(selectModerationSettings);
 
-  const onChange = useCallback(event => {
+  const onChange = event => {
     if (event.target.value) {
       setReasonCode(event.target.value);
     } else {
       setReasonCode(null);
     }
-  }, []);
+  };
 
   useEffect(() => {
     /* istanbul ignore if: This API is not available in the test environment. */
@@ -88,12 +87,13 @@ const ClosePostReasonModal = ({
       </ModalDialog.Footer>
     </ModalDialog>
   );
-};
+}
 
 ClosePostReasonModal.propTypes = {
+  intl: intlShape.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
 };
 
-export default React.memo(ClosePostReasonModal);
+export default injectIntl(ClosePostReasonModal);

@@ -1,13 +1,15 @@
+/* eslint-disable import/prefer-default-export */
 import {
-  useCallback,
-  useContext, useEffect, useMemo, useRef, useState,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
@@ -40,14 +42,16 @@ import { fetchCourseConfig } from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
-  const count = useMemo(() => (
-    Object.keys(topics)?.reduce((total, topicId) => {
+
+  if (!topics) {
+    return 0;
+  }
+
+  return Object.keys(topics)
+    .reduce((total, topicId) => {
       const topic = topics[topicId];
       return total + topic.threadCounts.discussion + topic.threadCounts.question;
-    }, 0)),
-  []);
-
-  return count;
+    }, 0);
 }
 
 export const useSidebarVisible = () => {
@@ -83,14 +87,13 @@ export function useCourseDiscussionData(courseId) {
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
-
   const redirectToThread = useSelector(
     (state) => state.threads.redirectToThread,
   );
+  const history = useHistory();
+  const location = useLocation();
 
-  useEffect(() => {
+  return useEffect(() => {
     // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
     // stored in redirectToThread
     if (redirectToThread) {
@@ -150,20 +153,17 @@ export function useContainerSize(refContainer) {
   return height;
 }
 
-export const useAlertBannerVisible = (
-  {
-    author, abuseFlagged, lastEdit, closed,
-  } = {},
-) => {
+export const useAlertBannerVisible = (content) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
-  const userIsContentAuthor = getAuthenticatedUser().username === author;
+  const userIsContentAuthor = getAuthenticatedUser().username === content.author;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
-  const canSeeReportedBanner = abuseFlagged;
+  const canSeeReportedBanner = content.abuseFlagged;
 
   return (
-    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
+    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (content.lastEdit?.reason || content.closed))
+    || (content.abuseFlagged && canSeeReportedBanner)
   );
 };
 
@@ -193,50 +193,38 @@ export const useCurrentDiscussionTopic = () => {
 export const useUserCanAddThreadInBlackoutDate = () => {
   const blackoutDateRange = useSelector(selectBlackoutDate);
   const isUserAdmin = useSelector(selectUserIsStaff);
-  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userHasModerationPrivilages = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
-  const isPrivileged = isUserAdmin || userHasModerationPrivileges || isUserGroupTA || isCourseAdmin || isCourseStaff;
-  const isInBlackoutDateRange = useMemo(() => inBlackoutDateRange(blackoutDateRange), [blackoutDateRange]);
+  const isInBlackoutDateRange = inBlackoutDateRange(blackoutDateRange);
 
-  return (!(isInBlackoutDateRange) || (isPrivileged));
+  return (!(isInBlackoutDateRange)
+    || (isUserAdmin || userHasModerationPrivilages || isUserGroupTA || isCourseAdmin || isCourseStaff));
 };
 
 function camelToConstant(string) {
   return string.replace(/[A-Z]/g, (match) => `_${match}`).toUpperCase();
 }
 
-export const useTourConfiguration = () => {
-  const intl = useIntl();
+export const useTourConfiguration = (intl) => {
   const dispatch = useDispatch();
+
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const tours = useSelector(selectTours);
 
-  const handleOnDismiss = useCallback((id) => (
-    dispatch(updateTourShowStatus(id))
-  ), []);
-
-  const handleOnEnd = useCallback((id) => (
-    dispatch(updateTourShowStatus(id))
-  ), []);
-
-  const toursConfig = useMemo(() => (
-    tours.map((tour) => (
-      {
-        tourId: tour.tourName,
-        advanceButtonText: intl.formatMessage(messages.advanceButtonText),
-        dismissButtonText: intl.formatMessage(messages.dismissButtonText),
-        endButtonText: intl.formatMessage(messages.endButtonText),
-        enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
-        onDismiss: handleOnDismiss(tour.id),
-        onEnd: handleOnEnd(tour.id),
-        checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
-      }
-    ))
-  ), [tours, enableInContextSidebar]);
-
-  return toursConfig;
+  return tours.map((tour) => (
+    {
+      tourId: tour.tourName,
+      advanceButtonText: intl.formatMessage(messages.advanceButtonText),
+      dismissButtonText: intl.formatMessage(messages.dismissButtonText),
+      endButtonText: intl.formatMessage(messages.endButtonText),
+      enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
+      onDismiss: () => dispatch(updateTourShowStatus(tour.id)),
+      onEnd: () => dispatch(updateTourShowStatus(tour.id)),
+      checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
+    }
+  ));
 };
 
 export const useDebounce = (value, delay) => {
