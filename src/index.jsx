@@ -42,6 +42,7 @@ function onRenderCallback(
 
 function enableProfiler() {
   console.log('Enabling React Profiler');
+  console.log('React versoion: ', React.version);
   if (
     process.env.NODE_ENV === 'production'
     && typeof window !== 'undefined'
