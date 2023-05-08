@@ -95,13 +95,13 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .post-summary-comment-count-dimensions {
-  height: 15.39px;
-  width: 15.5px
+  height: 15.39px !important;
+  width: 15.5px !important;
 }
 
 .post-summary-like-dimensions {
-  height: 16px;
-  width: 17px
+  height: 16px !important;
+  width: 17px !important;
 }
 
 .post-summary-timestamp {
