@@ -103,6 +103,8 @@ const commentsSlice = createSlice({
       state.postStatus = RequestStatus.FAILED;
     },
     postCommentSuccess: (state, { payload }) => {
+      console.log('payload s', payload);
+
       state.postStatus = RequestStatus.SUCCESSFUL;
       if (payload.parentId) {
         if (!(payload.parentId in state.commentsInComments)) {
@@ -117,6 +119,7 @@ const commentsSlice = createSlice({
           || state.commentsInThreads[payload.threadId][EndorsementStatus.UNENDORSED]
         ).push(payload.id);
       }
+      console.log('payload', payload);
       state.commentsById[payload.id] = payload;
       state.commentDraft = null;
     },

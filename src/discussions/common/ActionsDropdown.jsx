@@ -25,6 +25,12 @@ function ActionsDropdown({
   iconSize,
   id,
 }) {
+  console.log('ActionsDropdown', actionHandlers,
+    contentType,
+    disabled,
+    dropDownIconSize,
+    iconSize,
+    id);
   const buttonRef = useRef();
   const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);

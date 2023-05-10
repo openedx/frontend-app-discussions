@@ -157,6 +157,7 @@ export function addComment(comment, threadId, parentId = null, enableInContextSi
         parentId,
       }));
       const data = await postComment(comment, threadId, parentId, enableInContextSidebar);
+      console.log('data', data);
       dispatch(postCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
