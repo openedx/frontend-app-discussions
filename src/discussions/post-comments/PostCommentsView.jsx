@@ -39,14 +39,14 @@ const PostCommentsView = () => {
   const { closed, id: threadId, type } = usePost(postId);
 
   useEffect(() => {
-    if (!postId) {
+    if (!threadId) {
       submitDispatch(fetchThread(postId, courseId, true));
     }
 
     return () => {
       setAddingResponse(false);
     };
-  }, [postId, courseId]);
+  }, [postId]);
 
   const handleAddResponseButton = useCallback(() => {
     setAddingResponse(true);
