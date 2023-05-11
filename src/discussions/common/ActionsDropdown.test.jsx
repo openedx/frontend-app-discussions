@@ -42,34 +42,34 @@ const buildTestContent = (buildParams, testMeta) => {
   questionThread = Factory.build('thread', { ...buildParamsSnakeCase, id: questionThreadId }, null);
   comment = Factory.build('comment', { ...buildParamsSnakeCase, thread_id: discussionThreadId }, null);
 
-  return [
-    {
+  return {
+    discussion: {
       testFor: 'discussion threads',
       contentType: 'POST',
       ...camelCaseObject(discussionThread),
       ...testMeta,
     },
-    {
+    question: {
       testFor: 'question threads',
       contentType: 'POST',
       ...camelCaseObject(questionThread),
       ...testMeta,
     },
-    {
+    comment: {
       testFor: 'comments',
       contentType: 'COMMENT',
       type: 'discussion',
       ...camelCaseObject(comment),
       ...testMeta,
     },
-  ];
+  };
 };
 
-const mockThreadAndComment = async () => {
-  axiosMock.onGet(`${threadsApiUrl}${discussionThreadId}/`).reply(200, discussionThread);
-  axiosMock.onGet(`${threadsApiUrl}${questionThreadId}/`).reply(200, questionThread);
+const mockThreadAndComment = async (response) => {
+  axiosMock.onGet(`${threadsApiUrl}${discussionThreadId}/`).reply(200, response);
+  axiosMock.onGet(`${threadsApiUrl}${questionThreadId}/`).reply(200, response);
   axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
-  axiosMock.onPost(commentsApiUrl).reply(200, comment);
+  axiosMock.onPost(commentsApiUrl).reply(200, response);
 
   await executeThunk(fetchThread(discussionThreadId), store.dispatch, store.getState);
   await executeThunk(fetchThread(questionThreadId), store.dispatch, store.getState);
@@ -77,61 +77,58 @@ const mockThreadAndComment = async () => {
   await executeThunk(addComment(commentContent, discussionThreadId, null), store.dispatch, store.getState);
 };
 
-// const canPerformActionTestData = ACTIONS_LIST
-//   .map(({ action, conditions, label: { defaultMessage } }) => {
-//     const buildParams = {
-//       editable_fields: [action],
-//     };
-//     if (conditions) {
-//       Object.entries(conditions)
-//         .forEach(([conditionKey, conditionValue]) => {
-//           buildParams[conditionKey] = conditionValue;
-//         });
-//     }
-//     return buildTestContent(buildParams, { label: defaultMessage, action });
-//   })
-//   .flat();
+const canPerformActionTestData = ACTIONS_LIST.map(({ action, conditions, label: { defaultMessage } }) => {
+  const buildParams = {
+    editable_fields: [action],
+  };
+  if (conditions) {
+    Object.entries(conditions)
+      .forEach(([conditionKey, conditionValue]) => {
+        buildParams[conditionKey] = conditionValue;
+      });
+  }
+  const testContent = buildTestContent(buildParams, { label: defaultMessage, action });
+  return [testContent.discussion, testContent.question, testContent.comment];
+}).flat();
 
-// const canNotPerformActionTestData = ACTIONS_LIST
-//   .map(({ action, conditions, label: { defaultMessage } }) => {
-//     const label = defaultMessage;
-//     let content;
-//     if (!conditions) {
-//       content = buildTestContent({ editable_fields: [] }, { reason: 'field is not editable', label: defaultMessage });
-//     } else {
-//       const reversedConditions = Object.keys(conditions)
-//         .reduce(
-//           (results, key) => ({
-//             ...results,
-//             [key]: !conditions[key],
-//           }),
-//           {},
-//         );
+const canNotPerformActionTestData = ACTIONS_LIST.map(({ action, conditions, label: { defaultMessage } }) => {
+  const label = defaultMessage;
+  let content;
+  if (!conditions) {
+    content = buildTestContent({ editable_fields: [] }, { reason: 'field is not editable', label: defaultMessage });
+  } else {
+    const reversedConditions = Object.keys(conditions)
+      .reduce(
+        (results, key) => ({
+          ...results,
+          [key]: !conditions[key],
+        }),
+        {},
+      );
 
-//       content = [
-//         // can edit field, but doesn't pass conditions
-//         ...buildTestContent({
-//           editable_fields: [action],
-//           ...reversedConditions,
-//         }, { reason: 'field is editable but does not pass condition', label, action }),
-//         // passes conditions, but can't edit field
-//         ...(action === ContentActions.DELETE
-//           ? []
-//           : buildTestContent({
-//             editable_fields: [],
-//             ...conditions,
-//           }, { reason: 'passes conditions but field is not editable', label, action })
-//         ),
-//         // can't edit field, and doesn't pass conditions
-//         ...buildTestContent({
-//           editable_fields: [],
-//           ...reversedConditions,
-//         }, { reason: 'can not edit field and does not match conditions', label, action }),
-//       ];
-//     }
-//     return content;
-//   })
-//   .flat();
+    content = {
+      // can edit field, but doesn't pass conditions
+      ...buildTestContent({
+        editable_fields: [action],
+        ...reversedConditions,
+      }, { reason: 'field is editable but does not pass condition', label, action }),
+      // passes conditions, but can't edit field
+      ...(action === ContentActions.DELETE
+        ? []
+        : buildTestContent({
+          editable_fields: [],
+          ...conditions,
+        }, { reason: 'passes conditions but field is not editable', label, action })
+      ),
+      // can't edit field, and doesn't pass conditions
+      ...buildTestContent({
+        editable_fields: [],
+        ...reversedConditions,
+      }, { reason: 'can not edit field and does not match conditions', label, action }),
+    };
+  }
+  return [content.discussion, content.question, content.comment];
+}).flat();
 
 const renderComponent = ({
   id = '',
@@ -182,8 +179,8 @@ describe('ActionsDropdown', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   });
 
-  it.each(buildTestContent())('can open drop down if enabled', async (commentOrPost) => {
-    await mockThreadAndComment();
+  it.each(Object.values(buildTestContent()))('can open drop down if enabled', async (commentOrPost) => {
+    await mockThreadAndComment(commentOrPost);
     renderComponent({ ...commentOrPost });
 
     const openButton = await findOpenActionsDropdownButton();
@@ -194,8 +191,8 @@ describe('ActionsDropdown', () => {
     await waitFor(() => expect(screen.queryByTestId('actions-dropdown-modal-popup')).toBeInTheDocument());
   });
 
-  it.each(buildTestContent())('can not open drop down if disabled', async (commentOrPost) => {
-    await mockThreadAndComment();
+  it.each(Object.values(buildTestContent()))('can not open drop down if disabled', async (commentOrPost) => {
+    await mockThreadAndComment(commentOrPost);
     renderComponent({ ...commentOrPost, disabled: true });
 
     const openButton = await findOpenActionsDropdownButton();
@@ -207,9 +204,9 @@ describe('ActionsDropdown', () => {
   });
 
   it('copy link action should be visible on posts', async () => {
-    buildTestContent({ editable_fields: ['copy_link'] });
-    await mockThreadAndComment();
-    renderComponent({ ...camelCaseObject(discussionThread) });
+    const discussionObject = buildTestContent({ editable_fields: ['copy_link'] }).discussion;
+    await mockThreadAndComment(discussionObject);
+    renderComponent({ ...camelCaseObject(discussionObject) });
 
     const openButton = await findOpenActionsDropdownButton();
     await act(async () => {
@@ -220,9 +217,9 @@ describe('ActionsDropdown', () => {
   });
 
   it('copy link action should not be visible on a comment', async () => {
-    buildTestContent();
-    await mockThreadAndComment();
-    renderComponent({ ...camelCaseObject(comment) });
+    const commentObject = buildTestContent().comment;
+    await mockThreadAndComment(commentObject);
+    renderComponent({ ...camelCaseObject(commentObject) });
 
     const openButton = await findOpenActionsDropdownButton();
     await act(async () => {
@@ -232,47 +229,46 @@ describe('ActionsDropdown', () => {
     await waitFor(() => expect(screen.queryByText('Copy link')).not.toBeInTheDocument());
   });
 
-  // describe.each(canPerformActionTestData)('Actions', ({
-  //   testFor, action, label, reason, ...commentOrPost
-  // }) => {
-  //   describe(`for ${testFor}`, () => {
-  //     it(`can "${label}" when allowed`, async () => {
-  //       const mockHandler = jest.fn();
-  //       renderComponent(
-  //         commentOrPost,
-  //         { actionHandlers: { [action]: mockHandler } },
-  //       );
+  describe.each(canPerformActionTestData)('Actions', ({
+    testFor, action, label, ...commentOrPost
+  }) => {
+    describe(`for ${testFor}`, () => {
+      it(`can "${label}" when allowed`, async () => {
+        await mockThreadAndComment(commentOrPost);
+        const mockHandler = jest.fn();
+        renderComponent({ ...commentOrPost, actionHandlers: { [action]: mockHandler } });
 
-  //       const openButton = await findOpenActionsDropdownButton();
-  //       await act(async () => {
-  //         fireEvent.click(openButton);
-  //       });
+        const openButton = await findOpenActionsDropdownButton();
+        await act(async () => {
+          fireEvent.click(openButton);
+        });
 
-  //       await waitFor(() => expect(screen.queryByText(label))
-  //         .toBeInTheDocument());
+        await waitFor(() => expect(screen.queryByText(label))
+          .toBeInTheDocument());
 
-  //       await act(async () => {
-  //         fireEvent.click(screen.queryByText(label));
-  //       });
-  //       expect(mockHandler).toHaveBeenCalled();
-  //     });
-  //   });
-  // });
+        await act(async () => {
+          fireEvent.click(screen.queryByText(label));
+        });
+        expect(mockHandler).toHaveBeenCalled();
+      });
+    });
+  });
 
-  // describe.each(canNotPerformActionTestData)('Actions', ({
-  //   testFor, action, label, reason, ...commentOrPost
-  // }) => {
-  //   describe(`for ${testFor}`, () => {
-  //     it(`can't "${label}" when ${reason}`, async () => {
-  //       renderComponent(commentOrPost);
+  describe.each(canNotPerformActionTestData)('Actions', ({
+    testFor, action, label, reason, ...commentOrPost
+  }) => {
+    describe(`for ${testFor}`, () => {
+      it(`can't "${label}" when ${reason}`, async () => {
+        await mockThreadAndComment(commentOrPost);
+        renderComponent({ ...commentOrPost });
 
-  //       const openButton = await findOpenActionsDropdownButton();
-  //       await act(async () => {
-  //         fireEvent.click(openButton);
-  //       });
+        const openButton = await findOpenActionsDropdownButton();
+        await act(async () => {
+          fireEvent.click(openButton);
+        });
 
-  //       await waitFor(() => expect(screen.queryByText(label)).not.toBeInTheDocument());
-  //     });
-  //   });
-  // });
+        await waitFor(() => expect(screen.queryByText(label)).not.toBeInTheDocument());
+      });
+    });
+  });
 });
