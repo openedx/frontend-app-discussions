@@ -77,58 +77,63 @@ const mockThreadAndComment = async (response) => {
   await executeThunk(addComment(commentContent, discussionThreadId, null), store.dispatch, store.getState);
 };
 
-const canPerformActionTestData = ACTIONS_LIST.map(({ action, conditions, label: { defaultMessage } }) => {
-  const buildParams = {
-    editable_fields: [action],
-  };
+const canPerformActionTestData = ACTIONS_LIST.flatMap(({
+  id, action, conditions, label: { defaultMessage },
+}) => {
+  const buildParams = { editable_fields: [action] };
+
   if (conditions) {
-    Object.entries(conditions)
-      .forEach(([conditionKey, conditionValue]) => {
-        buildParams[conditionKey] = conditionValue;
-      });
+    Object.entries(conditions).forEach(([conditionKey, conditionValue]) => {
+      buildParams[conditionKey] = conditionValue;
+    });
   }
+
   const testContent = buildTestContent(buildParams, { label: defaultMessage, action });
-  return [testContent.discussion, testContent.question, testContent.comment];
-}).flat();
 
-const canNotPerformActionTestData = ACTIONS_LIST.map(({ action, conditions, label: { defaultMessage } }) => {
-  const label = defaultMessage;
-  let content;
-  if (!conditions) {
-    content = buildTestContent({ editable_fields: [] }, { reason: 'field is not editable', label: defaultMessage });
-  } else {
-    const reversedConditions = Object.keys(conditions)
-      .reduce(
-        (results, key) => ({
-          ...results,
-          [key]: !conditions[key],
-        }),
-        {},
-      );
-
-    content = {
-      // can edit field, but doesn't pass conditions
-      ...buildTestContent({
-        editable_fields: [action],
-        ...reversedConditions,
-      }, { reason: 'field is editable but does not pass condition', label, action }),
-      // passes conditions, but can't edit field
-      ...(action === ContentActions.DELETE
-        ? []
-        : buildTestContent({
-          editable_fields: [],
-          ...conditions,
-        }, { reason: 'passes conditions but field is not editable', label, action })
-      ),
-      // can't edit field, and doesn't pass conditions
-      ...buildTestContent({
-        editable_fields: [],
-        ...reversedConditions,
-      }, { reason: 'can not edit field and does not match conditions', label, action }),
-    };
+  switch (id) {
+    case 'answer':
+    case 'unanswer':
+      return [testContent.question];
+    case 'endorse':
+    case 'unendorse':
+      return [testContent.comment, testContent.discussion];
+    default:
+      return [testContent.discussion, testContent.question, testContent.comment];
   }
+});
+
+const canNotPerformActionTestData = ACTIONS_LIST.flatMap(({ action, conditions, label: { defaultMessage } }) => {
+  const label = defaultMessage;
+
+  if (!conditions) {
+    const content = buildTestContent({ editable_fields: [] }, { reason: 'field is not editable', label: defaultMessage });
+    return [content.discussion, content.question, content.comment];
+  }
+
+  const reversedConditions = Object.fromEntries(Object.entries(conditions).map(([key, value]) => [key, !value]));
+
+  const content = {
+    // can edit field, but doesn't pass conditions
+    ...buildTestContent({
+      editable_fields: [action],
+      ...reversedConditions,
+    }, { reason: 'field is editable but does not pass condition', label, action }),
+
+    // passes conditions, but can't edit field
+    ...(action === ContentActions.DELETE ? {} : buildTestContent({
+      editable_fields: [],
+      ...conditions,
+    }, { reason: 'passes conditions but field is not editable', label, action })),
+
+    // can't edit field, and doesn't pass conditions
+    ...buildTestContent({
+      editable_fields: [],
+      ...reversedConditions,
+    }, { reason: 'can not edit field and does not match conditions', label, action }),
+  };
+
   return [content.discussion, content.question, content.comment];
-}).flat();
+});
 
 const renderComponent = ({
   id = '',
