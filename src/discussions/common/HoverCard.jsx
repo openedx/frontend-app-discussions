@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
@@ -12,29 +12,32 @@ import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
 import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
-import { postShape } from '../posts/post/proptypes';
+import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
 
 const HoverCard = ({
-  intl,
-  commentOrPost,
+  id,
+  contentType,
   actionHandlers,
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
   onLike,
   onFollow,
-  isClosedPost,
+  voted,
+  following,
   endorseIcons,
 }) => {
+  const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
+  const { isClosed } = useContext(PostCommentsContext);
   const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+
   return (
     <div
       className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
-      data-testid={`hover-card-${commentOrPost.id}`}
-      id={`hover-card-${commentOrPost.id}`}
+      data-testid={`hover-card-${id}`}
+      id={`hover-card-${id}`}
     >
       {userCanAddThreadInBlackoutDate && (
         <div className="d-flex">
@@ -45,7 +48,7 @@ const HoverCard = ({
               { 'w-100': enableInContextSidebar },
             )}
             onClick={() => handleResponseCommentButton()}
-            disabled={isClosedPost}
+            disabled={isClosed}
             style={{ lineHeight: '20px' }}
           >
             {addResponseCommentButtonMessage}
@@ -78,7 +81,7 @@ const HoverCard = ({
       )}
       <div className="hover-button">
         <IconButton
-          src={commentOrPost.voted ? ThumbUpFilled : ThumbUpOutline}
+          src={voted ? ThumbUpFilled : ThumbUpOutline}
           iconAs={Icon}
           size="sm"
           alt="Like"
@@ -89,10 +92,10 @@ const HoverCard = ({
           }}
         />
       </div>
-      {commentOrPost.following !== undefined && (
+      {following !== undefined && (
         <div className="hover-button">
           <IconButton
-            src={commentOrPost.following ? StarFilled : StarOutline}
+            src={following ? StarFilled : StarOutline}
             iconAs={Icon}
             size="sm"
             alt="Follow"
@@ -105,27 +108,35 @@ const HoverCard = ({
         </div>
       )}
       <div className="hover-button ml-auto">
-        <ActionsDropdown commentOrPost={commentOrPost} actionHandlers={actionHandlers} dropDownIconSize />
+        <ActionsDropdown
+          id={id}
+          contentType={contentType}
+          actionHandlers={actionHandlers}
+          dropDownIconSize
+        />
       </div>
     </div>
   );
 };
 
 HoverCard.propTypes = {
-  intl: intlShape.isRequired,
-  commentOrPost: PropTypes.oneOfType([commentShape, postShape]).isRequired,
+  id: PropTypes.string.isRequired,
+  contentType: PropTypes.string.isRequired,
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   handleResponseCommentButton: PropTypes.func.isRequired,
-  onLike: PropTypes.func.isRequired,
-  onFollow: PropTypes.func,
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
-  isClosedPost: PropTypes.bool.isRequired,
-  endorseIcons: PropTypes.objectOf(PropTypes.shape({})),
+  onLike: PropTypes.func.isRequired,
+  voted: PropTypes.bool.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  endorseIcons: PropTypes.objectOf(PropTypes.any),
+  onFollow: PropTypes.func,
+  following: PropTypes.bool,
 };
 
 HoverCard.defaultProps = {
   onFollow: () => null,
   endorseIcons: null,
+  following: undefined,
 };
 
-export default injectIntl(HoverCard);
+export default React.memo(HoverCard);

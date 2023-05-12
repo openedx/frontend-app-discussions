@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   ActionRow,
   Button,
@@ -15,23 +17,22 @@ import { selectModerationSettings } from '../../data/selectors';
 import messages from './messages';
 
 const ClosePostReasonModal = ({
-  intl,
   isOpen,
   onCancel,
   onConfirm,
 }) => {
+  const intl = useIntl();
   const scrollTo = useRef(null);
   const [reasonCode, setReasonCode] = useState(null);
-
   const { postCloseReasons } = useSelector(selectModerationSettings);
 
-  const onChange = event => {
+  const onChange = useCallback(event => {
     if (event.target.value) {
       setReasonCode(event.target.value);
     } else {
       setReasonCode(null);
     }
-  };
+  }, []);
 
   useEffect(() => {
     /* istanbul ignore if: This API is not available in the test environment. */
@@ -90,10 +91,9 @@ const ClosePostReasonModal = ({
 };
 
 ClosePostReasonModal.propTypes = {
-  intl: intlShape.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
 };
 
-export default injectIntl(ClosePostReasonModal);
+export default React.memo(ClosePostReasonModal);

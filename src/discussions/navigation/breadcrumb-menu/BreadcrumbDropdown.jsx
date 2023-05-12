@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Dropdown, DropdownButton } from '@edx/paragon';
 
 import messages from './messages';
 
 const BreadcrumbDropdown = ({
   currentItem,
-  intl,
   showAllPath,
   items,
   itemPathFunc,
@@ -18,7 +17,9 @@ const BreadcrumbDropdown = ({
   itemActiveFunc,
   itemFilterFunc,
 }) => {
+  const intl = useIntl();
   const showAllMsg = intl.formatMessage(messages.showAll);
+
   return (
     <DropdownButton
       title={itemLabelFunc(currentItem) || showAllMsg}
@@ -51,7 +52,6 @@ const BreadcrumbDropdown = ({
 BreadcrumbDropdown.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   currentItem: PropTypes.any,
-  intl: intlShape.isRequired,
   showAllPath: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   items: PropTypes.array.isRequired,
@@ -60,9 +60,10 @@ BreadcrumbDropdown.propTypes = {
   itemActiveFunc: PropTypes.func.isRequired,
   itemFilterFunc: PropTypes.func,
 };
+
 BreadcrumbDropdown.defaultProps = {
   currentItem: null,
   itemFilterFunc: null,
 };
 
-export default injectIntl(BreadcrumbDropdown);
+export default React.memo(BreadcrumbDropdown);

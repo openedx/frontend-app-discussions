@@ -50,4 +50,4 @@ EmptyPage.defaultProps = {
   actionText: null,
 };
 
-export default EmptyPage;
+export default React.memo(EmptyPage);

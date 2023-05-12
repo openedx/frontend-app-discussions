@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, {
+  lazy, Suspense, useContext, useEffect, useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -9,16 +11,20 @@ import {
 
 import { useWindowSize } from '@edx/paragon';
 
+import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
 import { selectconfigLoadingStatus, selectEnableInContext } from '../data/selectors';
-import { TopicPostsView, TopicsView as InContextTopicsView } from '../in-context-topics';
-import { LearnerPostsView, LearnersView } from '../learners';
-import { PostsView } from '../posts';
-import { TopicsView as LegacyTopicsView } from '../topics';
+
+const TopicPostsView = lazy(() => import('../in-context-topics/TopicPostsView'));
+const InContextTopicsView = lazy(() => import('../in-context-topics/TopicsView'));
+const LearnerPostsView = lazy(() => import('../learners/LearnerPostsView'));
+const LearnersView = lazy(() => import('../learners/LearnersView'));
+const PostsView = lazy(() => import('../posts/PostsView'));
+const LegacyTopicsView = lazy(() => import('../topics/TopicsView'));
 
 const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
   const location = useLocation();
@@ -55,15 +61,16 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
       })}
       data-testid="sidebar"
     >
-      <Switch>
-        {enableInContext && !enableInContextSidebar && (
+      <Suspense fallback={(<Spinner />)}>
+        <Switch>
+          {enableInContext && !enableInContextSidebar && (
           <Route
             path={Routes.TOPICS.ALL}
             component={InContextTopicsView}
             exact
           />
-        )}
-        {enableInContext && !enableInContextSidebar && (
+          )}
+          {enableInContext && !enableInContextSidebar && (
           <Route
             path={[
               Routes.TOPICS.TOPIC,
@@ -74,19 +81,19 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
             component={TopicPostsView}
             exact
           />
-        )}
-        <Route
-          path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-          component={PostsView}
-        />
-        <Route path={Routes.TOPICS.PATH} component={LegacyTopicsView} />
-        {redirectToLearnersTab && (
+          )}
+          <Route
+            path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
+            component={PostsView}
+          />
+          <Route path={Routes.TOPICS.PATH} component={LegacyTopicsView} />
+          {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
-        )}
-        {redirectToLearnersTab && (
+          )}
+          {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
-        )}
-        {configStatus === RequestStatus.SUCCESSFUL && (
+          )}
+          {configStatus === RequestStatus.SUCCESSFUL && (
           <Redirect
             from={Routes.DISCUSSIONS.PATH}
             to={{
@@ -94,15 +101,11 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
               pathname: Routes.POSTS.ALL_POSTS,
             }}
           />
-        )}
-      </Switch>
+          )}
+        </Switch>
+      </Suspense>
     </div>
   );
-};
-
-DiscussionSidebar.defaultProps = {
-  displaySidebar: false,
-  postActionBarRef: null,
 };
 
 DiscussionSidebar.propTypes = {
@@ -113,4 +116,9 @@ DiscussionSidebar.propTypes = {
   ]),
 };
 
-export default DiscussionSidebar;
+DiscussionSidebar.defaultProps = {
+  displaySidebar: false,
+  postActionBarRef: null,
+};
+
+export default React.memo(DiscussionSidebar);

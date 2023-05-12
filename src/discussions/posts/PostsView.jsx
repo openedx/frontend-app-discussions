@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import isEmpty from 'lodash/isEmpty';
@@ -13,33 +15,36 @@ import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
 import { selectTopics } from '../topics/data/selectors';
 import { fetchCourseTopics } from '../topics/data/thunks';
 import { handleKeyDown } from '../utils';
-import { selectAllThreads, selectTopicThreads } from './data/selectors';
+import { selectAllThreadsIds, selectTopicThreadsIds } from './data/selectors';
 import { setSearchQuery } from './data/slices';
 import PostFilterBar from './post-filter-bar/PostFilterBar';
 import PostsList from './PostsList';
 
 const AllPostsList = () => {
-  const posts = useSelector(selectAllThreads);
-  return <PostsList posts={posts} topics={null} />;
+  const postsIds = useSelector(selectAllThreadsIds);
+
+  return <PostsList postsIds={postsIds} topicsIds={null} />;
 };
 
-const TopicPostsList = ({ topicId }) => {
-  const posts = useSelector(selectTopicThreads([topicId]));
-  return <PostsList posts={posts} topics={[topicId]} isTopicTab />;
-};
+const TopicPostsList = React.memo(({ topicId }) => {
+  const postsIds = useSelector(selectTopicThreadsIds([topicId]));
+
+  return <PostsList postsIds={postsIds} topicsIds={[topicId]} isTopicTab />;
+});
 
 TopicPostsList.propTypes = {
   topicId: PropTypes.string.isRequired,
 };
 
-const CategoryPostsList = ({ category }) => {
+const CategoryPostsList = React.memo(({ category }) => {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const groupedCategory = useSelector(selectCurrentCategoryGrouping)(category);
   // If grouping at subsection is enabled, only apply it when browsing discussions in context in the learning MFE.
   const topicIds = useSelector(selectTopicsUnderCategory)(enableInContextSidebar ? groupedCategory : category);
-  const posts = useSelector(enableInContextSidebar ? selectAllThreads : selectTopicThreads(topicIds));
-  return <PostsList posts={posts} topics={topicIds} />;
-};
+  const postsIds = useSelector(enableInContextSidebar ? selectAllThreadsIds : selectTopicThreadsIds(topicIds));
+
+  return <PostsList postsIds={postsIds} topicsIds={topicIds} />;
+});
 
 CategoryPostsList.propTypes = {
   category: PropTypes.string.isRequired,
@@ -68,15 +73,19 @@ const PostsView = () => {
     }
   }, [topics]);
 
-  let postsListComponent;
+  const handleOnClear = useCallback(() => {
+    dispatch(setSearchQuery(''));
+  }, []);
 
-  if (topicId) {
-    postsListComponent = <TopicPostsList topicId={topicId} />;
-  } else if (category) {
-    postsListComponent = <CategoryPostsList category={category} />;
-  } else {
-    postsListComponent = <AllPostsList />;
-  }
+  const postsListComponent = useMemo(() => {
+    if (topicId) {
+      return <TopicPostsList topicId={topicId} />;
+    }
+    if (category) {
+      return <CategoryPostsList category={category} />;
+    }
+    return <AllPostsList />;
+  }, [topicId, category]);
 
   return (
     <div className="discussion-posts d-flex flex-column h-100">
@@ -85,7 +94,7 @@ const PostsView = () => {
           count={resultsFound}
           text={searchString}
           loadingStatus={loadingStatus}
-          onClear={() => dispatch(setSearchQuery(''))}
+          onClear={handleOnClear}
           textSearchRewrite={textSearchRewrite}
         />
       )}
@@ -96,9 +105,6 @@ const PostsView = () => {
       </div>
     </div>
   );
-};
-
-PostsView.propTypes = {
 };
 
 export default PostsView;

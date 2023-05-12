@@ -1,4 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 
 import classNames from 'classnames';
 import isEmpty from 'lodash/isEmpty';
@@ -27,24 +29,32 @@ const TopicsList = () => {
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
   const archivedTopics = useSelector(selectArchivedTopics);
 
+  const renderNonCoursewareTopics = useMemo(() => (
+    nonCoursewareTopics?.map((topic, index) => (
+      <Topic
+        key={topic.id}
+        topic={topic}
+        showDivider={(nonCoursewareTopics.length - 1) !== index}
+      />
+    ))
+  ), [nonCoursewareTopics]);
+
+  const renderCoursewareTopics = useMemo(() => (
+    coursewareTopics?.map((topic, index) => (
+      <SectionBaseGroup
+        key={topic.id}
+        section={topic?.children}
+        sectionId={topic.id}
+        sectionTitle={topic.displayName}
+        showDivider={(coursewareTopics.length - 1) !== index}
+      />
+    ))
+  ), [coursewareTopics]);
+
   return (
     <>
-      {nonCoursewareTopics?.map((topic, index) => (
-        <Topic
-          key={topic.id}
-          topic={topic}
-          showDivider={(nonCoursewareTopics.length - 1) !== index}
-        />
-      ))}
-      {coursewareTopics?.map((topic, index) => (
-        <SectionBaseGroup
-          key={topic.id}
-          section={topic?.children}
-          sectionId={topic.id}
-          sectionTitle={topic.displayName}
-          showDivider={(coursewareTopics.length - 1) !== index}
-        />
-      ))}
+      {renderNonCoursewareTopics}
+      {renderCoursewareTopics}
       {!isEmpty(archivedTopics) && (
         <ArchivedBaseGroup
           archivedTopics={archivedTopics}
@@ -83,6 +93,10 @@ const TopicsView = () => {
     }
   }, [isPostsFiltered]);
 
+  const handleOnClear = useCallback(() => {
+    dispatch(setFilter(''));
+  }, []);
+
   return (
     <div className="d-flex flex-column h-100" data-testid="inContext-topics-view">
       {topicFilter && (
@@ -91,7 +105,7 @@ const TopicsView = () => {
             text={topicFilter}
             count={filteredTopics.length}
             loadingStatus={loadingStatus}
-            onClear={() => dispatch(setFilter(''))}
+            onClear={handleOnClear}
           />
           {filteredTopics.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
         </>

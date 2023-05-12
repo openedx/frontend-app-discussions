@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars, react/forbid-prop-types */
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -8,31 +8,31 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../../data/selectors';
 import { discussionsPath } from '../../../utils';
+import { selectTopic } from '../../data/selectors';
 import messages from '../../messages';
 
-const Topic = ({
-  topic,
-  showDivider,
-  index,
-  intl,
-}) => {
+const Topic = ({ topicId, showDivider, index }) => {
+  const intl = useIntl();
   const { courseId } = useParams();
-  const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, {
-    courseId,
-    topicId: topic.id,
-  });
+  const topic = useSelector(selectTopic(topicId));
+  const {
+    id, inactiveFlags, activeFlags, name, threadCounts,
+  } = topic;
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
-  const { inactiveFlags, activeFlags } = topic;
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
-  const isSelected = (id) => window.location.pathname.includes(id);
+  const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, { courseId, topicId });
+
+  const isSelected = useCallback((selectedId) => (
+    window.location.pathname.includes(selectedId)
+  ), []);
 
   return (
     <Link
@@ -41,18 +41,18 @@ const Topic = ({
           'border-bottom border-light-400': showDivider,
         })
       }
-      data-topic-id={topic.id}
+      data-topic-id={id}
       to={topicUrl}
-      onClick={() => isSelected(topic.id)}
-      aria-current={isSelected(topic.id) ? 'page' : undefined}
+      onClick={() => isSelected(id)}
+      aria-current={isSelected(id) ? 'page' : undefined}
       role="option"
-      tabIndex={(isSelected(topic.id) || index === 0) ? 0 : -1}
+      tabIndex={(isSelected(id) || index === 0) ? 0 : -1}
     >
       <div className="d-flex flex-row pt-2.5 pb-2 px-4">
         <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
             <div className="topic-name text-truncate">
-              {topic.name || intl.formatMessage(messages.unnamedTopicSubCategories)}
+              {name || intl.formatMessage(messages.unnamedTopicSubCategories)}
             </div>
           </div>
           <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
@@ -62,7 +62,7 @@ const Topic = ({
                 <Tooltip>
                   <div className="d-flex flex-column align-items-start">
                     {intl.formatMessage(messages.discussions, {
-                      count: topic.threadCounts?.discussion || 0,
+                      count: threadCounts?.discussion || 0,
                     })}
                   </div>
                 </Tooltip>
@@ -70,7 +70,7 @@ const Topic = ({
             >
               <div className="d-flex align-items-center mr-3.5">
                 <Icon src={PostOutline} className="icon-size mr-2" />
-                {topic.threadCounts?.discussion || 0}
+                {threadCounts?.discussion || 0}
               </div>
             </OverlayTrigger>
             <OverlayTrigger
@@ -79,7 +79,7 @@ const Topic = ({
                 <Tooltip>
                   <div className="d-flex flex-column align-items-start">
                     {intl.formatMessage(messages.questions, {
-                      count: topic.threadCounts?.question || 0,
+                      count: threadCounts?.question || 0,
                     })}
                   </div>
                 </Tooltip>
@@ -87,7 +87,7 @@ const Topic = ({
             >
               <div className="d-flex align-items-center mr-3.5">
                 <Icon src={HelpOutline} className="icon-size mr-2" />
-                {topic.threadCounts?.question || 0}
+                {threadCounts?.question || 0}
               </div>
             </OverlayTrigger>
             {Boolean(canSeeReportedStats) && (
@@ -131,9 +131,9 @@ export const topicShape = PropTypes.shape({
   discussions: PropTypes.number,
   flags: PropTypes.number,
 });
+
 Topic.propTypes = {
-  intl: intlShape.isRequired,
-  topic: topicShape.isRequired,
+  topicId: PropTypes.string.isRequired,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
 };
@@ -143,4 +143,4 @@ Topic.defaultProps = {
   index: -1,
 };
 
-export default injectIntl(Topic);
+export default React.memo(Topic);

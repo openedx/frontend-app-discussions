@@ -1,23 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
+import { generatePath } from 'react-router';
+import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import { useShowLearnersTab } from '../data/hooks';
 import messages from '../messages';
-import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
 
 const AuthorLabel = ({
-  intl,
   author,
   authorLabel,
   linkToProfile,
@@ -27,16 +26,17 @@ const AuthorLabel = ({
   authorToolTip,
   postOrComment,
 }) => {
-  const location = useLocation();
+  timeago.register('time-locale', timeLocale);
+  const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
-  timeago.register('time-locale', timeLocale);
 
   if (authorLabel === 'Staff') {
     icon = Institution;
     authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
   }
+
   if (authorLabel === 'Community TA') {
     icon = School;
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
@@ -49,7 +49,7 @@ const AuthorLabel = ({
   const showUserNameAsLink = useShowLearnersTab()
     && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
 
-  const authorName = (
+  const authorName = useMemo(() => (
     <span
       className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
         'text-gray-700': isRetiredUser,
@@ -60,8 +60,9 @@ const AuthorLabel = ({
     >
       {isRetiredUser ? '[Deactivated]' : author}
     </span>
-  );
-  const labelContents = (
+  ), [author, authorLabelMessage, isRetiredUser]);
+
+  const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
         overlay={(
@@ -109,7 +110,7 @@ const AuthorLabel = ({
         </span>
       )}
     </>
-  );
+  ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
   return showUserNameAsLink
     ? (
@@ -117,7 +118,7 @@ const AuthorLabel = ({
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
-          to={discussionsPath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })(location)}
+          to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
           className="text-decoration-none"
           style={{ width: 'fit-content' }}
         >
@@ -130,7 +131,6 @@ const AuthorLabel = ({
 };
 
 AuthorLabel.propTypes = {
-  intl: intlShape.isRequired,
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
@@ -151,4 +151,4 @@ AuthorLabel.defaultProps = {
   postOrComment: false,
 };
 
-export default injectIntl(AuthorLabel);
+export default React.memo(AuthorLabel);

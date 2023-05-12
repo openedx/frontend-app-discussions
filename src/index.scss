@@ -42,27 +42,27 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .font-size-16 {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 .font-size-14 {
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 .font-size-12 {
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .font-size-8 {
-  font-size: 8px;
+  font-size: 8px !important;
 }
 
 .font-weight-500 {
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 .font-style-normal {
-  font-style: normal;
+  font-style: normal !important;
 }
 
 .font-family-inter {
@@ -95,13 +95,13 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .post-summary-comment-count-dimensions {
-  height: 15.39px;
-  width: 15.5px
+  height: 15.39px !important;
+  width: 15.5px !important;
 }
 
 .post-summary-like-dimensions {
-  height: 16px;
-  width: 17px
+  height: 16px !important;
+  width: 17px !important;
 }
 
 .post-summary-timestamp {
@@ -110,8 +110,8 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .post-summary-card-selected {
-  border-right-width: 4px;
-  border-right-style: solid;
+  border-right-width: 4px !important;
+  border-right-style: solid !important;
 }
 
 .my-14px {
@@ -178,18 +178,18 @@ $fa-font-path: "~font-awesome/fonts";
   background-color: unset !important;
 }
 
-.learner>a:hover {
+.learner > a:hover {
   background-color: #F2F0EF;
 }
 
 .py-10px {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 .py-8px {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 .pb-10px {
@@ -211,8 +211,8 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .question-icon-size {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
 }
 
 .question-icon-position {
@@ -244,11 +244,11 @@ header {
 }
 
 .sidebar-desktop-width {
-  min-width: 29rem;
+  min-width: 29rem !important;
 }
 
 .sidebar-XL-width {
-  min-width: 29rem;
+  min-width: 29rem !important;
 }
 
 .filter-menu:focus-visible {
@@ -261,8 +261,8 @@ header {
 
 .post-form {
   input[type=checkbox] {
-    width: 18px;
-    height: 18px;
+    width: 18px !important;
+    height: 18px !important;
   }
 }
 
@@ -278,13 +278,13 @@ header {
 header {
   line-height: 28px;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
-  font-size: 18px;
-  height: 60px;
+  font-size: 18px !important;
+  height: 60px !important;
 
   .user-dropdown {
     button {
       height: 44px !important;
-      font-size: 18px;
+      font-size: 18px !important;
       font-weight: 400;
       line-height: 28px;
     };
@@ -297,7 +297,7 @@ header {
 
   .container-xl {
     .course-title-lockup {
-      font-size: 1.125rem;
+      font-size: 1.125rem !important;
     };
 
     .logo {
@@ -306,14 +306,14 @@ header {
   };
 
   span:first-child {
-    font-size: 14px;
+    font-size: 14px !important;
     margin-top: 1px !important;
     margin-bottom: -1px !important;
   };
 }
 
 #courseTabsNavigation {
-  font-size: 18px;
+  font-size: 18px !important;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
   z-index: 3;
   background-color: #fff;
@@ -333,7 +333,7 @@ header {
 }
 
 .min-content-height {
-  min-height: 80vh;
+  min-height: 80vh !important;
 }
 
 .header-action-bar {
@@ -409,11 +409,11 @@ header {
 }
 
 .hover-card {
-  height: 36px;
+  height: 36px !important;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15), 0px 4px 10px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   background: #FFFFFF;
-  max-width: fit-content;
+  max-width: fit-content !important;
   margin-left: auto;
   margin-top: -2.063rem;
   z-index: 2;
@@ -426,7 +426,7 @@ header {
 
 .hover-button:hover {
   background-color: #F2F0EF !important;
-  height: 36px;
+  height: 36px !important;
   border: none;
 }
 
@@ -470,8 +470,8 @@ header {
 }
 
 .spinner-dimentions {
-  height: 24px;
-  width: 24px;
+  height: 24px !important;
+  width: 24px !important;
 }
 
 .MJX-TEX {
@@ -506,19 +506,19 @@ header {
 }
 
 .icon-size-24 {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
 }
 
 .actions-dropdown-item {
   padding: 12px 16px;
-  height: 48px;
-  width: 304px;
+  height: 48px !important;
+  width: 304px !important;
 }
 
 .font-xl {
-  font-size: 18px;
-  line-height: 28px;
+  font-size: 18px !important;
+  line-height: 28px !important;
 }
 
 .usabilla_live_button_container{
@@ -529,4 +529,11 @@ header {
   z-index: 4;
   position: relative;
   background-color: #fff;
+}
+
+.spinner-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

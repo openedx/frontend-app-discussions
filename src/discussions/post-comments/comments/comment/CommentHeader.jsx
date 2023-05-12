@@ -1,20 +1,29 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Avatar } from '@edx/paragon';
 
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { commentShape } from './proptypes';
 
 const CommentHeader = ({
-  comment,
+  author,
+  authorLabel,
+  abuseFlagged,
+  closed,
+  createdAt,
+  lastEdit,
 }) => {
-  const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
-  const hasAnyAlert = useAlertBannerVisible(comment);
+  const colorClass = AvatarOutlineAndLabelColors[authorLabel];
+  const hasAnyAlert = useAlertBannerVisible({
+    author,
+    abuseFlagged,
+    lastEdit,
+    closed,
+  });
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
@@ -24,18 +33,18 @@ const CommentHeader = ({
       <div className="align-items-center d-flex flex-row">
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
-          alt={comment.author}
+          alt={author}
           style={{
             width: '32px',
             height: '32px',
           }}
         />
         <AuthorLabel
-          author={comment.author}
-          authorLabel={comment.authorLabel}
+          author={author}
+          authorLabel={authorLabel}
           labelColor={colorClass && `text-${colorClass}`}
           linkToProfile
-          postCreatedAt={comment.createdAt}
+          postCreatedAt={createdAt}
           postOrComment
         />
       </div>
@@ -44,7 +53,21 @@ const CommentHeader = ({
 };
 
 CommentHeader.propTypes = {
-  comment: commentShape.isRequired,
+  author: PropTypes.string.isRequired,
+  authorLabel: PropTypes.string,
+  abuseFlagged: PropTypes.bool.isRequired,
+  closed: PropTypes.bool,
+  createdAt: PropTypes.string.isRequired,
+  lastEdit: PropTypes.shape({
+    editorUsername: PropTypes.string,
+    reason: PropTypes.string,
+  }),
 };
 
-export default injectIntl(CommentHeader);
+CommentHeader.defaultProps = {
+  authorLabel: null,
+  closed: undefined,
+  lastEdit: null,
+};
+
+export default React.memo(CommentHeader);

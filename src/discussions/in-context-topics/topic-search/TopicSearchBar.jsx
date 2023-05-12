@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
@@ -10,26 +10,27 @@ import { DiscussionContext } from '../../common/context';
 import postsMessages from '../../posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../data/slices';
 
-const TopicSearchBar = ({ intl }) => {
+const TopicSearchBar = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
   const topicSearch = useSelector(({ inContextTopics }) => inContextTopics.filter);
   let searchValue = '';
 
-  const onClear = () => {
+  const onClear = useCallback(() => {
     dispatch(setTopicFilter(''));
-  };
+  }, []);
 
-  const onChange = (query) => {
+  const onChange = useCallback((query) => {
     searchValue = query;
-  };
+  }, []);
 
-  const onSubmit = (query) => {
+  const onSubmit = useCallback((query) => {
     if (query === '') {
       return;
     }
     dispatch(setTopicFilter(query));
-  };
+  }, []);
 
   useEffect(() => onClear(), [page]);
 
@@ -56,8 +57,4 @@ const TopicSearchBar = ({ intl }) => {
   );
 };
 
-TopicSearchBar.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(TopicSearchBar);
+export default TopicSearchBar;
