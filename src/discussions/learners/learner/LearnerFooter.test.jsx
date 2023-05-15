@@ -16,7 +16,15 @@ function renderComponent(learner) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <LearnerFooter learner={learner} />
+        <LearnerFooter
+          learner={learner}
+          inactiveFlags={learner.inactiveFlags}
+          activeFlags={learner.activeFlags}
+          threads={learner.threads}
+          responses={learner.responses}
+          replies={learner.replies}
+          username={learner.username}
+        />
       </AppProvider>
     </IntlProvider>,
   );
