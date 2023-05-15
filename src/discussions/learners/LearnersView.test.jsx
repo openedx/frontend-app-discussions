@@ -37,6 +37,7 @@ function renderComponent() {
         <DiscussionContext.Provider value={{
           page: 'learners',
           learnerUsername: 'learner-1',
+          courseId,
         }}
         >
           <MemoryRouter initialEntries={[`/${courseId}/`]}>
