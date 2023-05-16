@@ -14,7 +14,7 @@ import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getCommentsApiUrl } from '../post-comments/data/api';
-import { fetchThreadComments } from '../post-comments/data/thunks';
+import { fetchCommentResponses, fetchThreadComments } from '../post-comments/data/thunks';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { DiscussionContext } from './context';
@@ -33,11 +33,14 @@ let store;
 let axiosMock;
 let container;
 
-function mockAxiosReturnPagedComments() {
-  [null, false, true].forEach(endorsed => {
+async function mockAxiosReturnPagedComments() {
+  const endorsedArray = [null, false, true];
+  const pageArray = [1, 2];
+
+  endorsedArray.forEach(async (endorsed) => {
     const postId = endorsed === null ? discussionPostId : questionPostId;
-    [1, 2].forEach(page => {
-      axiosMock.onGet(commentsApiUrl, {
+    pageArray.forEach(async (page) => {
+      const params = {
         thread_id: postId,
         page,
         page_size: undefined,
@@ -45,38 +48,43 @@ function mockAxiosReturnPagedComments() {
         endorsed,
         reverse_order: reverseOrder,
         enable_in_context_sidebar: enableInContextSidebar,
-      })
-        .reply(200, Factory.build('commentsResult', { can_delete: true }, {
-          threadId: postId,
-          page,
-          pageSize: 1,
-          count: 2,
-          endorsed,
-          childCount: page === 1 ? 2 : 0,
-        }));
+        signal: {},
+      };
+      axiosMock.onGet(commentsApiUrl, { ...params }).reply(200, Factory.build('commentsResult', { can_delete: true }, {
+        threadId: postId,
+        page,
+        pageSize: 1,
+        count: 2,
+        endorsed,
+        childCount: page === 1 ? 2 : 0,
+      }));
+
+      await executeThunk(fetchThreadComments(postId, { ...params }), store.dispatch, store.getState);
     });
   });
 }
 
-function mockAxiosReturnPagedCommentsResponses() {
+async function mockAxiosReturnPagedCommentsResponses() {
   const parentId = 'comment-1';
   const commentsResponsesApiUrl = `${commentsApiUrl}${parentId}/`;
   const paramsTemplate = {
     page: undefined,
     page_size: undefined,
     requested_fields: 'profile_image',
+    reverse_order: true,
   };
 
-  for (let page = 1; page <= 2; page++) {
-    axiosMock
-      .onGet(commentsResponsesApiUrl, { params: { ...paramsTemplate, page } })
-      .reply(200, Factory.build('commentsResult', null, {
+  [1, 2].forEach(async (page) => {
+    axiosMock.onGet(commentsResponsesApiUrl, { params: { ...paramsTemplate, page } }).reply(200,
+      Factory.build('commentsResult', null, {
         parentId,
         page,
         pageSize: 1,
         count: 2,
       }));
-  }
+
+    await executeThunk(fetchCommentResponses(parentId), store.dispatch, store.getState);
+  });
 }
 
 function renderComponent(postId) {
@@ -101,7 +109,7 @@ function renderComponent(postId) {
 }
 
 describe('HoverCard', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
@@ -114,42 +122,28 @@ describe('HoverCard', () => {
     store = initializeStore();
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onGet(threadsApiUrl)
-      .reply(200, Factory.build('threadsResult'));
-
-    axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({
-      url,
-      data,
-    }) => {
+    axiosMock.onGet(threadsApiUrl).reply(200, Factory.build('threadsResult'));
+    axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({ url, data }) => {
       const commentId = url.match(/comments\/(?<id>[a-z1-9-]+)\//).groups.id;
-      const {
-        rawBody,
-      } = camelCaseObject(JSON.parse(data));
+      const { rawBody } = camelCaseObject(JSON.parse(data));
       return [200, Factory.build('comment', {
         id: commentId,
         rendered_body: rawBody,
         raw_body: rawBody,
       })];
     });
+    axiosMock.onPost(commentsApiUrl).reply(({ data }) => {
+      const { rawBody, threadId } = camelCaseObject(JSON.parse(data));
+      return [200, Factory.build('comment', {
+        rendered_body: rawBody,
+        raw_body: rawBody,
+        thread_id: threadId,
+      })];
+    });
 
-    axiosMock.onPost(commentsApiUrl)
-      .reply(({ data }) => {
-        const {
-          rawBody,
-          postId,
-        } = camelCaseObject(JSON.parse(data));
-        return [200, Factory.build(
-          'comment',
-          {
-            thread_id: postId,
-            raw_body: rawBody,
-            rendered_body: rawBody,
-          },
-        )];
-      });
-    executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
-    mockAxiosReturnPagedComments();
-    mockAxiosReturnPagedCommentsResponses();
+    await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
+    await mockAxiosReturnPagedComments();
+    await mockAxiosReturnPagedCommentsResponses();
   });
 
   test('it should have hover card on post', async () => {
@@ -165,9 +159,10 @@ describe('HoverCard', () => {
   });
 
   test('it should show add response, like, follow and actions menu for hovered post', async () => {
-    renderComponent(discussionPostId);
+    await waitFor(() => renderComponent(discussionPostId));
     const post = screen.getByTestId('post-thread-1');
     const view = within(post).getByTestId('hover-card-thread-1');
+
     expect(within(view).queryByRole('button', { name: /Add response/i })).toBeInTheDocument();
     expect(within(view).getByRole('button', { name: /like/i })).toBeInTheDocument();
     expect(within(view).queryByRole('button', { name: /follow/i })).toBeInTheDocument();
@@ -175,9 +170,10 @@ describe('HoverCard', () => {
   });
 
   test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
-    renderComponent(discussionPostId);
+    await waitFor(() => renderComponent(discussionPostId));
     const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
     const view = within(comment).getByTestId('hover-card-comment-1');
+
     expect(within(view).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
     expect(within(view).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
     expect(within(view).queryByRole('button', { name: /like/i })).toBeInTheDocument();
