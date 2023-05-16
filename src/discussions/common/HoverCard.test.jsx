@@ -1,6 +1,5 @@
 import {
-  render, screen, waitFor,
-  within,
+  render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -15,6 +14,7 @@ import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getCommentsApiUrl } from '../post-comments/data/api';
+import { fetchThreadComments } from '../post-comments/data/thunks';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { DiscussionContext } from './context';
@@ -37,18 +37,15 @@ function mockAxiosReturnPagedComments() {
   [null, false, true].forEach(endorsed => {
     const postId = endorsed === null ? discussionPostId : questionPostId;
     [1, 2].forEach(page => {
-      axiosMock
-        .onGet(commentsApiUrl, {
-          params: {
-            thread_id: postId,
-            page,
-            page_size: undefined,
-            requested_fields: 'profile_image',
-            endorsed,
-            reverse_order: reverseOrder,
-            enable_in_context_sidebar: enableInContextSidebar,
-          },
-        })
+      axiosMock.onGet(commentsApiUrl, {
+        thread_id: postId,
+        page,
+        page_size: undefined,
+        requested_fields: 'profile_image',
+        endorsed,
+        reverse_order: reverseOrder,
+        enable_in_context_sidebar: enableInContextSidebar,
+      })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
           threadId: postId,
           page,
@@ -87,7 +84,7 @@ function renderComponent(postId) {
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
-          value={{ courseId }}
+          value={{ courseId, postId }}
         >
           <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
             <DiscussionContent />
@@ -119,6 +116,7 @@ describe('HoverCard', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(threadsApiUrl)
       .reply(200, Factory.build('threadsResult'));
+
     axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({
       url,
       data,
@@ -133,35 +131,35 @@ describe('HoverCard', () => {
         raw_body: rawBody,
       })];
     });
+
     axiosMock.onPost(commentsApiUrl)
       .reply(({ data }) => {
         const {
           rawBody,
-          threadId,
+          postId,
         } = camelCaseObject(JSON.parse(data));
         return [200, Factory.build(
           'comment',
           {
-            rendered_body: rawBody,
+            thread_id: postId,
             raw_body: rawBody,
-            thread_id: threadId,
+            rendered_body: rawBody,
           },
         )];
       });
-
     executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     mockAxiosReturnPagedComments();
     mockAxiosReturnPagedCommentsResponses();
   });
 
   test('it should have hover card on post', async () => {
-    renderComponent(discussionPostId);
+    await waitFor(() => renderComponent(discussionPostId));
     const post = screen.getByTestId('post-thread-1');
     expect(within(post).getByTestId('hover-card-thread-1')).toBeInTheDocument();
   });
 
   test('it should have hover card on comment', async () => {
-    renderComponent(discussionPostId);
+    await waitFor(() => renderComponent(discussionPostId));
     const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
     expect(within(comment).getByTestId('hover-card-comment-1')).toBeInTheDocument();
   });
@@ -177,9 +175,9 @@ describe('HoverCard', () => {
   });
 
   test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
-    renderComponent(questionPostId);
-    const comment = await waitFor(() => screen.findByTestId('comment-comment-3'));
-    const view = within(comment).getByTestId('hover-card-comment-3');
+    renderComponent(discussionPostId);
+    const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+    const view = within(comment).getByTestId('hover-card-comment-1');
     expect(within(view).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
     expect(within(view).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
     expect(within(view).queryByRole('button', { name: /like/i })).toBeInTheDocument();

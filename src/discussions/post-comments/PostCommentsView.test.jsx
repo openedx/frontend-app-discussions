@@ -53,15 +53,13 @@ function mockAxiosReturnPagedComments() {
     [1, 2].forEach(page => {
       axiosMock
         .onGet(commentsApiUrl, {
-          params: {
-            thread_id: postId,
-            page,
-            page_size: undefined,
-            requested_fields: 'profile_image',
-            endorsed,
-            reverse_order: reverseOrder,
-            enable_in_context_sidebar: enableInContextSidebar,
-          },
+          thread_id: postId,
+          page,
+          page_size: undefined,
+          requested_fields: 'profile_image',
+          endorsed,
+          reverse_order: reverseOrder,
+          enable_in_context_sidebar: enableInContextSidebar,
         })
         .reply(200, Factory.build('commentsResult', { can_delete: true }, {
           threadId: postId,
@@ -108,7 +106,7 @@ function renderComponent(postId) {
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
-          value={{ courseId }}
+          value={{ courseId, postId }}
         >
           <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
             <DiscussionContent />
