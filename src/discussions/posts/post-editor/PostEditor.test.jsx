@@ -121,12 +121,7 @@ describe('PostEditor', () => {
       // 3 non courseare topics
       expect(screen.queryAllByText(/ncw-topic \d/)).toHaveLength(3);
       expect(screen.queryByText('cohort', { exact: false })).not.toBeInTheDocument();
-
-      if (allowAnonymous) {
-        expect(screen.queryByText('Post anonymously')).not.toBeInTheDocument();
-      } else {
-        expect(screen.queryByText('Post anonymously')).not.toBeInTheDocument();
-      }
+      expect(screen.queryByText('Post anonymously')).not.toBeInTheDocument();
 
       if (allowAnonymousToPeers) {
         expect(screen.queryByText('Post anonymously to peers')).toBeInTheDocument();
