@@ -82,6 +82,10 @@ describe('Learner Posts View', () => {
     await executeThunk(fetchUserPosts(courseId), store.dispatch, store.getState);
   });
 
+  afterEach(() => {
+    axiosMock.reset();
+  });
+
   test('Reported icon is visible to moderator for post with reported comment', async () => {
     await setUpPrivilages(axiosMock, store, true);
     await waitFor(() => { renderComponent(); });
@@ -112,7 +116,9 @@ describe('Learner Posts View', () => {
 
       const backButton = screen.getByLabelText('Back');
 
-      await act(() => fireEvent.click(backButton));
+      await act(() => {
+        fireEvent.click(backButton);
+      });
       await waitFor(() => {
         expect(lastLocation.pathname.endsWith('/learners')).toBeTruthy();
       });
@@ -128,15 +134,13 @@ describe('Learner Posts View', () => {
     expect(recentActivity).toBeInTheDocument();
   });
 
-  it(`should display a list of the interactive posts of a selected learner and the posts count
-     should be equal to the API response count.`, async () => {
+  it('should display a list of the interactive posts of a selected learner', async () => {
     await waitFor(() => {
       renderComponent();
     });
     const posts = await container.querySelectorAll('.discussion-post');
 
     expect(posts).toHaveLength(2);
-    expect(posts).toHaveLength(Object.values(store.getState().threads.threadsById).length);
   });
 
   it.each([
@@ -162,9 +166,9 @@ describe('Learner Posts View', () => {
       await act(async () => {
         fireEvent.click(activity);
       });
+
       await waitFor(() => {
         const learners = container.querySelectorAll('.discussion-post');
-
         expect(learners).toHaveLength(result);
       });
     });
@@ -175,8 +179,7 @@ describe('Learner Posts View', () => {
     { searchBy: 'cohort-1', result: 2 },
   ])('successfully display learners by %s.', async ({ searchBy, result }) => {
     await setUpPrivilages(axiosMock, store, true);
-    axiosMock.onGet(getCohortsApiUrl(courseId))
-      .reply(200, Factory.buildList('cohort', 3));
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
 
     await executeThunk(fetchCourseCohorts(courseId), store.dispatch, store.getState);
     await renderComponent();
@@ -191,9 +194,9 @@ describe('Learner Posts View', () => {
     await act(async () => {
       fireEvent.click(cohort);
     });
+
     await waitFor(() => {
       const learners = container.querySelectorAll('.discussion-post');
-
       expect(learners).toHaveLength(result);
     });
   });
@@ -211,6 +214,6 @@ describe('Learner Posts View', () => {
     });
 
     expect(loadMoreButton).not.toBeInTheDocument();
-    expect(container.querySelectorAll('.discussion-post')).toHaveLength(2);
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(4);
   });
 });

@@ -18,7 +18,17 @@ function renderComponent(post, userHasModerationPrivileges = false) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <PostFooter post={post} userHasModerationPrivileges={userHasModerationPrivileges} />
+        <PostFooter
+          post={post}
+          userHasModerationPrivileges={userHasModerationPrivileges}
+          closed={post.closed}
+          following={post.following}
+          groupId={toString(post.groupId)}
+          groupName={post.groupName}
+          id={post.id}
+          voted={post.voted}
+          voteCount={post.voteCount}
+        />
       </AppProvider>
     </IntlProvider>,
   );
@@ -88,7 +98,7 @@ describe('PostFooter', () => {
     expect(store.getState().threads.status === RequestStatus.IN_PROGRESS).toBeTruthy();
   });
 
-  it('test follow button when following=false', async () => {
+  it('test follow button when following = false', async () => {
     renderComponent({ ...mockPost, following: false });
     expect(screen.queryByRole('button', { name: /follow/i })).not.toBeInTheDocument();
   });

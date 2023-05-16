@@ -31,7 +31,14 @@ function renderComponent(
           value={{ courseId: 'course-v1:edX+TestX+Test_Course' }}
         >
           <AlertBanner
-            content={content}
+            author={content.author}
+            abuseFlagged={content.abuseFlagged}
+            lastEdit={content.lastEdit}
+            closed={content.closed}
+            closedBy={content.closedBy}
+            closeReason={content.closeReason}
+            editByLabel={content.editByLabel}
+            closedByLabel={content.closedByLabel}
           />
         </DiscussionContext.Provider>
       </AppProvider>

@@ -23,8 +23,9 @@ const LearnerFooter = ({
     <div className="d-flex align-items-center pt-1 mt-2.5" style={{ marginBottom: '2px' }}>
       <OverlayTrigger
         placement="right"
+        id={`learner-${username}-responses`}
         overlay={(
-          <Tooltip>
+          <Tooltip id={`learner-${username}-responses`}>
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.allActivity)}
             </div>
@@ -38,8 +39,9 @@ const LearnerFooter = ({
       </OverlayTrigger>
       <OverlayTrigger
         placement="right"
+        id={`learner-${username}-posts`}
         overlay={(
-          <Tooltip>
+          <Tooltip id={`learner-${username}-posts`}>
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.posts)}
             </div>
@@ -54,8 +56,9 @@ const LearnerFooter = ({
       {Boolean(canSeeLearnerReportedStats) && (
         <OverlayTrigger
           placement="right"
+          id={`learner-${username}-flags`}
           overlay={(
-            <Tooltip id={`learner-${username}`}>
+            <Tooltip id={`learner-${username}-flags`}>
               <div className="d-flex flex-column align-items-start">
                 {Boolean(activeFlags)
                   && (
