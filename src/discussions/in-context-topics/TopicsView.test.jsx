@@ -131,7 +131,7 @@ describe('InContext Topics View', () => {
     const statsList = await topic.querySelectorAll('.icon-size');
 
     expect(statsList.length).toBe(3);
-    fireEvent.mouseOver(statsList[0]);
+    await act(async () => { fireEvent.mouseOver(statsList[0]); });
     expect(screen.queryByText('1 Discussion')).toBeInTheDocument();
   });
 
@@ -180,7 +180,7 @@ describe('InContext Topics View', () => {
     const subsectionObject = coursewareTopics[0].children[0];
     const subSection = await container.querySelector(`[data-subsection-id=${subsectionObject.id}]`);
 
-    await act(async () => fireEvent.click(subSection));
+    await act(async () => { fireEvent.click(subSection); });
     await waitFor(async () => {
       const backButton = await screen.getByLabelText('Back to topics list');
       const topicsList = await screen.getByRole('list');
@@ -199,7 +199,7 @@ describe('InContext Topics View', () => {
     renderComponent();
     const subSection = await container.querySelector(`[data-subsection-id=${coursewareTopics[0].children[0].id}]`);
 
-    await act(async () => fireEvent.click(subSection));
+    await act(async () => { fireEvent.click(subSection); });
     await waitFor(async () => {
       const units = await container.querySelectorAll('.discussion-topic');
 
@@ -215,7 +215,7 @@ describe('InContext Topics View', () => {
 
     const subSection = await container.querySelector(`[data-subsection-id=${subSectionObject.id}]`);
 
-    await act(async () => fireEvent.click(subSection));
+    await act(async () => { fireEvent.click(subSection); });
     await waitFor(async () => {
       const unitElement = await screen.findByText(unitObject.name);
       const unitContainer = await container.querySelector(`[data-topic-id=${unitObject.id}]`);
@@ -224,7 +224,7 @@ describe('InContext Topics View', () => {
       expect(unitElement).toBeInTheDocument();
       expect(statsList).toHaveLength(3);
 
-      await act(async () => fireEvent.click(unitContainer));
+      await act(async () => { fireEvent.click(unitContainer); });
       await waitFor(async () => {
         expect(lastLocation.pathname.endsWith(`/topics/${unitObject.id}`)).toBeTruthy();
       });
