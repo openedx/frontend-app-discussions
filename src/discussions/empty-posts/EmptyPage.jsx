@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { Button } from '@edx/paragon';
 
-import { ReactComponent as EmptyIcon } from '../../assets/empty.svg';
+import EmptyIcon from '../../assets/Empty';
 
 const EmptyPage = ({
   title,
