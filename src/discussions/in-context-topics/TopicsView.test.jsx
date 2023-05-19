@@ -123,14 +123,14 @@ describe('InContext Topics View', () => {
     expect(topic.nextSibling).toBe(container.querySelector('.divider'));
   });
 
-  it('A non-Courseware topic should have 3 stats and should be hoverable', async () => {
+  it('A non-Courseware topic should have 2 stats and should be hoverable', async () => {
     await setupMockResponse();
     renderComponent();
 
     const topic = await container.querySelector('.discussion-topic');
     const statsList = await topic.querySelectorAll('.icon-size');
 
-    expect(statsList.length).toBe(3);
+    expect(statsList.length).toBe(2);
     await act(async () => { fireEvent.mouseOver(statsList[0]); });
     expect(screen.queryByText('1 Discussion')).toBeInTheDocument();
   });
@@ -207,7 +207,7 @@ describe('InContext Topics View', () => {
     });
   });
 
-  it('A unit should have a title and stats and should be clickable', async () => {
+  it('A unit should have a title and should be clickable', async () => {
     await setupMockResponse();
     renderComponent();
     const subSectionObject = coursewareTopics[0].children[0];
@@ -222,7 +222,7 @@ describe('InContext Topics View', () => {
       const statsList = await unitContainer.querySelectorAll('.icon-size');
 
       expect(unitElement).toBeInTheDocument();
-      expect(statsList).toHaveLength(3);
+      expect(statsList).toHaveLength(2);
 
       await act(async () => { fireEvent.click(unitContainer); });
       await waitFor(async () => {

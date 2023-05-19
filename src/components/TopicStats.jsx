@@ -98,8 +98,8 @@ TopicStats.propTypes = {
     discussions: PropTypes.number,
     questions: PropTypes.number,
   }),
-  activeFlags: PropTypes.bool,
-  inactiveFlags: PropTypes.bool,
+  activeFlags: PropTypes.number,
+  inactiveFlags: PropTypes.number,
 };
 
 TopicStats.defaultProps = {
@@ -107,8 +107,8 @@ TopicStats.defaultProps = {
     discussions: 0,
     questions: 0,
   },
-  activeFlags: false,
-  inactiveFlags: false,
+  activeFlags: null,
+  inactiveFlags: null,
 };
 
 export default React.memo(TopicStats);
