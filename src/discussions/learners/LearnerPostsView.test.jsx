@@ -116,7 +116,7 @@ describe('Learner Posts View', () => {
 
       const backButton = screen.getByLabelText('Back');
 
-      await act(() => {
+      await act(async () => {
         fireEvent.click(backButton);
       });
       await waitFor(() => {
