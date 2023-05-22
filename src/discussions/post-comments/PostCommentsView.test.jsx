@@ -182,14 +182,14 @@ describe('ThreadView', () => {
     }
 
     it('should display post content', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       const post = await waitFor(() => screen.getByTestId('post-thread-1'));
 
       expect(within(post).queryByTestId(discussionPostId)).toBeInTheDocument();
     });
 
     it('should display comment content', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
 
       expect(within(comment).queryByTestId('comment-1')).toBeInTheDocument();
@@ -200,7 +200,7 @@ describe('ThreadView', () => {
       await getThreadAPIResponse({
         vote_count: 0, following: false, closed: false, group_id: null,
       });
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       expect(screen.queryByTestId('post-footer')).not.toBeInTheDocument();
     });
@@ -210,13 +210,13 @@ describe('ThreadView', () => {
       await getThreadAPIResponse({
         vote_count: 4, following: true, closed: false, group_id: null,
       });
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       expect(screen.queryByTestId('post-footer')).toBeInTheDocument();
     });
 
     it('should show and hide the editor', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = screen.getByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
@@ -230,13 +230,13 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a response', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
       const addResponseButton = within(hoverCard).getByRole('button', { name: /Add response/i });
       await act(async () => { fireEvent.click(addResponseButton); });
-      await act(() => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
@@ -252,12 +252,12 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
-      act(() => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
@@ -265,13 +265,13 @@ describe('ThreadView', () => {
     });
 
     it('should allow editing an existing comment', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /actions menu/i })); });
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: /edit/i })); });
-      act(() => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: /submit/i })); });
 
       await waitFor(async () => {
@@ -298,7 +298,7 @@ describe('ThreadView', () => {
 
     it('should show reason codes when closing a post', async () => {
       await setupCourseConfig();
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
@@ -327,7 +327,7 @@ describe('ThreadView', () => {
 
     it('should close the post directly if reason codes are not enabled', async () => {
       await setupCourseConfig(false);
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
@@ -368,7 +368,7 @@ describe('ThreadView', () => {
 
     it('should show the editor if the post is edited', async () => {
       await setupCourseConfig(false);
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
@@ -384,7 +384,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow pinning the post', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
@@ -399,7 +399,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow reporting the post', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
       await act(async () => {
@@ -419,7 +419,7 @@ describe('ThreadView', () => {
     });
 
     it('handles liking a post', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
       const hoverCard = within(post).getByTestId('hover-card-thread-1');
@@ -433,7 +433,7 @@ describe('ThreadView', () => {
     });
 
     it('handles liking a comment', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
@@ -447,7 +447,7 @@ describe('ThreadView', () => {
     });
 
     it('handles endorsing comments', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       // Wait for the content to load
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
@@ -459,7 +459,7 @@ describe('ThreadView', () => {
     });
 
     it('handles reporting comments', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       // Wait for the content to load
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
@@ -490,7 +490,7 @@ describe('ThreadView', () => {
     });
 
     it('initially loads only the first page', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       expect(await screen.findByTestId('comment-comment-1'))
         .toBeInTheDocument();
       expect(screen.queryByTestId('comment-comment-2'))
@@ -503,14 +503,14 @@ describe('ThreadView', () => {
     const findLoadMoreCommentsResponsesButton = () => screen.findByTestId('load-more-comments-responses');
 
     it('initially loads only the first page', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       await waitFor(() => screen.findByTestId('reply-comment-7'));
       expect(screen.queryByTestId('reply-comment-8')).not.toBeInTheDocument();
     });
 
     it('pressing load more button will load next page of responses', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
       await act(async () => {
@@ -521,7 +521,7 @@ describe('ThreadView', () => {
     });
 
     it('newly loaded responses are appended to the old ones', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
       await act(async () => {
@@ -534,20 +534,15 @@ describe('ThreadView', () => {
     });
 
     it('load more button is hidden when no more responses pages to load', async () => {
-      const totalPages = 2;
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const loadMoreButton = await findLoadMoreCommentsResponsesButton();
-      for (let page = 1; page < totalPages; page++) {
-        act(() => {
-          fireEvent.click(loadMoreButton);
-        });
-      }
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
       await screen.findByTestId('reply-comment-8');
-      await expect(findLoadMoreCommentsResponsesButton())
-        .rejects
-        .toThrow();
+      await expect(findLoadMoreCommentsResponsesButton()).rejects.toThrow();
     });
   });
 
@@ -560,7 +555,7 @@ describe('ThreadView', () => {
     cardId,
   }) => {
     test(`for ${component}`, async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
       // Wait for the content to load
       const post = await screen.findByTestId(testId);
       const hoverCard = within(post).getByTestId(cardId);
@@ -579,21 +574,21 @@ describe('ThreadView', () => {
 
   describe('For comments replies', () => {
     it('shows action dropdown for replies', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
       expect(within(reply).getByRole('button', { name: /actions menu/i })).toBeInTheDocument();
     });
 
     it('should display reply content', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
       expect(within(reply).queryByTestId('comment-7')).toBeInTheDocument();
     });
 
     it('shows delete confirmation modal', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const reply = await waitFor(() => screen.findByTestId('reply-comment-7'));
       await act(async () => { fireEvent.click(within(reply).getByRole('button', { name: /actions menu/i })); });
@@ -605,7 +600,7 @@ describe('ThreadView', () => {
 
   describe('for comments sort', () => {
     const getCommentSortDropdown = async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Newest first/i })); });
@@ -613,7 +608,7 @@ describe('ThreadView', () => {
     };
 
     it('should show sort dropdown if there are endorse or unendorsed comments', async () => {
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const sortWrapper = container.querySelector('.comments-sort');
@@ -625,7 +620,7 @@ describe('ThreadView', () => {
 
     it('should not show sort dropdown if there is no response', async () => {
       const commentId = 'comment-1';
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
       axiosMock.onDelete(`${commentsApiUrl}${commentId}/`).reply(201);
@@ -664,7 +659,7 @@ describe('ThreadView', () => {
       await axiosMock.onGet(getDiscussionTourUrl(), {}).reply(200, [discussionTourFactory.build({ tourName })]);
       await executeThunk(fetchDiscussionTours(), store.dispatch, store.getState);
 
-      renderComponent(discussionPostId);
+      await waitFor(() => renderComponent(discussionPostId));
 
       await waitFor(() => screen.findByTestId('comment-comment-1'));
       const responseSortTour = () => selectTours(store.getState()).find(item => item.tourName === 'response_sort');
