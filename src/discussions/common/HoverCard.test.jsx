@@ -161,22 +161,22 @@ describe('HoverCard', () => {
   test('it should show add response, like, follow and actions menu for hovered post', async () => {
     await waitFor(() => renderComponent(discussionPostId));
     const post = screen.getByTestId('post-thread-1');
-    const view = within(post).getByTestId('hover-card-thread-1');
+    const hoverCard = within(post).getByTestId('hover-card-thread-1');
 
-    expect(within(view).queryByRole('button', { name: /Add response/i })).toBeInTheDocument();
-    expect(within(view).getByRole('button', { name: /like/i })).toBeInTheDocument();
-    expect(within(view).queryByRole('button', { name: /follow/i })).toBeInTheDocument();
-    expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /Add response/i })).toBeInTheDocument();
+    expect(within(hoverCard).getByRole('button', { name: /like/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /follow/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
   });
 
   test('it should show add comment, Endorse, like and actions menu Buttons for hovered comment', async () => {
     await waitFor(() => renderComponent(discussionPostId));
     const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
-    const view = within(comment).getByTestId('hover-card-comment-1');
+    const hoverCard = within(comment).getByTestId('hover-card-comment-1');
 
-    expect(within(view).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
-    expect(within(view).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
-    expect(within(view).queryByRole('button', { name: /like/i })).toBeInTheDocument();
-    expect(within(view).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /Add comment/i })).toBeInTheDocument();
+    expect(within(hoverCard).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /like/i })).toBeInTheDocument();
+    expect(within(hoverCard).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
   });
 });
