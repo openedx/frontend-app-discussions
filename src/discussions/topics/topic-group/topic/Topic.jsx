@@ -57,8 +57,9 @@ const Topic = ({ topicId, showDivider, index }) => {
           <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
             <OverlayTrigger
               placement="right"
+              id={`tooltip-${id}-discussions`}
               overlay={(
-                <Tooltip>
+                <Tooltip id={`tooltip-${id}-discussions`}>
                   <div className="d-flex flex-column align-items-start">
                     {intl.formatMessage(messages.discussions, {
                       count: threadCounts?.discussion || 0,
@@ -74,8 +75,9 @@ const Topic = ({ topicId, showDivider, index }) => {
             </OverlayTrigger>
             <OverlayTrigger
               placement="right"
+              id={`tooltip-${id}-questions`}
               overlay={(
-                <Tooltip>
+                <Tooltip id={`tooltip-${id}-questions`}>
                   <div className="d-flex flex-column align-items-start">
                     {intl.formatMessage(messages.questions, {
                       count: threadCounts?.question || 0,
@@ -91,9 +93,10 @@ const Topic = ({ topicId, showDivider, index }) => {
             </OverlayTrigger>
             {Boolean(canSeeReportedStats) && (
               <OverlayTrigger
+                id={`tooltip-${id}-flags`}
                 placement="right"
                 overlay={(
-                  <Tooltip>
+                  <Tooltip id={`tooltip-${id}-flags`}>
                     <div className="d-flex flex-column align-items-start">
                       {Boolean(activeFlags) && (
                         <span>

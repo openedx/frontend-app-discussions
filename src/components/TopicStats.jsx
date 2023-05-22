@@ -27,9 +27,10 @@ const TopicStats = ({
   return (
     <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
       <OverlayTrigger
+        id="discussion-topic-stats"
         placement="right"
         overlay={(
-          <Tooltip>
+          <Tooltip id="discussion-topic-stats">
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.discussions, {
                 count: threadCounts?.discussion || 0,
@@ -44,9 +45,10 @@ const TopicStats = ({
         </div>
       </OverlayTrigger>
       <OverlayTrigger
+        id="question-topic-stats"
         placement="right"
         overlay={(
-          <Tooltip>
+          <Tooltip id="question-topic-stats">
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.questions, {
                 count: threadCounts?.question || 0,
@@ -62,9 +64,10 @@ const TopicStats = ({
       </OverlayTrigger>
       {Boolean(canSeeReportedStats) && (
         <OverlayTrigger
+          id="reported-topic-stats"
           placement="right"
           overlay={(
-            <Tooltip>
+            <Tooltip id="reported-topic-stats">
               <div className="d-flex flex-column align-items-start">
                 {Boolean(activeFlags) && (
                   <span>

@@ -54,11 +54,7 @@ const Topic = ({
                 {topic?.name || topic?.displayName || intl.formatMessage(messages.unnamedTopicSubCategories)}
               </div>
             </div>
-            <TopicStats
-              threadCounts={topic?.threadCounts}
-              activeFlags={topic?.activeFlags}
-              inactiveFlags={topic?.inactiveFlags}
-            />
+            <TopicStats threadCounts={topic?.threadCounts} />
           </div>
         </div>
       </Link>
