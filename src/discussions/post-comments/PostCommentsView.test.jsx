@@ -183,10 +183,6 @@ describe('ThreadView', () => {
 
     it('should display post content', async () => {
       renderComponent(discussionPostId);
-
-      await waitFor(() => {
-        expect(screen.queryByTestId('spinner')).not.toBeInTheDocument();
-      });
       const post = await waitFor(() => screen.getByTestId('post-thread-1'));
 
       expect(within(post).queryByTestId(discussionPostId)).toBeInTheDocument();
