@@ -75,13 +75,15 @@ async function mockAxiosReturnPagedCommentsResponses() {
   };
 
   [1, 2].forEach(async (page) => {
-    axiosMock.onGet(commentsResponsesApiUrl, { params: { ...paramsTemplate, page } }).reply(200,
+    axiosMock.onGet(commentsResponsesApiUrl, { params: { ...paramsTemplate, page } }).reply(
+      200,
       Factory.build('commentsResult', null, {
         parentId,
         page,
         pageSize: 1,
         count: 2,
-      }));
+      }),
+    );
 
     await executeThunk(fetchCommentResponses(parentId), store.dispatch, store.getState);
   });
