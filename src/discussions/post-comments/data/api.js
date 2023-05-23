@@ -38,8 +38,7 @@ export async function getThreadComments(threadId, {
     enableInContextSidebar,
   });
 
-  const { data } = await getAuthenticatedHttpClient()
-    .get(getCommentsApiUrl(), { params: { ...params, signal } });
+  const { data } = await getAuthenticatedHttpClient().get(getCommentsApiUrl(), { params: { ...params, signal } });
   return data;
 }
 
