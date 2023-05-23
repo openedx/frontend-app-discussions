@@ -20,14 +20,14 @@ export const getCommentsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussi
  * @param enableInContextSidebar
  * @returns {Promise<{}>}
  */
-export async function getThreadComments(threadId, {
+export const getThreadComments = async (threadId, {
   endorsed,
   page,
   pageSize,
   reverseOrder,
   enableInContextSidebar = false,
   signal,
-} = {}) {
+} = {}) => {
   const params = snakeCaseObject({
     threadId,
     endorsed: EndorsementValue[endorsed],
@@ -40,7 +40,7 @@ export async function getThreadComments(threadId, {
 
   const { data } = await getAuthenticatedHttpClient().get(getCommentsApiUrl(), { params: { ...params, signal } });
   return data;
-}
+};
 
 /**
  * Fetches a responses to a comment.
@@ -49,11 +49,11 @@ export async function getThreadComments(threadId, {
  * @param {number=} pageSize
  * @returns {Promise<{}>}
  */
-export async function getCommentResponses(commentId, {
+export const getCommentResponses = async (commentId, {
   page,
   pageSize,
   reverseOrder,
-} = {}) {
+} = {}) => {
   const url = `${getCommentsApiUrl()}${commentId}/`;
   const params = snakeCaseObject({
     page,
@@ -64,7 +64,7 @@ export async function getCommentResponses(commentId, {
   const { data } = await getAuthenticatedHttpClient()
     .get(url, { params });
   return data;
-}
+};
 
 /**
  * Posts a comment.
@@ -74,13 +74,13 @@ export async function getCommentResponses(commentId, {
  * @param {boolean} enableInContextSidebar
  * @returns {Promise<{}>}
  */
-export async function postComment(comment, threadId, parentId = null, enableInContextSidebar = false) {
+export const postComment = async (comment, threadId, parentId = null, enableInContextSidebar = false) => {
   const { data } = await getAuthenticatedHttpClient()
     .post(getCommentsApiUrl(), snakeCaseObject({
       threadId, raw_body: comment, parentId, enableInContextSidebar,
     }));
   return data;
-}
+};
 
 /**
  * Updates existing comment.
@@ -92,13 +92,13 @@ export async function postComment(comment, threadId, parentId = null, enableInCo
  * @param {string=} editReasonCode The moderation reason code for editing.
  * @returns {Promise<{}>}
  */
-export async function updateComment(commentId, {
+export const updateComment = async (commentId, {
   comment,
   voted,
   flagged,
   endorsed,
   editReasonCode,
-}) {
+}) => {
   const url = `${getCommentsApiUrl()}${commentId}/`;
   const postData = snakeCaseObject({
     raw_body: comment,
@@ -111,14 +111,14 @@ export async function updateComment(commentId, {
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, postData, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;
-}
+};
 
 /**
  * Deletes existing comment.
  * @param {string} commentId ID of comment to delete
  */
-export async function deleteComment(commentId) {
+export const deleteComment = async (commentId) => {
   const url = `${getCommentsApiUrl()}${commentId}/`;
   await getAuthenticatedHttpClient()
     .delete(url);
-}
+};
