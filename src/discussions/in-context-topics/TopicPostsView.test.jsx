@@ -206,7 +206,8 @@ describe('InContext Topic Posts View', () => {
   test.each([
     { searchText: 'hello world', output: 'Showing 0 results for', resultCount: 0 },
     { searchText: 'introduction', output: 'Showing 8 results for', resultCount: 8 },
-  ])('It should have a search bar with a clear button and \'$output\' results found text.',
+  ])(
+    'It should have a search bar with a clear button and \'$output\' results found text.',
     async ({ searchText, output, resultCount }) => {
       await setupTopicsMockResponse();
       await renderComponent();
@@ -226,7 +227,8 @@ describe('InContext Topic Posts View', () => {
         expect(clearButton).toBeInTheDocument();
         expect(units).toHaveLength(resultCount);
       });
-    });
+    },
+  );
 
   it('When click on the clear button it should move to main topics pages.', async () => {
     await setupTopicsMockResponse();
@@ -253,7 +255,8 @@ describe('InContext Topic Posts View', () => {
     });
   });
 
-  it('should display Nothing here yet and No topic exists message when topics and selectedSubsectionUnits are empty',
+  it(
+    'should display Nothing here yet and No topic exists message when topics and selectedSubsectionUnits are empty',
     async () => {
       await setupTopicsMockResponse(0, 0, 0);
       await renderComponent({ topicId: 'test-topic', category: 'test-category' });
@@ -261,7 +264,8 @@ describe('InContext Topic Posts View', () => {
       await waitFor(() => expect(within(container).queryByText('Nothing here yet')).toBeInTheDocument());
       expect(within(container).queryByText('No topic exists')).toBeInTheDocument();
       expect(within(container).queryByText('Unnamed Topic')).toBeInTheDocument();
-    });
+    },
+  );
 
   it('should display all topics when search by an empty search string', async () => {
     await setupTopicsMockResponse();

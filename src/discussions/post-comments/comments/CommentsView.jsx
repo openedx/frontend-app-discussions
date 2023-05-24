@@ -72,6 +72,7 @@ const CommentsView = ({ endorsed }) => {
   ), [hasMorePages, isLoading, handleLoadMoreResponses]);
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {((hasMorePages && isLoading) || !isLoading) && (
         <>

@@ -51,105 +51,109 @@ const PostLink = ({
   const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;
   const isPostRead = read || (!read && commentCount !== unreadCommentCount);
 
-  const checkIsSelected = useMemo(() => (
-    window.location.pathname.includes(postId)),
-  [window.location.pathname]);
+  const checkIsSelected = useMemo(
+    () => (
+      window.location.pathname.includes(postId)),
+    [window.location.pathname],
+  );
 
   return (
-    <>
-      <Link
-        className={
+    <Link
+      className={
           classNames('discussion-post p-0 text-decoration-none text-gray-900', {
             'border-bottom border-light-400': showDivider,
           })
         }
-        to={linkUrl}
-        aria-current={checkIsSelected ? 'page' : undefined}
-        role="option"
-        tabIndex={(checkIsSelected || idx === 0) ? 0 : -1}
-      >
-        <div
-          className={
-            classNames('d-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
+      to={linkUrl}
+      aria-current={checkIsSelected ? 'page' : undefined}
+      role="option"
+      tabIndex={(checkIsSelected || idx === 0) ? 0 : -1}
+    >
+      <div
+        className={
+            classNames(
+              'd-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
               { 'bg-light-300': isPostRead },
-              { 'post-summary-card-selected': id === selectedPostId })
+              { 'post-summary-card-selected': id === selectedPostId },
+            )
           }
-        >
-          <PostAvatar
-            postType={type}
-            author={author}
-            authorLabel={authorLabel}
-            fromPostLink
-            read={isPostRead}
-          />
-          <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
-            <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
-              <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-                <Truncate lines={1} className="mr-1.5" whiteSpace>
-                  <span
-                    class={
-                      classNames('font-weight-500 font-size-14 text-primary-500 font-style align-bottom',
-                        { 'font-weight-bolder': !read })
+      >
+        <PostAvatar
+          postType={type}
+          author={author}
+          authorLabel={authorLabel}
+          fromPostLink
+          read={isPostRead}
+        />
+        <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
+          <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
+            <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
+              <Truncate lines={1} className="mr-1.5" whiteSpace>
+                <span
+                  class={
+                      classNames(
+                        'font-weight-500 font-size-14 text-primary-500 font-style align-bottom',
+                        { 'font-weight-bolder': !read },
+                      )
                     }
-                  >
-                    {title}
-                  </span>
-                  <span class="align-bottom"> </span>
-                  <span
-                    class="text-gray-700 font-weight-normal font-size-14 font-style align-bottom"
-                  >
-                    {isPostPreviewAvailable(previewBody)
-                      ? previewBody
-                      : intl.formatMessage(messages.postWithoutPreview)}
-                  </span>
-                </Truncate>
-                {showAnsweredBadge && (
-                  <Icon src={CheckCircle} className="text-success font-weight-500 ml-auto badge-padding" data-testid="check-icon">
-                    <span className="sr-only">{' '}answered</span>
-                  </Icon>
-                )}
-                {canSeeReportedBadge && (
-                  <Badge
-                    variant="danger"
-                    data-testid="reported-post"
-                    className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-                  >
-                    {intl.formatMessage(messages.contentReported)}
-                    <span className="sr-only">{' '}reported</span>
-                  </Badge>
-                )}
-                {pinned && (
-                  <Icon
-                    src={PushPin}
-                    className={`post-summary-icons-dimensions text-gray-700
+                >
+                  {title}
+                </span>
+                <span class="align-bottom"> </span>
+                <span
+                  class="text-gray-700 font-weight-normal font-size-14 font-style align-bottom"
+                >
+                  {isPostPreviewAvailable(previewBody)
+                    ? previewBody
+                    : intl.formatMessage(messages.postWithoutPreview)}
+                </span>
+              </Truncate>
+              {showAnsweredBadge && (
+              <Icon src={CheckCircle} className="text-success font-weight-500 ml-auto badge-padding" data-testid="check-icon">
+                <span className="sr-only">{' '}answered</span>
+              </Icon>
+              )}
+              {canSeeReportedBadge && (
+              <Badge
+                variant="danger"
+                data-testid="reported-post"
+                className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+              >
+                {intl.formatMessage(messages.contentReported)}
+                <span className="sr-only">{' '}reported</span>
+              </Badge>
+              )}
+              {pinned && (
+              <Icon
+                src={PushPin}
+                className={`post-summary-icons-dimensions text-gray-700
                     ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-                  />
-                )}
-              </div>
+              />
+              )}
             </div>
-            <AuthorLabel
-              author={author || intl.formatMessage(messages.anonymous)}
-              authorLabel={authorLabel}
-              labelColor={authorLabelColor && `text-${authorLabelColor}`}
-            />
-            <PostSummaryFooter
-              postId={id}
-              voted={voted}
-              voteCount={voteCount}
-              following={following}
-              commentCount={commentCount}
-              unreadCommentCount={unreadCommentCount}
-              groupId={groupId}
-              groupName={groupName}
-              createdAt={createdAt}
-              preview
-              showNewCountLabel={isPostRead}
-            />
           </div>
+          <AuthorLabel
+            author={author || intl.formatMessage(messages.anonymous)}
+            authorLabel={authorLabel}
+            labelColor={authorLabelColor && `text-${authorLabelColor}`}
+          />
+          <PostSummaryFooter
+            postId={id}
+            voted={voted}
+            voteCount={voteCount}
+            following={following}
+            commentCount={commentCount}
+            unreadCommentCount={unreadCommentCount}
+            groupId={groupId}
+            groupName={groupName}
+            createdAt={createdAt}
+            preview
+            showNewCountLabel={isPostRead}
+          />
         </div>
-        {!showDivider && pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
-      </Link>
-    </>
+      </div>
+      {!showDivider && pinned && <div className="pt-1 bg-light-500 border-top border-light-700" />}
+    </Link>
   );
 };
 

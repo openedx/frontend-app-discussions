@@ -6,7 +6,7 @@ import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
 import messages from '../messages';
 
-function Confirmation({
+const Confirmation = ({
   isOpen,
   title,
   description,
@@ -15,7 +15,7 @@ function Confirmation({
   closeButtonVaraint,
   confirmButtonVariant,
   confirmButtonText,
-}) {
+}) => {
   const intl = useIntl();
 
   return (
@@ -40,7 +40,7 @@ function Confirmation({
       </ModalDialog.Footer>
     </ModalDialog>
   );
-}
+};
 
 Confirmation.propTypes = {
   isOpen: PropTypes.bool.isRequired,

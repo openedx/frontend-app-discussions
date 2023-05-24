@@ -20,12 +20,21 @@ Factory.define('sub-section')
   .sequence('id', ['topicPrefix'], (idx, topicPrefix) => `${topicPrefix}-topic-${idx}`)
   .sequence('display-name', ['sectionPrefix'], (idx, sectionPrefix) => `Introduction ${sectionPrefix + idx}`)
   .option('courseId', null, 'course-v1:edX+DemoX+Demo_Course')
-  .sequence('legacy_web_url', ['id', 'courseId'],
-    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/block-v1:${id}?experience=legacy`)
-  .sequence('lms_web_url', ['id', 'courseId'],
-    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/block-v1:${id}`)
-  .sequence('student_view_url', ['id', 'courseId'],
-    (idx, id) => `${getApiBaseUrl}/xblock/block-v1:${id}`)
+  .sequence(
+    'legacy_web_url',
+    ['id', 'courseId'],
+    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/block-v1:${id}?experience=legacy`,
+  )
+  .sequence(
+    'lms_web_url',
+    ['id', 'courseId'],
+    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/block-v1:${id}`,
+  )
+  .sequence(
+    'student_view_url',
+    ['id', 'courseId'],
+    (idx, id) => `${getApiBaseUrl}/xblock/block-v1:${id}`,
+  )
   .attr('type', null, 'sequential')
   .attr('activeFlags', null, true)
   .attr('thread_counts', ['discussionCount', 'questionCount'], (discCount, questCount) => {
@@ -51,12 +60,21 @@ Factory.define('section')
   .attr('courseware', null, true)
   .sequence('display-name', (idx) => `Introduction ${idx}`)
   .option('courseId', null, 'course-v1:edX+DemoX+Demo_Course')
-  .sequence('legacy_web_url', ['id', 'courseId'],
-    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}?experience=legacy`)
-  .sequence('lms_web_url', ['id', 'courseId'],
-    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}`)
-  .sequence('student_view_url', ['id', 'courseId'],
-    (idx, id, courseId) => `${getApiBaseUrl}/xblock/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}`)
+  .sequence(
+    'legacy_web_url',
+    ['id', 'courseId'],
+    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}?experience=legacy`,
+  )
+  .sequence(
+    'lms_web_url',
+    ['id', 'courseId'],
+    (idx, id, courseId) => `${getApiBaseUrl}/courses/${courseId}/jump_to/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}`,
+  )
+  .sequence(
+    'student_view_url',
+    ['id', 'courseId'],
+    (idx, id, courseId) => `${getApiBaseUrl}/xblock/${courseId.replace('course-v1:', 'block-v1:')}+type@chapter+block@${id}`,
+  )
   .attr('type', null, 'chapter')
   .attr('children', ['id', 'display-name'], (id, name) => {
     Factory.reset('sub-section');

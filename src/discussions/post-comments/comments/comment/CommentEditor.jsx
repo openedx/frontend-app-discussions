@@ -24,12 +24,12 @@ import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
-function CommentEditor({
+const CommentEditor = ({
   comment,
   edit,
   formClasses,
   onCloseEditor,
-}) {
+}) => {
   const {
     id, threadId, parentId, rawBody, author, lastEdit,
   } = comment;
@@ -60,6 +60,7 @@ function CommentEditor({
 
   const initialValues = {
     comment: rawBody,
+    // eslint-disable-next-line react/prop-types
     editReasonCode: lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
@@ -176,13 +177,13 @@ function CommentEditor({
       )}
     </Formik>
   );
-}
+};
 
 CommentEditor.propTypes = {
   comment: PropTypes.shape({
     author: PropTypes.string,
     id: PropTypes.string,
-    lastEdit: PropTypes.object,
+    lastEdit: PropTypes.shape({}),
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
     threadId: PropTypes.string.isRequired,

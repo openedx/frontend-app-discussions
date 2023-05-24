@@ -74,6 +74,7 @@ const PostCommentsView = () => {
   }
 
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <PostCommentsContext.Provider value={{
       isClosed: closed,
       postType: type,

@@ -172,7 +172,8 @@ describe('DiscussionsHome', () => {
   it.each([
     { searchByEndPoint: 'category/section-topic-1' },
     { searchByEndPoint: 'topics' },
-  ])('should display No Topic selected message on inContext topic pages when user has yet to select a topic %s',
+  ])(
+    'should display No Topic selected message on inContext topic pages when user has yet to select a topic %s',
     async ({ searchByEndPoint }) => {
       axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
         enableInContext: true, provider: 'openedx', hasModerationPrivileges: true,
@@ -193,7 +194,8 @@ describe('DiscussionsHome', () => {
       await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
       expect(screen.queryByText('No topic selected')).toBeInTheDocument();
-    });
+    },
+  );
 
   it('should display empty page message for empty learners list', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {

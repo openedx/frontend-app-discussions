@@ -22,9 +22,7 @@ function buildTestContent(type, buildParams) {
   return camelCaseObject(Factory.build(type, { ...buildParamsSnakeCase }, null));
 }
 
-function renderComponent(
-  content, postType,
-) {
+const renderComponent = (content, postType) => {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
@@ -47,7 +45,7 @@ function renderComponent(
       </AppProvider>
     </IntlProvider>,
   );
-}
+};
 
 describe.each([
   {

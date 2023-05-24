@@ -1,3 +1,4 @@
+/* eslint-disable default-param-last */
 import React from 'react';
 
 import {
@@ -201,7 +202,8 @@ describe('LearnersView', () => {
       username:
         ['learner-1', 'learner-2'],
     },
-  ])('should have a search bar with a clear button and \'$output\' results found text.',
+  ])(
+    'should have a search bar with a clear button and \'$output\' results found text.',
     async ({
       searchText, output, learnersCount, username,
     }) => {
@@ -227,7 +229,8 @@ describe('LearnersView', () => {
         expect(clearButton).toBeInTheDocument();
         expect(leaners).toHaveLength(learnersCount);
       });
-    });
+    },
+  );
 
   test('When click on the clear button it should move to a list of all learners.', async () => {
     await setUpLearnerMockResponse();
@@ -257,7 +260,8 @@ describe('LearnersView', () => {
     expect(learners).toHaveLength(3);
   });
 
-  it('should display reported and previously reported message by passing activeFlags or inactiveFlags',
+  it(
+    'should display reported and previously reported message by passing activeFlags or inactiveFlags',
     async () => {
       await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], '', 1, 1);
       await assignPrivilages(true);
@@ -274,7 +278,8 @@ describe('LearnersView', () => {
       expect(reportedIcon).toBeInTheDocument();
       expect(reported).toBeInTheDocument();
       expect(previouslyReported).toBeInTheDocument();
-    });
+    },
+  );
 
   it('should display load more button and display more learners by clicking on button.', async () => {
     await setUpLearnerMockResponse();

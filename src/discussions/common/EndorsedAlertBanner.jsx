@@ -13,12 +13,12 @@ import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
-function EndorsedAlertBanner({
+const EndorsedAlertBanner = ({
   endorsed,
   endorsedAt,
   endorsedBy,
   endorsedByLabel,
-}) {
+}) => {
   timeago.register('time-locale', timeLocale);
 
   const intl = useIntl();
@@ -62,7 +62,7 @@ function EndorsedAlertBanner({
       </Alert>
     )
   );
-}
+};
 
 EndorsedAlertBanner.propTypes = {
   endorsed: PropTypes.bool.isRequired,

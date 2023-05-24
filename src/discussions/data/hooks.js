@@ -40,12 +40,14 @@ import { fetchCourseConfig } from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
-  const count = useMemo(() => (
-    Object.keys(topics)?.reduce((total, topicId) => {
-      const topic = topics[topicId];
-      return total + topic.threadCounts.discussion + topic.threadCounts.question;
-    }, 0)),
-  []);
+  const count = useMemo(
+    () => (
+      Object.keys(topics)?.reduce((total, topicId) => {
+        const topic = topics[topicId];
+        return total + topic.threadCounts.discussion + topic.threadCounts.question;
+      }, 0)),
+    [],
+  );
 
   return count;
 }

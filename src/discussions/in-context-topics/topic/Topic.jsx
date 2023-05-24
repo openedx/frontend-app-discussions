@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars, react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';

@@ -17,14 +17,14 @@ import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { inBlackoutDateRange, useActions } from '../utils';
 
-function ActionsDropdown({
+const ActionsDropdown = ({
   actionHandlers,
   contentType,
   disabled,
   dropDownIconSize,
   iconSize,
   id,
-}) {
+}) => {
   const buttonRef = useRef();
   const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);
@@ -109,7 +109,7 @@ function ActionsDropdown({
       </div>
     </>
   );
-}
+};
 
 ActionsDropdown.propTypes = {
   id: PropTypes.string.isRequired,

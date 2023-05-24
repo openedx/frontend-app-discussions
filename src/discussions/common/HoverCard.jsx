@@ -43,8 +43,10 @@ const HoverCard = ({
         <div className="d-flex">
           <Button
             variant="tertiary"
-            className={classNames('px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
-              { 'w-100': enableInContextSidebar })}
+            className={classNames(
+              'px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
+              { 'w-100': enableInContextSidebar },
+            )}
             onClick={() => handleResponseCommentButton()}
             disabled={isClosed}
             style={{ lineHeight: '20px' }}
@@ -125,6 +127,7 @@ HoverCard.propTypes = {
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   onLike: PropTypes.func.isRequired,
   voted: PropTypes.bool.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
   endorseIcons: PropTypes.objectOf(PropTypes.any),
   onFollow: PropTypes.func,
   following: PropTypes.bool,

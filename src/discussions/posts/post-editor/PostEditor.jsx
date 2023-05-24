@@ -131,9 +131,11 @@ const PostEditor = ({
   }, [postId, topicId, post?.author, category, editExisting, commentsPagePath, location]);
 
   // null stands for no cohort restriction ("All learners" option)
-  const selectedCohort = useCallback((cohort) => (
-    cohort === 'default' ? null : cohort),
-  []);
+  const selectedCohort = useCallback(
+    (cohort) => (
+      cohort === 'default' ? null : cohort),
+    [],
+  );
 
   const submitForm = useCallback(async (values, { resetForm }) => {
     if (editExisting) {
@@ -288,18 +290,18 @@ const PostEditor = ({
               {enableInContext ? (
                 <>
                   {coursewareTopics?.map(section => (
-                      section?.children?.map(subsection => (
-                        <optgroup
-                          label={handleInContextSelectLabel(section, subsection)}
-                          key={subsection.id}
-                        >
-                          {subsection?.children?.map(unit => (
-                            <option key={unit.id} value={unit.id}>
-                              {unit.name || intl.formatMessage(messages.unnamedSubTopics)}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))
+                    section?.children?.map(subsection => (
+                      <optgroup
+                        label={handleInContextSelectLabel(section, subsection)}
+                        key={subsection.id}
+                      >
+                        {subsection?.children?.map(unit => (
+                          <option key={unit.id} value={unit.id}>
+                            {unit.name || intl.formatMessage(messages.unnamedSubTopics)}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))
                   ))}
                   {(userIsStaff || userIsGroupTa || userHasModerationPrivileges) && (
                   <optgroup label={intl.formatMessage(messages.archivedTopics)}>
