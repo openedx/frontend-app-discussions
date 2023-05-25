@@ -30,14 +30,14 @@ const generateApiResponse = (blackouts = [], isCourseAdmin = false) => ({
 
 describe('Hooks', () => {
   describe('useCurrentDiscussionTopic', () => {
-    function ComponentWithHook() {
+    const ComponentWithHook = () => {
       const topic = useCurrentDiscussionTopic();
       return (
         <div>
           {String(topic)}
         </div>
       );
-    }
+    };
 
     function renderComponent({ topicId, category }) {
       return render(
@@ -103,14 +103,14 @@ describe('Hooks', () => {
   });
 
   describe('useUserCanAddThreadInBlackoutDate', () => {
-    function ComponentWithHook() {
+    const ComponentWithHook = () => {
       const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
       return (
         <div>
           {String(userCanAddThreadInBlackoutDate)}
         </div>
       );
-    }
+    };
 
     function renderComponent() {
       return render(

@@ -34,6 +34,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
+// eslint-disable-next-line import/no-cycle
 import { EmptyPage } from '../../empty-posts';
 import {
   selectArchivedTopics,
@@ -50,12 +51,12 @@ import { selectThread } from '../data/selectors';
 import { createNewThread, fetchThread, updateExistingThread } from '../data/thunks';
 import messages from './messages';
 
-function DiscussionPostType({
+const DiscussionPostType = ({
   value,
   type,
   selected,
   icon,
-}) {
+}) => {
   const { enableInContextSidebar } = useContext(DiscussionContext);
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
@@ -75,7 +76,7 @@ function DiscussionPostType({
       </Card>
     </label>
   );
-}
+};
 
 DiscussionPostType.propTypes = {
   value: PropTypes.string.isRequired,
@@ -84,9 +85,9 @@ DiscussionPostType.propTypes = {
   icon: PropTypes.element.isRequired,
 };
 
-function PostEditor({
+const PostEditor = ({
   editExisting,
-}) {
+}) => {
   const intl = useIntl();
   const { authenticatedUser } = useContext(AppContext);
   const dispatch = useDispatch();
@@ -500,7 +501,7 @@ function PostEditor({
       }
     </Formik>
   );
-}
+};
 
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,

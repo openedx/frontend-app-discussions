@@ -11,10 +11,10 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import messages from '../messages';
 import { learnerShape } from './proptypes';
 
-function LearnerFooter({
+const LearnerFooter = ({
   learner,
   intl,
-}) {
+}) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const { inactiveFlags } = learner;
@@ -83,7 +83,7 @@ function LearnerFooter({
       )}
     </div>
   );
-}
+};
 
 LearnerFooter.propTypes = {
   intl: intlShape.isRequired,

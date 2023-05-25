@@ -14,7 +14,7 @@ import messages from '../../messages';
 import { messages as postMessages, showPostEditor } from '../../posts';
 import { selectCourseWareThreadsCount, selectTotalTopicsThreadsCount } from '../data/selectors';
 
-function EmptyTopics({ intl }) {
+const EmptyTopics = ({ intl }) => {
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -74,7 +74,7 @@ function EmptyTopics({ intl }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyTopics.propTypes = {
   intl: intlShape.isRequired,

@@ -106,7 +106,8 @@ describe('Learner Posts View', () => {
     expect(backButton).toBeInTheDocument();
   });
 
-  test('Learner title bar should redirect to the learners list when clicking on the back button',
+  test(
+    'Learner title bar should redirect to the learners list when clicking on the back button',
     async () => {
       await renderComponent();
 
@@ -116,7 +117,8 @@ describe('Learner Posts View', () => {
       await waitFor(() => {
         expect(lastLocation.pathname.endsWith('/learners')).toBeTruthy();
       });
-    });
+    },
+  );
 
   it('should display a post-filter bar and All posts sorted by recent activity text.', async () => {
     await renderComponent();

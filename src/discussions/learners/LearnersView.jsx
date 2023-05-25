@@ -24,7 +24,7 @@ import { fetchLearners } from './data/thunks';
 import { LearnerCard, LearnerFilterBar } from './learner';
 import messages from './messages';
 
-function LearnersView({ intl }) {
+const LearnersView = ({ intl }) => {
   const { courseId } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -98,7 +98,7 @@ function LearnersView({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 LearnersView.propTypes = {
   intl: intlShape.isRequired,

@@ -9,10 +9,11 @@ import { ALL_ROUTES } from '../../data/constants';
 import { useIsOnDesktop, useTotalTopicThreadCount } from '../data/hooks';
 import { selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
+// eslint-disable-next-line import/no-cycle
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyTopics({ intl }) {
+const EmptyTopics = ({ intl }) => {
   const match = useRouteMatch(ALL_ROUTES);
   const dispatch = useDispatch();
 
@@ -62,7 +63,7 @@ function EmptyTopics({ intl }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyTopics.propTypes = {
   intl: intlShape.isRequired,

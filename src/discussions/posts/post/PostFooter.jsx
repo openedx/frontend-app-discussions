@@ -15,11 +15,11 @@ import LikeButton from './LikeButton';
 import messages from './messages';
 import { postShape } from './proptypes';
 
-function PostFooter({
+const PostFooter = ({
   intl,
   post,
   userHasModerationPrivileges,
-}) {
+}) => {
   const dispatch = useDispatch();
   return (
     <div className="d-flex align-items-center ml-n1.5 mt-10px" style={{ height: '32px' }} data-testid="post-footer">
@@ -95,7 +95,7 @@ function PostFooter({
       </div>
     </div>
   );
-}
+};
 
 PostFooter.propTypes = {
   intl: intlShape.isRequired,

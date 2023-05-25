@@ -12,9 +12,9 @@ import messages from './messages';
 
 import './navBar.scss';
 
-function CourseTabsNavigation({
+const CourseTabsNavigation = ({
   activeTab, className, intl, courseId, rootSlug,
-}) {
+}) => {
   const dispatch = useDispatch();
 
   const tabs = useSelector(state => state.courseTabs.tabs);
@@ -45,7 +45,7 @@ function CourseTabsNavigation({
       </div>
     </div>
   );
-}
+};
 
 CourseTabsNavigation.propTypes = {
   activeTab: PropTypes.string,

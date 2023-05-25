@@ -13,11 +13,11 @@ import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
-function EndorsedAlertBanner({
+const EndorsedAlertBanner = ({
   intl,
   content,
   postType,
-}) {
+}) => {
   timeago.register('time-locale', timeLocale);
   const isQuestion = postType === ThreadType.QUESTION;
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
@@ -58,7 +58,7 @@ function EndorsedAlertBanner({
       </Alert>
     )
   );
-}
+};
 
 EndorsedAlertBanner.propTypes = {
   intl: intlShape.isRequired,

@@ -20,7 +20,7 @@ import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView as LegacyTopicsView } from '../topics';
 
-export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
+const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
@@ -98,7 +98,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
       </Switch>
     </div>
   );
-}
+};
 
 DiscussionSidebar.defaultProps = {
   displaySidebar: false,
@@ -112,3 +112,5 @@ DiscussionSidebar.propTypes = {
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]),
 };
+
+export default DiscussionSidebar;

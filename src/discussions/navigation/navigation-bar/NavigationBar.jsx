@@ -11,7 +11,7 @@ import { useShowLearnersTab } from '../../data/hooks';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
 
-function NavigationBar({ intl }) {
+const NavigationBar = ({ intl }) => {
   const { courseId } = useParams();
   const showLearnersTab = useShowLearnersTab();
 
@@ -52,7 +52,7 @@ function NavigationBar({ intl }) {
       ))}
     </Nav>
   );
-}
+};
 
 NavigationBar.propTypes = {
   intl: intlShape.isRequired,

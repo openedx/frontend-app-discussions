@@ -8,7 +8,7 @@ import { Dropdown, DropdownButton } from '@edx/paragon';
 
 import messages from './messages';
 
-function BreadcrumbDropdown({
+const BreadcrumbDropdown = ({
   currentItem,
   intl,
   showAllPath,
@@ -17,7 +17,7 @@ function BreadcrumbDropdown({
   itemLabelFunc,
   itemActiveFunc,
   itemFilterFunc,
-}) {
+}) => {
   const showAllMsg = intl.formatMessage(messages.showAll);
   return (
     <DropdownButton
@@ -46,7 +46,7 @@ function BreadcrumbDropdown({
       ))}
     </DropdownButton>
   );
-}
+};
 
 BreadcrumbDropdown.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types

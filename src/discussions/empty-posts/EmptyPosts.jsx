@@ -8,10 +8,11 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { useIsOnDesktop } from '../data/hooks';
 import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';
 import messages from '../messages';
+// eslint-disable-next-line import/no-cycle
 import { messages as postMessages, showPostEditor } from '../posts';
 import EmptyPage from './EmptyPage';
 
-function EmptyPosts({ intl, subTitleMessage }) {
+const EmptyPosts = ({ intl, subTitleMessage }) => {
   const dispatch = useDispatch();
 
   const isFiltered = useSelector(selectAreThreadsFiltered);
@@ -49,7 +50,7 @@ function EmptyPosts({ intl, subTitleMessage }) {
       fullWidth={fullWidth}
     />
   );
-}
+};
 
 EmptyPosts.propTypes = {
   subTitleMessage: propTypes.shape({

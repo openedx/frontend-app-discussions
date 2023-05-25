@@ -23,7 +23,7 @@ import CommentsView from './comments/CommentsView';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
 
-function PostCommentsView({ intl }) {
+const PostCommentsView = ({ intl }) => {
   const [isLoading, submitDispatch] = useDispatchWithState();
   const { postId } = useParams();
   const thread = usePost(postId);
@@ -134,7 +134,7 @@ function PostCommentsView({ intl }) {
       )}
     </>
   );
-}
+};
 
 PostCommentsView.propTypes = {
   intl: intlShape.isRequired,

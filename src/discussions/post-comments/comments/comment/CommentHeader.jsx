@@ -10,9 +10,9 @@ import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
 import { commentShape } from './proptypes';
 
-function CommentHeader({
+const CommentHeader = ({
   comment,
-}) {
+}) => {
   const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(comment);
 
@@ -41,7 +41,7 @@ function CommentHeader({
       </div>
     </div>
   );
-}
+};
 
 CommentHeader.propTypes = {
   comment: commentShape.isRequired,

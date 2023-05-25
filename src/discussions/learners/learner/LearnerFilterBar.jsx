@@ -47,9 +47,9 @@ ActionItem.propTypes = {
   selected: PropTypes.string.isRequired,
 };
 
-function LearnerFilterBar({
+const LearnerFilterBar = ({
   intl,
-}) {
+}) => {
   const dispatch = useDispatch();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
@@ -124,7 +124,7 @@ function LearnerFilterBar({
       </Collapsible.Body>
     </Collapsible.Advanced>
   );
-}
+};
 
 LearnerFilterBar.propTypes = {
   intl: intlShape.isRequired,

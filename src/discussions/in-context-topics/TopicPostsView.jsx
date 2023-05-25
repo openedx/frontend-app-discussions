@@ -21,7 +21,7 @@ import { BackButton, NoResults } from './components';
 import messages from './messages';
 import { Topic } from './topic';
 
-function TopicPostsView({ intl }) {
+const TopicPostsView = ({ intl }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const { courseId, topicId, category } = useContext(DiscussionContext);
@@ -90,7 +90,7 @@ function TopicPostsView({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 TopicPostsView.propTypes = {
   intl: intlShape.isRequired,

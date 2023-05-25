@@ -8,9 +8,9 @@ import { Close } from '@edx/paragon/icons';
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPanel({
+const PostPreviewPanel = ({
   htmlNode, intl, isPost, editExisting,
-}) {
+}) => {
   const [showPreviewPane, setShowPreviewPane] = useState(false);
 
   return (
@@ -55,7 +55,7 @@ function PostPreviewPanel({
       </div>
     </>
   );
-}
+};
 
 PostPreviewPanel.propTypes = {
   intl: intlShape.isRequired,

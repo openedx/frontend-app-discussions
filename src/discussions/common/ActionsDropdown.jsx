@@ -17,14 +17,14 @@ import { commentShape } from '../post-comments/comments/comment/proptypes';
 import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
 
-function ActionsDropdown({
+const ActionsDropdown = ({
   intl,
   commentOrPost,
   disabled,
   actionHandlers,
   iconSize,
   dropDownIconSize,
-}) {
+}) => {
   const buttonRef = useRef();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
@@ -108,7 +108,7 @@ function ActionsDropdown({
       </div>
     </>
   );
-}
+};
 
 ActionsDropdown.propTypes = {
   intl: intlShape.isRequired,

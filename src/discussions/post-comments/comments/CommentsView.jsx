@@ -11,13 +11,13 @@ import { usePostComments } from '../data/hooks';
 import messages from '../messages';
 import { Comment, ResponseEditor } from './comment';
 
-function CommentsView({
+const CommentsView = ({
   postType,
   postId,
   intl,
   endorsed,
   isClosed,
-}) {
+}) => {
   const {
     comments,
     hasMorePages,
@@ -71,51 +71,49 @@ function CommentsView({
   );
 
   return (
+    ((hasMorePages && isLoading) || !isLoading) && (
     <>
-      {((hasMorePages && isLoading) || !isLoading) && (
-        <>
-          {endorsedComments.length > 0 && (
-            <>
-              {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
-              {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedComments, true)
-                : handleComments(endorsedComments, false)}
-            </>
-          )}
-          {endorsed !== EndorsementStatus.ENDORSED && (
-            <>
-              {handleDefinition(messages.responseCount, unEndorsedComments.length)}
-              {unEndorsedComments.length === 0 && <br />}
-              {handleComments(unEndorsedComments, false)}
-              {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
-                <div className="mx-4">
-                  {!addingResponse && (
-                    <Button
-                      variant="plain"
-                      block="true"
-                      className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
+      {endorsedComments.length > 0 && (
+      <>
+        {handleDefinition(messages.endorsedResponseCount, endorsedComments.length)}
+        {endorsed === EndorsementStatus.DISCUSSION
+          ? handleComments(endorsedComments, true)
+          : handleComments(endorsedComments, false)}
+      </>
+      )}
+      {endorsed !== EndorsementStatus.ENDORSED && (
+      <>
+        {handleDefinition(messages.responseCount, unEndorsedComments.length)}
+        {unEndorsedComments.length === 0 && <br />}
+        {handleComments(unEndorsedComments, false)}
+        {(userCanAddThreadInBlackoutDate && !!unEndorsedComments.length && !isClosed) && (
+        <div className="mx-4">
+          {!addingResponse && (
+          <Button
+            variant="plain"
+            block="true"
+            className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
                       line-height-24 font-size-14 text-primary-500"
-                      onClick={() => setAddingResponse(true)}
-                      data-testid="add-response"
-                    >
-                      {intl.formatMessage(messages.addResponse)}
-                    </Button>
-                  )}
-                  <ResponseEditor
-                    postId={postId}
-                    handleCloseEditor={() => setAddingResponse(false)}
-                    addWrappingDiv
-                    addingResponse={addingResponse}
-                  />
-                </div>
-              )}
-            </>
+            onClick={() => setAddingResponse(true)}
+            data-testid="add-response"
+          >
+            {intl.formatMessage(messages.addResponse)}
+          </Button>
           )}
-        </>
+          <ResponseEditor
+            postId={postId}
+            handleCloseEditor={() => setAddingResponse(false)}
+            addWrappingDiv
+            addingResponse={addingResponse}
+          />
+        </div>
+        )}
+      </>
       )}
     </>
+    )
   );
-}
+};
 
 CommentsView.propTypes = {
   postId: PropTypes.string.isRequired,

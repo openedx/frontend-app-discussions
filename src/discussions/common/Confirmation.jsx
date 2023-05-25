@@ -6,7 +6,7 @@ import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
 import messages from '../messages';
 
-function Confirmation({
+const Confirmation = ({
   intl,
   isOpen,
   title,
@@ -16,30 +16,28 @@ function Confirmation({
   closeButtonVaraint,
   confirmButtonVariant,
   confirmButtonText,
-}) {
-  return (
-    <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
-      <ModalDialog.Header>
-        <ModalDialog.Title>
-          {title}
-        </ModalDialog.Title>
-      </ModalDialog.Header>
-      <ModalDialog.Body>
-        {description}
-      </ModalDialog.Body>
-      <ModalDialog.Footer>
-        <ActionRow>
-          <ModalDialog.CloseButton variant={closeButtonVaraint}>
-            {intl.formatMessage(messages.confirmationCancel)}
-          </ModalDialog.CloseButton>
-          <Button variant={confirmButtonVariant} onClick={comfirmAction}>
-            { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
-          </Button>
-        </ActionRow>
-      </ModalDialog.Footer>
-    </ModalDialog>
-  );
-}
+}) => (
+  <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
+    <ModalDialog.Header>
+      <ModalDialog.Title>
+        {title}
+      </ModalDialog.Title>
+    </ModalDialog.Header>
+    <ModalDialog.Body>
+      {description}
+    </ModalDialog.Body>
+    <ModalDialog.Footer>
+      <ActionRow>
+        <ModalDialog.CloseButton variant={closeButtonVaraint}>
+          {intl.formatMessage(messages.confirmationCancel)}
+        </ModalDialog.CloseButton>
+        <Button variant={confirmButtonVariant} onClick={comfirmAction}>
+          { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
+        </Button>
+      </ActionRow>
+    </ModalDialog.Footer>
+  </ModalDialog>
+);
 
 Confirmation.propTypes = {
   intl: intlShape.isRequired,

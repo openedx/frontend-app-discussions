@@ -24,11 +24,11 @@ import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
 import { postShape } from './proptypes';
 
-function Post({
+const Post = ({
   post,
   intl,
   handleAddResponseButton,
-}) {
+}) => {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -154,8 +154,10 @@ function Post({
       </div>
       {(topicContext || topic) && (
         <div
-          className={classNames('mt-14px font-style font-size-12',
-            { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter })}
+          className={classNames(
+            'mt-14px font-style font-size-12',
+            { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter },
+          )}
           style={{ lineHeight: '20px' }}
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>{intl.formatMessage(messages.relatedTo)}{' '}</span>
@@ -188,7 +190,7 @@ function Post({
       />
     </div>
   );
-}
+};
 
 Post.propTypes = {
   intl: intlShape.isRequired,

@@ -58,7 +58,7 @@ const setup = (editor) => {
 };
 
 /* istanbul ignore next */
-export default function TinyMCEEditor(props) {
+const TinyMCEEditor = (props) => {
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
 
@@ -148,4 +148,6 @@ export default function TinyMCEEditor(props) {
     </>
 
   );
-}
+};
+
+export default TinyMCEEditor;
