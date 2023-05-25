@@ -21,7 +21,7 @@ import { setFilter } from './data/slices';
 import { fetchCourseTopicsV3 } from './data/thunks';
 import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
-function TopicsList() {
+const TopicsList = () => {
   const loadingStatus = useSelector(selectLoadingStatus);
   const coursewareTopics = useSelector(selectCoursewareTopics);
   const nonCoursewareTopics = useSelector(selectNonCoursewareTopics);
@@ -58,9 +58,9 @@ function TopicsList() {
       )}
     </>
   );
-}
+};
 
-function TopicsView() {
+const TopicsView = () => {
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
   const provider = useSelector(selectDiscussionProvider);
@@ -116,6 +116,6 @@ function TopicsView() {
       </div>
     </div>
   );
-}
+};
 
 export default TopicsView;

@@ -8,9 +8,9 @@ import { Hyperlink, PageBanner } from '@edx/paragon';
 import { selectUserIsStaff, selectUserRoles } from '../data/selectors';
 import messages from '../messages';
 
-function InformationBanner({
+const InformationBanner = ({
   intl,
-}) {
+}) => {
   const [showBanner, setShowBanner] = useState(true);
   const userRoles = useSelector(selectUserRoles);
   const isAdmin = useSelector(selectUserIsStaff);
@@ -55,7 +55,7 @@ function InformationBanner({
       </div>
     </PageBanner>
   );
-}
+};
 
 InformationBanner.propTypes = {
   intl: intlShape.isRequired,

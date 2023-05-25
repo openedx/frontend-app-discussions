@@ -9,9 +9,9 @@ import { selectBlackoutDate } from '../data/selectors';
 import messages from '../messages';
 import { inBlackoutDateRange } from '../utils';
 
-function BlackoutInformationBanner({
+const BlackoutInformationBanner = ({
   intl,
-}) {
+}) => {
   const isDiscussionsBlackout = inBlackoutDateRange(useSelector(selectBlackoutDate));
   const [showBanner, setShowBanner] = useState(true);
 
@@ -27,7 +27,7 @@ function BlackoutInformationBanner({
       </div>
     </PageBanner>
   );
-}
+};
 
 BlackoutInformationBanner.propTypes = {
   intl: intlShape.isRequired,

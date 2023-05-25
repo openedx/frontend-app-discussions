@@ -7,7 +7,7 @@ import { selectAreThreadsFiltered } from '../data/selectors';
 import { selectTopicFilter } from '../in-context-topics/data/selectors';
 import messages from '../messages';
 
-function NoResults({ intl }) {
+const NoResults = ({ intl }) => {
   const postsFiltered = useSelector(selectAreThreadsFiltered);
   const inContextTopicsFilter = useSelector(selectTopicFilter);
   const topicsFilter = useSelector(({ topics }) => topics.filter);
@@ -37,7 +37,7 @@ function NoResults({ intl }) {
       <small className={textCssClasses}>{intl.formatMessage(helpMessage)}</small>
     </div>
   );
-}
+};
 
 NoResults.propTypes = {
   intl: intlShape.isRequired,

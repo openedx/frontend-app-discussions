@@ -13,13 +13,13 @@ import { discussionsPath } from '../../utils';
 import messages from '../messages';
 import { topicShape } from './Topic';
 
-function SectionBaseGroup({
+const SectionBaseGroup = ({
   section,
   sectionTitle,
   sectionId,
   showDivider,
   intl,
-}) {
+}) => {
   const { courseId } = useParams();
   const isSelected = (id) => window.location.pathname.includes(id);
   const sectionUrl = (id) => discussionsPath(Routes.TOPICS.CATEGORY, {
@@ -70,7 +70,7 @@ function SectionBaseGroup({
       )}
     </div>
   );
-}
+};
 
 SectionBaseGroup.propTypes = {
   section: PropTypes.arrayOf(PropTypes.shape({

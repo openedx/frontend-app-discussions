@@ -31,7 +31,7 @@ import { fetchUserPosts } from './data/thunks';
 import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import messages from './messages';
 
-function LearnerPostsView({ intl }) {
+const LearnerPostsView = ({ intl }) => {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -114,7 +114,7 @@ function LearnerPostsView({ intl }) {
       </div>
     </div>
   );
-}
+};
 
 LearnerPostsView.propTypes = {
   intl: intlShape.isRequired,

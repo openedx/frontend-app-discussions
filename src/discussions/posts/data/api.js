@@ -28,22 +28,20 @@ export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussio
  * @param {number} cohort
  * @returns {Promise<{}>}
  */
-export async function getThreads(
-  courseId, {
-    topicIds,
-    page,
-    pageSize,
-    textSearch,
-    orderBy,
-    following,
-    view,
-    author,
-    flagged,
-    threadType,
-    countFlagged,
-    cohort,
-  } = {},
-) {
+export async function getThreads(courseId, {
+  topicIds,
+  page,
+  pageSize,
+  textSearch,
+  orderBy,
+  following,
+  view,
+  author,
+  flagged,
+  threadType,
+  countFlagged,
+  cohort,
+} = {}) {
   const params = snakeCaseObject({
     courseId,
     page,

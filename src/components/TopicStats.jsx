@@ -14,12 +14,12 @@ import {
 } from '../discussions/data/selectors';
 import messages from '../discussions/in-context-topics/messages';
 
-function TopicStats({
+const TopicStats = ({
   threadCounts,
   activeFlags,
   inactiveFlags,
   intl,
-}) {
+}) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
@@ -87,7 +87,7 @@ function TopicStats({
       )}
     </div>
   );
-}
+};
 
 TopicStats.propTypes = {
   threadCounts: PropTypes.shape({

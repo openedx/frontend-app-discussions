@@ -32,14 +32,14 @@ import CommentHeader from './CommentHeader';
 import { commentShape } from './proptypes';
 import Reply from './Reply';
 
-function Comment({
+const Comment = ({
   postType,
   comment,
   showFullThread = true,
   isClosedPost,
   intl,
   marginBottom,
-}) {
+}) => {
   const dispatch = useDispatch();
   const hasChildren = comment.childCount > 0;
   const isNested = Boolean(comment.parentId);
@@ -201,26 +201,24 @@ function Comment({
                 />
               </div>
             ) : (
-              <>
-                {!isClosedPost && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
-                  && (
-                    <Button
-                      className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
-                      variant="plain"
-                      style={{ height: '36px' }}
-                      onClick={() => setReplying(true)}
-                    >
-                      {intl.formatMessage(messages.addComment)}
-                    </Button>
-                  )}
-              </>
+              !isClosedPost && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5)
+                && (
+                  <Button
+                    className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
+                    variant="plain"
+                    style={{ height: '36px' }}
+                    onClick={() => setReplying(true)}
+                  >
+                    {intl.formatMessage(messages.addComment)}
+                  </Button>
+                )
             )
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 Comment.propTypes = {
   postType: PropTypes.oneOf(['discussion', 'question']).isRequired,

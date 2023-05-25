@@ -21,9 +21,9 @@ import messages from './messages';
 
 import './actionBar.scss';
 
-function PostActionsBar({
+const PostActionsBar = ({
   intl,
-}) {
+}) => {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
@@ -51,8 +51,10 @@ function PostActionsBar({
           {!enableInContextSidebar && <div className="border-right border-light-400 mx-3" />}
           <Button
             variant={enableInContextSidebar ? 'plain' : 'brand'}
-            className={classNames('my-0 font-style border-0 line-height-24',
-              { 'px-3 py-10px border-0': enableInContextSidebar })}
+            className={classNames(
+              'my-0 font-style border-0 line-height-24',
+              { 'px-3 py-10px border-0': enableInContextSidebar },
+            )}
             onClick={() => dispatch(showPostEditor())}
             size={enableInContextSidebar ? 'md' : 'sm'}
           >
@@ -77,7 +79,7 @@ function PostActionsBar({
       )}
     </div>
   );
-}
+};
 
 PostActionsBar.propTypes = {
   intl: intlShape.isRequired,

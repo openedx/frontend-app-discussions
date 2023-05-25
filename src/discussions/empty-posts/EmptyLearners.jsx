@@ -6,7 +6,7 @@ import { useIsOnDesktop } from '../data/hooks';
 import messages from '../messages';
 import EmptyPage from './EmptyPage';
 
-function EmptyLearners({ intl }) {
+const EmptyLearners = ({ intl }) => {
   const isOnDesktop = useIsOnDesktop();
 
   if (!isOnDesktop) {
@@ -16,7 +16,7 @@ function EmptyLearners({ intl }) {
   return (
     <EmptyPage title={intl.formatMessage(messages.emptyTitle)} />
   );
-}
+};
 
 EmptyLearners.propTypes = {
   intl: intlShape.isRequired,

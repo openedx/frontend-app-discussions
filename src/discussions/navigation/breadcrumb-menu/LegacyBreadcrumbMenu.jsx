@@ -13,7 +13,7 @@ import {
 import { discussionsPath } from '../../utils';
 import BreadcrumbDropdown from './BreadcrumbDropdown';
 
-function LegacyBreadcrumbMenu() {
+const LegacyBreadcrumbMenu = () => {
   const {
     params: {
       courseId,
@@ -78,7 +78,7 @@ function LegacyBreadcrumbMenu() {
       )}
     </div>
   );
-}
+};
 
 LegacyBreadcrumbMenu.propTypes = {};
 

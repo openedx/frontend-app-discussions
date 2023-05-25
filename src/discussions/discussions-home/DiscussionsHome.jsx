@@ -32,7 +32,7 @@ import DiscussionSidebar from './DiscussionSidebar';
 import useFeedbackWrapper from './FeedbackWrapper';
 import InformationBanner from './InformationBanner';
 
-export default function DiscussionsHome() {
+const DiscussionsHome = () => {
   const location = useLocation();
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(selectPostEditorVisible);
@@ -67,6 +67,7 @@ export default function DiscussionsHome() {
   }, [path]);
 
   return (
+    // eslint-disable-next-line react/jsx-no-constructed-context-values
     <DiscussionContext.Provider value={{
       page,
       courseId,
@@ -130,4 +131,6 @@ export default function DiscussionsHome() {
       {!enableInContextSidebar && <Footer />}
     </DiscussionContext.Provider>
   );
-}
+};
+
+export default React.memo(DiscussionsHome);

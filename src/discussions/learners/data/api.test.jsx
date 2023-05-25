@@ -29,7 +29,8 @@ describe('Learner api test cases', () => {
     axiosMock.reset();
   });
 
-  it('Successfully get and store API response for the learner\'s list and learners posts in redux',
+  it(
+    'Successfully get and store API response for the learner\'s list and learners posts in redux',
     async () => {
       const learners = await setupLearnerMockResponse();
       const threads = await setupPostsMockResponse();
@@ -38,20 +39,23 @@ describe('Learner api test cases', () => {
       expect(Object.values(learners.learnerProfiles)).toHaveLength(3);
       expect(threads.status).toEqual('successful');
       expect(Object.values(threads.threadsById)).toHaveLength(2);
-    });
+    },
+  );
 
   it.each([
     { status: 'statusUnread', search: 'Title', cohort: 'post' },
     { status: 'statusUnanswered', search: 'Title', cohort: 'post' },
     { status: 'statusReported', search: 'Title', cohort: 'post' },
     { status: 'statusUnresponded', search: 'Title', cohort: 'post' },
-  ])('Successfully fetch user posts based on %s filters',
+  ])(
+    'Successfully fetch user posts based on %s filters',
     async ({ status, search, cohort }) => {
       const threads = await setupPostsMockResponse({ filters: { status, search, cohort } });
 
       expect(threads.status).toEqual('successful');
       expect(Object.values(threads.threadsById)).toHaveLength(2);
-    });
+    },
+  );
 
   it('Failed to fetch learners', async () => {
     const learners = await setupLearnerMockResponse({ learnerCourseId: courseId2 });

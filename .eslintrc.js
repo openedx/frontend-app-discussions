@@ -1,9 +1,10 @@
 const { createConfig } = require('@edx/frontend-build');
 
-module.exports = createConfig('eslint',
-{
-  "plugins": ["simple-import-sort"],
-    "rules": {
+module.exports = createConfig(
+  'eslint',
+  {
+    plugins: ['simple-import-sort'],
+    rules: {
       'import/no-extraneous-dependencies': 'off',
       'react-hooks/exhaustive-deps': 'off',
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
@@ -25,7 +26,6 @@ module.exports = createConfig('eslint',
         },
       ],
       'simple-import-sort/exports': 'error',
-    }
-  }
+    },
+  },
 );
-

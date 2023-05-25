@@ -13,7 +13,7 @@ import { selectCommentSortOrder } from '../data/selectors';
 import { setCommentSortOrder } from '../data/slices';
 import messages from '../messages';
 
-function CommentSortDropdown({ intl }) {
+const CommentSortDropdown = ({ intl }) => {
   const dispatch = useDispatch();
   const sortedOrder = useSelector(selectCommentSortOrder);
   const [isOpen, open, close] = useToggle(false);
@@ -94,7 +94,7 @@ function CommentSortDropdown({ intl }) {
       </div>
     </>
   );
-}
+};
 
 CommentSortDropdown.propTypes = {
   intl: intlShape.isRequired,
