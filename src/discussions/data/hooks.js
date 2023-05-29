@@ -22,13 +22,13 @@ import tourCheckpoints from '../tours/constants';
 import { selectTours } from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
-import { discussionsPath, inBlackoutDateRange } from '../utils';
+import { discussionsPath } from '../utils';
 import {
   selectAreThreadsFiltered,
-  selectBlackoutDate,
   selectEnableInContext,
   selectIsCourseAdmin,
   selectIsCourseStaff,
+  selectIsPostingEnabled,
   selectLearnersTabEnabled,
   selectModerationSettings,
   selectPostThreadCount,
@@ -192,17 +192,16 @@ export const useCurrentDiscussionTopic = () => {
   return null;
 };
 
-export const useUserCanAddThreadInBlackoutDate = () => {
-  const blackoutDateRange = useSelector(selectBlackoutDate);
+export const useUserPostingEnabled = () => {
+  const isPostingEnabled = useSelector(selectIsPostingEnabled);
   const isUserAdmin = useSelector(selectUserIsStaff);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
   const isPrivileged = isUserAdmin || userHasModerationPrivileges || isUserGroupTA || isCourseAdmin || isCourseStaff;
-  const isInBlackoutDateRange = useMemo(() => inBlackoutDateRange(blackoutDateRange), [blackoutDateRange]);
 
-  return (!(isInBlackoutDateRange) || (isPrivileged));
+  return (isPostingEnabled || isPrivileged);
 };
 
 function camelToConstant(string) {

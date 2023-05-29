@@ -15,7 +15,7 @@ import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common'
 import { DiscussionContext } from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
 import { ContentTypes } from '../../../data/constants';
-import { useUserCanAddThreadInBlackoutDate } from '../../../data/hooks';
+import { useUserPostingEnabled } from '../../../data/hooks';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
@@ -61,7 +61,7 @@ const Comment = ({
   const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
   const actions = useActions(ContentTypes.COMMENT, id);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -119,10 +119,10 @@ const Comment = ({
   ), [id, currentPage, sortedOrder]);
 
   const handleAddCommentButton = useCallback(() => {
-    if (userCanAddThreadInBlackoutDate) {
+    if (isUserPrivilagedInPostingRestriction) {
       setReplying(true);
     }
-  }, [userCanAddThreadInBlackoutDate]);
+  }, [isUserPrivilagedInPostingRestriction]);
 
   const handleCommentLike = useCallback(async () => {
     await dispatch(editComment(id, { voted: !voted }));
@@ -265,7 +265,7 @@ const Comment = ({
                 />
               </div>
             ) : (
-              !isClosed && userCanAddThreadInBlackoutDate && (inlineReplies.length >= 5) && (
+              !isClosed && isUserPrivilagedInPostingRestriction && (inlineReplies.length >= 5) && (
                 <Button
                   className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
                   variant="plain"

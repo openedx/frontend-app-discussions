@@ -7,7 +7,6 @@ const configSlice = createSlice({
   name: 'config',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    blackouts: [],
     allowAnonymous: false,
     allowAnonymousToPeers: false,
     userRoles: [],
@@ -18,6 +17,7 @@ const configSlice = createSlice({
     isCourseStaff: false,
     isUserAdmin: false,
     learnersTabEnabled: false,
+    isPostingEnabled: false,
     settings: {
       divisionScheme: 'none',
       alwaysDivideInlineDiscussions: false,
