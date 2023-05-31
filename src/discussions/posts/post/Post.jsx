@@ -67,6 +67,11 @@ function Post({
     hideReportConfirmation();
   };
 
+  const handlePostCopyLink = useCallback(() => {
+    const postURL = new URL(`${getConfig().PUBLIC_PATH}${courseId}/posts/${post.id}`, window.location.origin);
+    navigator.clipboard.writeText(postURL.href);
+  }, [window.location.origin, post.id, courseId]);
+
   const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: () => history.push({
       ...location,
@@ -82,7 +87,7 @@ function Post({
         dispatch(updateExistingThread(post.id, { closed: true }));
       }
     },
-    [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(`${window.location.origin}/${courseId}/posts/${post.id}`); },
+    [ContentActions.COPY_LINK]: handlePostCopyLink,
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
     [ContentActions.REPORT]: () => handleAbusedFlag(),
   }), [
