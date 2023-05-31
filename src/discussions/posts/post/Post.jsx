@@ -77,9 +77,10 @@ const Post = ({ handleAddResponseButton }) => {
     }
   }, [closed, postId, reasonCodesEnabled, showClosePostModal]);
 
-  const handlePostCopyLink = useCallback(() => navigator.clipboard.writeText(
-    `${window.location.origin}/${courseId}/posts/${postId}`,
-  ), [window.location.origin, postId, courseId]);
+  const handlePostCopyLink = useCallback(() => {
+    const postURL = new URL(`${getConfig().PUBLIC_PATH}${courseId}/posts/${postId}`, window.location.origin);
+    navigator.clipboard.writeText(postURL.href);
+  }, [window.location.origin, postId, courseId]);
 
   const handlePostPin = useCallback(() => dispatch(
     updateExistingThread(postId, { pinned: !pinned }),
