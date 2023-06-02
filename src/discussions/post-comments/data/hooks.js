@@ -1,4 +1,6 @@
-import { useContext, useEffect } from 'react';
+import {
+  useCallback, useContext, useEffect, useMemo,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,20 +11,21 @@ import { useDispatchWithState } from '../../../data/hooks';
 import { DiscussionContext } from '../../common/context';
 import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
+import { filterPosts } from '../../utils';
 import {
   selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
-function trackLoadMoreEvent(postId, params) {
+const trackLoadMoreEvent = (postId, params) => (
   sendTrackEvent(
     'edx.forum.responses.loadMore',
     {
       postId,
       params,
     },
-  );
-}
+  )
+);
 
 export function usePost(postId) {
   const dispatch = useDispatch();
@@ -34,18 +37,26 @@ export function usePost(postId) {
     }
   }, [postId]);
 
-  return thread;
+  return thread || {};
 }
 
-export function usePostComments(postId, endorsed = null) {
+export function usePostComments(endorsed = null) {
+  const { enableInContextSidebar, postId } = useContext(DiscussionContext);
   const [isLoading, dispatch] = useDispatchWithState();
   const comments = useSelector(selectThreadComments(postId, endorsed));
   const reverseOrder = useSelector(selectCommentSortOrder);
   const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
   const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
-  const { enableInContextSidebar } = useContext(DiscussionContext);
 
-  const handleLoadMoreResponses = async () => {
+  const endorsedCommentsIds = useMemo(() => (
+    [...filterPosts(comments, 'endorsed')].map(comment => comment.id)
+  ), [comments]);
+
+  const unEndorsedCommentsIds = useMemo(() => (
+    [...filterPosts(comments, 'unendorsed')].map(comment => comment.id)
+  ), [comments]);
+
+  const handleLoadMoreResponses = useCallback(async () => {
     const params = {
       endorsed,
       page: currentPage + 1,
@@ -53,19 +64,27 @@ export function usePostComments(postId, endorsed = null) {
     };
     await dispatch(fetchThreadComments(postId, params));
     trackLoadMoreEvent(postId, params);
-  };
+  }, [currentPage, endorsed, postId, reverseOrder]);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     dispatch(fetchThreadComments(postId, {
       endorsed,
       page: 1,
       reverseOrder,
       enableInContextSidebar,
+      signal: abortController.signal,
     }));
-  }, [postId, reverseOrder]);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [postId, endorsed, reverseOrder, enableInContextSidebar]);
 
   return {
-    comments,
+    endorsedCommentsIds,
+    unEndorsedCommentsIds,
     hasMorePages,
     isLoading,
     handleLoadMoreResponses,
@@ -77,5 +96,9 @@ export function useCommentsCount(postId) {
   const endorsedQuestions = useSelector(selectThreadComments(postId, EndorsementStatus.ENDORSED));
   const unendorsedQuestions = useSelector(selectThreadComments(postId, EndorsementStatus.UNENDORSED));
 
-  return [...discussions, ...endorsedQuestions, ...unendorsedQuestions].length;
+  const commentsLength = useMemo(() => (
+    [...discussions, ...endorsedQuestions, ...unendorsedQuestions].length
+  ), [discussions, endorsedQuestions, unendorsedQuestions]);
+
+  return commentsLength;
 }

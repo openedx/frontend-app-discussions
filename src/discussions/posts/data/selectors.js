@@ -16,6 +16,15 @@ export const selectTopicThreads = topicIds => createSelector(
   mapIdsToThreads,
 );
 
+export const selectTopicThreadsIds = topicIds => state => (
+  (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || [])
+);
+
+export const selectThreadsByIds = ids => createSelector(
+  [selectThreads],
+  (threads) => mapIdsToThreads(ids, threads),
+);
+
 export const selectThread = threadId => createSelector(
   [selectThreads],
   (threads) => threads?.[threadId],
@@ -37,6 +46,11 @@ export const selectAllThreads = createSelector(
   (pages, threads) => pages.flatMap(ids => mapIdsToThreads(ids, threads)),
 );
 
+export const selectAllThreadsIds = createSelector(
+  [state => state.threads.pages],
+  pages => pages.flatMap(ids => ids),
+);
+
 export const threadsLoadingStatus = () => state => state.threads.status;
 
 export const selectThreadSorting = () => state => state.threads.sortedBy;
@@ -44,7 +58,3 @@ export const selectThreadSorting = () => state => state.threads.sortedBy;
 export const selectThreadFilters = () => state => state.threads.filters;
 
 export const selectThreadNextPage = () => state => state.threads.nextPage;
-
-export const selectAuthorAvatars = author => state => (
-  state.threads.avatars?.[author]?.profile.image
-);

@@ -3,12 +3,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { getApiBaseUrl } from '../../../data/constants';
 
-export async function getCourseTopics(courseId, topicIds) {
+export const getCourseTopicsApiUrl = () => `${getApiBaseUrl()}/api/discussion/v1/course_topics/`;
+
+export async function getCourseTopics(courseId) {
   const url = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
-  const params = {};
-  if (topicIds) {
-    params.topic_id = topicIds.join(',');
-  }
+
   const { data } = await getAuthenticatedHttpClient()
     .get(url);
   return data;

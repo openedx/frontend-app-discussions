@@ -1,30 +1,34 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import * as timeago from 'timeago.js';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Icon } from '@edx/paragon';
 import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
-import { commentShape } from '../post-comments/comments/comment/proptypes';
 import messages from '../post-comments/messages';
+import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 
-function EndorsedAlertBanner({
-  intl,
-  content,
-  postType,
-}) {
+const EndorsedAlertBanner = ({
+  endorsed,
+  endorsedAt,
+  endorsedBy,
+  endorsedByLabel,
+}) => {
   timeago.register('time-locale', timeLocale);
+
+  const intl = useIntl();
+  const { postType } = useContext(PostCommentsContext);
   const isQuestion = postType === ThreadType.QUESTION;
   const classes = isQuestion ? 'bg-success-500 text-white' : 'bg-dark-500 text-white';
   const iconClass = isQuestion ? CheckCircle : Verified;
 
   return (
-    content.endorsed && (
+    endorsed && (
       <Alert
         variant="plain"
         className={`px-2.5 mb-0 py-8px align-items-center shadow-none ${classes}`}
@@ -45,11 +49,11 @@ function EndorsedAlertBanner({
           </div>
           <span className="d-flex align-items-center align-items-center flex-wrap" style={{ marginRight: '-1px' }}>
             <AuthorLabel
-              author={content.endorsedBy}
-              authorLabel={content.endorsedByLabel}
+              author={endorsedBy}
+              authorLabel={endorsedByLabel}
               linkToProfile
-              alert={content.endorsed}
-              postCreatedAt={content.endorsedAt}
+              alert={endorsed}
+              postCreatedAt={endorsedAt}
               authorToolTip
               postOrComment
             />
@@ -58,16 +62,19 @@ function EndorsedAlertBanner({
       </Alert>
     )
   );
-}
+};
 
 EndorsedAlertBanner.propTypes = {
-  intl: intlShape.isRequired,
-  content: PropTypes.oneOfType([commentShape.isRequired]).isRequired,
-  postType: PropTypes.string,
+  endorsed: PropTypes.bool.isRequired,
+  endorsedAt: PropTypes.string,
+  endorsedBy: PropTypes.string,
+  endorsedByLabel: PropTypes.string,
 };
 
 EndorsedAlertBanner.defaultProps = {
-  postType: null,
+  endorsedAt: null,
+  endorsedBy: null,
+  endorsedByLabel: null,
 };
 
-export default injectIntl(EndorsedAlertBanner);
+export default React.memo(EndorsedAlertBanner);

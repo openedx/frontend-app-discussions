@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
@@ -14,20 +14,23 @@ import {
 } from '../discussions/data/selectors';
 import messages from '../discussions/in-context-topics/messages';
 
-function TopicStats({
+const TopicStats = ({
   threadCounts,
   activeFlags,
   inactiveFlags,
-  intl,
-}) {
+}) => {
+  const intl = useIntl();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
+
   return (
     <div className="d-flex align-items-center mt-2.5" style={{ marginBottom: '2px' }}>
       <OverlayTrigger
+        id="discussion-topic-stats"
+        placement="right"
         overlay={(
-          <Tooltip>
+          <Tooltip id="discussion-topic-stats">
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.discussions, {
                 count: threadCounts?.discussion || 0,
@@ -42,8 +45,10 @@ function TopicStats({
         </div>
       </OverlayTrigger>
       <OverlayTrigger
+        id="question-topic-stats"
+        placement="right"
         overlay={(
-          <Tooltip>
+          <Tooltip id="question-topic-stats">
             <div className="d-flex flex-column align-items-start">
               {intl.formatMessage(messages.questions, {
                 count: threadCounts?.question || 0,
@@ -59,8 +64,10 @@ function TopicStats({
       </OverlayTrigger>
       {Boolean(canSeeReportedStats) && (
         <OverlayTrigger
+          id="reported-topic-stats"
+          placement="right"
           overlay={(
-            <Tooltip>
+            <Tooltip id="reported-topic-stats">
               <div className="d-flex flex-column align-items-start">
                 {Boolean(activeFlags) && (
                   <span>
@@ -84,7 +91,7 @@ function TopicStats({
       )}
     </div>
   );
-}
+};
 
 TopicStats.propTypes = {
   threadCounts: PropTypes.shape({
@@ -93,7 +100,6 @@ TopicStats.propTypes = {
   }),
   activeFlags: PropTypes.number,
   inactiveFlags: PropTypes.number,
-  intl: intlShape.isRequired,
 };
 
 TopicStats.defaultProps = {
@@ -105,4 +111,4 @@ TopicStats.defaultProps = {
   inactiveFlags: null,
 };
 
-export default injectIntl(TopicStats);
+export default React.memo(TopicStats);

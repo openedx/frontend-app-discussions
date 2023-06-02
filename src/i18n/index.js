@@ -1,3 +1,7 @@
+import { messages as footerMessages } from '@edx/frontend-component-footer';
+import { messages as headerMessages } from '@edx/frontend-component-header';
+import { messages as paragonMessages } from '@edx/paragon';
+
 import arMessages from './messages/ar.json';
 // no need to import en messages-- they are in the defaultMessage field
 import deMessages from './messages/de_DE.json';
@@ -10,7 +14,7 @@ import plMessages from './messages/pl.json';
 import trTRMessages from './messages/tr_TR.json';
 import zhcnMessages from './messages/zh_CN.json';
 
-const messages = {
+const appMessages = {
   ar: arMessages,
   de: deMessages,
   'es-419': es419Messages,
@@ -23,4 +27,9 @@ const messages = {
   'zh-cn': zhcnMessages,
 };
 
-export default messages;
+export default [
+  headerMessages,
+  footerMessages,
+  paragonMessages,
+  appMessages,
+];

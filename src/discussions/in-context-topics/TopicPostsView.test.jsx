@@ -100,9 +100,9 @@ describe('InContext Topic Posts View', () => {
     lastLocation = undefined;
   });
 
-  async function setupTopicsMockResponse() {
+  async function setupTopicsMockResponse(topicCount = 1, sectionCount = 2, archivedCount = 2) {
     axiosMock.onGet(`${topicsApiUrl}${courseId}`)
-      .reply(200, (Factory.buildList('topic', 1, null, {
+      .reply(200, (Factory.buildList('topic', topicCount, null, {
         topicPrefix: 'noncourseware-topic',
         enabledInContext: true,
         topicNamePrefix: 'general-topic',
@@ -111,8 +111,8 @@ describe('InContext Topic Posts View', () => {
         discussionCount: 1,
         questionCount: 1,
       })
-        .concat(Factory.buildList('section', 2, null, { topicPrefix: 'courseware' })))
-        .concat(Factory.buildList('archived-topics', 2, null)));
+        .concat(Factory.buildList('section', sectionCount, null, { topicPrefix: 'courseware' })))
+        .concat(Factory.buildList('archived-topics', archivedCount, null)));
     await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
 
     const state = store.getState();
@@ -206,7 +206,8 @@ describe('InContext Topic Posts View', () => {
   test.each([
     { searchText: 'hello world', output: 'Showing 0 results for', resultCount: 0 },
     { searchText: 'introduction', output: 'Showing 8 results for', resultCount: 8 },
-  ])('It should have a search bar with a clear button and \'$output\' results found text.',
+  ])(
+    'It should have a search bar with a clear button and \'$output\' results found text.',
     async ({ searchText, output, resultCount }) => {
       await setupTopicsMockResponse();
       await renderComponent();
@@ -226,7 +227,8 @@ describe('InContext Topic Posts View', () => {
         expect(clearButton).toBeInTheDocument();
         expect(units).toHaveLength(resultCount);
       });
-    });
+    },
+  );
 
   it('When click on the clear button it should move to main topics pages.', async () => {
     await setupTopicsMockResponse();
@@ -250,6 +252,32 @@ describe('InContext Topic Posts View', () => {
         expect(coursewareTopicList).toHaveLength(3);
         expect(within(container).queryByText('Clear results')).not.toBeInTheDocument();
       });
+    });
+  });
+
+  it(
+    'should display Nothing here yet and No topic exists message when topics and selectedSubsectionUnits are empty',
+    async () => {
+      await setupTopicsMockResponse(0, 0, 0);
+      await renderComponent({ topicId: 'test-topic', category: 'test-category' });
+
+      await waitFor(() => expect(within(container).queryByText('Nothing here yet')).toBeInTheDocument());
+      expect(within(container).queryByText('No topic exists')).toBeInTheDocument();
+      expect(within(container).queryByText('Unnamed Topic')).toBeInTheDocument();
+    },
+  );
+
+  it('should display all topics when search by an empty search string', async () => {
+    await setupTopicsMockResponse();
+    await renderComponent();
+
+    const searchField = await within(container).getByPlaceholderText('Search topics');
+    fireEvent.change(searchField, { target: { value: '' } });
+
+    await act(async () => fireEvent.click(within(container).getByTestId('search-icon')));
+    await waitFor(() => {
+      expect(within(container).queryByText('Clear results')).not.toBeInTheDocument();
+      expect(container.querySelectorAll('.discussion-topic')).toHaveLength(3);
     });
   });
 });

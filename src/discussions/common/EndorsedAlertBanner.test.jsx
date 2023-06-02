@@ -8,6 +8,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../post-comments/messages';
+import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import { DiscussionContext } from './context';
 import EndorsedAlertBanner from './EndorsedAlertBanner';
 
@@ -21,24 +22,30 @@ function buildTestContent(type, buildParams) {
   return camelCaseObject(Factory.build(type, { ...buildParamsSnakeCase }, null));
 }
 
-function renderComponent(
-  content, postType,
-) {
+const renderComponent = (content, postType) => {
   render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
           value={{ courseId: 'course-v1:edX+DemoX+Demo_Course' }}
         >
-          <EndorsedAlertBanner
-            content={content}
-            postType={postType}
-          />
+          <PostCommentsContext.Provider value={{
+            postType,
+          }}
+          >
+            <EndorsedAlertBanner
+              endorsed={content.endorsed}
+              endorsedAt={content.endorsedAt}
+              endorsedBy={content.endorsedBy}
+              endorsedByLabel={content.endorsedByLabel}
+            />
+          </PostCommentsContext.Provider>
+
         </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
   );
-}
+};
 
 describe.each([
   {

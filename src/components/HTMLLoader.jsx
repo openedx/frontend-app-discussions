@@ -12,24 +12,30 @@ const defaultSanitizeOptions = {
   ADD_ATTR: ['columnalign'],
 };
 
-function HTMLLoader({
+const HTMLLoader = ({
   htmlNode, componentId, cssClassName, testId, delay,
-}) {
+}) => {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef(null);
   const debouncedPostContent = useDebounce(htmlNode, delay);
 
   useEffect(() => {
     let promise = Promise.resolve(); // Used to hold chain of typesetting calls
+
     function typeset(code) {
-      promise = promise.then(() => window.MathJax?.typesetPromise(code()))
+      promise = promise.then(() => {
+        if (typeof window?.MathJax !== 'undefined' && typeof window?.MathJax.startup !== 'undefined') {
+          window.MathJax.startup.defaultPageReady().then((window.MathJax?.typesetPromise(code())));
+        }
+        return null;
+      })
         .catch((err) => logError(`Typeset failed: ${err.message}`));
       return promise;
     }
 
     if (debouncedPostContent) {
       typeset(() => {
-        if (previewRef.current !== null) {
+        if (previewRef.current !== null && typeof window?.MathJax !== 'undefined') {
           previewRef.current.innerHTML = sanitizedMath;
         }
       });
@@ -39,7 +45,7 @@ function HTMLLoader({
   return (
     <div ref={previewRef} className={cssClassName} id={componentId} data-testid={testId} />
   );
-}
+};
 
 HTMLLoader.propTypes = {
   htmlNode: PropTypes.node,
@@ -57,4 +63,4 @@ HTMLLoader.defaultProps = {
   delay: 0,
 };
 
-export default HTMLLoader;
+export default React.memo(HTMLLoader);

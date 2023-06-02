@@ -20,23 +20,21 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Provides a mock editor component that functions like tinyMCE without the overhead
-function MockEditor({
+const MockEditor = ({
   onBlur,
   onEditorChange,
-}) {
-  return (
-    // eslint-disable-next-line react/jsx-filename-extension
-    <textarea
-      data-testid="tinymce-editor"
-      onChange={(event) => {
-        onEditorChange(event.currentTarget.value);
-      }}
-      onBlur={event => {
-        onBlur(event.currentTarget.value);
-      }}
-    />
-  );
-}
+}) => (
+  // eslint-disable-next-line react/jsx-filename-extension
+  <textarea
+    data-testid="tinymce-editor"
+    onChange={(event) => {
+      onEditorChange(event.currentTarget.value);
+    }}
+    onBlur={event => {
+      onBlur(event.currentTarget.value);
+    }}
+  />
+);
 
 MockEditor.propTypes = {
   onBlur: PropTypes.func.isRequired,

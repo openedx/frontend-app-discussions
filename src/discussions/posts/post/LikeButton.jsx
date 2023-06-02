@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
@@ -9,19 +9,15 @@ import {
 import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
 import messages from './messages';
 
-function LikeButton({
-  count,
-  intl,
-  onClick,
-  voted,
-}) {
-  const handleClick = (e) => {
+const LikeButton = ({ count, onClick, voted }) => {
+  const intl = useIntl();
+
+  const handleClick = useCallback((e) => {
     e.preventDefault();
     if (onClick) {
       onClick();
     }
-    return false;
-  };
+  }, [onClick]);
 
   return (
     <div className="d-flex align-items-center mr-36px text-primary-500">
@@ -47,11 +43,10 @@ function LikeButton({
 
     </div>
   );
-}
+};
 
 LikeButton.propTypes = {
   count: PropTypes.number.isRequired,
-  intl: intlShape.isRequired,
   onClick: PropTypes.func,
   voted: PropTypes.bool,
 };
@@ -61,4 +56,4 @@ LikeButton.defaultProps = {
   onClick: undefined,
 };
 
-export default injectIntl(LikeButton);
+export default React.memo(LikeButton);

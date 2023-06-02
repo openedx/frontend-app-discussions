@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars, react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -7,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
@@ -17,12 +18,12 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
-function Topic({
+const Topic = ({
   topic,
   showDivider,
   index,
-  intl,
-}) {
+}) => {
+  const intl = useIntl();
   const { courseId } = useParams();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
@@ -54,11 +55,7 @@ function Topic({
                 {topic?.name || topic?.displayName || intl.formatMessage(messages.unnamedTopicSubCategories)}
               </div>
             </div>
-            <TopicStats
-              threadCounts={topic?.threadCounts}
-              activeFlags={topic?.activeFlags}
-              inactiveFlags={topic?.inactiveFlags}
-            />
+            <TopicStats threadCounts={topic?.threadCounts} />
           </div>
         </div>
       </Link>
@@ -70,7 +67,7 @@ function Topic({
       )}
     </>
   );
-}
+};
 
 export const topicShape = PropTypes.shape({
   id: PropTypes.string,
@@ -85,7 +82,6 @@ export const topicShape = PropTypes.shape({
 });
 
 Topic.propTypes = {
-  intl: intlShape.isRequired,
   topic: topicShape,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
@@ -99,4 +95,4 @@ Topic.defaultProps = {
   },
 };
 
-export default injectIntl(Topic);
+export default React.memo(Topic);

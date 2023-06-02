@@ -9,7 +9,7 @@
       href="<%=htmlWebpackPlugin.options.FAVICON_URL%>"
       type="image/x-icon"
     />
-    <script>
+    <script defer>
       window.MathJax = {
         tex: {
           inlineMath: [
@@ -192,10 +192,6 @@
           var r = (window.lightningjs = t(e));
           (r.require = t), (r.modules = n);
         })({});
-      window.usabilla_live = lightningjs.require(
-        "usabilla_live",
-        "//w.usabilla.com/9e6036348fa1.js"
-      );
     </script>
     <!-- end usabilla live embed code -->
   </body>

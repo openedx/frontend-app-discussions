@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export, no-unused-expressions */
 import { logError } from '@edx/frontend-platform/logging';
 
+import { getHttpErrorStatus } from '../../../discussions/utils';
 import { getCourseHomeCourseMetadata } from './api';
 import {
   fetchTabDenied,
@@ -26,7 +27,11 @@ export function fetchTab(courseId, rootSlug) {
         }));
       }
     } catch (e) {
-      dispatch(fetchTabFailure({ courseId }));
+      if (getHttpErrorStatus(e) === 403) {
+        dispatch(fetchTabDenied({ courseId }));
+      } else {
+        dispatch(fetchTabFailure({ courseId }));
+      }
       logError(e);
     }
   };

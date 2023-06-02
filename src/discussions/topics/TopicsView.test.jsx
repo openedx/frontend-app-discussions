@@ -1,5 +1,5 @@
 import {
-  fireEvent, render, screen,
+  act, fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -26,9 +26,10 @@ const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${cours
 let store;
 let axiosMock;
 let lastLocation;
+let container;
 
 function renderComponent() {
-  render(
+  const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{ courseId }}>
@@ -50,6 +51,7 @@ function renderComponent() {
       </AppProvider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
 describe('Legacy Topics View', () => {
@@ -67,7 +69,7 @@ describe('Legacy Topics View', () => {
     });
 
     store = initializeStore({
-      config: { provider: 'legacy' },
+      config: { provider: 'legacy', hasModerationPrivileges: true },
       blocks: {
         topics: {},
       },
@@ -133,5 +135,48 @@ describe('Legacy Topics View', () => {
     const topic = await screen.findByText(categoryName);
     fireEvent.click(topic);
     expect(lastLocation.pathname.endsWith(`/category/${categoryPath}`)).toBeTruthy();
+  });
+
+  it('should display Unnamed category message for undefined groupId', async () => {
+    const mockData = {
+      courseware_topics: Factory.buildList('category', 2),
+      non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw' }),
+    };
+    mockData.courseware_topics[0].name = '';
+
+    axiosMock
+      .onGet(topicsApiUrl)
+      .reply(200, mockData);
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+    await renderComponent();
+
+    expect(await screen.findByText('Unnamed category')).toBeInTheDocument();
+  });
+
+  it('should select the specific topic', async () => {
+    await setupMockResponse();
+    renderComponent();
+
+    const topic = await container.querySelector('[data-topic-id="ncwtopic-5"]');
+
+    await act(async () => {
+      fireEvent.click(topic);
+    });
+    await waitFor(() => {
+      expect(lastLocation.pathname.endsWith('/ncwtopic-5')).toBeTruthy();
+    });
+  });
+
+  it(`should display reported and previously reported messages by enabling canSeeReportedStats along with
+  activeFlags and inactiveFlags`, async () => {
+    await setupMockResponse();
+    renderComponent();
+
+    const reportedIcon = await waitFor(() => container.querySelector('.text-danger'));
+    await act(async () => fireEvent.mouseEnter(reportedIcon));
+
+    expect(reportedIcon).toBeInTheDocument();
+    expect(screen.getByText('2 reported')).toBeInTheDocument();
+    expect(screen.getByText('1 previously reported')).toBeInTheDocument();
   });
 });

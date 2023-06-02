@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -32,10 +34,11 @@ const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${cours
 const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
+let container;
 
 async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
   const path = editExisting ? Routes.POSTS.EDIT_POST : Routes.POSTS.NEW_POSTS;
-  await render(
+  const wrapper = await render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider
@@ -50,6 +53,7 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
       </AppProvider>
     </IntlProvider>,
   );
+  container = wrapper.container;
 }
 
 describe('PostEditor', () => {
@@ -67,13 +71,12 @@ describe('PostEditor', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     const cwtopics = Factory.buildList('category', 2);
     Factory.reset('topic');
-    axiosMock
-      .onGet(topicsApiUrl)
-      .reply(200, {
-        courseware_topics: cwtopics,
-        non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw-' }),
-      });
+    axiosMock.onGet(topicsApiUrl).reply(200, {
+      courseware_topics: cwtopics,
+      non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw-' }),
+    });
   });
+
   describe.each([
     {
       allowAnonymous: false,
@@ -106,50 +109,35 @@ describe('PostEditor', () => {
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
     });
-    test(
-      `new post when anonymous posts are ${allowAnonymous ? '' : 'not '}allowed and anonymous posts to peers are ${allowAnonymousToPeers ? '' : 'not '}allowed`,
-      async () => {
-        await renderComponent();
 
-        expect(screen.queryByRole('heading'))
-          .toHaveTextContent('Add a post');
-        expect(screen.queryAllByRole('radio'))
-          .toHaveLength(2);
-        // 2 categories with 4 subcategories each
-        expect(screen.queryAllByText(/category-\d-topic \d/))
-          .toHaveLength(8);
-        // 3 non courseare topics
-        expect(screen.queryAllByText(/ncw-topic \d/))
-          .toHaveLength(3);
+    test(`new post when anonymous posts are ${allowAnonymous ? '' : 'not'} allowed and anonymous posts to peers are ${
+      allowAnonymousToPeers ? '' : 'not'} allowed`, async () => {
+      await renderComponent();
 
-        expect(screen.queryByText('cohort', { exact: false }))
-          .not.toBeInTheDocument();
-        if (allowAnonymous) {
-          expect(screen.queryByText('Post anonymously'))
-            .not.toBeInTheDocument();
-        } else {
-          expect(screen.queryByText('Post anonymously'))
-            .not.toBeInTheDocument();
-        }
-        if (allowAnonymousToPeers) {
-          expect(screen.queryByText('Post anonymously to peers'))
-            .toBeInTheDocument();
-        } else {
-          expect(screen.queryByText('Post anonymously to peers'))
-            .not
-            .toBeInTheDocument();
-        }
-      },
-    );
+      expect(screen.queryByRole('heading')).toHaveTextContent('Add a post');
+      expect(screen.queryAllByRole('radio')).toHaveLength(2);
+      // 2 categories with 4 subcategories each
+      expect(screen.queryAllByText(/category-\d-topic \d/)).toHaveLength(8);
+      // 3 non courseare topics
+      expect(screen.queryAllByText(/ncw-topic \d/)).toHaveLength(3);
+      expect(screen.queryByText('cohort', { exact: false })).not.toBeInTheDocument();
+      expect(screen.queryByText('Post anonymously')).not.toBeInTheDocument();
+
+      if (allowAnonymousToPeers) {
+        expect(screen.queryByText('Post anonymously to peers')).toBeInTheDocument();
+      } else {
+        expect(screen.queryByText('Post anonymously to peers')).not.toBeInTheDocument();
+      }
+    });
+
     test('selectThread is not called while creating a new post', async () => {
       const mockSelectThread = jest.fn();
       jest.mock('../data/selectors', () => ({
         selectThread: mockSelectThread,
       }));
       await renderComponent();
-      expect(mockSelectThread)
-        .not
-        .toHaveBeenCalled();
+
+      expect(mockSelectThread).not.toHaveBeenCalled();
     });
   });
 
@@ -158,8 +146,7 @@ describe('PostEditor', () => {
     const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
 
     beforeEach(async () => {
-      axiosMock.onGet(getCohortsApiUrl(courseId))
-        .reply(200, Factory.buildList('cohort', 3));
+      axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
     });
 
     async function setupData(config = {}, settings = {}) {
@@ -183,69 +170,46 @@ describe('PostEditor', () => {
       await setupData();
       await renderComponent();
       // Initially the user can't select a cohort
-      expect(screen.queryByRole('combobox', {
-        name: /cohort visibility/i,
-      }))
-        .not
-        .toBeInTheDocument();
+      expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       // If a cohorted topic is selected, the cohort visibility selector is displayed
-      ['ncw-topic 2', 'category-1-topic 2', 'category-2-topic 1', 'category-2-topic 2'].forEach((topicName) => {
+      ['ncw-topic 2', 'category-1-topic 2', 'category-2-topic 1', 'category-2-topic 2'].forEach(async (topicName) => {
         act(() => {
           userEvent.selectOptions(
-            screen.getByRole('combobox', {
-              name: /topic area/i,
-            }),
+            screen.getByRole('combobox', { name: /topic area/i }),
             screen.getByRole('option', { name: topicName }),
           );
         });
 
-        expect(screen.queryByRole('combobox', {
-          name: /cohort visibility/i,
-        }))
-          .toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).toBeInTheDocument();
       });
       // Now if a non-cohorted topic is selected, the cohort visibility selector is hidden
-      ['ncw-topic 1', 'category-1-topic 1', 'category-2-topic 4'].forEach((topicName) => {
+      ['ncw-topic 1', 'category-1-topic 1', 'category-2-topic 4'].forEach(async (topicName) => {
         act(() => {
           userEvent.selectOptions(
-            screen.getByRole('combobox', {
-              name: /topic area/i,
-            }),
+            screen.getByRole('combobox', { name: /topic area/i }),
             screen.getByRole('option', { name: topicName }),
           );
         });
-        expect(screen.queryByRole('combobox', {
-          name: /cohort visibility/i,
-        }))
-          .not
-          .toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       });
     });
+
     test('test always divided inline', async () => {
       await setupData({}, { alwaysDivideInlineDiscussions: true });
       await renderComponent();
       // Initially the user can't select a cohort
-      expect(screen.queryByRole('combobox', {
-        name: /cohort visibility/i,
-      }))
-        .not
-        .toBeInTheDocument();
+      expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       // All coursweare topics are divided
       [1, 2].forEach(catId => {
         [1, 2, 3, 4].forEach((topicId) => {
           act(() => {
             userEvent.selectOptions(
-              screen.getByRole('combobox', {
-                name: /topic area/i,
-              }),
+              screen.getByRole('combobox', { name: /topic area/i }),
               screen.getByRole('option', { name: `category-${catId}-topic ${topicId}` }),
             );
           });
 
-          expect(screen.queryByRole('combobox', {
-            name: /cohort visibility/i,
-          }))
-            .toBeInTheDocument();
+          expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).toBeInTheDocument();
         });
       });
 
@@ -253,46 +217,38 @@ describe('PostEditor', () => {
       ['ncw-topic 1', 'ncw-topic 3'].forEach((topicName) => {
         act(() => {
           userEvent.selectOptions(
-            screen.getByRole('combobox', {
-              name: /topic area/i,
-            }),
+            screen.getByRole('combobox', { name: /topic area/i }),
             screen.getByRole('option', { name: topicName }),
           );
         });
-        expect(screen.queryByRole('combobox', {
-          name: /cohort visibility/i,
-        }))
-          .not
-          .toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       });
     });
+
     test('test unprivileged user', async () => {
       await setupData({ hasModerationPrivileges: false });
       await renderComponent();
+
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
         act(() => {
           userEvent.selectOptions(
-            screen.getByRole('combobox', {
-              name: /topic area/i,
-            }),
+            screen.getByRole('combobox', { name: /topic area/i }),
             screen.getByRole('option', { name: topicName }),
           );
         });
         // If a cohorted topic is selected, the cohort visibility selector is displayed
-        expect(screen.queryByRole('combobox', {
-          name: /cohort visibility/i,
-        }))
-          .not
-          .toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       });
     });
+
     test('edit existing post should not show cohort selector to unprivileged users', async () => {
       const threadId = 'thread-1';
       await setupData({ hasModerationPrivileges: false });
-      axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
-        .reply(200, Factory.build('thread'));
-      await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
-      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+      await act(async () => {
+        axiosMock.onGet(`${threadsApiUrl}${threadId}/`).reply(200, Factory.build('thread'));
+        await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+        await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+      });
 
       ['ncw-topic 1', 'ncw-topic 2', 'category-1-topic 1', 'category-2-topic 1'].forEach((topicName) => {
         act(() => {
@@ -304,20 +260,18 @@ describe('PostEditor', () => {
           );
         });
         // If a cohorted topic is selected, the cohort visibility selector is displayed
-        expect(screen.queryByRole('combobox', {
-          name: /cohort visibility/i,
-        }))
-          .not
-          .toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
       });
     });
+
     test('cancel posting of existing post', async () => {
       const threadId = 'thread-1';
       await setupData();
-      axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
-        .reply(200, Factory.build('thread'));
-      await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
-      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+      await act(async () => {
+        axiosMock.onGet(`${threadsApiUrl}${threadId}/`).reply(200, Factory.build('thread'));
+        await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
+        await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+      });
 
       const cancelButton = screen.getByRole('button', { name: /cancel/i });
       await act(async () => {
@@ -329,6 +283,7 @@ describe('PostEditor', () => {
 
   describe('Edit codes', () => {
     const threadId = 'thread-1';
+
     beforeEach(async () => {
       const dividedncw = ['ncw-topic-2'];
       const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
@@ -355,20 +310,51 @@ describe('PostEditor', () => {
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
-      axiosMock.onGet(`${threadsApiUrl}${threadId}/`)
-        .reply(200, Factory.build('thread'));
+      axiosMock.onGet(`${threadsApiUrl}${threadId}/`).reply(200, Factory.build('thread'));
       await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
     });
+
     test('Edit post and see reasons', async () => {
+      await act(async () => {
+        await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+      });
+
+      expect(screen.queryByRole('combobox', { name: /reason for editing/i })).toBeInTheDocument();
+      expect(screen.getAllByRole('option', { name: /reason \d/i })).toHaveLength(2);
+    });
+
+    it('should show Preview Panel', async () => {
       await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
 
-      expect(screen.queryByRole('combobox', {
-        name: /reason for editing/i,
-      }))
-        .toBeInTheDocument();
-      expect(screen.getAllByRole('option', {
-        name: /reason \d/i,
-      })).toHaveLength(2);
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="show-preview-button"]'));
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).toBeInTheDocument();
+        expect(container.querySelector('[data-testid="show-preview-button"]')).not.toBeInTheDocument();
+      });
+    });
+
+    it('should hide Preview Panel', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="show-preview-button"]'));
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).toBeInTheDocument();
+      });
+
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="hide-preview-button"]'));
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="show-preview-button"]')).toBeInTheDocument();
+        expect(container.querySelector('[data-testid="hide-preview-button"]')).not.toBeInTheDocument();
+      });
     });
   });
 });

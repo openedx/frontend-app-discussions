@@ -1,17 +1,17 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
-import PostPreviewPane from '../../../../components/PostPreviewPane';
+import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import { useDispatchWithState } from '../../../../data/hooks';
 import { DiscussionContext } from '../../../common/context';
 import {
@@ -24,13 +24,16 @@ import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
-function CommentEditor({
-  intl,
+const CommentEditor = ({
   comment,
-  onCloseEditor,
   edit,
   formClasses,
-}) {
+  onCloseEditor,
+}) => {
+  const {
+    id, threadId, parentId, rawBody, author, lastEdit,
+  } = comment;
+  const intl = useIntl();
   const editorRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -42,7 +45,7 @@ function CommentEditor({
 
   const canDisplayEditReason = (reasonCodesEnabled && edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
-    && comment?.author !== authenticatedUser.username
+    && author !== authenticatedUser.username
   );
 
   const editReasonCodeValidation = canDisplayEditReason && {
@@ -56,34 +59,35 @@ function CommentEditor({
   });
 
   const initialValues = {
-    comment: comment.rawBody,
-    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
+    comment: rawBody,
+    // eslint-disable-next-line react/prop-types
+    editReasonCode: lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
 
-  const handleCloseEditor = (resetForm) => {
+  const handleCloseEditor = useCallback((resetForm) => {
     resetForm({ values: initialValues });
     onCloseEditor();
-  };
+  }, [onCloseEditor, initialValues]);
 
-  const saveUpdatedComment = async (values, { resetForm }) => {
-    if (comment.id) {
+  const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
+    if (id) {
       const payload = {
         ...values,
         editReasonCode: values.editReasonCode || undefined,
       };
-      await dispatch(editComment(comment.id, payload));
+      await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(values.comment, comment.threadId, comment.parentId, enableInContextSidebar));
+      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
       editorRef.current.plugins.autosave.removeDraft();
     }
     handleCloseEditor(resetForm);
-  };
+  }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
-  const editorId = `comment-editor-${comment.id || comment.parentId || comment.threadId}`;
+  const editorId = `comment-editor-${id || parentId || threadId}`;
 
   return (
     <Formik
@@ -150,7 +154,7 @@ function CommentEditor({
                 {intl.formatMessage(messages.commentError)}
               </Form.Control.Feedback>
             )}
-          <PostPreviewPane htmlNode={values.comment} />
+          <PostPreviewPanel htmlNode={values.comment} />
           <div className="d-flex py-2 justify-content-end">
             <Button
               variant="outline-primary"
@@ -173,26 +177,32 @@ function CommentEditor({
       )}
     </Formik>
   );
-}
+};
 
 CommentEditor.propTypes = {
   comment: PropTypes.shape({
+    author: PropTypes.string,
     id: PropTypes.string,
-    threadId: PropTypes.string.isRequired,
+    lastEdit: PropTypes.shape({}),
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
-    author: PropTypes.string,
-    lastEdit: PropTypes.object,
-  }).isRequired,
-  onCloseEditor: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
+    threadId: PropTypes.string.isRequired,
+  }),
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
+  onCloseEditor: PropTypes.func.isRequired,
 };
 
 CommentEditor.defaultProps = {
   edit: true,
+  comment: {
+    author: null,
+    id: null,
+    lastEdit: null,
+    parentId: null,
+    rawBody: '',
+  },
   formClasses: '',
 };
 
-export default injectIntl(CommentEditor);
+export default React.memo(CommentEditor);

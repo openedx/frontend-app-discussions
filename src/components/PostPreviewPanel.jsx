@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
-function PostPreviewPane({
-  htmlNode, intl, isPost, editExisting,
-}) {
+const PostPreviewPanel = ({
+  htmlNode, isPost, editExisting,
+}) => {
+  const intl = useIntl();
   const [showPreviewPane, setShowPreviewPane] = useState(false);
 
   return (
@@ -28,14 +29,17 @@ function PostPreviewPane({
             size="inline"
             className="float-right p-3"
             iconClassNames="icon-size"
+            data-testid="hide-preview-button"
           />
-          <HTMLLoader
-            htmlNode={htmlNode}
-            cssClassName="text-primary"
-            componentId="post-preview"
-            testId="post-preview"
-            delay={500}
-          />
+          {htmlNode && (
+            <HTMLLoader
+              htmlNode={htmlNode}
+              cssClassName="text-primary"
+              componentId="post-preview"
+              testId="post-preview"
+              delay={500}
+            />
+          )}
         </div>
       )}
       <div className="d-flex justify-content-end">
@@ -46,6 +50,7 @@ function PostPreviewPane({
             onClick={() => setShowPreviewPane(true)}
             className={`text-primary-500 font-style p-0 ${editExisting && 'mb-4.5'}`}
             style={{ lineHeight: '26px' }}
+            data-testid="show-preview-button"
           >
             {intl.formatMessage(messages.showPreviewButton)}
           </Button>
@@ -53,18 +58,18 @@ function PostPreviewPane({
       </div>
     </>
   );
-}
+};
 
-PostPreviewPane.propTypes = {
-  intl: intlShape.isRequired,
-  htmlNode: PropTypes.node.isRequired,
+PostPreviewPanel.propTypes = {
+  htmlNode: PropTypes.node,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
 };
 
-PostPreviewPane.defaultProps = {
+PostPreviewPanel.defaultProps = {
+  htmlNode: '',
   isPost: false,
   editExisting: false,
 };
 
-export default injectIntl(PostPreviewPane);
+export default React.memo(PostPreviewPanel);

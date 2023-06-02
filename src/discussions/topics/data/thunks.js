@@ -2,8 +2,11 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
+import { getHttpErrorStatus } from '../../utils';
 import { getCourseTopics } from './api';
-import { fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess } from './slices';
+import {
+  fetchCourseTopicsDenied, fetchCourseTopicsFailed, fetchCourseTopicsRequest, fetchCourseTopicsSuccess,
+} from './slices';
 
 function normaliseTopics(data) {
   const topicsInCategory = {};
@@ -33,7 +36,11 @@ export function fetchCourseTopics(courseId) {
       const data = normaliseTopics(camelCaseObject(await getCourseTopics(courseId)));
       dispatch(fetchCourseTopicsSuccess(data));
     } catch (error) {
-      dispatch(fetchCourseTopicsFailed());
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(fetchCourseTopicsDenied());
+      } else {
+        dispatch(fetchCourseTopicsFailed());
+      }
       logError(error);
     }
   };
