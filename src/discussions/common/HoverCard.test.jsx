@@ -10,16 +10,16 @@ import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { getCourseConfigApiUrl } from '../data/api';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { getCourseConfigApiUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getCommentsApiUrl } from '../post-comments/data/api';
 import { fetchCommentResponses, fetchThreadComments } from '../post-comments/data/thunks';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { DiscussionContext } from './context';
-import { fetchCourseConfig } from '../data/thunks';
 
 import '../posts/data/__factories__';
 import '../post-comments/data/__factories__';
@@ -146,7 +146,7 @@ describe('HoverCard', () => {
       })];
     });
     axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
-      .reply(200, { isPostingEnabled: true});
+      .reply(200, { isPostingEnabled: true });
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
