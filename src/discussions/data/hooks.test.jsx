@@ -163,6 +163,7 @@ describe('Hooks', () => {
       test('when posting is not disabled and Role is not Learner return true', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
           .reply(200, generateApiResponse(false, true));
+        await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });

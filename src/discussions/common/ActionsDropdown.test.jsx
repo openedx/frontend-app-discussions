@@ -21,6 +21,8 @@ import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread } from '../posts/data/thunks';
 import { ACTIONS_LIST } from '../utils';
 import ActionsDropdown from './ActionsDropdown';
+import { getCourseConfigApiUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 
 import '../post-comments/data/__factories__';
 import '../posts/data/__factories__';
@@ -29,6 +31,7 @@ let store;
 let axiosMock;
 const commentsApiUrl = getCommentsApiUrl();
 const threadsApiUrl = getThreadsApiUrl();
+const courseId = 'course-v1:edX+TestX+Test_Course';
 const discussionThreadId = 'thread-1';
 const questionThreadId = 'thread-2';
 const commentContent = 'This is a comment for thread-1';
@@ -170,7 +173,7 @@ const findOpenActionsDropdownButton = async () => (
 );
 
 describe('ActionsDropdown', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
         userId: 3,
@@ -182,6 +185,11 @@ describe('ActionsDropdown', () => {
     store = initializeStore();
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+
+    axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
+      .reply(200, { isPostingEnabled: true });
+
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   });
 
   it.each(Object.values(buildTestContent()))('can open drop down if enabled', async (commentOrPost) => {
