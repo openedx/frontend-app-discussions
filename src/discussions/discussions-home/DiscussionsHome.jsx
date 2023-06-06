@@ -30,7 +30,7 @@ const CourseTabsNavigation = lazy(() => import('../../components/NavigationBar/C
 const LegacyBreadcrumbMenu = lazy(() => import('../navigation/breadcrumb-menu/LegacyBreadcrumbMenu'));
 const NavigationBar = lazy(() => import('../navigation/navigation-bar/NavigationBar'));
 const DiscussionsProductTour = lazy(() => import('../tours/DiscussionsProductTour'));
-const BlackoutInformationBanner = lazy(() => import('./BlackoutInformationBanner'));
+const DiscussionsRestrictionBanner = lazy(() => import('./DiscussionsRestrictionBanner'));
 const DiscussionContent = lazy(() => import('./DiscussionContent'));
 const DiscussionSidebar = lazy(() => import('./DiscussionSidebar'));
 const InformationBanner = lazy(() => import('./InformationBanner'));
@@ -96,7 +96,7 @@ const DiscussionsHome = () => {
               <PostActionsBar />
             </div>
             {isFeedbackBannerVisible && <InformationBanner />}
-            <BlackoutInformationBanner />
+            <DiscussionsRestrictionBanner />
           </div>
           {provider === DiscussionProvider.LEGACY && (
           <Suspense fallback={(<Spinner />)}>

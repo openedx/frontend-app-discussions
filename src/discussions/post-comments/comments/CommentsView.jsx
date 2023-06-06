@@ -5,7 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import { EndorsementStatus } from '../../../data/constants';
-import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
+import { useUserPostingEnabled } from '../../data/hooks';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
@@ -16,7 +16,8 @@ const CommentsView = ({ endorsed }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+
   const {
     endorsedCommentsIds,
     unEndorsedCommentsIds,
@@ -89,7 +90,7 @@ const CommentsView = ({ endorsed }) => {
               {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
               {unEndorsedCommentsIds.length === 0 && <br />}
               {handleComments(unEndorsedCommentsIds, false)}
-              {(userCanAddThreadInBlackoutDate && !!unEndorsedCommentsIds.length && !isClosed) && (
+              {(isUserPrivilagedInPostingRestriction && !!unEndorsedCommentsIds.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
                     <Button

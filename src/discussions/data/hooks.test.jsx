@@ -11,7 +11,7 @@ import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
 import { getCourseConfigApiUrl } from './api';
-import { useCurrentDiscussionTopic, useUserCanAddThreadInBlackoutDate } from './hooks';
+import { useCurrentDiscussionTopic, useUserPostingEnabled } from './hooks';
 import { fetchCourseConfig } from './thunks';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
@@ -19,8 +19,8 @@ const courseConfigApiUrl = getCourseConfigApiUrl();
 let store;
 let axiosMock;
 
-const generateApiResponse = (blackouts = [], isCourseAdmin = false) => ({
-  blackouts,
+const generateApiResponse = (isPostingEnabled, isCourseAdmin = false) => ({
+  isPostingEnabled,
   hasModerationPrivileges: false,
   isGroupTa: false,
   isCourseAdmin,
@@ -102,12 +102,12 @@ describe('Hooks', () => {
     });
   });
 
-  describe('useUserCanAddThreadInBlackoutDate', () => {
+  describe('useUserPostingEnabled', () => {
     const ComponentWithHook = () => {
-      const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+      const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
       return (
         <div>
-          {String(userCanAddThreadInBlackoutDate)}
+          {String(isUserPrivilagedInPostingRestriction)}
         </div>
       );
     };
@@ -121,7 +121,7 @@ describe('Hooks', () => {
         </IntlProvider>,
       );
     }
-    describe('User can add Thread in blackoutdates ', () => {
+    describe('User can add Thread in Posting Restrictions ', () => {
       beforeEach(() => {
         initializeMockApp({
           authenticatedUser: {
@@ -136,37 +136,34 @@ describe('Hooks', () => {
         store = initializeStore();
       });
 
-      test('when blackoutdates are not active and Role is Learner return true', async () => {
+      test('when posting is not disabled and Role is Learner return true', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
-          .reply(200, generateApiResponse([], false));
+          .reply(200, generateApiResponse(true, false));
         await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });
 
-      test('when blackoutdates are not active and Role is not Learner return true', async () => {
+      test('when posting is not disabled and Role is not Learner return true', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
-          .reply(200, generateApiResponse([], true));
+          .reply(200, generateApiResponse(true, true));
         await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });
 
-      test('when blackoutdates are active and Role is Learner return false', async () => {
+      test('when posting is disabled and Role is Learner return false', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
-          .reply(200, generateApiResponse([{
-            start: '2022-11-25T00:00:00Z',
-            end: '2050-11-25T23:59:00Z',
-          }], false));
+          .reply(200, generateApiResponse(false, false));
         await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('false')).toBeInTheDocument();
       });
 
-      test('when blackoutdates are active and Role is not Learner return true', async () => {
+      test('when posting is not disabled and Role is not Learner return true', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
-          .reply(200, generateApiResponse([
-            { start: '2022-11-25T00:00:00Z', end: '2050-11-25T23:59:00Z' }], true));
+          .reply(200, generateApiResponse(false, true));
+        await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
         const { queryByText } = renderComponent();
         expect(queryByText('true')).toBeInTheDocument();
       });

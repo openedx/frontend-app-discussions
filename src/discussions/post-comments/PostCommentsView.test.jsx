@@ -109,6 +109,24 @@ async function getThreadAPIResponse(attr = null) {
   await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
+async function setupCourseConfig(reasonCodesEnabled = true) {
+  axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+    has_moderation_privileges: true,
+    isPostingEnabled: true,
+    reason_codes_enabled: reasonCodesEnabled,
+    editReasons: [
+      { code: 'reason-1', label: 'reason 1' },
+      { code: 'reason-2', label: 'reason 2' },
+    ],
+    postCloseReasons: [
+      { code: 'reason-1', label: 'reason 1' },
+      { code: 'reason-2', label: 'reason 2' },
+    ],
+  });
+  axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
+  await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+}
+
 function renderComponent(postId) {
   const wrapper = render(
     <IntlProvider locale="en">
@@ -218,6 +236,7 @@ describe('ThreadView', () => {
     });
 
     it('should show and hide the editor', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const post = screen.getByTestId('post-thread-1');
@@ -232,6 +251,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a response', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
@@ -246,6 +266,7 @@ describe('ThreadView', () => {
     });
 
     it('should not allow posting a response on a closed post', async () => {
+      await setupCourseConfig();
       renderComponent(closedPostId);
       const post = screen.getByTestId('post-thread-2');
       const hoverCard = within(post).getByTestId('hover-card-thread-2');
@@ -254,6 +275,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
@@ -267,6 +289,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow editing an existing comment', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
@@ -280,23 +303,6 @@ describe('ThreadView', () => {
         expect(await screen.findByTestId('comment-comment-1')).toBeInTheDocument();
       });
     });
-
-    async function setupCourseConfig(reasonCodesEnabled = true) {
-      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-        has_moderation_privileges: true,
-        reason_codes_enabled: reasonCodesEnabled,
-        editReasons: [
-          { code: 'reason-1', label: 'reason 1' },
-          { code: 'reason-2', label: 'reason 2' },
-        ],
-        postCloseReasons: [
-          { code: 'reason-1', label: 'reason 1' },
-          { code: 'reason-2', label: 'reason 2' },
-        ],
-      });
-      axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
-      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
-    }
 
     it('should show reason codes when closing a post', async () => {
       await setupCourseConfig();

@@ -12,7 +12,7 @@ import { Close } from '@edx/paragon/icons';
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
-import { useUserCanAddThreadInBlackoutDate } from '../../data/hooks';
+import { useUserPostingEnabled } from '../../data/hooks';
 import { selectconfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
@@ -26,7 +26,7 @@ const PostActionsBar = () => {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectconfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
   const handleCloseInContext = useCallback(() => {
@@ -49,7 +49,7 @@ const PostActionsBar = () => {
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-      {loadingStatus === RequestStatus.SUCCESSFUL && userCanAddThreadInBlackoutDate && (
+      {loadingStatus === RequestStatus.SUCCESSFUL && isUserPrivilagedInPostingRestriction && (
         <>
           {!enableInContextSidebar && <div className="border-right border-light-400 mx-3" />}
           <Button

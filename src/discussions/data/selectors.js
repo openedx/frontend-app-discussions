@@ -20,8 +20,6 @@ export const selectUserRoles = state => state.config.userRoles;
 
 export const selectDivisionSettings = state => state.config.settings;
 
-export const selectBlackoutDate = state => state.config.blackouts;
-
 export const selectGroupAtSubsection = state => state.config.groupAtSubsection;
 
 export const selectIsCourseAdmin = state => state.config.isCourseAdmin;
@@ -29,6 +27,8 @@ export const selectIsCourseAdmin = state => state.config.isCourseAdmin;
 export const selectIsCourseStaff = state => state.config.isCourseStaff;
 
 export const selectEnableInContext = state => state.config.enableInContext;
+
+export const selectIsPostingEnabled = state => state.config.isPostingEnabled;
 
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,

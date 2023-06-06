@@ -185,7 +185,7 @@ const messages = defineMessages({
   },
   blackoutDiscussionInformation: {
     id: 'discussion.blackoutBanner.information',
-    defaultMessage: 'Posting in discussions is temporarily disabled by the course team',
+    defaultMessage: 'Posting in discussions is disabled by the course team',
     description: 'Informative text when discussion posting is disabled',
   },
   imageWarningMessage: {

@@ -11,7 +11,7 @@ import {
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
-import { useUserCanAddThreadInBlackoutDate } from '../data/hooks';
+import { useUserPostingEnabled } from '../data/hooks';
 import { PostCommentsContext } from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
 import { DiscussionContext } from './context';
@@ -31,7 +31,7 @@ const HoverCard = ({
   const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);
-  const userCanAddThreadInBlackoutDate = useUserCanAddThreadInBlackoutDate();
+  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
 
   return (
     <div
@@ -39,7 +39,7 @@ const HoverCard = ({
       data-testid={`hover-card-${id}`}
       id={`hover-card-${id}`}
     >
-      {userCanAddThreadInBlackoutDate && (
+      {isUserPrivilagedInPostingRestriction && (
         <div className="d-flex">
           <Button
             variant="tertiary"

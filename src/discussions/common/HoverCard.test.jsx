@@ -12,6 +12,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
+import { getCourseConfigApiUrl } from '../data/api';
+import { fetchCourseConfig } from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getCommentsApiUrl } from '../post-comments/data/api';
 import { fetchCommentResponses, fetchThreadComments } from '../post-comments/data/thunks';
@@ -118,6 +120,7 @@ describe('HoverCard', () => {
         username: 'abc123',
         administrator: true,
         roles: [],
+        isPostingEnabled: true,
       },
     });
 
@@ -142,7 +145,10 @@ describe('HoverCard', () => {
         thread_id: threadId,
       })];
     });
+    axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
+      .reply(200, { isPostingEnabled: true });
 
+    await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     await mockAxiosReturnPagedComments();
     await mockAxiosReturnPagedCommentsResponses();

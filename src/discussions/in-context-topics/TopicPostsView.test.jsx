@@ -92,7 +92,6 @@ describe('InContext Topic Posts View', () => {
         enableInContext: true,
         provider: 'openedx',
         hasModerationPrivileges: true,
-        blackouts: [],
       },
     });
     Factory.resetAll();

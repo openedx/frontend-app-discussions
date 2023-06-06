@@ -1,22 +1,19 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { PageBanner } from '@edx/paragon';
 
-import { selectBlackoutDate } from '../data/selectors';
+import { RequestStatus } from '../../data/constants';
+import { selectconfigLoadingStatus, selectIsPostingEnabled } from '../data/selectors';
 import messages from '../messages';
-import { inBlackoutDateRange } from '../utils';
 
-const BlackoutInformationBanner = () => {
+const DiscussionsRestrictionBanner = () => {
   const intl = useIntl();
-  const blackoutDate = useSelector(selectBlackoutDate);
+  const isPostingEnabled = useSelector(selectIsPostingEnabled);
+  const configLoadingStatus = useSelector(selectconfigLoadingStatus);
   const [showBanner, setShowBanner] = useState(true);
-
-  const isDiscussionsBlackout = useMemo(() => (
-    inBlackoutDateRange(blackoutDate)
-  ), [blackoutDate]);
 
   const handleDismiss = useCallback(() => {
     setShowBanner(false);
@@ -25,7 +22,7 @@ const BlackoutInformationBanner = () => {
   return (
     <PageBanner
       variant="accentB"
-      show={isDiscussionsBlackout && showBanner}
+      show={!isPostingEnabled && showBanner && configLoadingStatus === RequestStatus.SUCCESSFUL}
       dismissible
       onDismiss={handleDismiss}
     >
@@ -36,4 +33,4 @@ const BlackoutInformationBanner = () => {
   );
 };
 
-export default BlackoutInformationBanner;
+export default DiscussionsRestrictionBanner;

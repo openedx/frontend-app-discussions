@@ -13,9 +13,9 @@ import {
 import { MoreHoriz } from '@edx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
-import { selectBlackoutDate } from '../data/selectors';
+import { selectIsPostingEnabled } from '../data/selectors';
 import messages from '../messages';
-import { inBlackoutDateRange, useActions } from '../utils';
+import { useActions } from '../utils';
 
 const ActionsDropdown = ({
   actionHandlers,
@@ -29,7 +29,7 @@ const ActionsDropdown = ({
   const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const blackoutDateRange = useSelector(selectBlackoutDate);
+  const isPostingEnabled = useSelector(selectIsPostingEnabled);
   const actions = useActions(contentType, id);
 
   const handleActions = useCallback((action) => {
@@ -41,12 +41,12 @@ const ActionsDropdown = ({
     }
   }, [actionHandlers]);
 
-  // Find and remove edit action if in blackout date range.
+  // Find and remove edit action if in Posting is disabled.
   useMemo(() => {
-    if (inBlackoutDateRange(blackoutDateRange)) {
+    if (!isPostingEnabled) {
       actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
     }
-  }, [actions, blackoutDateRange]);
+  }, [actions, isPostingEnabled]);
 
   const onClickButton = useCallback(() => {
     setTarget(buttonRef.current);

@@ -8,7 +8,7 @@ import { initializeStore } from '../../store';
 import { DiscussionContext } from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import messages from '../messages';
-import BlackoutInformationBanner from './BlackoutInformationBanner';
+import DiscussionsRestrictionBanner from './DiscussionsRestrictionBanner';
 
 let store;
 let container;
@@ -20,13 +20,13 @@ activeEndDate.setDate(activeEndDate.getDate() + 2);
 activeStartDate = activeStartDate.toISOString();
 activeEndDate = activeEndDate.toISOString();
 
-const getConfigData = (blackouts = []) => ({
+const getConfigData = (isPostingEnabled) => ({
   id: 'course-v1:edX+DemoX+Demo_Course',
   userRoles: ['Admin', 'Student'],
   hasModerationPrivileges: false,
   isGroupTa: false,
   isUserAdmin: false,
-  blackouts,
+  isPostingEnabled,
 });
 
 function renderComponent() {
@@ -34,7 +34,7 @@ function renderComponent() {
     <IntlProvider locale="en">
       <AppProvider store={store}>
         <DiscussionContext.Provider value={{ courseId }}>
-          <BlackoutInformationBanner />
+          <DiscussionsRestrictionBanner />
         </DiscussionContext.Provider>
       </AppProvider>
     </IntlProvider>,
@@ -43,7 +43,7 @@ function renderComponent() {
   return container;
 }
 
-describe('Blackout Information Banner', () => {
+describe('Discussions Restriction Banner', () => {
   beforeEach(async () => {
     initializeMockApp({
       authenticatedUser: {
@@ -56,13 +56,11 @@ describe('Blackout Information Banner', () => {
   });
 
   test.each([
-    { blackouts: [], visibility: false },
-    { blackouts: ['2021-12-31T10:15', '2021-12-31T10:20'], visibility: false },
-    { blackouts: [{ start: activeStartDate, end: activeEndDate }], visibility: true },
-    { blackouts: [{ start: activeEndDate, end: activeEndDate }], visibility: false },
-  ])('Test Blackout Banner is visible on app load if blackout date is active', async ({ blackouts, visibility }) => {
+    { isPostingEnabled: false, visibility: true },
+    { isPostingEnabled: true, visibility: false },
+  ])('Test Discussions Restriction is visible on app load if posting is disabled', async ({ isPostingEnabled, visibility }) => {
     store = initializeStore();
-    await store.dispatch(fetchConfigSuccess(getConfigData(blackouts)));
+    await store.dispatch(fetchConfigSuccess(getConfigData(isPostingEnabled)));
     renderComponent();
     if (visibility) {
       const element = await screen.findByRole('alert');
