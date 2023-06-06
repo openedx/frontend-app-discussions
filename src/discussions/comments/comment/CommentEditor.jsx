@@ -55,8 +55,11 @@ function CommentEditor({
 
   const initialValues = {
     comment: comment.rawBody,
-    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
   };
+
+  if (canDisplayEditReason) {
+    initialValues.editReasonCode = comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : '')
+  }
 
   const handleCloseEditor = (resetForm) => {
     resetForm({ values: initialValues });

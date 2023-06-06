@@ -138,9 +138,12 @@ function PostEditor({
     follow: isEmpty(post?.following) ? true : post?.following,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    editReasonCode: post?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
     cohort: post?.cohort || 'default',
   };
+
+  if (canDisplayEditReason) {
+    initialValues.editReasonCode = post?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : '')
+  }
 
   const hideEditor = (resetForm) => {
     resetForm({ values: initialValues });
