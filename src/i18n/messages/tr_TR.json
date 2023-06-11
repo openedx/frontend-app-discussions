@@ -209,6 +209,6 @@
   "tour.action.end": "Tamam",
   "tour.body.notRespondedFilter": "Artık yanıt vermeyen iletileri bulmak için tartışmaları filtreleyebilirsiniz.",
   "tour.title.notRespondedFilter": "Yeni filtreleme seçeneği!",
-  "tour.body.responseSortTour": "Responses and comments are now sorted by newest first. Please use this option to change the sort order",
-  "tour.title.responseSortTour": "Sort Responses!"
+  "tour.body.responseSortTour": "Yanıtlar ve yorumlar artık önce en yeniye göre sıralanıyor. Lütfen sıralama düzenini değiştirmek için bu seçeneği kullanın",
+  "tour.title.responseSortTour": "Yanıtları Sırala!"
 }
