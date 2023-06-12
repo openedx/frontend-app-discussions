@@ -58,7 +58,9 @@ const CommentEditor = ({
   const initialValues = {
     comment: comment.rawBody,
     // eslint-disable-next-line react/prop-types
-    editReasonCode: comment?.lastEdit?.reasonCode || (userIsStaff ? 'violates-guidelines' : ''),
+    editReasonCode: comment?.lastEdit?.reasonCode || (
+      userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined
+    ),
   };
 
   const handleCloseEditor = (resetForm) => {
