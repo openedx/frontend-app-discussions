@@ -157,7 +157,7 @@ describe('PostView', () => {
 
   it('should show Topic Info for non-courseware topics', async () => {
     await getThreadAPIResponse({ id: 'thread-1', topic_id: 'non-courseware-topic-1' });
-    renderComponent(discussionPostId);
+    await waitFor(() => renderComponent(discussionPostId));
     expect(await screen.findByText('Related to')).toBeInTheDocument();
     expect(await screen.findByText('non-courseware-topic 1')).toBeInTheDocument();
   });
@@ -165,7 +165,7 @@ describe('PostView', () => {
   it('should show Topic Info for courseware topics with category', async () => {
     await getThreadAPIResponse({ id: 'thread-2', topic_id: 'courseware-topic-2' });
 
-    renderComponent('thread-2');
+    await waitFor(() => renderComponent('thread-2'));
     expect(await screen.findByText('Related to')).toBeInTheDocument();
     expect(await screen.findByText('category-1 / courseware-topic 2')).toBeInTheDocument();
   });
@@ -226,8 +226,8 @@ describe('ThreadView', () => {
       axiosMock.reset();
       await mockAxiosReturnPagedComments(closedPostId, true);
       await waitFor(() => renderComponent(closedPostId, true));
-      const comment = await waitFor(() => screen.findAllByTestId('comment-comment-4'));
-      const hoverCard = within(comment[0]).getByTestId('hover-card-comment-4');
+      const comments = await waitFor(() => screen.findAllByTestId('comment-comment-4'));
+      const hoverCard = within(comments[0]).getByTestId('hover-card-comment-4');
 
       expect(within(hoverCard).getByRole('button', { name: /Add comment/i })).toBeDisabled();
     });
@@ -572,7 +572,9 @@ describe('ThreadView', () => {
       await mockAxiosReturnPagedComments(discussionPostId, false, 2);
 
       const loadMoreButton = await findLoadMoreCommentsButton();
-      fireEvent.click(loadMoreButton);
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
       await screen.findByTestId('comment-comment-1');
       await screen.findByTestId('comment-comment-4');
@@ -583,7 +585,9 @@ describe('ThreadView', () => {
       await mockAxiosReturnPagedComments(discussionPostId, false, 2);
 
       const loadMoreButton = await findLoadMoreCommentsButton();
-      fireEvent.click(loadMoreButton);
+      await act(async () => {
+        fireEvent.click(loadMoreButton);
+      });
 
       await screen.findByTestId('comment-comment-1');
       // check that comments from the first page are also displayed
