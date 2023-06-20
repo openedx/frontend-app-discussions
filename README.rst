@@ -1,7 +1,7 @@
 |Codecov| |license|
 
 .. |Codecov| image:: https://codecov.io/gh/openedx/frontend-app-discussions/branch/master/graph/badge.svg?token=3z7XvuzTq3
-   :target: https://codecov.io/gh/edx/frontend-app-discussions
+   :target: https://codecov.io/gh/openedx/frontend-app-discussions
 .. |license| image:: https://img.shields.io/badge/license-AGPL-informational
    :target: https://github.com/openedx/frontend-app-discussions/blob/master/LICENSE
 
