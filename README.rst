@@ -1,10 +1,15 @@
+|Codecov| |license|
+
+.. |Codecov| image:: https://codecov.io/gh/openedx/frontend-app-discussions/branch/master/graph/badge.svg?token=3z7XvuzTq3
+   :target: https://codecov.io/gh/edx/frontend-app-discussions
+.. |license| image:: https://img.shields.io/badge/license-AGPL-informational
+   :target: https://github.com/openedx/frontend-app-discussions/blob/master/LICENSE
+
 frontend-app-discussions
 ========================
 
-|Build Status| |Codecov| |license|
-
-Purpose
--------
+Introduction
+------------
 
 This repository is a React-based micro frontend for the Open edX discussion forums.
 
@@ -79,10 +84,3 @@ Internationalization
 --------------------
 
 Please see `edx/frontend-platform's i18n module <https://edx.github.io/frontend-platform/module-Internationalization.html>`_ for documentation on internationalization.  The documentation explains how to use it, and the `How To <https://github.com/openedx/frontend-i18n/blob/master/docs/how_tos/i18n.rst>`_ has more detail.
-
-.. |Build Status| image:: https://api.travis-ci.org/edx/frontend-app-discussions.svg?branch=master
-   :target: https://travis-ci.org/edx/frontend-app-discussions
-.. |Codecov| image:: https://codecov.io/gh/edx/frontend-app-discussions/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/edx/frontend-app-discussions
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-discussions.svg
-   :target: @edx/frontend-app-discussions
