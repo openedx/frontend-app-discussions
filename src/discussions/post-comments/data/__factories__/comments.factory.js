@@ -59,6 +59,7 @@ Factory.define('commentsResult')
       return Factory.buildList('comment', len, {
         thread_id: threadId,
         parent_id: parentId,
+        endorsed,
       }, {
         endorsedBy: endorsed ? 'staff' : null,
         childCount,
