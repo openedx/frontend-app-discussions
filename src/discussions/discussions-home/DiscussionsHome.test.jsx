@@ -127,7 +127,7 @@ describe('DiscussionsHome', () => {
 
   test('header, course navigation bar and footer are only visible in Discussions MFE', async () => {
     renderComponent();
-    expect(screen.queryByRole('banner')).toBeInTheDocument();
+    waitFor(() => expect(screen.queryByRole('banner')).toBeInTheDocument());
     expect(document.getElementById('courseTabsNavigation')).toBeInTheDocument();
     expect(screen.queryByRole('contentinfo')).toBeInTheDocument();
   });
