@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import postsMessages from '../discussions/posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../discussions/topics/data/slices';
 
 const Search = ({ intl }) => {
+  const [previousSearchValue, setPreviousSearchValue] = useState('');
   const dispatch = useDispatch();
   const { page } = useContext(DiscussionContext);
   const postSearch = useSelector(({ threads }) => threads.filters.search);
@@ -35,6 +36,7 @@ const Search = ({ intl }) => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
     dispatch(setUsernameSearch(''));
+    setPreviousSearchValue('');
   };
 
   const onChange = (query) => {
@@ -42,7 +44,7 @@ const Search = ({ intl }) => {
   };
 
   const onSubmit = (query) => {
-    if (query === '') {
+    if (query === '' || query === previousSearchValue) {
       return;
     }
     if (isPostSearch) {
@@ -52,6 +54,7 @@ const Search = ({ intl }) => {
     } else if (page === 'learners') {
       dispatch(setUsernameSearch(query));
     }
+    setPreviousSearchValue(query);
   };
 
   useEffect(() => onClear(), [page]);
