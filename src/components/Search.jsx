@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useState,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 
 import camelCase from 'lodash/camelCase';
@@ -25,6 +25,7 @@ const Search = () => {
   const isPostSearch = ['posts', 'my-posts'].includes(page);
   const isTopicSearch = 'topics'.includes(page);
   const [searchValue, setSearchValue] = useState('');
+  const previousSearchValueRef = useRef('');
   let currentValue = '';
 
   if (isPostSearch) {
@@ -39,14 +40,15 @@ const Search = () => {
     dispatch(setSearchQuery(''));
     dispatch(setTopicFilter(''));
     dispatch(setUsernameSearch(''));
-  }, []);
+    previousSearchValueRef.current = '';
+  }, [previousSearchValueRef]);
 
   const onChange = useCallback((query) => {
     setSearchValue(query);
   }, []);
 
   const onSubmit = useCallback((query) => {
-    if (query === '') {
+    if (query === '' || query === previousSearchValueRef.current) {
       return;
     }
 
@@ -57,7 +59,8 @@ const Search = () => {
     } else if (page === 'learners') {
       dispatch(setUsernameSearch(query));
     }
-  }, [page, searchValue]);
+    previousSearchValueRef.current = query;
+  }, [page, searchValue, previousSearchValueRef]);
 
   const handleIconClick = useCallback((e) => {
     e.preventDefault();
