@@ -256,7 +256,8 @@ header {
 }
 
 .border-2 {
-  border-width: 2px;
+  border: 2px solid #cccccc !important;
+  border-width: 2px !important;
 }
 
 .post-form {
