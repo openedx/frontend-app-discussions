@@ -223,7 +223,7 @@ export const useTourConfiguration = () => {
   ), []);
 
   const toursConfig = useMemo(() => (
-    tours?.map((tour) => (
+    tours?.map((tour) => Object.keys(tourCheckpoints(intl)).includes(tour.tourName) && (
       {
         tourId: tour.tourName,
         advanceButtonText: intl.formatMessage(messages.advanceButtonText),
