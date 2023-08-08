@@ -10,7 +10,7 @@ import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus, Routes } from '../../data/constants';
-import { selectconfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
+import { selectConfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
 import NoResults from '../posts/NoResults';
 import {
   learnersLoadingStatus,
@@ -33,7 +33,7 @@ const LearnersView = () => {
   const nextPage = useSelector(selectLearnerNextPage());
   const loadingStatus = useSelector(learnersLoadingStatus());
   const usernameSearch = useSelector(selectUsernameSearch());
-  const courseConfigLoadingStatus = useSelector(selectconfigLoadingStatus);
+  const courseConfigLoadingStatus = useSelector(selectConfigLoadingStatus);
   const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   const learners = useSelector(selectAllLearners);
 

@@ -17,7 +17,7 @@ import { DiscussionContext } from '../common/context';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
 } from '../data/hooks';
-import { selectconfigLoadingStatus, selectEnableInContext } from '../data/selectors';
+import { selectConfigLoadingStatus, selectEnableInContext } from '../data/selectors';
 
 const TopicPostsView = lazy(() => import('../in-context-topics/TopicPostsView'));
 const InContextTopicsView = lazy(() => import('../in-context-topics/TopicsView'));
@@ -32,7 +32,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
   const isOnXLDesktop = useIsOnXLDesktop();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const enableInContext = useSelector(selectEnableInContext);
-  const configStatus = useSelector(selectconfigLoadingStatus);
+  const configStatus = useSelector(selectConfigLoadingStatus);
   const redirectToLearnersTab = useShowLearnersTab();
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);

@@ -56,8 +56,8 @@ const PostFooter = ({
               return true;
             }}
             iconAs={Icon}
-            iconClassNames="follow-icon-dimentions"
-            className="post-footer-icon-dimentions"
+            iconClassNames="follow-icon-dimensions"
+            className="post-footer-icon-dimensions"
             alt="Follow"
           />
         </OverlayTrigger>

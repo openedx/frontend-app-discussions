@@ -13,7 +13,7 @@ import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectconfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
+import { selectConfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
@@ -24,9 +24,9 @@ import './actionBar.scss';
 const PostActionsBar = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const loadingStatus = useSelector(selectconfigLoadingStatus);
+  const loadingStatus = useSelector(selectConfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
-  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+  const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
   const handleCloseInContext = useCallback(() => {
@@ -49,7 +49,7 @@ const PostActionsBar = () => {
           {intl.formatMessage(messages.title)}
         </h4>
       )}
-      {loadingStatus === RequestStatus.SUCCESSFUL && isUserPrivilagedInPostingRestriction && (
+      {loadingStatus === RequestStatus.SUCCESSFUL && isUserPrivilegedInPostingRestriction && (
         <>
           {!enableInContextSidebar && <div className="border-right border-light-400 mx-3" />}
           <Button
@@ -74,8 +74,8 @@ const PostActionsBar = () => {
               iconAs={Icon}
               onClick={handleCloseInContext}
               alt={intl.formatMessage(messages.close)}
-              iconClassNames="spinner-dimentions"
-              className="spinner-dimentions"
+              iconClassNames="spinner-dimensions"
+              className="spinner-dimensions"
             />
           </div>
         </>

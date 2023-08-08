@@ -31,10 +31,10 @@ const LikeButton = ({ count, onClick, voted }) => {
         <IconButton
           src={voted ? ThumbUpFilled : ThumbUpOutline}
           onClick={handleClick}
-          className="post-footer-icon-dimentions"
+          className="post-footer-icon-dimensions"
           alt="Like"
           iconAs={Icon}
-          iconClassNames="like-icon-dimentions"
+          iconClassNames="like-icon-dimensions"
         />
       </OverlayTrigger>
       <div className="font-style">
