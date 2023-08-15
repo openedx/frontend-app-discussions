@@ -37,6 +37,8 @@ initialize({
     config: () => {
       mergeConfig({
         LEARNING_BASE_URL: process.env.LEARNING_BASE_URL,
+        LEARNER_FEEDBACK_URL: process.env.LEARNER_FEEDBACK_URL,
+        STAFF_FEEDBACK_URL: process.env.STAFF_FEEDBACK_URL,
       }, 'DiscussionsConfig');
     },
   },
