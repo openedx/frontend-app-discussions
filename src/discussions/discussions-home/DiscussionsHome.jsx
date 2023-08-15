@@ -8,7 +8,6 @@ import {
 } from 'react-router';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
-import { getConfig } from '@edx/frontend-platform';
 
 import { Spinner } from '../../components';
 import { selectCourseTabs } from '../../components/NavigationBar/data/selectors';
@@ -33,7 +32,6 @@ const DiscussionsProductTour = lazy(() => import('../tours/DiscussionsProductTou
 const DiscussionsRestrictionBanner = lazy(() => import('./DiscussionsRestrictionBanner'));
 const DiscussionContent = lazy(() => import('./DiscussionContent'));
 const DiscussionSidebar = lazy(() => import('./DiscussionSidebar'));
-const InformationBanner = lazy(() => import('./InformationBanner'));
 
 const DiscussionsHome = () => {
   const location = useLocation();
@@ -48,7 +46,6 @@ const DiscussionsHome = () => {
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
-  const isFeedbackBannerVisible = getConfig().DISPLAY_FEEDBACK_BANNER === 'true';
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
@@ -95,7 +92,6 @@ const DiscussionsHome = () => {
               )}
               <PostActionsBar />
             </div>
-            {isFeedbackBannerVisible && <InformationBanner />}
             <DiscussionsRestrictionBanner />
           </div>
           {provider === DiscussionProvider.LEGACY && (
