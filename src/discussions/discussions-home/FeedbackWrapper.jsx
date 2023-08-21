@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
+import { getConfig } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
 import { RequestStatus } from '../../data/constants';
@@ -22,9 +23,9 @@ export default function useFeedbackWrapper() {
 
   useEffect(() => {
     if (configStatus === RequestStatus.SUCCESSFUL) {
-      let url = '//w.usabilla.com/9e6036348fa1.js';
+      let url = getConfig().LEARNER_FEEDBACK_URL;
       if (isStaff || isUserGroupTA || isCourseAdmin || isCourseStaff) {
-        url = '//w.usabilla.com/767740a06856.js';
+        url = getConfig().STAFF_FEEDBACK_URL;
       }
       try {
         // eslint-disable-next-line no-undef
