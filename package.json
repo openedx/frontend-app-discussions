@@ -33,11 +33,11 @@
     "url": "https://github.com/openedx/frontend-app-discussions/issues"
   },
   "dependencies": {
-    "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
+    "@edx/brand": "npm:@edx/brand-edx.org@2.2.0-alpha.16",
     "@edx/frontend-component-footer": "12.1.0",
     "@edx/frontend-component-header": "4.3.0",
-    "@edx/frontend-platform": "4.6.0",
-    "@edx/paragon": "20.44.0",
+    "@edx/frontend-platform": "github:openedx/frontend-platform#ags/inject-theme-css",
+    "@edx/paragon": "21.0.0-alpha.41",
     "@reduxjs/toolkit": "1.8.0",
     "@tinymce/tinymce-react": "3.13.1",
     "babel-polyfill": "6.26.0",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "1.1.0",
-    "@edx/frontend-build": "12.8.27",
+    "@edx/frontend-build": "github:openedx/frontend-build#ags/2321",
     "@edx/reactifex": "1.0.3",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.5",
