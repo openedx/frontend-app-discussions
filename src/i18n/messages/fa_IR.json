@@ -59,9 +59,6 @@
   "discussions.authors.label.ta": "کمک مربی",
   "discussions.learner.loadMostPosts": "بارگیری مطالب بیشتر",
   "discussions.post.anonymous.author": "بی‌نام",
-  "discussion.banner.welcomeMessage": "🎉 به نسخه جدید و بهبود یافته discussions خوش اومدید!",
-  "discussion.banner.learnMore": "اطلاعات بیشتر",
-  "discussion.banner.shareFeedback": "اشتراک‌گذاری بازخورد",
   "discussion.blackoutBanner.information": "ارسال پست در بحث ها توسط تیم دوره غیرفعال شده است",
   "discussions.editor.image.warning.message": "هنگامی که مطلب یا پاسخ یا نظری در گفتگوهای دوره به صورت درون‌خطی مشاهده می شود، تصاویری که عرض یا ارتفاع آنها بیشتر از 999 پیکسل باشد، قابل مشاهده نخواهند بود.",
   "discussions.editor.image.warning.title": "هشدار!",
