@@ -8,7 +8,6 @@ import {
 
 import Footer from '@edx/frontend-component-footer';
 import { LearningHeader as Header } from '@edx/frontend-component-header';
-import { getConfig } from '@edx/frontend-platform';
 
 import { PostActionsBar } from '../../components';
 import { CourseTabsNavigation } from '../../components/NavigationBar';
@@ -30,7 +29,6 @@ import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import useFeedbackWrapper from './FeedbackWrapper';
-import InformationBanner from './InformationBanner';
 
 const DiscussionsHome = () => {
   const location = useLocation();
@@ -46,7 +44,6 @@ const DiscussionsHome = () => {
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
-  const isFeedbackBannerVisible = getConfig().DISPLAY_FEEDBACK_BANNER === 'true';
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
@@ -95,7 +92,6 @@ const DiscussionsHome = () => {
             {!enableInContextSidebar && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
             <PostActionsBar />
           </div>
-          {isFeedbackBannerVisible && <InformationBanner />}
           <BlackoutInformationBanner />
         </div>
         {provider === DiscussionProvider.LEGACY && (
