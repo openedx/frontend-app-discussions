@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Editor } from '@tinymce/tinymce-react';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 // TinyMCE so the global var exists
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
@@ -45,10 +45,11 @@ import contentUiCss from '!!raw-loader!tinymce/skins/ui/oxide/content.min.css';
 const TinyMCEEditor = (props) => {
   // note that skin and content_css is disabled to avoid the normal
   // loading process and is instead loaded as a string via content_style
-
+  const locationObj = useLocation();
   const { courseId, postId } = useParams();
   const [showImageWarning, setShowImageWarning] = useState(false);
   const intl = useIntl();
+  const enableInContextSidebar = Boolean(new URLSearchParams(locationObj.search).get('inContextSidebar') !== null);
 
   /* istanbul ignore next */
   const setup = useCallback((editor) => {
@@ -98,6 +99,29 @@ const TinyMCEEditor = (props) => {
   } catch (err) {
     contentStyle = '';
   }
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (enableInContextSidebar) {
+      const checkToxDialogVisibility = () => {
+        const toxDialog = document.querySelector('.tox-dialog');
+        if (toxDialog) {
+          toxDialog.style.alignSelf = 'start';
+          toxDialog.style.marginTop = '50px';
+        }
+      };
+
+      const observer = new MutationObserver(checkToxDialogVisibility);
+
+      // Observe changes to the entire document
+      observer.observe(document, { childList: true, subtree: true });
+
+      // Clean up the observer when the component unmounts
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [enableInContextSidebar]);
 
   return (
     <>
