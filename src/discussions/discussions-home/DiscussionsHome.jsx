@@ -95,6 +95,7 @@ export default function DiscussionsHome() {
               'pl-4 pr-2.5 py-1.5': inContext,
             })}
           >
+            <h1>ok</h1>
             {!inContext && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
             <PostActionsBar inContext={inContext} />
           </div>
