@@ -1,0 +1,61 @@
+.box-message{
+    gap: 20px;
+    height: 450px;
+
+}
+
+
+.message {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .time {
+        text-align: center;
+    }
+    .text {
+        margin-left: 30px;
+        border-end-start-radius: 20px !important;
+        border-radius: 3px;
+        padding:8px 20px ;
+        background:#4D44FF;
+        color: white;
+    }
+}
+
+.result-message{
+    .text{
+        margin-right: 30px;
+        padding: 8px 20px;
+        border-end-end-radius : 20px !important;
+        border-radius: 3px;
+        background: #F6F6F6;
+
+    }
+}
+
+.type-message{
+    textarea{
+        width: 100%;
+        border-radius: 3px;
+        padding: 14px;
+        outline: none;
+        resize: none;
+        &:hover{
+            box-shadow: rgb(32, 21, 255) 0px 0px 0px 2px;
+        }
+
+    }
+}
+
+#btn-message{
+    border:none;
+    background:rgb(32, 21, 255) ;
+    padding:10px 20px ;
+    color:white;
+    border-radius: 3px;
+    font-weight: 600;
+    &:disabled{
+      background-color: #DFDFDF;  
+        cursor: not-allowed;
+    }
+}

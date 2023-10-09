@@ -1,0 +1,195 @@
+.learning-header {
+    min-width: 0;
+  
+    .course-title-lockup {
+      min-width: 0;
+  
+      span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-bottom: 0.1rem;
+      }
+    }
+  
+    .user-dropdown {
+      .btn {
+        height: 3rem;
+        // @media (max-width: -1 + map-get($grid-breakpoints, "sm")) {
+        //   padding: 0 0.5rem;
+        // }
+      }
+    }
+  }
+  
+  
+  
+  .select-selected{
+  &:hover{
+    cursor: pointer;
+  }
+  img {
+    width: 24px;
+  }
+    display:flex ;
+  
+    gap:5px;
+  }
+  
+  .select-options {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  z-index: 9999;
+  
+  }
+  .option{
+  &:hover{
+    background-color:#f1f1f1 ;
+    cursor: pointer;
+  }
+  img{
+    width: 24px;
+  }
+  display: flex;
+  gap:5px;
+  width: 100%;
+  padding:10px;
+  }
+  
+  
+  .dropdown-item{
+    i{
+      font-size: 20px;
+    }
+    display: flex;
+    gap: 10px;
+  
+  }
+  .dropdown-menu {
+    min-width: 10rem ;
+  }
+  
+  
+  .search-course-custom{
+    .btn-search{
+      border: none;
+      background: none;
+      font-size: 22px;
+      width: 50px; 
+      height: 50px;
+      border-radius: 50%; 
+      transition: background-color 0.3s ease;
+      &:hover{
+        background-color:#f1f1f1 ;
+      }
+    }
+    
+  }
+  
+  .modal-search{
+    height: 90vh;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .search-title{
+    font-size: 1.75rem;
+    letter-spacing: 0.56px;
+    font-weight: 600;
+  }
+  
+  .modal-header-search {
+    .search-close{
+        padding:5px 10px;
+      &:hover{
+        background-color:#f1f1f1 ;
+        cursor: pointer;
+      
+      }
+    }
+  }
+  
+  .modal-body-search {
+  
+    .input-search{
+      display: flex;
+      justify-content: space-between;
+      border: 1px solid #808080 ;
+      gap:10px;
+      padding:10px;
+      
+      input{
+        border: none;
+        outline: none;
+        width: 100%;
+        color : #878787;
+      }
+      i{
+        &:hover{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  
+  .search-lesson{
+    background: #99e8d9;
+    border-radius: 50px;
+    font-weight: 500;
+  }
+  
+  .search-results{
+    overflow: auto;
+  
+  }
+  
+  .result-item{
+    &:hover {
+      background-color: #f1f1f1 ;
+      cursor: pointer;
+    }
+  }
+  
+  .excerpt{
+    b{
+      background: #90cdf4;
+    }
+  }
+  
+  .btn-load-more{
+    border : none;
+    background: none;
+    color : #0a3055;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  
+  .btn-chatGPT {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .btn-chatGPT:hover::before {
+    content: "";
+    position: absolute;
+    width: 150%; 
+    height: 150%; 
+    border-radius: 50%;
+    background-color: #f1f1f1 ;
+    top: -25%; 
+    left: -25%; 
+    z-index: -1; 
+  
+  }
+  
+  .btn-chatGPT img {
+    display: block;
+    max-width: 30px;
+    height: auto;
+  }

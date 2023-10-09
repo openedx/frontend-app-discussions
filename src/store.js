@@ -8,6 +8,7 @@ import { configReducer } from './discussions/data/slices';
 import { learnersReducer } from './discussions/learners/data';
 import { threadsReducer } from './discussions/posts/data';
 import { topicsReducer } from './discussions/topics/data';
+import {reducer as headerReducer} from './header/data/index';
 
 export function initializeStore(preloadedState = undefined) {
   return configureStore({
@@ -20,6 +21,7 @@ export function initializeStore(preloadedState = undefined) {
       blocks: blocksReducer,
       learners: learnersReducer,
       courseTabs: courseTabsReducer,
+      header: headerReducer 
     },
     preloadedState,
   });

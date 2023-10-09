@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -26,6 +26,9 @@ import BlackoutInformationBanner from './BlackoutInformationBanner';
 import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationsBanner';
+import HeaderLearning from '../../header/HeaderLearning';
+
+
 
 export default function DiscussionsHome() {
   const location = useLocation();
@@ -72,6 +75,17 @@ export default function DiscussionsHome() {
     }
   }, [path]);
 
+  const [show , setShow] = useState(false)
+  const [styling, setStyling] = useState('css-yeymkw')
+  const isShowChatGPT = useSelector(state =>state.header.isShowGlobalChatGPT)
+  
+  useEffect(() => {
+    setStyling(show ? (isShowChatGPT ? 'css-14u8e49' : 'css-jygthk') : (isShowChatGPT ? 'css-1mjee9h' : 'css-yeymkw'));
+  }, [show, isShowChatGPT]);
+
+
+
+
   return (
     <DiscussionContext.Provider value={{
       page,
@@ -83,19 +97,21 @@ export default function DiscussionsHome() {
       learnerUsername,
     }}
     >
-      {!inContext && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />}
+      {/* {!inContext && <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />} */}
+      {!inContext && <HeaderLearning  courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle}/>}
       <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
+        <div className={styling}>
+
         {!inContext && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
         <div
           className={classNames('header-action-bar', { 'shadow-none border-light-300 border-bottom': inContext })}
           ref={postActionBarRef}
         >
           <div
-            className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
+            className={classNames('d-flex flex-row justify-content-between navbar ', {
               'pl-4 pr-2.5 py-1.5': inContext,
             })}
           >
-            <h1>ok</h1>
             {!inContext && <Route path={Routes.DISCUSSIONS.PATH} component={NavigationBar} />}
             <PostActionsBar inContext={inContext} />
           </div>
@@ -125,6 +141,7 @@ export default function DiscussionsHome() {
               {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
             </Switch>
           )}
+        </div>
         </div>
       </main>
       {!inContext && <Footer />}

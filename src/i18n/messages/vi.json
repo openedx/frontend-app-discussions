@@ -88,7 +88,7 @@
     "discussions.navigation.breadcrumbMenu.showAll": "Show all",
     "discussions.navigation.navigationBar.allPosts": "All posts",
     "discussions.navigation.navigationBar.allTopics": "Topics",
-    "discussions.navigation.navigationBar.myPosts": "posts",
+    "discussions.navigation.navigationBar.myPosts": "My Posts",
     "discussions.navigation.navigationBar.learners": "Learners",
     "discussions.app.title": "Discussions",
     "discussions.posts.actionBar.searchAllPosts": "Search all posts",
@@ -178,5 +178,12 @@
     "discussions.topics.find.label": "Search topics",
     "discussions.topics.archived.label": "Archived",
     "discussions.topics.unnamed.label": "Unnamed category",
-    "discussions.subtopics.unnamed.label": "Unnamed subcategory"
+    "discussions.subtopics.unnamed.label": "Unnamed subcategory" ,
+
+    "header.menu.dashboard" : "Trang chủ" ,
+    "header.help" : "Sổ tay sinh viên" ,
+    "header.menu.profile" : "Hồ sơ" ,
+    "header.menu.account" : "Tài khoản" ,
+    "header.menu.signOut" : "Đăng Xuất" ,
+    "learning.section.sequence.title.question" : "câu hỏi"
   }
