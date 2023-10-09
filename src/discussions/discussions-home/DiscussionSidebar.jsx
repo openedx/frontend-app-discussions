@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
-  Redirect, Route, Switch, useLocation,
+  Redirect, Route, Switch, useLocation, matchPath
 } from 'react-router';
 
 import { useWindowSize } from '@edx/paragon';
@@ -65,7 +65,17 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
-        {configStatus === RequestStatus.SUCCESSFUL && (
+        {/* { 
+           Boolean(matchPath(location.pathname, { path: Routes.DISCUSSIONS.PATH })) &&  <Redirect
+           from={Routes.DISCUSSIONS.PATH}
+           to={{
+             ...location,
+             pathname: Routes.POSTS.ALL_POSTS,
+           }}
+         />
+        } */}
+
+        {/* {configStatus === RequestStatus.SUCCESSFUL && (
         <Redirect
           from={Routes.DISCUSSIONS.PATH}
           to={{
@@ -73,7 +83,16 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
             pathname: Routes.POSTS.ALL_POSTS,
           }}
         />
-        )}
+        )} */}
+   {configStatus === RequestStatus.SUCCESSFUL && !Boolean(matchPath(location.pathname, { path: Routes.COURSES.PATH })) && (
+  <Redirect
+    from={Routes.DISCUSSIONS.PATH}
+    to={{
+      ...location,
+      pathname: Routes.POSTS.ALL_POSTS,
+    }}
+  />
+)}
       </Switch>
     </div>
   );

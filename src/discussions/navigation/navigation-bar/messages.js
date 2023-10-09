@@ -21,6 +21,11 @@ const messages = defineMessages({
     defaultMessage: 'Learners',
     description: 'Option in navbar to show learners',
   },
+  courses:{
+    id: 'discussions.navigation.navigationBar.courses',
+    defaultMessage: 'Courses',
+    description: 'Option in navbar to show courses',
+  }
 
 });
 

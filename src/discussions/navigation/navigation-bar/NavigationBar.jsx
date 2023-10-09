@@ -36,7 +36,10 @@ function NavigationBar({ intl }) {
       labelMessage: messages.learners,
     });
   }
-
+  navLinks.push({
+    route: Routes.COURSES.PATH,
+    labelMessage: messages.courses,
+  });
   return (
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (

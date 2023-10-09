@@ -27,6 +27,7 @@ import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationsBanner';
 import HeaderLearning from '../../header/HeaderLearning';
+import Courses from '../courses/Courses';
 
 
 
@@ -124,6 +125,7 @@ export default function DiscussionsHome() {
             component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
           />
         )}
+        <Route path={Routes.COURSES.PATH} component={Courses}/>
         <div className="d-flex flex-row">
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}

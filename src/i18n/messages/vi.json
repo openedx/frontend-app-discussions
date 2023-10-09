@@ -90,6 +90,7 @@
     "discussions.navigation.navigationBar.allTopics": "Topics",
     "discussions.navigation.navigationBar.myPosts": "My Posts",
     "discussions.navigation.navigationBar.learners": "Learners",
+    "discussions.navigation.navigationBar.courses" : "Courses",
     "discussions.app.title": "Discussions",
     "discussions.posts.actionBar.searchAllPosts": "Search all posts",
     "discussions.posts.actionBar.search": "{page, select,\n      topics {Search topics}\n      posts {Search all posts}\n      learners {Search learners}\n      myPosts {Search all posts}\n      other {{page}}\n    }",
