@@ -9,6 +9,7 @@ import itITMessages from './messages/it_IT.json';
 import plMessages from './messages/pl.json';
 import trTRMessages from './messages/tr_TR.json';
 import zhcnMessages from './messages/zh_CN.json';
+import vnMessages from './messages/vi.json' ;
 
 const messages = {
   ar: arMessages,
@@ -21,6 +22,7 @@ const messages = {
   pl: plMessages,
   'tr-tr': trTRMessages,
   'zh-cn': zhcnMessages,
+  vi : vnMessages,
 };
 
 export default messages;
