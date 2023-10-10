@@ -29,6 +29,10 @@ function NavigationBar({ intl }) {
       isActive: (match, location) => Boolean(matchPath(location.pathname, { path: Routes.TOPICS.PATH })),
       labelMessage: messages.allTopics,
     },
+    {
+      route: Routes.COURSES.ALL,
+      labelMessage: messages.courses,
+    }
   ];
   if (showLearnersTab) {
     navLinks.push({
@@ -36,10 +40,7 @@ function NavigationBar({ intl }) {
       labelMessage: messages.learners,
     });
   }
-  navLinks.push({
-    route: Routes.COURSES.PATH,
-    labelMessage: messages.courses,
-  });
+
   return (
     <Nav variant="pills" className="py-2">
       {navLinks.map(link => (

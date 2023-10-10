@@ -147,7 +147,14 @@ export const Routes = {
     POSTS: `${BASE_PATH}/learners/:learnerUsername/posts(/:postId)?`,
   },
   COURSES:{
-    PATH:  `${BASE_PATH}/courses`,
+    PATH: [
+      `${BASE_PATH}/courses`,
+      `${BASE_PATH}/courses/:courseId`,
+      `${BASE_PATH}/courses/:courseId/:topicId`,
+      `${BASE_PATH}/courses/:courseId/:topicId/post/:postId`,
+
+    ],
+    ALL:  `${BASE_PATH}/courses`,
   },
   POSTS: {
     PATH: `${BASE_PATH}/topics/:topicId`,

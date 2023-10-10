@@ -16,6 +16,7 @@ import PostsList from './PostsList';
 
 function AllPostsList() {
   const posts = useSelector(selectAllThreads);
+
   return <PostsList posts={posts} topics={null} />;
 }
 

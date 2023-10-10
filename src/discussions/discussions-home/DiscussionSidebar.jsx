@@ -18,6 +18,8 @@ import { selectconfigLoadingStatus } from '../data/selectors';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
+import Courses from '../courses/Courses';
+import CourseTopic from '../courses/CourseTopic';
 
 export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
   const location = useLocation();
@@ -40,11 +42,13 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, inContext]);
 
+  const isCourseUrl = Boolean(matchPath(location.pathname, { path: Routes.COURSES.ALL }))
+
   return (
     <div
       ref={sidebarRef}
       className={classNames('flex-column  position-sticky', {
-        'd-none': !displaySidebar,
+        'd-none': !displaySidebar ,
         'd-flex overflow-auto': displaySidebar,
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
@@ -65,32 +69,16 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
-        {/* { 
-           Boolean(matchPath(location.pathname, { path: Routes.DISCUSSIONS.PATH })) &&  <Redirect
-           from={Routes.DISCUSSIONS.PATH}
-           to={{
-             ...location,
-             pathname: Routes.POSTS.ALL_POSTS,
-           }}
-         />
-        } */}
+         <Route path={Routes.COURSES.PATH} component={Courses}>
+         </Route>
 
-        {/* {configStatus === RequestStatus.SUCCESSFUL && (
+        {configStatus === RequestStatus.SUCCESSFUL && !isCourseUrl && (
         <Redirect
           from={Routes.DISCUSSIONS.PATH}
           to={{
             ...location,
             pathname: Routes.POSTS.ALL_POSTS,
           }}
-        />
-        )} */}
-   {configStatus === RequestStatus.SUCCESSFUL && !Boolean(matchPath(location.pathname, { path: Routes.COURSES.PATH })) && (
-  <Redirect
-    from={Routes.DISCUSSIONS.PATH}
-    to={{
-      ...location,
-      pathname: Routes.POSTS.ALL_POSTS,
-    }}
   />
 )}
       </Switch>

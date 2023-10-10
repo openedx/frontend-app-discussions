@@ -61,6 +61,7 @@ export async function getThreads(
     groupId: cohort,
   });
   const { data } = await getAuthenticatedHttpClient().get(getThreadsApiUrl(), { params });
+  
   return data;
 }
 

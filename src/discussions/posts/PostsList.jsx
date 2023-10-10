@@ -76,7 +76,7 @@ function PostsList({ posts, topics, intl }) {
       />
     ))
   ), []);
-
+   
   return (
     <>
       {postInstances(pinnedPosts)}
