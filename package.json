@@ -60,7 +60,7 @@
     "yup": "0.31.1"
   },
   "devDependencies": {
-    "@edx/browserslist-config": "1.1.0",
+    "@edx/browserslist-config": "1.2.0",
     "@edx/frontend-build": "12.8.27",
     "@edx/reactifex": "1.0.3",
     "@testing-library/jest-dom": "5.16.2",
