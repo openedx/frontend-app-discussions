@@ -38,6 +38,8 @@ export const PostAvatar = ({
     return spacing;
   }, [post.type]);
 
+  const profileImage = Object.values(post.users)[0].profile.image;
+
   return (
     <div className={avatarSpacing}>
       {post.type === ThreadType.QUESTION && (
@@ -59,6 +61,7 @@ export const PostAvatar = ({
           height: avatarSize,
           width: avatarSize,
         }}
+        src={profileImage.hasImage ? profileImage.imageUrlSmall : undefined}
         alt={post.author}
       />
     </div>
