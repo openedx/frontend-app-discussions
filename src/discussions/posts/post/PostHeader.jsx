@@ -38,7 +38,7 @@ export const PostAvatar = ({
     return spacing;
   }, [post.type]);
 
-  const profileImage = Object.values(post.users)[0].profile.image;
+  const profileImage = post.users && Object.values(post.users)[0].profile.image;
 
   return (
     <div className={avatarSpacing}>
