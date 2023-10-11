@@ -545,3 +545,13 @@ html:root {
   border-right-style: solid;
   border-color: var(--chakra-colors-gray-300);
 }
+
+.none {
+  display: none !important;
+}
+
+.discussion-courses {
+  &:hover{
+    cursor: pointer;
+  }
+}

@@ -5,7 +5,7 @@ import {   matchPath} from 'react-router-dom';
 import { useIsOnDesktop } from '../data/hooks';
 import EmptyPage from './EmptyPage';
 import { Routes } from "../../data/constants";
-import CoursesComments from '../courses/CoursesComments';
+
 
 
 function EmptyCourses({ intl }) {
@@ -15,11 +15,7 @@ function EmptyCourses({ intl }) {
     return null;
   }
   const isCourseUrl = Boolean(matchPath(location.pathname, { path: Routes.COURSES.PATH[3] }))
-  if (isCourseUrl){
-
-   
-    return <CoursesComments />
-  }
+ 
   return (
     <EmptyPage  />
   );

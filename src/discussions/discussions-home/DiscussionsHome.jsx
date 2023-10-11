@@ -128,6 +128,11 @@ export default function DiscussionsHome() {
         <div className="d-flex flex-row" >
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}
+          <Route path={Routes.COURSES.PATH} >
+              <div style={{minWidth:'29rem'}}>
+                  <Courses />
+              </div>
+         </Route>
           {!displayContentArea && (
             <Switch>
               <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />

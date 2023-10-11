@@ -19,7 +19,7 @@ import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
 import Courses from '../courses/Courses';
-import CourseTopic from '../courses/CourseTopic';
+
 
 export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
   const location = useLocation();
@@ -54,6 +54,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !inContext,
+        'none' : isCourseUrl
       })}
       data-testid="sidebar"
     >
@@ -69,8 +70,7 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
-         <Route path={Routes.COURSES.PATH} component={Courses}>
-         </Route>
+
 
         {configStatus === RequestStatus.SUCCESSFUL && !isCourseUrl && (
         <Redirect
