@@ -37,7 +37,7 @@ export const PostAvatar = React.memo(({
     return spacing;
   }, [postType]);
 
-  const profileImage = Object.values(postUsers)[0].profile.image;
+  const profileImage = postUsers && Object.values(postUsers)[0].profile.image;
 
   return (
     <div className={avatarSpacing}>
