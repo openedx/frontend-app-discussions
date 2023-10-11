@@ -56,7 +56,7 @@
     "redux": "4.1.2",
     "regenerator-runtime": "0.13.9",
     "timeago.js": "4.0.2",
-    "tinymce": "5.10.2",
+    "tinymce": "5.10.7",
     "yup": "0.31.1"
   },
   "devDependencies": {
