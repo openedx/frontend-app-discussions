@@ -57,6 +57,7 @@ const AuthorLabel = ({
       })}
       role="heading"
       aria-level="2"
+      style={{ lineHeight: 1, wordBreak: 'break-all' }}
     >
       {isRetiredUser ? '[Deactivated]' : author}
     </span>
