@@ -1,6 +1,6 @@
 export TRANSIFEX_RESOURCE = frontend-app-discussions
 transifex_resource = frontend-app-discussions
-transifex_langs = "ar,fr,es_419,zh_CN,tr_TR,pl,fr_CA,fr_FR,de_DE,it_IT,pt_PT,uk,ru,hi,cs,es_AR,es_ES,fa_IR"
+transifex_langs = "ar,cs,de_DE,es_419,es_AR,es_ES,fa_IR,fr,fr_CA,fr_FR,hi,it_IT,pl,pt_PT,tr_TR,uk,ru,zh_CN"
 
 intl_imports = ./node_modules/.bin/intl-imports.js
 transifex_utils = ./node_modules/.bin/transifex-utils.js
