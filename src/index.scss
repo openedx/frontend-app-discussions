@@ -338,8 +338,16 @@ header {
     .nav-item:not(:last-child){
       .nav-link {
           border-right: 0;
+
+          @media screen and (max-width: 567px) {
+            border-right: solid 1px #e9e6e4;
+          }
       }
     }
+  }
+
+  button {
+    font-family: inherit;
   }
 }
 
@@ -484,6 +492,10 @@ header {
 .comments-sort {
   margin-bottom: -44px;
   z-index: 1;
+}
+
+.comment-line {
+  width: calc(100% - 180px);
 }
 
 .post-preview,
