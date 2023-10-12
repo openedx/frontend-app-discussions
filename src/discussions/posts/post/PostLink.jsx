@@ -37,6 +37,7 @@ const PostLink = ({
   const {
     topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
     unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
+    users: postUsers,
   } = useSelector(selectThread(postId));
   const { pathname } = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
@@ -84,6 +85,7 @@ const PostLink = ({
           authorLabel={authorLabel}
           fromPostLink
           read={isPostRead}
+          postUsers={postUsers}
         />
         <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
