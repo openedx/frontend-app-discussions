@@ -4,6 +4,9 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 
 export async function getAllCourseEnroll (){
+    console.log(getConfig().STUDIO_BASE_URL)
+    console.log(getConfig().BASE_URL)
+
     const url = `${getConfig().LMS_BASE_URL}/api/resume-url/`
     const data = await getAuthenticatedHttpClient().get(url)
     const resume_button_url = data.data.resume_button_url

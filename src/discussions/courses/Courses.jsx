@@ -6,7 +6,7 @@ import { Routes } from "../../data/constants";
 
 
 const Courses = ()=>{
-
+    
     const {courseId} = useParams()
     const [courseEnroll, setCourseEnroll] = useState([])
     const history = useHistory();
