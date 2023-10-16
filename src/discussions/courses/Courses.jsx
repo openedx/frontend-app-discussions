@@ -6,14 +6,14 @@ import { Routes } from "../../data/constants";
 
 
 const Courses = ()=>{
-    
+
     const {courseId} = useParams()
     const [courseEnroll, setCourseEnroll] = useState([])
     const history = useHistory();
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const data = await fetchAllCourseEnroll();
+            const data = await fetchAllCourseEnroll(courseId);
             setCourseEnroll(data);
           } catch (error) {
             console.error(error);
@@ -29,9 +29,10 @@ const Courses = ()=>{
         if(course.course_id == courseId){
           history.push(`/${courseId}/posts`)
         }else {
-          window.open(`/${course.course_id}/posts`, '_blank')
+          window.open(`/discussions/${course.course_id}/posts`, '_blank')
         }
       }
+      
     return (<>
         <div className="d-flex flex-column ">
         {courseEnroll.map(course =>{

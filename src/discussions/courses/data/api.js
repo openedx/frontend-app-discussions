@@ -3,14 +3,12 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 
 
-export async function getAllCourseEnroll (){
-    console.log(getConfig().STUDIO_BASE_URL)
-    console.log(getConfig().BASE_URL)
-
-    const url = `${getConfig().LMS_BASE_URL}/api/resume-url/`
+export async function getAllCourseEnroll (courseId){
+    
+    const url = `${getConfig().STUDIO_BASE_URL}/api/specialization_course/${courseId}`
     const data = await getAuthenticatedHttpClient().get(url)
-    const resume_button_url = data.data.resume_button_url
-    const results = resume_button_url.map(({ url, textContent, ...rest }) => rest)
-    return results
+
+    
+    return data.data.data
 }
 

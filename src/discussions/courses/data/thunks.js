@@ -2,7 +2,7 @@
 import { getAllCourseEnroll} from "./api";
 
 
-export async function fetchAllCourseEnroll (){
-    return getAllCourseEnroll()
+export async function fetchAllCourseEnroll (courseId){
+    return getAllCourseEnroll(courseId)
 }
 
