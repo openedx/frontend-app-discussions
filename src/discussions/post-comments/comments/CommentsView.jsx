@@ -16,7 +16,7 @@ const CommentsView = ({ endorsed }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
-  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+  const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
 
   const {
     endorsedCommentsIds,
@@ -66,7 +66,7 @@ const CommentsView = ({ endorsed }) => {
       )}
       {isLoading && !showLoadMoreResponses && (
         <div className="mb-2 mt-3 d-flex justify-content-center">
-          <Spinner animation="border" variant="primary" className="spinner-dimentions" />
+          <Spinner animation="border" variant="primary" className="spinner-dimensions" />
         </div>
       )}
     </div>
@@ -90,7 +90,7 @@ const CommentsView = ({ endorsed }) => {
               {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
               {unEndorsedCommentsIds.length === 0 && <br />}
               {handleComments(unEndorsedCommentsIds, false)}
-              {(isUserPrivilagedInPostingRestriction && !!unEndorsedCommentsIds.length && !isClosed) && (
+              {(isUserPrivilegedInPostingRestriction && !!unEndorsedCommentsIds.length && !isClosed) && (
                 <div className="mx-4">
                   {!addingResponse && (
                     <Button

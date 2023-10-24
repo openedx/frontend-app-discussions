@@ -6,13 +6,13 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { PageBanner } from '@edx/paragon';
 
 import { RequestStatus } from '../../data/constants';
-import { selectconfigLoadingStatus, selectIsPostingEnabled } from '../data/selectors';
+import { selectConfigLoadingStatus, selectIsPostingEnabled } from '../data/selectors';
 import messages from '../messages';
 
 const DiscussionsRestrictionBanner = () => {
   const intl = useIntl();
   const isPostingEnabled = useSelector(selectIsPostingEnabled);
-  const configLoadingStatus = useSelector(selectconfigLoadingStatus);
+  const configLoadingStatus = useSelector(selectConfigLoadingStatus);
   const [showBanner, setShowBanner] = useState(true);
 
   const handleDismiss = useCallback(() => {

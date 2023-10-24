@@ -12,7 +12,7 @@ export const selectUserIsStaff = state => state.config.isUserAdmin;
 
 export const selectUserIsGroupTa = state => state.config.isGroupTa;
 
-export const selectconfigLoadingStatus = state => state.config.status;
+export const selectConfigLoadingStatus = state => state.config.status;
 
 export const selectLearnersTabEnabled = state => state.config.learnersTabEnabled;
 

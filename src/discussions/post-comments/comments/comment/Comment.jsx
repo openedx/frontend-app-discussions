@@ -61,7 +61,7 @@ const Comment = ({
   const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
   const actions = useActions(ContentTypes.COMMENT, id);
-  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+  const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -119,10 +119,10 @@ const Comment = ({
   ), [id, currentPage, sortedOrder]);
 
   const handleAddCommentButton = useCallback(() => {
-    if (isUserPrivilagedInPostingRestriction) {
+    if (isUserPrivilegedInPostingRestriction) {
       setReplying(true);
     }
-  }, [isUserPrivilagedInPostingRestriction]);
+  }, [isUserPrivilegedInPostingRestriction]);
 
   const handleCommentLike = useCallback(async () => {
     await dispatch(editComment(id, { voted: !voted }));
@@ -154,8 +154,8 @@ const Comment = ({
           title={intl.formatMessage(messages.deleteResponseTitle)}
           description={intl.formatMessage(messages.deleteResponseDescription)}
           onClose={hideDeleteConfirmation}
-          comfirmAction={handleDeleteConfirmation}
-          closeButtonVaraint="tertiary"
+          confirmAction={handleDeleteConfirmation}
+          closeButtonVariant="tertiary"
           confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
         />
         {!abuseFlagged && (
@@ -164,7 +164,7 @@ const Comment = ({
             title={intl.formatMessage(messages.reportResponseTitle)}
             description={intl.formatMessage(messages.reportResponseDescription)}
             onClose={hideReportConfirmation}
-            comfirmAction={handleReportConfirmation}
+            confirmAction={handleReportConfirmation}
             confirmButtonVariant="danger"
           />
         )}
@@ -265,7 +265,7 @@ const Comment = ({
                 />
               </div>
             ) : (
-              !isClosed && isUserPrivilagedInPostingRestriction && (inlineReplies.length >= 5) && (
+              !isClosed && isUserPrivilegedInPostingRestriction && (inlineReplies.length >= 5) && (
                 <Button
                   className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
                   variant="plain"

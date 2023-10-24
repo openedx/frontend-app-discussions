@@ -7,7 +7,7 @@ import { logError } from '@edx/frontend-platform/logging';
 
 import { RequestStatus } from '../../data/constants';
 import {
-  selectconfigLoadingStatus,
+  selectConfigLoadingStatus,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectUserIsGroupTa,
@@ -19,7 +19,7 @@ export default function useFeedbackWrapper() {
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
   const isCourseAdmin = useSelector(selectIsCourseAdmin);
   const isCourseStaff = useSelector(selectIsCourseStaff);
-  const configStatus = useSelector(selectconfigLoadingStatus);
+  const configStatus = useSelector(selectConfigLoadingStatus);
 
   useEffect(() => {
     if (configStatus === RequestStatus.SUCCESSFUL) {

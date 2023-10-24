@@ -83,8 +83,8 @@ const Reply = ({ responseId }) => {
         title={intl.formatMessage(messages.deleteCommentTitle)}
         description={intl.formatMessage(messages.deleteCommentDescription)}
         onClose={hideDeleteConfirmation}
-        comfirmAction={handleDeleteConfirmation}
-        closeButtonVaraint="tertiary"
+        confirmAction={handleDeleteConfirmation}
+        closeButtonVariant="tertiary"
         confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
       {!abuseFlagged && (
@@ -93,7 +93,7 @@ const Reply = ({ responseId }) => {
           title={intl.formatMessage(messages.reportCommentTitle)}
           description={intl.formatMessage(messages.reportCommentDescription)}
           onClose={hideReportConfirmation}
-          comfirmAction={handleReportConfirmation}
+          confirmAction={handleReportConfirmation}
           confirmButtonVariant="danger"
         />
       )}

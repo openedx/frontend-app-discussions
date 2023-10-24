@@ -3,9 +3,8 @@ import { messages as headerMessages } from '@edx/frontend-component-header';
 import { messages as paragonMessages } from '@edx/paragon';
 
 import arMessages from './messages/ar.json';
-// no need to import en messages-- they are in the defaultMessage field
 import csMessages from './messages/cs.json';
-import deMessages from './messages/de_DE.json';
+import deDEMessages from './messages/de_DE.json';
 import es419Messages from './messages/es_419.json';
 import esARMessages from './messages/es_AR.json';
 import esESMessages from './messages/es_ES.json';
@@ -20,27 +19,28 @@ import ptPTMessages from './messages/pt_PT.json';
 import ruMessages from './messages/ru.json';
 import trTRMessages from './messages/tr_TR.json';
 import ukMessages from './messages/uk.json';
-import zhcnMessages from './messages/zh_CN.json';
+import zhCNMessages from './messages/zh_CN.json';
+// no need to import en messages-- they are in the defaultMessage field
 
 const appMessages = {
   ar: arMessages,
-  de: deMessages,
+  cs: csMessages,
+  'de-de': deDEMessages,
   'es-419': es419Messages,
+  'es-ar': esARMessages,
+  'es-es': esESMessages,
+  'fa-ir': faIRMessages,
   fr: frMessages,
   'fr-ca': frCAMessages,
   'fr-fr': frFRMessages,
+  hi: hiMessages,
   'it-it': itITMessages,
   pl: plMessages,
-  'tr-tr': trTRMessages,
-  'zh-cn': zhcnMessages,
   'pt-pt': ptPTMessages,
+  'tr-tr': trTRMessages,
   uk: ukMessages,
   ru: ruMessages,
-  hi: hiMessages,
-  cs: csMessages,
-  'es-AR': esARMessages,
-  'es-ES': esESMessages,
-  'fa-IR': faIRMessages,
+  'zh-cn': zhCNMessages,
 };
 
 export default [
