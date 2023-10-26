@@ -162,7 +162,9 @@ function PostEditor({
     dispatch(hidePostEditor());
   };
 
+ 
   // api course specialization
+  const courseTitle = useSelector(state =>state.courseTabs.courseTitle)
   const [courseEnroll, setCourseEnroll] = useState([])
   const [course_id , setCourse_id ] = useState(courseId)
   useEffect(() => {
@@ -173,20 +175,18 @@ function PostEditor({
           label: e.display_name,
           value: e.course_id
         }));
-
-        setCourseEnroll(newCourseEnroll);
-        
-      
+          if (newCourseEnroll.length == 0){
+            newCourseEnroll.push({label:courseTitle , value:courseId})
+          }
+          setCourseEnroll(newCourseEnroll);
       } catch (error) {
-        console.error(error);
-       
-      
+        console.error(error);  
       }
     };
 
     fetchData();
   }, []);
-
+  
 // course topics 
 const [nonCoursewareTopicsNew , setNonCoursewareTopicsNew ] = useState(nonCoursewareTopics)
 const [coursewareTopicsNew , setCoursewareTopicsNew] = useState(coursewareTopics)
@@ -204,7 +204,7 @@ useEffect(()=>{
   fetchData()
 },[course_id])
 
-  console.log('===nonCoursewareTopics==' , nonCoursewareTopicsNew)
+
 
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = (cohort) => (cohort === 'default' ? null : cohort);
@@ -324,13 +324,13 @@ useEffect(()=>{
             onBlur={handleBlur}
             aria-label={intl.formatMessage(messages.postTitle)}
           >
-         { courseEnroll.length > 0 && <InputSelect
+         <InputSelect
             name="fruits"
             label="Course"
             value={courseId}
             options={courseEnroll}
             onChange={(e)=>setCourse_id(e)}
-          />}
+          />
 
             {/* <DiscussionPostType
               value="discussion"
