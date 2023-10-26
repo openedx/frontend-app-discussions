@@ -173,7 +173,9 @@ function PostEditor({
           label: e.display_name,
           value: e.course_id
         }));
+
         setCourseEnroll(newCourseEnroll);
+        
       
       } catch (error) {
         console.error(error);
@@ -322,13 +324,13 @@ useEffect(()=>{
             onBlur={handleBlur}
             aria-label={intl.formatMessage(messages.postTitle)}
           >
-          <InputSelect
+         { courseEnroll.length > 0 && <InputSelect
             name="fruits"
             label="Course"
             value={courseId}
             options={courseEnroll}
             onChange={(e)=>setCourse_id(e)}
-          />
+          />}
 
             {/* <DiscussionPostType
               value="discussion"
