@@ -175,7 +175,7 @@ function PostEditor({
       await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
-        type: values.postType,
+        type: "question",
         title: values.title,
         content: values.comment,
         following: values.follow,
@@ -272,20 +272,20 @@ function PostEditor({
             onBlur={handleBlur}
             aria-label={intl.formatMessage(messages.postTitle)}
           >
-            <DiscussionPostType
+            {/* <DiscussionPostType
               value="discussion"
               selected={values.postType === 'discussion'}
               type={intl.formatMessage(messages.discussionType)}
               icon={<Post />}
               description={intl.formatMessage(messages.discussionDescription)}
-            />
-            <DiscussionPostType
+            /> */}
+            {/* <DiscussionPostType
               value="question"
               selected={values.postType === 'question'}
               type={intl.formatMessage(messages.questionType)}
               icon={<Help />}
               description={intl.formatMessage(messages.questionDescription)}
-            />
+            /> */}
           </Form.RadioSet>
           <div className="d-flex flex-row my-4.5 justify-content-between">
             <Form.Group className="w-100 m-0">
