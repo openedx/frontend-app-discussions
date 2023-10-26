@@ -12,3 +12,8 @@ export async function getAllCourseEnroll (courseId){
     return data.data.data
 }
 
+export async function getAllCourseTopic (courseId) {
+    const url = `${getConfig().LMS_BASE_URL}/api/discussion/v1/course_topics/${courseId}`
+    const {data} = await getAuthenticatedHttpClient().get(url)
+    return data
+}

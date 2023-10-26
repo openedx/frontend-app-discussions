@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useRef,
+  useContext, useEffect, useRef, useState
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import {
-  Button, Card, Form, Spinner, StatefulButton,
+  Button, Card, Form, Spinner, StatefulButton, InputSelect
 } from '@edx/paragon';
 import { Help, Post } from '@edx/paragon/icons';
 
@@ -42,6 +42,9 @@ import { hidePostEditor } from '../data';
 import { selectThread } from '../data/selectors';
 import { createNewThread, fetchThread, updateExistingThread } from '../data/thunks';
 import messages from './messages';
+import { fetchAllCourseEnroll , fetchAllCourseTopics } from '../../courses/data/thunks';
+import { async } from 'regenerator-runtime';
+
 
 function DiscussionPostType({
   value,
@@ -158,9 +161,53 @@ function PostEditor({
     }
     dispatch(hidePostEditor());
   };
+
+  // api course specialization
+  const [courseEnroll, setCourseEnroll] = useState([])
+  const [valueCourse , setValueCourse ] = useState(courseId)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllCourseEnroll(courseId);
+        const newCourseEnroll = data.map(e => ({
+          label: e.display_name,
+          value: e.course_id
+        }));
+        setCourseEnroll(newCourseEnroll);
+      
+      } catch (error) {
+        console.error(error);
+       
+      
+      }
+    };
+
+    fetchData();
+  }, [valueCourse]);
+
+// course topics 
+const [nonCoursewareTopicsNew , setNonCoursewareTopicsNew ] = useState(nonCoursewareTopics)
+const [coursewareTopicsNew , setCoursewareTopicsNew] = useState(coursewareTopics)
+useEffect(()=>{
+  const fetchData = async ()=>{
+    try {
+      const topic = await fetchAllCourseTopics(valueCourse)
+      setNonCoursewareTopicsNew(topic.non_courseware_topics)
+      setCoursewareTopicsNew(topic.courseware_topics)
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  fetchData()
+},[valueCourse])
+
+  console.log('===nonCoursewareTopics==' , nonCoursewareTopicsNew)
+
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = (cohort) => (cohort === 'default' ? null : cohort);
   const submitForm = async (values, { resetForm }) => {
+    console.log(valueCourse)
     if (editExisting) {
       await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
@@ -272,6 +319,14 @@ function PostEditor({
             onBlur={handleBlur}
             aria-label={intl.formatMessage(messages.postTitle)}
           >
+          <InputSelect
+            name="fruits"
+            label="Course"
+            value={courseId}
+            options={courseEnroll}
+            onChange={(e)=>setValueCourse(e)}
+          />
+
             {/* <DiscussionPostType
               value="discussion"
               selected={values.postType === 'discussion'}
@@ -300,14 +355,14 @@ function PostEditor({
                 floatingLabel={intl.formatMessage(messages.topicArea)}
                 disabled={inContext}
               >
-                {nonCoursewareTopics.map(topic => (
+                {nonCoursewareTopicsNew?.map(topic => (
                   <option
                     key={topic.id}
                     value={topic.id}
                   >{topic.name || intl.formatMessage(messages.unnamedSubTopics)}
                   </option>
                 ))}
-                {coursewareTopics.map(categoryObj => (
+                {coursewareTopicsNew?.map(categoryObj => (
                   <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
                     {categoryObj.topics.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
