@@ -35,6 +35,7 @@ export async function getThreadComments(
 
   const { data } = await getAuthenticatedHttpClient()
     .get(getCommentsApiUrl(), { params });
+  
   return data;
 }
 
@@ -59,6 +60,7 @@ export async function getCommentResponses(
   });
   const { data } = await getAuthenticatedHttpClient()
     .get(url, { params });
+   
   return data;
 }
 

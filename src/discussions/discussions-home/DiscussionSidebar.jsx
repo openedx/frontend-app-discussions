@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
-  Redirect, Route, Switch, useLocation,
+  Redirect, Route, Switch, useLocation, matchPath
 } from 'react-router';
 
 import { useWindowSize } from '@edx/paragon';
@@ -18,6 +18,8 @@ import { selectconfigLoadingStatus } from '../data/selectors';
 import { LearnerPostsView, LearnersView } from '../learners';
 import { PostsView } from '../posts';
 import { TopicsView } from '../topics';
+import Courses from '../courses/Courses';
+
 
 export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) {
   const location = useLocation();
@@ -40,16 +42,19 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
     }
   }, [sidebarRef, postActionBarHeight, inContext]);
 
+  const isCourseUrl = Boolean(matchPath(location.pathname, { path: Routes.COURSES.ALL }))
+
   return (
     <div
       ref={sidebarRef}
       className={classNames('flex-column  position-sticky', {
-        'd-none': !displaySidebar,
+        'd-none': !displaySidebar ,
         'd-flex overflow-auto': displaySidebar,
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !inContext,
+        'none' : isCourseUrl
       })}
       data-testid="sidebar"
     >
@@ -65,15 +70,17 @@ export default function DiscussionSidebar({ displaySidebar, postActionBarRef }) 
         {redirectToLearnersTab && (
           <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
         )}
-        {configStatus === RequestStatus.SUCCESSFUL && (
+
+
+        {configStatus === RequestStatus.SUCCESSFUL && !isCourseUrl && (
         <Redirect
           from={Routes.DISCUSSIONS.PATH}
           to={{
             ...location,
             pathname: Routes.POSTS.ALL_POSTS,
           }}
-        />
-        )}
+  />
+)}
       </Switch>
     </div>
   );

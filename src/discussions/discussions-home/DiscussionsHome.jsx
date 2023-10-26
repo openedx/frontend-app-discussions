@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
-  Route, Switch, useLocation, useRouteMatch,
+  Route, Switch, useLocation, useRouteMatch, matchPath
 } from 'react-router';
 
 import Footer from '@edx/frontend-component-footer';
@@ -27,6 +27,8 @@ import DiscussionContent from './DiscussionContent';
 import DiscussionSidebar from './DiscussionSidebar';
 import InformationBanner from './InformationsBanner';
 import HeaderLearning from '../../header/HeaderLearning';
+import Courses from '../courses/Courses';
+import EmptyCourses from '../empty-posts/EmptyCourses';
 
 
 
@@ -84,8 +86,6 @@ export default function DiscussionsHome() {
   }, [show, isShowChatGPT]);
 
 
-
-
   return (
     <DiscussionContext.Provider value={{
       page,
@@ -124,9 +124,15 @@ export default function DiscussionsHome() {
             component={provider === DiscussionProvider.LEGACY ? LegacyBreadcrumbMenu : BreadcrumbMenu}
           />
         )}
-        <div className="d-flex flex-row">
+
+        <div className="d-flex flex-row" >
           <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
           {displayContentArea && <DiscussionContent />}
+          <Route path={Routes.COURSES.PATH} >
+              <div style={{minWidth:'29rem'}}>
+                  <Courses />
+              </div>
+         </Route>
           {!displayContentArea && (
             <Switch>
               <Route path={Routes.TOPICS.PATH} component={EmptyTopics} />
@@ -139,6 +145,7 @@ export default function DiscussionsHome() {
                 render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
               />
               {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} /> }
+              <Route path={Routes.COURSES.PATH} component={EmptyCourses} />
             </Switch>
           )}
         </div>

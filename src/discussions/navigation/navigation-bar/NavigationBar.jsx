@@ -29,6 +29,10 @@ function NavigationBar({ intl }) {
       isActive: (match, location) => Boolean(matchPath(location.pathname, { path: Routes.TOPICS.PATH })),
       labelMessage: messages.allTopics,
     },
+    {
+      route: Routes.COURSES.ALL,
+      labelMessage: messages.courses,
+    }
   ];
   if (showLearnersTab) {
     navLinks.push({
