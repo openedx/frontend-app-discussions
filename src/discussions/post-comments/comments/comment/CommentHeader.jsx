@@ -16,7 +16,7 @@ const CommentHeader = ({
   const colorClass = AvatarOutlineAndLabelColors[comment.authorLabel];
   const hasAnyAlert = useAlertBannerVisible(comment);
 
-  const profileImage = comment.users && Object.values(comment.users)[0].profile.image;
+  const profileImage = Boolean(comment.users) && Object.values(comment.users)[0].profile.image;
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
