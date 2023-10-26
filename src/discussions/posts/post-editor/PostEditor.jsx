@@ -164,7 +164,7 @@ function PostEditor({
 
   // api course specialization
   const [courseEnroll, setCourseEnroll] = useState([])
-  const [valueCourse , setValueCourse ] = useState(courseId)
+  const [course_id , setCourse_id ] = useState(courseId)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -183,7 +183,7 @@ function PostEditor({
     };
 
     fetchData();
-  }, [valueCourse]);
+  }, []);
 
 // course topics 
 const [nonCoursewareTopicsNew , setNonCoursewareTopicsNew ] = useState(nonCoursewareTopics)
@@ -191,7 +191,7 @@ const [coursewareTopicsNew , setCoursewareTopicsNew] = useState(coursewareTopics
 useEffect(()=>{
   const fetchData = async ()=>{
     try {
-      const topic = await fetchAllCourseTopics(valueCourse)
+      const topic = await fetchAllCourseTopics(course_id)
       setNonCoursewareTopicsNew(topic.non_courseware_topics)
       setCoursewareTopicsNew(topic.courseware_topics)
       
@@ -200,14 +200,13 @@ useEffect(()=>{
     }
   }
   fetchData()
-},[valueCourse])
+},[course_id])
 
   console.log('===nonCoursewareTopics==' , nonCoursewareTopicsNew)
 
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = (cohort) => (cohort === 'default' ? null : cohort);
   const submitForm = async (values, { resetForm }) => {
-    console.log(valueCourse)
     if (editExisting) {
       await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
@@ -220,7 +219,7 @@ useEffect(()=>{
       const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
       // if not allowed to set cohort, always undefined, so no value is sent to backend
       await dispatchSubmit(createNewThread({
-        courseId,
+        courseId : course_id ,
         topicId: values.topic,
         type: "question",
         title: values.title,
@@ -236,6 +235,10 @@ useEffect(()=>{
       editorRef.current.plugins.autosave.removeDraft();
     }
     hideEditor(resetForm);
+
+    if (course_id !== courseId){
+      window.location.href = `/discussions/${course_id}/posts`
+    }
   };
 
   useEffect(() => {
@@ -324,7 +327,7 @@ useEffect(()=>{
             label="Course"
             value={courseId}
             options={courseEnroll}
-            onChange={(e)=>setValueCourse(e)}
+            onChange={(e)=>setCourse_id(e)}
           />
 
             {/* <DiscussionPostType
@@ -364,7 +367,7 @@ useEffect(()=>{
                 ))}
                 {coursewareTopicsNew?.map(categoryObj => (
                   <optgroup label={categoryObj.name || intl.formatMessage(messages.unnamedTopics)} key={categoryObj.id}>
-                    {categoryObj.topics.map(subtopic => (
+                    {categoryObj.topics?.map(subtopic => (
                       <option key={subtopic.id} value={subtopic.id}>
                         {subtopic.name || intl.formatMessage(messages.unnamedSubTopics)}
                       </option>
