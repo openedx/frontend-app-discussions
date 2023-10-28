@@ -128,7 +128,7 @@ function ActionsDropdown({
                     options={typeReport}
                     onChange={(e)=>dispatch(setType(e))}
                   />
-                  <InputText name="details_report" label="Report Details"  onChange={(e)=>dispatch(setDetails(e))}/>
+                  <InputText name="details_report" value={reportSelector.details} label="Report Details"  onChange={(e)=>dispatch(setDetails(e))}/>
               </div>}
               buttons={[
                 <Button onClick={handlerReport} variant="primary">Blue button!</Button>,
