@@ -170,7 +170,7 @@ header {
   line-height: 28px;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
   font-size: 18px;
-  height: 60px;
+  // height: 60px;
 
   .user-dropdown {
     button {
@@ -196,29 +196,29 @@ header {
     };
   };
 
-  span:first-child {
-    font-size: 14px;
-    margin-top: 1px !important;
-    margin-bottom: -1px !important;
-  };
+  // span:first-child {
+  //   font-size: 14px;
+  //   margin-top: 1px !important;
+  //   margin-bottom: -1px !important;
+  // };
 }
 
 #courseTabsNavigation {
   font-size: 18px;
   font-family: Inter, Helvetica Neue, Arial, sans-serif;
 
-  .container-xl {
-    padding-left: 31px;
-    font-size: 1.125 rem;
+  // .container-xl {
+  //   padding-left: 31px;
+  //   font-size: 1.125 rem;
 
-    .nav {
-      line-height: 28px;
-    }
+  //   .nav {
+  //     line-height: 28px;
+  //   }
 
-    .nav-item {
-      padding-bottom: 8px;
-    }
-  };
+  //   .nav-item {
+  //     padding-bottom: 8px;
+  //   }
+  // };
 }
 
 .min-content-height {
@@ -275,14 +275,14 @@ header {
 }
 
 
-.learning-header .course-title-lockup span:first-child {
-  padding-bottom: 5px;
-  padding-top: 5px;
-}
+// .learning-header .course-title-lockup span:first-child {
+//   padding-bottom: 5px;
+//   padding-top: 5px;
+// }
 
-.learning-header .course-title-lockup span {
-  padding-bottom: 5px;
-}
+// .learning-header .course-title-lockup span {
+//   padding-bottom: 5px;
+// }
 
 
 

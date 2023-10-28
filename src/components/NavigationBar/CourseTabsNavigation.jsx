@@ -24,7 +24,7 @@ function CourseTabsNavigation({
 
   return (
     <div id="courseTabsNavigation" className={classNames('course-tabs-navigation', className)}>
-      <div className="container-xl">
+      <div className="container-fluid">
         {!!tabs.length
           && (
           <Tabs
