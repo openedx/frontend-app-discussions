@@ -40,6 +40,9 @@ function Comment({
   const hasMorePages = useSelector(selectCommentHasMorePages(comment.id));
   const currentPage = useSelector(selectCommentCurrentPage(comment.id));
   const blackoutDateRange = useSelector(selectBlackoutDate);
+  // add report 
+  const reportSelector = useSelector(state=>state.report)
+
   const {
     courseId,
   } = useContext(DiscussionContext);
@@ -57,7 +60,7 @@ function Comment({
       await dispatch(fetchThread(comment.threadId, courseId));
     },
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged })),
+    [ContentActions.REPORT]: () => dispatch(editComment(comment.id, { flagged: !comment.abuseFlagged , report: reportSelector })),
   };
 
   const handleLoadMoreComments = () => (

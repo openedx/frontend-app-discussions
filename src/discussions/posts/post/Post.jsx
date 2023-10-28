@@ -36,7 +36,8 @@ function Post({
   const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
-
+  // add report 
+  const reportSelector = useSelector(state=>state.report)
   const postURL = new URL(`${getConfig().PUBLIC_PATH}${courseId}/posts/${post.id}`, window.location.origin);
 
   const actionHandlers = {
@@ -56,7 +57,7 @@ function Post({
     },
     [ContentActions.COPY_LINK]: () => { navigator.clipboard.writeText(postURL.href); },
     [ContentActions.PIN]: () => dispatch(updateExistingThread(post.id, { pinned: !post.pinned })),
-    [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged })),
+    [ContentActions.REPORT]: () => dispatch(updateExistingThread(post.id, { flagged: !post.abuseFlagged , report:reportSelector})),
   };
 
   const getTopicCategoryName = topicData => (

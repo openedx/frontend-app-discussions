@@ -93,6 +93,7 @@ export async function updateComment(commentId, {
   flagged,
   endorsed,
   editReasonCode,
+  report
 }) {
   const url = `${getCommentsApiUrl()}${commentId}/`;
   const postData = snakeCaseObject({
@@ -101,8 +102,8 @@ export async function updateComment(commentId, {
     abuse_flagged: flagged,
     endorsed,
     editReasonCode,
+    report
   });
-
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, postData, { headers: { 'Content-Type': 'application/merge-patch+json' } });
   return data;
