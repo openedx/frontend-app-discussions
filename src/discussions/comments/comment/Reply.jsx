@@ -29,6 +29,8 @@ function Reply({
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+    // add report 
+    const reportSelector = useSelector(state=>state.report)
   const actionHandlers = {
     [ContentActions.EDIT_CONTENT]: () => setEditing(true),
     [ContentActions.ENDORSE]: () => dispatch(editComment(
@@ -37,7 +39,7 @@ function Reply({
       ContentActions.ENDORSE,
     )),
     [ContentActions.DELETE]: showDeleteConfirmation,
-    [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged })),
+    [ContentActions.REPORT]: () => dispatch(editComment(reply.id, { flagged: !reply.abuseFlagged ,  report: reportSelector})),
   };
   const authorAvatars = useSelector(selectAuthorAvatars(reply.author));
   const colorClass = AvatarOutlineAndLabelColors[reply.authorLabel];
