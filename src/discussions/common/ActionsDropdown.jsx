@@ -60,6 +60,7 @@ function ActionsDropdown({
     const actionFunction = actionHandlers['abuse_flagged'];
     if (actionFunction) {
       actionFunction();
+      dispatch(addReports({id:commentOrPost.id , type : reportSelector.type }))
     } else {
       logError(`Unknown or unimplemented action ${'abuse_flagged'}`);
     }

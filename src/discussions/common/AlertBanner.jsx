@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
@@ -25,12 +25,24 @@ function AlertBanner({
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
   const canSeeReportedBanner = content?.abuseFlagged;
 
+const reports = useSelector(state=>state.report.reports)
+
+const reportType = reports?.find(r => r.id === content.id)?.type
+
+
   return (
     <>
       {canSeeReportedBanner && (
         <Alert icon={Error} variant="danger" className="px-3 mb-2 py-10px shadow-none flex-fill">
-          {intl.formatMessage(messages.abuseFlaggedMessage)}
-        </Alert>
+        {content?.reports ? (
+          <div className='d-flex' style={{ gap: '10px' }}>
+            {content.reports.map(r => <span>{r}</span>)}
+          </div>
+        ) : (
+          // intl.formatMessage(messages.abuseFlaggedMessage)
+          reportType
+        )}
+      </Alert>
       )}
       {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
         <>

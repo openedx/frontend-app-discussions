@@ -6,7 +6,8 @@ const reportSlice = createSlice({
   name: 'report',
   initialState: {
     type : '',
-    details: ''
+    details: '' ,
+    reports : []
   },
   reducers: {
     setType: (state, action) => {
@@ -20,12 +21,15 @@ const reportSlice = createSlice({
     resetReport : (state)=>{
         state.type ='',
         state.details = ''
+    },
+    addReports : (state, action) => {
+      state.reports.push(action.payload)
     }
   },
 });
 
 export const {
- setType, setDetails ,resetReport
+ setType, setDetails ,resetReport , addReports
 } = reportSlice.actions;
 
 export const reportReducer = reportSlice.reducer;
