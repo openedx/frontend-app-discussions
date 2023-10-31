@@ -88,8 +88,8 @@ People
 The assigned maintainers for this component and other project details may be found in Backstage or from inspecting catalog-info.yaml.
 
 Reporting Security Issues
-=========================
-Please do not report security issues in public. Please email security@edx.org.
+-------------------------
+Please do not report security issues in public. Please email security@openedx.org.
 
 Project Structure
 =================
