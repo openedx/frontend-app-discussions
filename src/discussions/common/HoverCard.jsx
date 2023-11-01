@@ -31,7 +31,7 @@ const HoverCard = ({
   const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);
-  const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+  const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
 
   return (
     <div
@@ -39,7 +39,7 @@ const HoverCard = ({
       data-testid={`hover-card-${id}`}
       id={`hover-card-${id}`}
     >
-      {isUserPrivilagedInPostingRestriction && (
+      {isUserPrivilegedInPostingRestriction && (
         <div className="d-flex">
           <Button
             variant="tertiary"
@@ -85,7 +85,7 @@ const HoverCard = ({
           iconAs={Icon}
           size="sm"
           alt="Like"
-          iconClassNames="like-icon-dimentions"
+          iconClassNames="like-icon-dimensions"
           onClick={(e) => {
             e.preventDefault();
             onLike();
@@ -99,7 +99,7 @@ const HoverCard = ({
             iconAs={Icon}
             size="sm"
             alt="Follow"
-            iconClassNames="follow-icon-dimentions"
+            iconClassNames="follow-icon-dimensions"
             onClick={(e) => {
               e.preventDefault();
               onFollow();

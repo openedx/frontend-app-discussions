@@ -1,7 +1,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { getDiscssionTours, updateDiscussionTour } from './api';
+import { getDiscussionTours, updateDiscussionTour } from './api';
 import {
   discussionsTourRequest,
   discussionsToursRequestError,
@@ -21,7 +21,7 @@ export function fetchDiscussionTours() {
   return async (dispatch) => {
     try {
       dispatch(discussionsTourRequest());
-      const data = await getDiscssionTours();
+      const data = await getDiscussionTours();
       dispatch(fetchUserDiscussionsToursSuccess(camelCaseObject(normaliseTourData(data))));
     } catch (error) {
       dispatch(discussionsToursRequestError());

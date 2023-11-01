@@ -57,7 +57,7 @@ describe('EmptyPage', () => {
     store = initializeStore();
   });
 
-  test('"posts youve interacted with" message shown when no posts in system', async () => {
+  test('"posts you\'ve interacted with" message shown when no posts in system', async () => {
     renderComponent(`/${courseId}/my-posts/`);
     expect(
       screen.queryByText(messages.emptyMyPosts.defaultMessage),

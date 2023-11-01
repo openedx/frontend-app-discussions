@@ -11,7 +11,7 @@ import { Button, Spinner } from '@edx/paragon';
 
 import { RequestStatus } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
-import { selectconfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
+import { selectConfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import { fetchUserPosts } from '../learners/data/thunks';
 import messages from '../messages';
 import { usePostList } from './data/hooks';
@@ -35,7 +35,7 @@ const PostsList = ({
   const nextPage = useSelector(selectThreadNextPage());
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const configStatus = useSelector(selectconfigLoadingStatus);
+  const configStatus = useSelector(selectConfigLoadingStatus);
   const sortedPostsIds = usePostList(postsIds);
   const showOwnPosts = page === 'my-posts';
 

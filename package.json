@@ -33,10 +33,10 @@
     "url": "https://github.com/openedx/frontend-app-discussions/issues"
   },
   "dependencies": {
-    "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
+    "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
     "@edx/frontend-component-footer": "12.1.0",
     "@edx/frontend-component-header": "4.3.0",
-    "@edx/frontend-platform": "4.6.0",
+    "@edx/frontend-platform": "4.6.3",
     "@edx/paragon": "20.44.0",
     "@reduxjs/toolkit": "1.8.0",
     "@tinymce/tinymce-react": "3.13.1",
@@ -56,7 +56,7 @@
     "redux": "4.1.2",
     "regenerator-runtime": "0.13.9",
     "timeago.js": "4.0.2",
-    "tinymce": "5.10.2",
+    "tinymce": "5.10.7",
     "yup": "0.31.1"
   },
   "devDependencies": {
