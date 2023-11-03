@@ -62,7 +62,7 @@
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
     "@edx/frontend-build": "13.0.1",
-    "@edx/reactifex": "1.0.3",
+    "@edx/reactifex": "1.1.0",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "13.5.0",
