@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
@@ -7,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Badge, Icon, Truncate } from '@edx/paragon';
+import { Badge, Icon } from '@edx/paragon';
 import { CheckCircle } from '@edx/paragon/icons';
 
 import { PushPin } from '../../../components/icons';
@@ -87,48 +86,46 @@ const PostLink = ({
         />
         <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
           <div className="d-flex flex-column justify-content-start mw-100 flex-fill" style={{ marginBottom: '-3px' }}>
-            <div className="d-flex align-items-center pb-0 mb-0 flex-fill font-weight-500">
-              <Truncate lines={1} className="mr-1.5" whiteSpace>
-                <span
-                  class={
-                      classNames(
-                        'font-weight-500 font-size-14 text-primary-500 font-style align-bottom',
-                        { 'font-weight-bolder': !read },
-                      )
-                    }
+            <div className="d-flex align-items-center pb-0 mb-0 flex-fill">
+              <div className="text-truncate mr-1">
+                <span className={classNames(
+                  'font-weight-500 font-size-14 text-primary-500 font-style align-bottom mr-1',
+                  { 'font-weight-bolder': !read },
+                )}
                 >
                   {title}
                 </span>
-                <span class="align-bottom"> </span>
-                <span
-                  class="text-gray-700 font-weight-normal font-size-14 font-style align-bottom"
-                >
-                  {isPostPreviewAvailable(previewBody)
-                    ? previewBody
-                    : intl.formatMessage(messages.postWithoutPreview)}
+                <span className="text-gray-700 font-weight-normal font-size-14 font-style align-bottom">
+                  {isPostPreviewAvailable(previewBody) ? previewBody : intl.formatMessage(messages.postWithoutPreview)}
                 </span>
-              </Truncate>
+              </div>
               {showAnsweredBadge && (
-              <Icon src={CheckCircle} className="text-success font-weight-500 ml-auto badge-padding" data-testid="check-icon">
-                <span className="sr-only">{' '}answered</span>
-              </Icon>
+                <Icon
+                  data-testid="check-icon"
+                  src={CheckCircle}
+                  className="text-success font-weight-500 ml-auto badge-padding"
+                >
+                  <span className="sr-only">{' '}answered</span>
+                </Icon>
               )}
               {canSeeReportedBadge && (
-              <Badge
-                variant="danger"
-                data-testid="reported-post"
-                className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-              >
-                {intl.formatMessage(messages.contentReported)}
-                <span className="sr-only">{' '}reported</span>
-              </Badge>
+                <Badge
+                  variant="danger"
+                  data-testid="reported-post"
+                  className={`font-weight-500 badge-padding ${showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
+                >
+                  {intl.formatMessage(messages.contentReported)}
+                  <span className="sr-only">{' '}reported</span>
+                </Badge>
               )}
               {pinned && (
-              <Icon
-                src={PushPin}
-                className={`post-summary-icons-dimensions text-gray-700
-                    ${canSeeReportedBadge || showAnsweredBadge ? 'ml-2' : 'ml-auto'}`}
-              />
+                <Icon
+                  src={PushPin}
+                  className={classNames('post-summary-icons-dimensions text-gray-700', {
+                    'ml-2': canSeeReportedBadge || showAnsweredBadge,
+                    'ml-auto': !canSeeReportedBadge && !showAnsweredBadge,
+                  })}
+                />
               )}
             </div>
           </div>
