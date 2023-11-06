@@ -18,6 +18,7 @@ import { postShape } from '../posts/post/proptypes';
 import { inBlackoutDateRange, useActions } from '../utils';
 import { DiscussionContext } from './context';
 
+
 import { resetReport, setDetails, setType } from './data/slice';
 function ActionsDropdown({
   intl,
@@ -45,7 +46,7 @@ function ActionsDropdown({
 
   // model report 
   const [modelReport , setModalReport] = useState(false)
-  const typeReport = ['Reporting due to duplication', 'Reporting due to inappropriate content']
+  const typeReport = [intl.formatMessage(messages.duplicationReport), intl.formatMessage(messages.inappropriateReport)]
   const dispatch = useDispatch()
   const reportSelector = useSelector(state=>state.report)
 
@@ -120,23 +121,27 @@ function ActionsDropdown({
       <div>
          <Modal
               open ={modelReport}
-              title="Report Modal"
+              title={intl.formatMessage(messages.titleModalReport)}
+              closeText = {intl.formatMessage(messages.closeModalReport)}
               body={<div>
                   <InputSelect
                     name="type_report"
-                    label="Type Report"
+                    label={intl.formatMessage(messages.labelModalReport)}
                     value={typeReport[0]}
                     options={typeReport}
                     onChange={(e)=>dispatch(setType(e))}
                   />
-                  <InputText name="details_report" value={reportSelector.details} label="Report Details"  onChange={(e)=>dispatch(setDetails(e))}/>
+                  <InputText name="details_report" value={reportSelector.details} label={intl.formatMessage(messages.detailModalReport)}  onChange={(e)=>dispatch(setDetails(e))}/>
               </div>}
               buttons={[
-                <Button onClick={handlerReport} variant="primary">Blue button!</Button>,
+                <Button onClick={handlerReport} variant="primary">{intl.formatMessage(messages.submitModalReport)}</Button>,
               ]}
+              
               onClose={() => {setModalReport(false)
                               dispatch(resetReport())}}
+              
             />
+
       
       </div>
     </>
