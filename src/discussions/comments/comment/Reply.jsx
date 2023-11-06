@@ -87,13 +87,14 @@ function Reply({
         >
           <div className="d-flex flex-row justify-content-between align-items-center mb-0.5">
             <AuthorLabel author={reply.author} authorLabel={reply.authorLabel} labelColor={colorClass && `text-${colorClass}`} linkToProfile />
-            <ActionsDropdown
+            <div>
+              <ActionsDropdown
               commentOrPost={{
                 ...reply,
                 postType,
               }}
               actionHandlers={actionHandlers}
-            />
+            /></div>
           </div>
           {isEditing
             ? <CommentEditor comment={reply} onCloseEditor={() => setEditing(false)} />

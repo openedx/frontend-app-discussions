@@ -191,7 +191,7 @@
     "discussions.model.report.type" : "Type Report" ,
     "discussions.model.report.detail" : "Detail Report",
     "discussions.model.report.close" : "Close" ,
-    "discussions.model.report.submit" : "Submit 1" ,
+    "discussions.model.report.submit" : "Submit" ,
     "discussions.model.report.type.duplication" : "Reporting due to duplication" ,
     "discussions.model.report.type.inappropriate" : "Reporting due to inappropriate content"
   }
