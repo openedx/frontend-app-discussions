@@ -1,7 +1,7 @@
-@import "@edx/brand/paragon/fonts.scss";
-@import "@edx/brand/paragon/variables.scss";
-@import "@edx/paragon/scss/core/core.scss";
-@import "@edx/brand/paragon/overrides.scss";
+@import "~@edx/brand/paragon/fonts.scss";
+@import "~@edx/brand/paragon/variables.scss";
+@import "~@edx/paragon/scss/core/core.scss";
+@import "~@edx/brand/paragon/overrides.scss";
 
 @import "~@edx/frontend-component-footer/dist/footer";
 @import "~@edx/frontend-component-header/dist/index";
@@ -319,7 +319,6 @@ header {
   background-color: #fff;
 
   .container-xl {
-    padding-left: 31px;
     font-size: 1.125rem;
 
     .nav {
