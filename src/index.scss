@@ -65,10 +65,6 @@ $fa-font-path: "~font-awesome/fonts";
   font-style: normal !important;
 }
 
-.font-family-inter {
-  font-family: "Inter";
-}
-
 .post-footer-icon-dimensions {
   width: 32px !important;
   height: 32px !important;
@@ -278,7 +274,6 @@ header {
 
 header {
   line-height: 28px;
-  font-family: Inter, Helvetica Neue, Arial, sans-serif;
   font-size: 18px !important;
 
   .user-dropdown {
@@ -314,7 +309,6 @@ header {
 
 #courseTabsNavigation {
   font-size: 18px !important;
-  font-family: Inter, Helvetica Neue, Arial, sans-serif;
   z-index: 3;
   background-color: #fff;
 
@@ -478,7 +472,6 @@ header {
 }
 
 .font-style {
-  font-family: "Inter";
   font-style: normal;
 }
 
