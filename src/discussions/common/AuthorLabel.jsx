@@ -99,7 +99,7 @@ const AuthorLabel = ({
       {postCreatedAt && (
         <span
           title={postCreatedAt}
-          className={classNames('font-family-inter align-content-center', {
+          className={classNames('align-content-center', {
             'text-white': alert,
             'text-gray-500': !alert,
           })}

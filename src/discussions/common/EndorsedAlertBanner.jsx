@@ -39,7 +39,7 @@ const EndorsedAlertBanner = ({
                 height: '20px',
               }}
             />
-            <strong className="ml-2 font-family-inter">
+            <strong className="ml-2">
               {intl.formatMessage(isQuestion ? messages.answer : messages.endorsed)}
             </strong>
           </div>
