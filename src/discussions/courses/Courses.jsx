@@ -3,6 +3,7 @@ import { Link , useHistory, useParams} from 'react-router-dom';
 import { fetchAllCourseEnroll } from "./data/thunks"
 
 import { Routes } from "../../data/constants";
+import { useSelector } from "react-redux";
 
 
 const Courses = ()=>{
@@ -10,20 +11,26 @@ const Courses = ()=>{
     const {courseId} = useParams()
     const [courseEnroll, setCourseEnroll] = useState([])
     const history = useHistory();
+    const {courseTitle} = useSelector(state =>state.courseTabs)
+
     useEffect(() => {
         const fetchData = async () => {
           try {
             const data = await fetchAllCourseEnroll(courseId);
-            setCourseEnroll(data);
+            if (data.length ==0){
+              data.push({course_id : courseId, display_name: courseTitle})
+            }
+             setCourseEnroll(data)
           } catch (error) {
-            console.error(error);
-           
-          
+            console.error(error);  
           }
         };
     
         fetchData();
-      }, []);
+      }, [courseTitle]);
+
+  
+
 
       const handlerClick = (course)=>{
         if(course.course_id == courseId){

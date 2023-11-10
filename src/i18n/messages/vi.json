@@ -181,10 +181,17 @@
     "discussions.topics.unnamed.label": "Unnamed category",
     "discussions.subtopics.unnamed.label": "Unnamed subcategory" ,
 
-    "header.menu.dashboard" : "Trang chủ" ,
+    "header.menu.dashboard" : "Trang chủ " ,
     "header.help" : "Sổ tay sinh viên" ,
     "header.menu.profile" : "Hồ sơ" ,
     "header.menu.account" : "Tài khoản" ,
     "header.menu.signOut" : "Đăng Xuất" ,
-    "learning.section.sequence.title.question" : "câu hỏi"
+
+    "discussions.model.report.title"  : "Report Modal",
+    "discussions.model.report.type" : "Type Report" ,
+    "discussions.model.report.detail" : "Detail Report",
+    "discussions.model.report.close" : "Close" ,
+    "discussions.model.report.submit" : "Submit" ,
+    "discussions.model.report.type.duplication" : "Reporting due to duplication" ,
+    "discussions.model.report.type.inappropriate" : "Reporting due to inappropriate content"
   }

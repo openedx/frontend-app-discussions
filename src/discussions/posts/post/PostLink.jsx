@@ -19,6 +19,16 @@ import PostFooter from './PostFooter';
 import { PostAvatar } from './PostHeader';
 import { postShape } from './proptypes';
 
+
+
+
+function decodeHTMLString(htmlString) {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = htmlString;
+  return textarea.value;
+}
+
+
 function PostLink({
   post,
   isSelected,
@@ -45,7 +55,7 @@ function PostLink({
   const authorLabelColor = AvatarOutlineAndLabelColors[post.authorLabel];
   const canSeeReportedBadge = post.abuseFlagged || post.abuseFlaggedCount;
   const read = post.read || (!post.read && post.commentCount !== post.unreadCommentCount);
-
+  const previewBodyDecode = decodeHTMLString(post.previewBody )
   return (
     <>
       <Link
@@ -89,7 +99,7 @@ function PostLink({
                     class="text-gray-700 font-weight-normal font-size-14 font-style-normal font-family-inter align-bottom"
                   >
                     {isPostPreviewAvailable(post.previewBody)
-                      ? post.previewBody
+                      ? previewBodyDecode
                       : intl.formatMessage(messages.postWithoutPreview)}
                   </span>
                 </Truncate>

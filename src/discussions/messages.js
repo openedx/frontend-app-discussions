@@ -203,6 +203,38 @@ const messages = defineMessages({
     defaultMessage: 'Ok',
     description: 'Modal dismiss button text',
   },
+
+  titleModalReport: {
+    id: 'discussions.model.report.title',
+    defaultMessage: 'Report Modal',
+    description: 'Modal Report Title' ,
+  },
+  labelModalReport : {
+    id: 'discussions.model.report.type',
+    defaultMessage: 'Type Report',
+    description: 'Modal Type Report'  
+  },
+  detailModalReport : {
+    id: 'discussions.model.report.detail',
+    defaultMessage: 'Detail Report',
+    description: 'Modal Type Detail'
+  },
+  closeModalReport : {
+    id :'discussions.model.report.close',
+    defaultMessage: 'Close'
+  },
+  submitModalReport : {
+    id :'discussions.model.report.submit',
+    defaultMessage: 'Submit'
+  },
+  duplicationReport : {
+    id:'discussions.model.report.type.duplication',
+    defaultMessage: 'Reporting due to duplication' ,
+  },
+  inappropriateReport :{
+    id:'discussions.model.report.type.inappropriate',
+    defaultMessage : 'Reporting due to inappropriate content'
+  }
 });
 
 export default messages;
