@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef, useState,
+  useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 
 import camelCase from 'lodash/camelCase';
@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
-import { DiscussionContext } from '../discussions/common/context';
+import { useCurrentPage } from '../discussions/data/hooks';
 import { setUsernameSearch } from '../discussions/learners/data';
 import { setSearchQuery } from '../discussions/posts/data';
 import postsMessages from '../discussions/posts/post-actions-bar/messages';
@@ -18,7 +18,7 @@ import { setFilter as setTopicFilter } from '../discussions/topics/data/slices';
 const Search = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const { page } = useContext(DiscussionContext);
+  const page = useCurrentPage();
   const postSearch = useSelector(({ threads }) => threads.filters.search);
   const topicSearch = useSelector(({ topics }) => topics.filter);
   const learnerSearch = useSelector(({ learners }) => learners.usernameSearch);
@@ -26,15 +26,15 @@ const Search = () => {
   const isTopicSearch = 'topics'.includes(page);
   const [searchValue, setSearchValue] = useState('');
   const previousSearchValueRef = useRef('');
-  let currentValue = '';
 
-  if (isPostSearch) {
-    currentValue = postSearch;
-  } else if (isTopicSearch) {
-    currentValue = topicSearch;
-  } else {
-    currentValue = learnerSearch;
-  }
+  const currentValue = useMemo(() => {
+    if (isPostSearch) {
+      return postSearch;
+    } if (isTopicSearch) {
+      return topicSearch;
+    }
+    return learnerSearch;
+  }, [postSearch, topicSearch, learnerSearch]);
 
   const onClear = useCallback(() => {
     dispatch(setSearchQuery(''));

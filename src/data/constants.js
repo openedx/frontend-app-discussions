@@ -137,7 +137,7 @@ export const DiscussionProvider = {
   OPEN_EDX: 'openedx',
 };
 
-const BASE_PATH = `${getConfig().PUBLIC_PATH}:courseId`;
+export const BASE_PATH = `${getConfig().PUBLIC_PATH}:courseId`;
 
 export const Routes = {
   DISCUSSIONS: {

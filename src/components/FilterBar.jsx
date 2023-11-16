@@ -17,7 +17,7 @@ import {
 } from '../data/constants';
 import { selectCourseCohorts } from '../discussions/cohorts/data/selectors';
 import messages from '../discussions/posts/post-filter-bar/messages';
-import { ActionItem } from '../discussions/posts/post-filter-bar/PostFilterBar';
+import ActionItem from '../discussions/posts/post-filter-bar/PostFilterBar';
 
 const FilterBar = ({
   intl,

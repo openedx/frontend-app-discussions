@@ -58,47 +58,18 @@ const PostsList = ({
     }
   }, [courseId, orderBy, filters, showOwnPosts, authenticatedUser.username, userHasModerationPrivileges, userIsStaff]);
 
-  useEffect(() => {
-    if (topicsIds !== undefined && configStatus === RequestStatus.SUCCESSFUL) {
-      loadThreads(topicsIds);
-    }
-  }, [courseId, filters, orderBy, page, JSON.stringify(topicsIds), configStatus]);
-
-  useEffect(() => {
-    if (isTopicTab) {
-      loadThreads(topicsIds, 1, true);
-    }
-  }, [filters]);
-
-  const postInstances = useMemo(() => (
-    sortedPostsIds?.map((postId, idx) => (
-      <PostLink
-        postId={postId}
-        idx={idx}
-        key={postId}
-        showDivider={(sortedPostsIds.length - 1) !== idx}
-      />
-    ))
-  ), [sortedPostsIds]);
-
-  console.log('sortedPostsIds', sortedPostsIds, loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading);
-
   return (
-    <>
-      {!parentIsLoading && postInstances}
-      {sortedPostsIds?.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
-      {loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading ? (
-        <div className="d-flex justify-content-center p-4 mx-auto my-auto">
-          <Spinner animation="border" variant="primary" size="lg" />
-        </div>
-      ) : (
-        nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
-          <Button onClick={() => loadThreads(topicsIds, nextPage)} variant="primary" size="md">
-            {intl.formatMessage(messages.loadMorePosts)}
-          </Button>
-        )
-      )}
-    </>
+    loadingStatus === RequestStatus.IN_PROGRESS || parentIsLoading ? (
+      <div className="d-flex justify-content-center p-4 mx-auto my-auto">
+        <Spinner animation="border" variant="primary" size="lg" />
+      </div>
+    ) : (
+      nextPage && loadingStatus === RequestStatus.SUCCESSFUL && (
+      <Button onClick={() => loadThreads(topicsIds, nextPage)} variant="primary" size="md">
+        {intl.formatMessage(messages.loadMorePosts)}
+      </Button>
+      )
+    )
   );
 };
 
