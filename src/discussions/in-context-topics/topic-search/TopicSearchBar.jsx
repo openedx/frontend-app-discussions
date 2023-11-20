@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -6,14 +6,15 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
-import { DiscussionContext } from '../../common/context';
+import { useCurrentPage } from '../../data/hooks';
 import postsMessages from '../../posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../data/slices';
 
 const TopicSearchBar = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const { page } = useContext(DiscussionContext);
+  const page = useCurrentPage();
+
   const topicSearch = useSelector(({ inContextTopics }) => inContextTopics.filter);
   let searchValue = '';
 
@@ -57,4 +58,4 @@ const TopicSearchBar = () => {
   );
 };
 
-export default TopicSearchBar;
+export default memo(TopicSearchBar);

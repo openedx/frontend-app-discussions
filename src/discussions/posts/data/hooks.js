@@ -7,20 +7,10 @@ import { selectThreadsByIds } from './selectors';
 
 export const usePostList = (ids) => {
   const posts = useSelector(selectThreadsByIds(ids));
-  const pinnedPostsIds = [];
-  const unpinnedPostsIds = [];
 
-  const sortedIds = useMemo(() => {
-    posts.forEach((post) => {
-      if (post.pinned) {
-        pinnedPostsIds.push(post.id);
-      } else {
-        unpinnedPostsIds.push(post.id);
-      }
-    });
-
-    return [...pinnedPostsIds, ...unpinnedPostsIds];
-  }, [posts]);
+  const sortedIds = useMemo(() => (
+    [...posts].sort((a, b) => (b.pinned - a.pinned)).map((post) => post.id)
+  ), [posts]);
 
   return sortedIds;
 };

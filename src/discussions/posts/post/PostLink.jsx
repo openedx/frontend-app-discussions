@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
@@ -12,7 +12,9 @@ import { CheckCircle } from '@edx/paragon/icons';
 import { PushPin } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
-import { DiscussionContext } from '../../common/context';
+import {
+  useCategory, useCourseId, useCurrentPage, useEnableInContextSidebar, useLearnerUsername, usePostId,
+} from '../../data/hooks';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import { selectThread } from '../data/selectors';
 import messages from './messages';
@@ -25,18 +27,18 @@ const PostLink = ({
   showDivider,
 }) => {
   const intl = useIntl();
-  const {
-    courseId,
-    postId: selectedPostId,
-    page,
-    enableInContextSidebar,
-    category,
-    learnerUsername,
-  } = useContext(DiscussionContext);
+  const courseId = useCourseId();
+  const selectedPostId = usePostId();
+  const page = useCurrentPage();
+  const enableInContextSidebar = useEnableInContextSidebar();
+  const category = useCategory();
+  const learnerUsername = useLearnerUsername();
+
   const {
     topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
     unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
   } = useSelector(selectThread(postId));
+
   const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
     courseId,
@@ -45,6 +47,7 @@ const PostLink = ({
     category,
     learnerUsername,
   });
+
   const showAnsweredBadge = hasEndorsed && type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
   const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;

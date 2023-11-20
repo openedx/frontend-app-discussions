@@ -11,7 +11,9 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import { breakpoints, useWindowSize } from '@edx/paragon';
 
-import { RequestStatus, Routes } from '../../data/constants';
+import {
+  ALL_ROUTES, BASE_PATH, RequestStatus, Routes,
+} from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import { fetchCourseBlocks } from '../../data/thunks';
 import { DiscussionContext } from '../common/context';
@@ -20,7 +22,7 @@ import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
 import tourCheckpoints from '../tours/constants';
 import { selectTours } from '../tours/data/selectors';
-import { updateTourShowStatus } from '../tours/data/thunks';
+import { fetchDiscussionTours, updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
 import { discussionsPath } from '../utils';
 import {
@@ -68,44 +70,6 @@ export const useSidebarVisible = () => {
 
   return !hideSidebar;
 };
-
-export function useCourseDiscussionData(courseId) {
-  const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
-
-  useEffect(() => {
-    async function fetchBaseData() {
-      await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
-    }
-
-    fetchBaseData();
-  }, [courseId]);
-}
-
-export function useRedirectToThread(courseId, enableInContextSidebar) {
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
-
-  const redirectToThread = useSelector(
-    (state) => state.threads.redirectToThread,
-  );
-
-  useEffect(() => {
-    // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
-    // stored in redirectToThread
-    if (redirectToThread) {
-      dispatch(clearRedirect());
-      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[enableInContextSidebar ? 'topics' : 'my-posts'], {
-        courseId,
-        postId: redirectToThread.threadId,
-        topicId: redirectToThread.topicId,
-      })(location);
-      history.push(newLocation);
-    }
-  }, [redirectToThread]);
-}
 
 export function useIsOnDesktop() {
   const windowSize = useWindowSize();
@@ -260,3 +224,89 @@ export const useDebounce = (value, delay) => {
   );
   return debouncedValue;
 };
+
+export const useEnableInContextSidebar = () => {
+  const location = useLocation();
+
+  return Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
+};
+
+export const useCourseId = () => {
+  const { params: { courseId } } = useRouteMatch(BASE_PATH);
+
+  return courseId;
+};
+
+export const useCurrentPage = () => {
+  const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
+
+  return page;
+};
+
+export const usePostId = () => {
+  const { params: { postId } } = useRouteMatch(ALL_ROUTES);
+
+  return postId;
+};
+
+export const useLearnerUsername = () => {
+  const { params: { learnerUsername } } = useRouteMatch(ALL_ROUTES);
+
+  return learnerUsername;
+};
+
+export const useTopicId = () => {
+  const { params: { topicId } } = useRouteMatch(ALL_ROUTES);
+
+  return topicId;
+};
+
+export const useCategory = () => {
+  const { params: { category } } = useRouteMatch(ALL_ROUTES);
+
+  return category;
+};
+
+export function useRedirectToThread() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const courseId = useCourseId();
+  const enableInContextSidebar = useEnableInContextSidebar();
+
+  const redirectToThread = useSelector(
+    (state) => state.threads.redirectToThread,
+  );
+
+  useEffect(() => {
+    // After posting a new thread we'd like to redirect users to it, the topic and post id are temporarily
+    // stored in redirectToThread
+    if (redirectToThread) {
+      dispatch(clearRedirect());
+      const newLocation = discussionsPath(Routes.COMMENTS.PAGES[enableInContextSidebar ? 'topics' : 'my-posts'], {
+        courseId,
+        postId: redirectToThread.threadId,
+        topicId: redirectToThread.topicId,
+      })(location);
+      history.push(newLocation);
+    }
+  }, [redirectToThread]);
+}
+
+export function useCourseDiscussionData() {
+  const dispatch = useDispatch();
+  const courseId = useCourseId();
+  const { authenticatedUser } = useContext(AppContext);
+
+  useEffect(() => {
+    async function fetchBaseData() {
+      await Promise.all([
+        dispatch(fetchCourseConfig(courseId)),
+        dispatch(fetchCourseBlocks(courseId, authenticatedUser.username)),
+        dispatch(fetchDiscussionTours()),
+      ]);
+    }
+
+    fetchBaseData();
+  }, [courseId]);
+}
