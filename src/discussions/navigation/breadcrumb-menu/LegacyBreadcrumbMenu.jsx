@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
 import { useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
 import {
@@ -15,12 +15,10 @@ import BreadcrumbDropdown from './BreadcrumbDropdown';
 
 const LegacyBreadcrumbMenu = () => {
   const {
-    params: {
-      courseId,
-      category,
-      topicId: currentTopicId,
-    },
-  } = useRouteMatch([Routes.TOPICS.CATEGORY, Routes.TOPICS.TOPIC]);
+    courseId,
+    category,
+    topicId: currentTopicId,
+  } = useParams();
   const currentTopic = useSelector(selectTopic(currentTopicId));
   const currentCategory = category || currentTopic?.categoryId;
   const decodedCurrentCategory = String(currentCategory).replace('%23', '#');

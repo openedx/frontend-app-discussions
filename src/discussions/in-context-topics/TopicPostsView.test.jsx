@@ -4,7 +4,9 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
-import { generatePath, MemoryRouter, Route } from 'react-router';
+import {
+  generatePath, MemoryRouter, Route, Routes, useLocation,
+} from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
@@ -12,7 +14,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { PostActionsBar } from '../../components';
-import { Routes } from '../../data/constants';
+import { Routes as ROUTES } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { DiscussionContext } from '../common/context';
@@ -35,16 +37,21 @@ let axiosMock;
 let lastLocation;
 let container;
 
+const LocationComponent = () => {
+  lastLocation = useLocation();
+  return null;
+};
+
 async function renderComponent({ topicId, category } = { }) {
   let path = `/${courseId}/topics`;
   if (topicId) {
-    path = generatePath(Routes.POSTS.PATH, { courseId, topicId });
+    path = generatePath(ROUTES.POSTS.PATH, { courseId, topicId });
   } else if (category) {
-    path = generatePath(Routes.TOPICS.CATEGORY, { courseId, category });
+    path = generatePath(ROUTES.TOPICS.CATEGORY, { courseId, category });
   }
   const wrapper = await render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider value={{
           courseId,
           topicId,
@@ -53,19 +60,36 @@ async function renderComponent({ topicId, category } = { }) {
         }}
         >
           <MemoryRouter initialEntries={[path]}>
-            <Route exact path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}>
-              <TopicPostsView />
-            </Route>
-            <Route exact path={[Routes.TOPICS.ALL]}>
-              <PostActionsBar />
-              <TopicsView />
-            </Route>
-            <Route
-              render={({ location }) => {
-                lastLocation = location;
-                return null;
-              }}
-            />
+            <Routes>
+              <Route
+                path={ROUTES.POSTS.PATH}
+                element={(
+                  <>
+                    <TopicPostsView />
+                    <LocationComponent />
+                  </>
+                )}
+              />
+              <Route
+                path={ROUTES.TOPICS.CATEGORY}
+                element={(
+                  <>
+                    <TopicPostsView />
+                    <LocationComponent />
+                  </>
+                )}
+              />
+              <Route
+                path={ROUTES.TOPICS.ALL}
+                element={(
+                  <>
+                    <PostActionsBar />
+                    <TopicsView />
+                    <LocationComponent />
+                  </>
+                )}
+              />
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>

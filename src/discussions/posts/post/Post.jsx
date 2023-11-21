@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { matchPath, useLocation, useNavigate } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { ContentActions } from '../../../data/constants';
+import { ContentActions, Routes } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
@@ -19,6 +19,7 @@ import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
 import { selectModerationSettings, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
+import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import ClosePostReasonModal from './ClosePostReasonModal';
@@ -35,7 +36,7 @@ const Post = ({ handleAddResponseButton }) => {
   } = useSelector(selectThread(postId));
   const intl = useIntl();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const courseId = useSelector((state) => state.config.id);
   const topic = useSelector(selectTopic(topicId));
@@ -49,9 +50,17 @@ const Post = ({ handleAddResponseButton }) => {
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
   const handleDeleteConfirmation = useCallback(async () => {
+    const isTopicCategoryPostsPage = Boolean(
+      matchPath({ path: Routes.TOPICS.CATEGORY_POST }, location.pathname)
+      || matchPath({ path: Routes.TOPICS.TOPIC_POST }, location.pathname),
+    );
+
+    let basePath = truncatePath(location.pathname);
+    if (isTopicCategoryPostsPage) { basePath = truncatePath(basePath); }
+
     await dispatch(removeThread(postId));
-    history.push({
-      pathname: '.',
+    navigate({
+      pathname: basePath,
       search: enableInContextSidebar && '?inContextSidebar',
     });
     hideDeleteConfirmation();
@@ -62,7 +71,7 @@ const Post = ({ handleAddResponseButton }) => {
     hideReportConfirmation();
   }, [abuseFlagged, postId, hideReportConfirmation]);
 
-  const handlePostContentEdit = useCallback(() => history.push({
+  const handlePostContentEdit = useCallback(() => navigate({
     ...location,
     pathname: `${location.pathname}/edit`,
   }), [location.pathname]);

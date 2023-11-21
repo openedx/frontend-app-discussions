@@ -4,14 +4,14 @@ import React, { lazy, Suspense, useRef } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
-  Route, Switch, useLocation, useRouteMatch,
-} from 'react-router';
+  matchPath, Route, Routes, useLocation, useMatch,
+} from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import { selectCourseTabs } from '../../components/NavigationBar/data/selectors';
-import { ALL_ROUTES, DiscussionProvider, Routes } from '../../data/constants';
+import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useShowLearnersTab, useSidebarVisible,
@@ -40,8 +40,10 @@ const DiscussionsHome = () => {
   const provider = useSelector(selectDiscussionProvider);
   const enableInContext = useSelector(selectEnableInContext);
   const { courseNumber, courseTitle, org } = useSelector(selectCourseTabs);
-  const { params: { page } } = useRouteMatch(`${Routes.COMMENTS.PAGE}?`);
-  const { params } = useRouteMatch(ALL_ROUTES);
+  const pageParams = useMatch(ROUTES.COMMENTS.PAGE)?.params;
+  const page = pageParams?.page || null;
+  const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
+  const { params } = useMatch(matchPattern);
   const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
@@ -95,12 +97,24 @@ const DiscussionsHome = () => {
             <DiscussionsRestrictionBanner />
           </div>
           {provider === DiscussionProvider.LEGACY && (
-          <Suspense fallback={(<Spinner />)}>
-            <Route
-              path={[Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-              component={LegacyBreadcrumbMenu}
-            />
-          </Suspense>
+            <Suspense fallback={(<Spinner />)}>
+              <Routes>
+                {[
+                  ROUTES.TOPICS.CATEGORY,
+                  ROUTES.TOPICS.CATEGORY_POST,
+                  ROUTES.TOPICS.CATEGORY_POST_EDIT,
+                  ROUTES.TOPICS.TOPIC,
+                  ROUTES.TOPICS.TOPIC_POST,
+                  ROUTES.TOPICS.TOPIC_POST_EDIT,
+                ].map((route) => (
+                  <Route
+                    key={route}
+                    path={route}
+                    element={<LegacyBreadcrumbMenu />}
+                  />
+                ))}
+              </Routes>
+            </Suspense>
           )}
           <div className="d-flex flex-row position-relative">
             <Suspense fallback={(<Spinner />)}>
@@ -112,21 +126,29 @@ const DiscussionsHome = () => {
               </Suspense>
             )}
             {!displayContentArea && (
-            <Switch>
-              <Route
-                path={Routes.TOPICS.PATH}
-                component={(enableInContext || enableInContextSidebar) ? InContextEmptyTopics : EmptyTopics}
-              />
-              <Route
-                path={Routes.POSTS.MY_POSTS}
-                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyMyPosts} />}
-              />
-              <Route
-                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
-                render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
-              />
-              {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />}
-            </Switch>
+              <Routes>
+                <>
+                  {ROUTES.TOPICS.PATH.map(path => (
+                    <Route
+                      key={path}
+                      path={path}
+                      element={(enableInContext || enableInContextSidebar) ? <InContextEmptyTopics /> : <EmptyTopics />}
+                    />
+                  ))}
+                  <Route
+                    path={ROUTES.POSTS.MY_POSTS}
+                    element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
+                  />
+                  {[ROUTES.POSTS.PATH, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
+                    <Route
+                      key={route}
+                      path={route}
+                      element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
+                    />
+                  ))}
+                  {isRedirectToLearners && <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />}
+                </>
+              </Routes>
             )}
           </div>
           {!enableInContextSidebar && (

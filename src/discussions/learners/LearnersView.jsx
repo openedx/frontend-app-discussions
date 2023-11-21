@@ -2,16 +2,17 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Redirect, useLocation, useParams,
-} from 'react-router';
+  Navigate, useLocation, useParams,
+} from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
-import { RequestStatus, Routes } from '../../data/constants';
+import { RequestStatus } from '../../data/constants';
 import { selectConfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
 import NoResults from '../posts/NoResults';
+import { truncatePath } from '../utils';
 import {
   learnersLoadingStatus,
   selectAllLearners,
@@ -84,12 +85,9 @@ const LearnersView = () => {
       )}
       <div className="list-group list-group-flush learner" role="list">
         {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
-        <Redirect
-          to={{
-            ...location,
-            pathname: Routes.DISCUSSIONS.PATH,
-          }}
-        />
+          <Navigate
+            to={`${truncatePath(location.pathname)}`}
+          />
         )}
         {renderLearnersList}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
