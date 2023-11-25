@@ -9,7 +9,7 @@ export const getDiscussionTourUrl = () => `${getConfig().LMS_BASE_URL}/api/user_
  * This function makes an HTTP GET request to the API to retrieve a list of tours for the authenticated user.
  * @returns {Promise} - A promise that resolves to the API response data.
  */
-export async function getDiscssionTours() {
+export async function getDiscussionTours() {
   const { data } = await getAuthenticatedHttpClient()
     .get(getDiscussionTourUrl());
   return data;

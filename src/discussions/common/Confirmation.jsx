@@ -11,8 +11,8 @@ const Confirmation = ({
   title,
   description,
   onClose,
-  comfirmAction,
-  closeButtonVaraint,
+  confirmAction,
+  closeButtonVariant,
   confirmButtonVariant,
   confirmButtonText,
 }) => {
@@ -30,10 +30,10 @@ const Confirmation = ({
       </ModalDialog.Body>
       <ModalDialog.Footer>
         <ActionRow>
-          <ModalDialog.CloseButton variant={closeButtonVaraint}>
+          <ModalDialog.CloseButton variant={closeButtonVariant}>
             {intl.formatMessage(messages.confirmationCancel)}
           </ModalDialog.CloseButton>
-          <Button variant={confirmButtonVariant} onClick={comfirmAction}>
+          <Button variant={confirmButtonVariant} onClick={confirmAction}>
             { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
           </Button>
         </ActionRow>
@@ -45,16 +45,16 @@ const Confirmation = ({
 Confirmation.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  comfirmAction: PropTypes.func.isRequired,
+  confirmAction: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  closeButtonVaraint: PropTypes.string,
+  closeButtonVariant: PropTypes.string,
   confirmButtonVariant: PropTypes.string,
   confirmButtonText: PropTypes.string,
 };
 
 Confirmation.defaultProps = {
-  closeButtonVaraint: 'default',
+  closeButtonVariant: 'default',
   confirmButtonVariant: 'primary',
   confirmButtonText: '',
 };

@@ -68,7 +68,7 @@ const ActionsDropdown = ({
         disabled={disabled}
         size={iconSize}
         ref={buttonRef}
-        iconClassNames={dropDownIconSize ? 'dropdown-icon-dimentions' : ''}
+        iconClassNames={dropDownIconSize ? 'dropdown-icon-dimensions' : ''}
       />
       <div className="actions-dropdown">
         <ModalPopup

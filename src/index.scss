@@ -1,7 +1,7 @@
-@import "@edx/brand/paragon/fonts.scss";
-@import "@edx/brand/paragon/variables.scss";
-@import "@edx/paragon/scss/core/core.scss";
-@import "@edx/brand/paragon/overrides.scss";
+@import "~@edx/brand/paragon/fonts.scss";
+@import "~@edx/brand/paragon/variables.scss";
+@import "~@edx/paragon/scss/core/core.scss";
+@import "~@edx/brand/paragon/overrides.scss";
 
 @import "~@edx/frontend-component-footer/dist/footer";
 @import "~@edx/frontend-component-header/dist/index";
@@ -65,26 +65,22 @@ $fa-font-path: "~font-awesome/fonts";
   font-style: normal !important;
 }
 
-.font-family-inter {
-  font-family: "Inter";
-}
-
-.post-footer-icon-dimentions {
+.post-footer-icon-dimensions {
   width: 32px !important;
   height: 32px !important;
 }
 
-.like-icon-dimentions {
+.like-icon-dimensions {
   width: 21px !important;
   height: 23px !important;
 }
 
-.follow-icon-dimentions {
+.follow-icon-dimensions {
   width: 21px !important;
   height: 24px !important;
 }
 
-.dropdown-icon-dimentions {
+.dropdown-icon-dimensions {
   width: 20px !important;
   height: 21px !important;
 }
@@ -278,7 +274,6 @@ header {
 
 header {
   line-height: 28px;
-  font-family: Inter, Helvetica Neue, Arial, sans-serif;
   font-size: 18px !important;
 
   .user-dropdown {
@@ -314,12 +309,10 @@ header {
 
 #courseTabsNavigation {
   font-size: 18px !important;
-  font-family: Inter, Helvetica Neue, Arial, sans-serif;
   z-index: 3;
   background-color: #fff;
 
   .container-xl {
-    padding-left: 31px;
     font-size: 1.125rem;
 
     .nav {
@@ -469,7 +462,7 @@ header {
   }
 }
 
-.spinner-dimentions {
+.spinner-dimensions {
   height: 24px !important;
   width: 24px !important;
 }
@@ -479,7 +472,6 @@ header {
 }
 
 .font-style {
-  font-family: "Inter";
   font-style: normal;
 }
 

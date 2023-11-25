@@ -104,10 +104,10 @@ describe('Hooks', () => {
 
   describe('useUserPostingEnabled', () => {
     const ComponentWithHook = () => {
-      const isUserPrivilagedInPostingRestriction = useUserPostingEnabled();
+      const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
       return (
         <div>
-          {String(isUserPrivilagedInPostingRestriction)}
+          {String(isUserPrivilegedInPostingRestriction)}
         </div>
       );
     };

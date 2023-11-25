@@ -118,7 +118,7 @@ describe('PostEditor', () => {
       expect(screen.queryAllByRole('radio')).toHaveLength(2);
       // 2 categories with 4 subcategories each
       expect(screen.queryAllByText(/category-\d-topic \d/)).toHaveLength(8);
-      // 3 non courseare topics
+      // 3 non courseware topics
       expect(screen.queryAllByText(/ncw-topic \d/)).toHaveLength(3);
       expect(screen.queryByText('cohort', { exact: false })).not.toBeInTheDocument();
       expect(screen.queryByText('Post anonymously')).not.toBeInTheDocument();
@@ -199,7 +199,7 @@ describe('PostEditor', () => {
       await renderComponent();
       // Initially the user can't select a cohort
       expect(screen.queryByRole('combobox', { name: /cohort visibility/i })).not.toBeInTheDocument();
-      // All coursweare topics are divided
+      // All courseware topics are divided
       [1, 2].forEach(catId => {
         [1, 2, 3, 4].forEach((topicId) => {
           act(() => {
