@@ -51,13 +51,12 @@ const AuthorLabel = ({
 
   const authorName = (
     <span
-      className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
+      className={classNames('mr-1.5 font-size-14 font-style font-weight-500 author-name', {
         'text-gray-700': isRetiredUser,
         'text-primary-500': !authorLabelMessage && !isRetiredUser,
       })}
       role="heading"
       aria-level="2"
-      style={{ lineHeight: 1, wordBreak: 'break-all' }}
     >
       {isRetiredUser ? '[Deactivated]' : author}
     </span>

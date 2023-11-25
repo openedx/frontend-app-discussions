@@ -345,10 +345,6 @@ header {
       }
     }
   }
-
-  button {
-    font-family: inherit;
-  }
 }
 
 .breadcrumb-menu {
@@ -496,6 +492,7 @@ header {
 
 .comment-line {
   width: calc(100% - 180px);
+  line-height: 1;
 }
 
 .post-preview,
@@ -521,4 +518,9 @@ header {
 .font-xl {
   font-size: 18px;
   line-height: 28px;
+}
+
+.author-name {
+  line-height: 1;
+  word-break: break-all;
 }
