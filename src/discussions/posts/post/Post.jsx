@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { matchPath, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { ContentActions, Routes } from '../../../data/constants';
+import { ContentActions } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
@@ -50,13 +50,7 @@ const Post = ({ handleAddResponseButton }) => {
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
   const handleDeleteConfirmation = useCallback(async () => {
-    const isTopicCategoryPostsPage = Boolean(
-      matchPath({ path: Routes.TOPICS.CATEGORY_POST }, location.pathname)
-      || matchPath({ path: Routes.TOPICS.TOPIC_POST }, location.pathname),
-    );
-
-    let basePath = truncatePath(location.pathname);
-    if (isTopicCategoryPostsPage) { basePath = truncatePath(basePath); }
+    const basePath = truncatePath(location.pathname);
 
     await dispatch(removeThread(postId));
     navigate({

@@ -10,7 +10,7 @@ import { ArrowBack } from '@edx/paragon/icons';
 
 import Spinner from '../../components/Spinner';
 import {
-  EndorsementStatus, PAGES, PostsPages, ThreadType,
+  EndorsementStatus, PostsPages, ThreadType,
 } from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
@@ -18,7 +18,7 @@ import { useIsOnDesktop } from '../data/hooks';
 import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
 import { fetchThread } from '../posts/data/thunks';
-import { discussionsPath, truncatePath } from '../utils';
+import { discussionsPath } from '../utils';
 import { ResponseEditor } from './comments/comment';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
@@ -42,10 +42,6 @@ const PostCommentsView = () => {
   const redirectUrl = discussionsPath(PostsPages[page], {
     courseId, learnerUsername, category, topicId,
   })(location);
-
-  if (page === PAGES.TOPICS || page === PAGES.CATEGORY) {
-    redirectUrl.pathname = truncatePath(redirectUrl.pathname);
-  }
 
   useEffect(() => {
     if (!threadId) {

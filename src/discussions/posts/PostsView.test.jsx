@@ -68,19 +68,16 @@ async function renderComponent({
           }}
           >
             <Routes>
-              <Route path={ROUTES.POSTS.MY_POSTS} element={<PostsView />} />
-              <Route
-                path={ROUTES.POSTS.PATH}
-                element={<PostsView />}
-              />
-              <Route
-                path={ROUTES.POSTS.ALL_POSTS}
-                element={<PostsView />}
-              />
-              <Route
-                path={ROUTES.TOPICS.CATEGORY}
-                element={<PostsView />}
-              />
+              {
+                [
+                  ROUTES.POSTS.PATH,
+                  ROUTES.POSTS.MY_POSTS,
+                  ROUTES.POSTS.ALL_POSTS,
+                  ROUTES.TOPICS.CATEGORY,
+                ].map((route) => (
+                  <Route key={route} path={route} element={<PostsView />} />
+                ))
+              }
             </Routes>
           </DiscussionContext.Provider>
         </MemoryRouter>

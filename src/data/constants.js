@@ -144,7 +144,7 @@ export const Routes = {
     PATH: BASE_PATH,
   },
   LEARNERS: {
-    PATH: `${BASE_PATH}/learners`,
+    PATH: `${BASE_PATH}/learners/:learnerUsername?`,
     POSTS: `${BASE_PATH}/learners/:learnerUsername/posts/:postId?`,
     POSTS_EDIT: `${BASE_PATH}/learners/:learnerUsername/posts/:postId/edit`,
   },
@@ -165,19 +165,19 @@ export const Routes = {
   },
   COMMENTS: {
     PATH: [
-      `${BASE_PATH}/category/:category/posts/:postId`,
-      `${BASE_PATH}/topics/:topicId/posts/:postId`,
+      `${BASE_PATH}/category/:category/posts/:postId?`,
+      `${BASE_PATH}/topics/:topicId/posts/:postId?`,
       `${BASE_PATH}/posts/:postId`,
       `${BASE_PATH}/my-posts/:postId`,
-      `${BASE_PATH}/learners/:learnerUsername/posts/:postId`,
+      `${BASE_PATH}/learners/:learnerUsername/posts/:postId?`,
     ],
     PAGE: `${BASE_PATH}/:page/*`,
     PAGES: {
-      category: `${BASE_PATH}/category/:category/posts/:postId`,
-      topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
+      category: `${BASE_PATH}/category/:category/posts/:postId?`,
+      topics: `${BASE_PATH}/topics/:topicId/posts/:postId?`,
       posts: `${BASE_PATH}/posts/:postId`,
       'my-posts': `${BASE_PATH}/my-posts/:postId`,
-      learners: `${BASE_PATH}/learners/:learnerUsername/posts/:postId`,
+      learners: `${BASE_PATH}/learners/:learnerUsername/posts/:postId?`,
     },
   },
   TOPICS: {
@@ -188,10 +188,10 @@ export const Routes = {
     ],
     ALL: `${BASE_PATH}/topics`,
     CATEGORY: `${BASE_PATH}/category/:category`,
-    CATEGORY_POST: `${BASE_PATH}/category/:category/posts/:postId`,
+    CATEGORY_POST: `${BASE_PATH}/category/:category/posts/:postId?`,
     CATEGORY_POST_EDIT: `${BASE_PATH}/category/:category/posts/:postId/edit`,
     TOPIC: `${BASE_PATH}/topics/:topicId`,
-    TOPIC_POST: `${BASE_PATH}/topics/:topicId/posts/:postId`,
+    TOPIC_POST: `${BASE_PATH}/topics/:topicId/posts/:postId?`,
     TOPIC_POST_EDIT: `${BASE_PATH}/topics/:topicId/posts/:postId/edit`,
   },
 };

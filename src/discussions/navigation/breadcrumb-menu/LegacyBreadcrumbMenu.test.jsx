@@ -31,14 +31,18 @@ function renderComponent(path) {
       <AppProvider store={store} wrapWithRouter={false}>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
-            <Route
-              path={ROUTES.POSTS.PATH}
-              element={<LegacyBreadcrumbMenu />}
-            />
-            <Route
-              path={ROUTES.TOPICS.CATEGORY}
-              element={<LegacyBreadcrumbMenu />}
-            />
+            {
+              [
+                ROUTES.POSTS.PATH,
+                ROUTES.TOPICS.CATEGORY,
+              ].map((route) => (
+                <Route
+                  key={route}
+                  path={route}
+                  element={<LegacyBreadcrumbMenu />}
+                />
+              ))
+            }
           </Routes>
         </MemoryRouter>
       </AppProvider>

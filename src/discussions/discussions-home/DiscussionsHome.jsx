@@ -128,10 +128,10 @@ const DiscussionsHome = () => {
             {!displayContentArea && (
               <Routes>
                 <>
-                  {ROUTES.TOPICS.PATH.map(path => (
+                  {ROUTES.TOPICS.PATH.map(route => (
                     <Route
-                      key={path}
-                      path={path}
+                      key={route}
+                      path={`${route}/*`}
                       element={(enableInContext || enableInContextSidebar) ? <InContextEmptyTopics /> : <EmptyTopics />}
                     />
                   ))}
@@ -139,7 +139,7 @@ const DiscussionsHome = () => {
                     path={ROUTES.POSTS.MY_POSTS}
                     element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
                   />
-                  {[ROUTES.POSTS.PATH, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
+                  {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
                     <Route
                       key={route}
                       path={route}

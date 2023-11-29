@@ -90,14 +90,10 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
             ROUTES.TOPICS.CATEGORY,
             ROUTES.TOPICS.CATEGORY_POST,
             ROUTES.TOPICS.CATEGORY_POST_EDIT,
+            ROUTES.TOPICS.TOPIC,
+            ROUTES.TOPICS.TOPIC_POST,
+            ROUTES.TOPICS.TOPIC_POST_EDIT,
           ].map((route) => (
-            <Route
-              key={route}
-              path={route}
-              element={<PostsView />}
-            />
-          ))}
-          {[ROUTES.TOPICS.TOPIC, ROUTES.TOPICS.TOPIC_POST, ROUTES.TOPICS.TOPIC_POST_EDIT].map((route) => (
             <Route
               key={route}
               path={route}
@@ -116,7 +112,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
             <Route path={ROUTES.LEARNERS.PATH} element={<LearnersView />} />
           )}
           {configStatus === RequestStatus.SUCCESSFUL && (
-            <Route path={ROUTES.DISCUSSIONS.PATH} element={<Navigate to="posts" />} />
+            <Route path={`${ROUTES.DISCUSSIONS.PATH}/*`} element={<Navigate to="posts" />} />
           )}
         </Routes>
       </Suspense>

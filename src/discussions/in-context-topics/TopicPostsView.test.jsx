@@ -61,24 +61,23 @@ async function renderComponent({ topicId, category } = { }) {
         >
           <MemoryRouter initialEntries={[path]}>
             <Routes>
-              <Route
-                path={ROUTES.POSTS.PATH}
-                element={(
-                  <>
-                    <TopicPostsView />
-                    <LocationComponent />
-                  </>
-                )}
-              />
-              <Route
-                path={ROUTES.TOPICS.CATEGORY}
-                element={(
-                  <>
-                    <TopicPostsView />
-                    <LocationComponent />
-                  </>
-                )}
-              />
+              {
+                [
+                  ROUTES.POSTS.PATH,
+                  ROUTES.TOPICS.CATEGORY,
+                ].map((route) => (
+                  <Route
+                    key={route}
+                    path={route}
+                    element={(
+                      <>
+                        <TopicPostsView />
+                        <LocationComponent />
+                      </>
+                    )}
+                  />
+                ))
+              }
               <Route
                 path={ROUTES.TOPICS.ALL}
                 element={(
