@@ -213,7 +213,7 @@ export const PAGES = {
 };
 
 export const ALL_ROUTES = []
-  .concat([Routes.TOPICS.CATEGORY_POST, Routes.TOPICS.CATEGORY])
+  .concat([Routes.TOPICS.CATEGORY_POST, `${Routes.TOPICS.CATEGORY}?`])
   .concat(Routes.COMMENTS.PATH)
   .concat(Routes.TOPICS.PATH)
   .concat(Routes.POSTS.EDIT_POST)
