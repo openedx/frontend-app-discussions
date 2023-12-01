@@ -391,27 +391,24 @@ describe('ThreadView', () => {
       assertLastUpdateData({ edit_reason_code: 'reason-1' });
     });
 
-    it.each([true, false])(
-      'should reopen the post directly when reason codes enabled=%s',
-      async () => {
-        await setupCourseConfig();
-        renderComponent(closedPostId);
+    it('should reopen the post', async () => {
+      await setupCourseConfig();
+      renderComponent(closedPostId);
 
-        const post = screen.getByTestId('post-thread-2');
-        const hoverCard = within(post).getByTestId('hover-card-thread-2');
-        await act(async () => {
-          fireEvent.click(
-            within(hoverCard).getByRole('button', { name: /actions menu/i }),
-          );
-        });
-        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /reopen/i }));
-        });
-        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
-        assertLastUpdateData({ closed: false });
-      },
-    );
+      const post = screen.getByTestId('post-thread-2');
+      const hoverCard = within(post).getByTestId('hover-card-thread-2');
+      await act(async () => {
+        fireEvent.click(
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
+        );
+      });
+      expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /reopen/i }));
+      });
+      expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
+      assertLastUpdateData({ closed: false });
+    });
 
     it('should show the editor if the post is edited', async () => {
       await setupCourseConfig(false);
