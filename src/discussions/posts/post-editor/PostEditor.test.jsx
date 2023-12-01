@@ -292,7 +292,6 @@ describe('PostEditor', () => {
         config: {
           provider: 'legacy',
           hasModerationPrivileges: true,
-          reasonCodesEnabled: true,
           editReasons: [
             {
               code: 'reason-1',
