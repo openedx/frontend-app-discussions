@@ -17,7 +17,7 @@ import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
-import { selectModerationSettings, selectUserHasModerationPrivileges } from '../../data/selectors';
+import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
@@ -42,7 +42,6 @@ const Post = ({ handleAddResponseButton }) => {
   const topic = useSelector(selectTopic(topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(topicId));
-  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
@@ -73,12 +72,10 @@ const Post = ({ handleAddResponseButton }) => {
   const handlePostClose = useCallback(() => {
     if (closed) {
       dispatch(updateExistingThread(postId, { closed: false }));
-    } else if (reasonCodesEnabled) {
-      showClosePostModal();
     } else {
-      dispatch(updateExistingThread(postId, { closed: true }));
+      showClosePostModal();
     }
-  }, [closed, postId, reasonCodesEnabled, showClosePostModal]);
+  }, [closed, postId, showClosePostModal]);
 
   const handlePostCopyLink = useCallback(() => {
     const postURL = new URL(`${getConfig().PUBLIC_PATH}${courseId}/posts/${postId}`, window.location.origin);

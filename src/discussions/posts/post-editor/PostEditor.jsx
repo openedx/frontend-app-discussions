@@ -75,12 +75,12 @@ const PostEditor = ({
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const settings = useSelector(selectDivisionSettings);
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
-  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+  const { editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
 
-  const canDisplayEditReason = (reasonCodesEnabled && editExisting
+  const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
     && post?.author !== authenticatedUser.username
   );

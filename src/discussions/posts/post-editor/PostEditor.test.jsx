@@ -268,7 +268,18 @@ describe('PostEditor', () => {
 
     test('cancel posting of existing post', async () => {
       const threadId = 'thread-1';
-      await setupData();
+      await setupData({
+        editReasons: [
+          {
+            code: 'reason-1',
+            label: 'Reason 1',
+          },
+          {
+            code: 'reason-2',
+            label: 'Reason 2',
+          },
+        ],
+      });
       await act(async () => {
         axiosMock.onGet(`${threadsApiUrl}${threadId}/`).reply(200, Factory.build('thread'));
         await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
@@ -294,7 +305,6 @@ describe('PostEditor', () => {
         config: {
           provider: 'legacy',
           hasModerationPrivileges: true,
-          reasonCodesEnabled: true,
           editReasons: [
             {
               code: 'reason-1',

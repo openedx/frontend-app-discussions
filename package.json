@@ -34,10 +34,10 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
-    "@edx/frontend-component-footer": "12.5.1",
-    "@edx/frontend-component-header": "4.9.1",
+    "@edx/frontend-component-footer": "12.6.0",
+    "@edx/frontend-component-header": "4.10.1",
     "@edx/frontend-platform": "5.6.1",
-    "@edx/paragon": "20.44.0",
+    "@edx/paragon": "20.46.3",
     "@reduxjs/toolkit": "1.8.0",
     "@tinymce/tinymce-react": "3.13.1",
     "babel-polyfill": "6.26.0",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
-    "@edx/frontend-build": "13.0.5",
+    "@edx/frontend-build": "13.0.8",
     "@edx/reactifex": "1.1.0",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "12.1.5",
@@ -72,6 +72,6 @@
     "glob": "7.2.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "rosie": "2.1.0"
+    "rosie": "2.1.1"
   }
 }

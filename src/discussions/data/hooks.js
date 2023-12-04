@@ -32,7 +32,6 @@ import {
   selectIsCourseStaff,
   selectIsPostingEnabled,
   selectLearnersTabEnabled,
-  selectModerationSettings,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -163,13 +162,12 @@ export const useAlertBannerVisible = (
 ) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
-  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === author;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
   const canSeeReportedBanner = abuseFlagged;
 
   return (
-    (reasonCodesEnabled && canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
+    (canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
   );
 };
 
