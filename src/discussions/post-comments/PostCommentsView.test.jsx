@@ -465,6 +465,20 @@ describe('ThreadView', () => {
       assertLastUpdateData({ pinned: false });
     });
 
+    it('should allow copying a link to the post', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      const post = await screen.findByTestId('post-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      Object.assign(navigator, { clipboard: { writeText: jest.fn() } });
+      await act(async () => {
+        fireEvent.click(within(hoverCard).getByRole('button', { name: /actions menu/i }));
+      });
+      await act(async () => {
+        fireEvent.click(within(hoverCard).getByRole('button', { name: /copy link/i }));
+      });
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`http://localhost/${courseId}/posts/${discussionPostId}`);
+    });
+
     it('should allow reporting the post', async () => {
       await waitFor(() => renderComponent(discussionPostId));
       const post = await screen.findByTestId('post-thread-1');

@@ -1,6 +1,9 @@
 import { getConfig } from '@edx/frontend-platform';
 
 export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
+export const getFullUrl = (path) => (
+  new URL(`${getConfig().PUBLIC_PATH.replace(/\/$/, '')}/${path}`, window.location.origin).href
+);
 
 /**
  * Enum for thread types.
@@ -137,7 +140,7 @@ export const DiscussionProvider = {
   OPEN_EDX: 'openedx',
 };
 
-const BASE_PATH = `${getConfig().PUBLIC_PATH}:courseId`;
+const BASE_PATH = '/:courseId';
 
 export const Routes = {
   DISCUSSIONS: {

@@ -11,7 +11,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { ContentActions } from '../../../data/constants';
+import { ContentActions, getFullUrl } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
 import { DiscussionContext } from '../../common/context';
@@ -37,7 +37,7 @@ const Post = ({ handleAddResponseButton }) => {
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
-  const courseId = useSelector((state) => state.config.id);
+  const { courseId } = useContext(DiscussionContext);
   const topic = useSelector(selectTopic(topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(topicId));
@@ -78,8 +78,7 @@ const Post = ({ handleAddResponseButton }) => {
   }, [closed, postId, reasonCodesEnabled, showClosePostModal]);
 
   const handlePostCopyLink = useCallback(() => {
-    const postURL = new URL(`${getConfig().PUBLIC_PATH}${courseId}/posts/${postId}`, window.location.origin);
-    navigator.clipboard.writeText(postURL.href);
+    navigator.clipboard.writeText(getFullUrl(`${courseId}/posts/${postId}`));
   }, [window.location.origin, postId, courseId]);
 
   const handlePostPin = useCallback(() => dispatch(
