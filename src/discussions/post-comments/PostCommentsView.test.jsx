@@ -3,7 +3,9 @@ import {
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import {
+  MemoryRouter, Route, Routes, useLocation,
+} from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
@@ -106,22 +108,28 @@ async function setupCourseConfig() {
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 }
 
-function renderComponent(postId, isClosed = false) {
+const LocationComponent = () => {
+  testLocation = useLocation();
+  return null;
+};
+
+function renderComponent(postId, isClosed = false, page = 'posts', path = `/${courseId}/posts/${postId}`) {
   const wrapper = render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider
-          value={{ courseId, postId, isClosed }}
+          value={{
+            courseId, postId, page, isClosed, topicId: 'topic-id',
+          }}
         >
-          <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
+          <MemoryRouter initialEntries={[path]}>
             <DiscussionContent />
-            <Route
-              path="*"
-              render={({ location }) => {
-                testLocation = location;
-                return null;
-              }}
-            />
+            <Routes>
+              <Route
+                path="*"
+                element={<LocationComponent />}
+              />
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>
@@ -425,6 +433,28 @@ describe('ThreadView', () => {
         fireEvent.click(screen.getByRole('button', { name: /edit/i }));
       });
       expect(testLocation.pathname).toBe(`/${courseId}/posts/${discussionPostId}/edit`);
+    });
+
+    it('should show the editor if the post is edited on topics page', async () => {
+      await setupCourseConfig(false);
+      await waitFor(() => renderComponent(
+        discussionPostId,
+        false,
+        'topics',
+        `/${courseId}/topics/topic-id/posts/${discussionPostId}`,
+      ));
+
+      const post = await screen.findByTestId('post-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      await act(async () => {
+        fireEvent.click(
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
+        );
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+      });
+      expect(testLocation.pathname).toBe(`/${courseId}/topics/topic-id/posts/${discussionPostId}/edit`);
     });
 
     it('should allow pinning the post', async () => {

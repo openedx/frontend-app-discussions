@@ -4,7 +4,9 @@ import {
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation, useRouteMatch } from 'react-router';
+import {
+  matchPath, useLocation, useMatch, useNavigate,
+} from 'react-router-dom';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -52,16 +54,18 @@ export function useTotalTopicThreadCount() {
 }
 
 export const useSidebarVisible = () => {
+  const location = useLocation();
   const enableInContext = useSelector(selectEnableInContext);
-  const isViewingTopics = useRouteMatch(Routes.TOPICS.ALL);
-  const isViewingLearners = useRouteMatch(Routes.LEARNERS.PATH);
+  const isViewingTopics = useMatch(Routes.TOPICS.ALL);
+  const isViewingLearners = useMatch(`${Routes.LEARNERS.PATH}/*`);
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
   const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
-  const isIncontextTopicsView = Boolean(useRouteMatch(Routes.TOPICS.PATH) && enableInContext);
-  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics?.isExact || isViewingLearners));
+  const matchInContextTopicView = Routes.TOPICS.PATH.find((route) => matchPath({ path: `${route}/*` }, location.pathname));
+  const isInContextTopicsView = Boolean(matchInContextTopicView && enableInContext);
+  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics || isViewingLearners));
 
-  if (isIncontextTopicsView) {
+  if (isInContextTopicsView) {
     return true;
   }
 
@@ -84,7 +88,7 @@ export function useCourseDiscussionData(courseId) {
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const redirectToThread = useSelector(
@@ -101,7 +105,7 @@ export function useRedirectToThread(courseId, enableInContextSidebar) {
         postId: redirectToThread.threadId,
         topicId: redirectToThread.topicId,
       })(location);
-      history.push(newLocation);
+      navigate({ ...newLocation });
     }
   }, [redirectToThread]);
 }

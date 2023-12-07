@@ -6,13 +6,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
-  Redirect, Route, Switch, useLocation,
-} from 'react-router';
+  Navigate, Route, Routes,
+} from 'react-router-dom';
 
 import { useWindowSize } from '@edx/paragon';
 
 import Spinner from '../../components/Spinner';
-import { RequestStatus, Routes } from '../../data/constants';
+import { RequestStatus, Routes as ROUTES } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
   useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
@@ -27,7 +27,6 @@ const PostsView = lazy(() => import('../posts/PostsView'));
 const LegacyTopicsView = lazy(() => import('../topics/TopicsView'));
 
 const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
-  const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -62,47 +61,60 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
       data-testid="sidebar"
     >
       <Suspense fallback={(<Spinner />)}>
-        <Switch>
+        <Routes>
           {enableInContext && !enableInContextSidebar && (
-          <Route
-            path={Routes.TOPICS.ALL}
-            component={InContextTopicsView}
-            exact
-          />
+            <Route
+              path={ROUTES.TOPICS.ALL}
+              element={<InContextTopicsView />}
+            />
           )}
           {enableInContext && !enableInContextSidebar && (
-          <Route
-            path={[
-              Routes.TOPICS.TOPIC,
-              Routes.TOPICS.CATEGORY,
-              Routes.TOPICS.TOPIC_POST,
-              Routes.TOPICS.TOPIC_POST_EDIT,
-            ]}
-            component={TopicPostsView}
-            exact
-          />
+            [
+              ROUTES.TOPICS.TOPIC,
+              ROUTES.TOPICS.CATEGORY,
+              ROUTES.TOPICS.TOPIC_POST,
+              ROUTES.TOPICS.TOPIC_POST_EDIT,
+            ].map((route) => (
+              <Route
+                key={route}
+                path={route}
+                element={<TopicPostsView />}
+              />
+            ))
           )}
-          <Route
-            path={[Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS, Routes.POSTS.PATH, Routes.TOPICS.CATEGORY]}
-            component={PostsView}
-          />
-          <Route path={Routes.TOPICS.PATH} component={LegacyTopicsView} />
+          {[
+            ROUTES.POSTS.ALL_POSTS,
+            ROUTES.POSTS.EDIT_ALL_POSTS,
+            ROUTES.POSTS.MY_POSTS,
+            ROUTES.POSTS.EDIT_MY_POSTS,
+            ROUTES.TOPICS.CATEGORY,
+            ROUTES.TOPICS.CATEGORY_POST,
+            ROUTES.TOPICS.CATEGORY_POST_EDIT,
+            ROUTES.TOPICS.TOPIC,
+            ROUTES.TOPICS.TOPIC_POST,
+            ROUTES.TOPICS.TOPIC_POST_EDIT,
+          ].map((route) => (
+            <Route
+              key={route}
+              path={route}
+              element={<PostsView />}
+            />
+          ))}
+          {ROUTES.TOPICS.PATH.map(path => (
+            <Route key={path} path={path} element={<LegacyTopicsView />} />
+          ))}
           {redirectToLearnersTab && (
-          <Route path={Routes.LEARNERS.POSTS} component={LearnerPostsView} />
+            [ROUTES.LEARNERS.POSTS, ROUTES.LEARNERS.POSTS_EDIT].map((route) => (
+              <Route key={route} path={route} element={<LearnerPostsView />} />
+            ))
           )}
           {redirectToLearnersTab && (
-          <Route path={Routes.LEARNERS.PATH} component={LearnersView} />
+            <Route path={ROUTES.LEARNERS.PATH} element={<LearnersView />} />
           )}
           {configStatus === RequestStatus.SUCCESSFUL && (
-          <Redirect
-            from={Routes.DISCUSSIONS.PATH}
-            to={{
-              ...location,
-              pathname: Routes.POSTS.ALL_POSTS,
-            }}
-          />
+            <Route path={`${ROUTES.DISCUSSIONS.PATH}/*`} element={<Navigate to="posts" />} />
           )}
-        </Switch>
+        </Routes>
       </Suspense>
     </div>
   );

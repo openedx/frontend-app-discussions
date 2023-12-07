@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
@@ -25,6 +25,7 @@ const PostLink = ({
   showDivider,
 }) => {
   const intl = useIntl();
+  const { search } = useLocation();
   const {
     courseId,
     postId: selectedPostId,
@@ -37,14 +38,14 @@ const PostLink = ({
     topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
     unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
   } = useSelector(selectThread(postId));
-  const linkUrl = discussionsPath(Routes.COMMENTS.PAGES[page], {
+  const { pathname } = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
     courseId,
     topicId,
     postId,
     category,
     learnerUsername,
-  });
+  })();
   const showAnsweredBadge = hasEndorsed && type === ThreadType.QUESTION;
   const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
   const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;
@@ -63,7 +64,7 @@ const PostLink = ({
             'border-bottom border-light-400': showDivider,
           })
         }
-      to={linkUrl}
+      to={`${pathname}${enableInContextSidebar ? search : ''}`}
       aria-current={checkIsSelected ? 'page' : undefined}
       role="option"
       tabIndex={(checkIsSelected || idx === 0) ? 0 : -1}

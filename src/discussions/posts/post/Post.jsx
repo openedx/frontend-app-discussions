@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -19,6 +19,7 @@ import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
+import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import ClosePostReasonModal from './ClosePostReasonModal';
@@ -35,7 +36,7 @@ const Post = ({ handleAddResponseButton }) => {
   } = useSelector(selectThread(postId));
   const intl = useIntl();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
   const topic = useSelector(selectTopic(topicId));
@@ -48,9 +49,11 @@ const Post = ({ handleAddResponseButton }) => {
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
   const handleDeleteConfirmation = useCallback(async () => {
+    const basePath = truncatePath(location.pathname);
+
     await dispatch(removeThread(postId));
-    history.push({
-      pathname: '.',
+    navigate({
+      pathname: basePath,
       search: enableInContextSidebar && '?inContextSidebar',
     });
     hideDeleteConfirmation();
@@ -61,7 +64,7 @@ const Post = ({ handleAddResponseButton }) => {
     hideReportConfirmation();
   }, [abuseFlagged, postId, hideReportConfirmation]);
 
-  const handlePostContentEdit = useCallback(() => history.push({
+  const handlePostContentEdit = useCallback(() => navigate({
     ...location,
     pathname: `${location.pathname}/edit`,
   }), [location.pathname]);

@@ -5,14 +5,14 @@ import {
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { getApiBaseUrl, Routes } from '../../../data/constants';
+import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { fetchCourseTopics } from '../../topics/data/thunks';
@@ -28,15 +28,22 @@ let axiosMock;
 function renderComponent(path) {
   render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <MemoryRouter initialEntries={[path]}>
-          <Route
-            path={[
-              Routes.POSTS.PATH,
-              Routes.TOPICS.CATEGORY,
-            ]}
-            component={LegacyBreadcrumbMenu}
-          />
+          <Routes>
+            {
+              [
+                ROUTES.POSTS.PATH,
+                ROUTES.TOPICS.CATEGORY,
+              ].map((route) => (
+                <Route
+                  key={route}
+                  path={route}
+                  element={<LegacyBreadcrumbMenu />}
+                />
+              ))
+            }
+          </Routes>
         </MemoryRouter>
       </AppProvider>
     </IntlProvider>,
