@@ -53,8 +53,8 @@
     "react-redux": "7.2.9",
     "react-router": "6.18.0",
     "react-router-dom": "6.18.0",
-    "redux": "4.1.2",
-    "regenerator-runtime": "0.13.9",
+    "redux": "4.2.1",
+    "regenerator-runtime": "0.14.0",
     "timeago.js": "4.0.2",
     "tinymce": "5.10.7",
     "yup": "0.31.1"
