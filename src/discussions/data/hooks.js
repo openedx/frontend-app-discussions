@@ -57,15 +57,15 @@ export const useSidebarVisible = () => {
   const location = useLocation();
   const enableInContext = useSelector(selectEnableInContext);
   const isViewingTopics = useMatch(Routes.TOPICS.ALL);
-  const isViewingLearners = useMatch(Routes.LEARNERS.PATH);
+  const isViewingLearners = useMatch(`${Routes.LEARNERS.PATH}/*`);
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
   const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
-  const matchIncontextTopicView = Routes.TOPICS.PATH.find((route) => matchPath({ path: route }, location.pathname));
-  const isIncontextTopicsView = Boolean(matchIncontextTopicView && enableInContext);
+  const matchInContextTopicView = Routes.TOPICS.PATH.find((route) => matchPath({ path: `${route}/*` }, location.pathname));
+  const isInContextTopicsView = Boolean(matchInContextTopicView && enableInContext);
   const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics || isViewingLearners));
 
-  if (isIncontextTopicsView) {
+  if (isInContextTopicsView) {
     return true;
   }
 

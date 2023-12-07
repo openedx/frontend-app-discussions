@@ -204,14 +204,6 @@ export const PostsPages = {
   learners: `${BASE_PATH}/learners/:learnerUsername/posts`,
 };
 
-export const PAGES = {
-  CATEGORY: 'category',
-  TOPICS: 'topics',
-  POSTS: 'posts',
-  'MY-POSTS': 'my-posts',
-  LEARNERS: 'learners',
-};
-
 export const ALL_ROUTES = []
   .concat([Routes.TOPICS.CATEGORY_POST, `${Routes.TOPICS.CATEGORY}?`])
   .concat(Routes.COMMENTS.PATH)
@@ -219,6 +211,6 @@ export const ALL_ROUTES = []
   .concat(Routes.POSTS.EDIT_POST)
   .concat([Routes.POSTS.ALL_POSTS, Routes.POSTS.MY_POSTS])
   .concat([Routes.LEARNERS.POSTS, Routes.LEARNERS.PATH])
-  .concat([Routes.DISCUSSIONS.PATH]);
+  .concat([`${Routes.DISCUSSIONS.PATH}/*`]);
 
 export const MAX_UPLOAD_FILE_SIZE = 1024;
