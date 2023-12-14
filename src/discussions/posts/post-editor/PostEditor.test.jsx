@@ -7,14 +7,14 @@ import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { getApiBaseUrl, Routes } from '../../../data/constants';
+import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { executeThunk } from '../../../test-utils';
 import { getCohortsApiUrl } from '../../cohorts/data/api';
@@ -37,17 +37,19 @@ let axiosMock;
 let container;
 
 async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
-  const path = editExisting ? Routes.POSTS.EDIT_POST : Routes.POSTS.NEW_POSTS;
+  const paths = editExisting ? ROUTES.POSTS.EDIT_POST : [ROUTES.POSTS.NEW_POST];
   const wrapper = await render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider
           value={{ courseId, category: null }}
         >
           <MemoryRouter initialEntries={[location]}>
-            <Route path={path}>
-              <PostEditor editExisting={editExisting} />
-            </Route>
+            <Routes>
+              {paths.map((path) => (
+                <Route path={path} element={<PostEditor editExisting={editExisting} />} />
+              ))}
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>
@@ -266,7 +268,18 @@ describe('PostEditor', () => {
 
     test('cancel posting of existing post', async () => {
       const threadId = 'thread-1';
-      await setupData();
+      await setupData({
+        editReasons: [
+          {
+            code: 'reason-1',
+            label: 'Reason 1',
+          },
+          {
+            code: 'reason-2',
+            label: 'Reason 2',
+          },
+        ],
+      });
       await act(async () => {
         axiosMock.onGet(`${threadsApiUrl}${threadId}/`).reply(200, Factory.build('thread'));
         await executeThunk(fetchThread(threadId), store.dispatch, store.getState);
@@ -292,7 +305,6 @@ describe('PostEditor', () => {
         config: {
           provider: 'legacy',
           hasModerationPrivileges: true,
-          reasonCodesEnabled: true,
           editReasons: [
             {
               code: 'reason-1',

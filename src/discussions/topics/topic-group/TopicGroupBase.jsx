@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -20,10 +20,15 @@ const TopicGroupBase = ({
   topicsIds,
 }) => {
   const intl = useIntl();
-  const { courseId } = useContext(DiscussionContext);
+  const { search } = useLocation();
+  const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
   const filter = useSelector(selectTopicFilter);
   const topics = useSelector(selectTopicsById(topicsIds));
   const hasTopics = topics.length > 0;
+  const { pathname } = discussionsPath(Routes.TOPICS.CATEGORY, {
+    courseId,
+    category: groupId,
+  })();
 
   const matchesFilter = useMemo(() => (
     filter ? groupTitle?.toLowerCase().includes(filter) : true
@@ -69,10 +74,7 @@ const TopicGroupBase = ({
         {linkToGroup && groupId ? (
           <Link
             className="text-decoration-none text-primary-500"
-            to={discussionsPath(Routes.TOPICS.CATEGORY, {
-              courseId,
-              category: groupId,
-            })}
+            to={`${pathname}${enableInContextSidebar ? search : ''}`}
           >
             {groupTitle}
           </Link>

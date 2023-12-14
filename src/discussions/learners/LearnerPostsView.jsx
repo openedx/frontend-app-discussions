@@ -4,7 +4,7 @@ import React, {
 
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
@@ -35,7 +35,7 @@ import messages from './messages';
 const LearnerPostsView = () => {
   const intl = useIntl();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const postsIds = useSelector(selectAllThreadsIds);
@@ -83,7 +83,7 @@ const LearnerPostsView = () => {
           iconAs={Icon}
           style={{ padding: '18px' }}
           size="inline"
-          onClick={() => history.push(discussionsPath(Routes.LEARNERS.PATH, { courseId })(location))}
+          onClick={() => navigate({ ...discussionsPath(Routes.LEARNERS.PATH, { courseId })(location) })}
           alt={intl.formatMessage(messages.back)}
         />
         <div className="text-primary-500 font-style font-weight-bold py-2.5">
