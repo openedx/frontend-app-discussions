@@ -338,6 +338,10 @@ header {
     .nav-item:not(:last-child){
       .nav-link {
           border-right: 0;
+
+          @media screen and (max-width: 567px) {
+            border-right: solid 1px #e9e6e4;
+          }
       }
     }
   }
@@ -486,6 +490,11 @@ header {
   z-index: 1;
 }
 
+.comment-line {
+  width: calc(100% - 180px);
+  line-height: 1;
+}
+
 .post-preview,
 .discussion-comments {
   blockquote {
@@ -509,4 +518,9 @@ header {
 .font-xl {
   font-size: 18px;
   line-height: 28px;
+}
+
+.author-name {
+  line-height: 1;
+  word-break: break-all;
 }
