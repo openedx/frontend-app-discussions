@@ -6,7 +6,7 @@ import {
   Route, Switch, useLocation, useRouteMatch, matchPath
 } from 'react-router';
 
-import Footer from '@edx/frontend-component-footer';
+// import Footer from '@edx/frontend-component-footer';
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 import { getConfig } from '@edx/frontend-platform';
 
@@ -29,6 +29,7 @@ import InformationBanner from './InformationsBanner';
 import HeaderLearning from '../../header/HeaderLearning';
 import Courses from '../courses/Courses';
 import EmptyCourses from '../empty-posts/EmptyCourses';
+import Footer from '../../footer/Footer';
 
 
 
@@ -151,7 +152,8 @@ export default function DiscussionsHome() {
         </div>
         </div>
       </main>
-      {!inContext && <Footer />}
+      {/* {!inContext && <Footer />} */}
+      {!inContext &&  <Footer />}
     </DiscussionContext.Provider>
   );
 }
