@@ -11,8 +11,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { showGlobalChatGPT } from './data/slice';
 import logoChatGPT from './assets/chatGPT.svg'
 import ChatGPT from '../chatGPT/ChatGPT';
+import { useState } from 'react';
+import avatar_icon from "./assets/avatar.svg";
+import avatar_hover_icon from "./assets/avatar_hover.svg";
 
 const AuthenticatedUserDropdown = ({intl,username})=>{
+  const [avatarSrc, setAvatarSrc] = useState(avatar_icon);
 
     const dashboardMenuItem = (
         <Dropdown.Item href={`${getConfig().LMS_BASE_URL}/dashboard`}>
@@ -20,54 +24,38 @@ const AuthenticatedUserDropdown = ({intl,username})=>{
           {intl.formatMessage(messages.dashboard)}
         </Dropdown.Item>
       );
-      const isShowGlobalChatGPT = useSelector(state => state.header.isShowGlobalChatGPT)
-      const dispatch = useDispatch()
-       
-      const handlerChatGPT = ()=>{
-    
-        dispatch(showGlobalChatGPT())
-      }
 
 
     return <>
-     <div className='d-flex align-items-center ' style={{gap:'1rem'}}>
-      <div className="btn-chatGPT" onClick={handlerChatGPT}>
-          <span>
-              <img src={logoChatGPT} alt='logo-chatGPT' />
-          </span>
-      </div>
-        <SearchCourse />
-        <a  className="text-gray-700" href='https://funix.gitbook.io/funix-documentation/' target='_blank'>{intl.formatMessage(messages.help)}</a>
-        <SelectLanguage username={username} />
-      </div>
-              <Dropdown className="user-dropdown ml-3">
-        <Dropdown.Toggle variant="outline-primary">
-          <FontAwesomeIcon icon={faUserCircle} className="d-md-none" size="lg" />
+ 
+      <Dropdown className="user-dropdown position-relative z-index-100000">
+        <Dropdown.Toggle
+          variant="outline-primary"
+          onMouseOver={() => setAvatarSrc(avatar_hover_icon)}
+          onMouseOut={() => setAvatarSrc(avatar_icon)}
+        >
+     
+          <button className="action-button mr-1">
+            <img src={avatarSrc} alt={avatar_icon} />
+          </button>
           <span data-hj-suppress className="d-none d-md-inline">
             {username}
           </span>
         </Dropdown.Toggle>
         <Dropdown.Menu className="dropdown-menu-right">
-          
           {dashboardMenuItem}
-          
+
           <Dropdown.Item href={`${getConfig().LMS_BASE_URL}/account/settings`}>
-          <i className="bi bi-person"></i>
+            <i class="bi bi-person"></i>
             {intl.formatMessage(messages.account)}
           </Dropdown.Item>
-          
+
           <Dropdown.Item href={getConfig().LOGOUT_URL}>
-          <i className="bi bi-box-arrow-left" ></i>
+            <i class="bi bi-box-arrow-left"></i>
             {intl.formatMessage(messages.signOut)}
-          </Dropdown.Item  >
-          
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <div className={isShowGlobalChatGPT ? 'css-1bljlat' : 'css-16kvbm'}>
-            <div className={isShowGlobalChatGPT ? 'css-19dz5pz' : 'css-1dntyew'}>
-            <ChatGPT />
-            </div>
-      </div>
      </>
 }
 AuthenticatedUserDropdown.propTypes = {

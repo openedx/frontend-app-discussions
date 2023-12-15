@@ -266,12 +266,12 @@ header {
 
 // headerLearning
 
-.learning-header{
+.learning-header {
   position: sticky;
-  top:0px;
+  // top:0px;
   background-color: white;
-  z-index: 3;
-  box-shadow:  0px 2px 4px -1px #0B0B0B0F,0px 4px 6px -1px #0B0B0B1A;;
+  z-index: 250000;
+  box-shadow: 0px 2px 4px -1px #0b0b0b0f, 0px 4px 6px -1px #0b0b0b1a;
 }
 
 
@@ -554,4 +554,60 @@ html:root {
   &:hover{
     cursor: pointer;
   }
+}
+
+// css course clone udacity
+
+html:root {
+  --chakra-space-16: 4rem;
+  --chakra-transition-easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --chakra-transition-duration-normal: 200ms;
+  --chakra-zIndices-low: 1;
+  --chakra-colors-white: #ffffff;
+  --chakra-shadows-base: 0px 1px 2px 0px #0b0b0b0f, 0px 1px 3px 0px #0b0b0b1a;
+  --chakra-lineHeights-none: 100%;
+  --chakra-fontSizes-md: 1rem;
+  --chakra-sizes-12: 3rem;
+  --chakra-colors-black: #0b0b0b;
+  --chakra-space-2: 0.5rem;
+  --chakra-colors-transparent: transparent;
+  --chakra-sizes-full: 100%;
+  --chakra-colors-gray-100: #f6f6f6;
+  --chakra-radii-full: 9999px;
+  --chakra-colors-gray-300: #c7c7c7;
+  --chakra-shadows-lg: 0px 4px 6px -2px #0b0b0b0d, 0px 10px 15px -3px #0b0b0b1a;
+  //extend
+  //color
+  --color-active: #007ae6;
+  --color-hover: #025dae;
+  --background-color-hover: #eef7ff;
+  --color-white: #ffffff;
+  --background-content: #fafbfb;
+  --color-stroke: #d7d7d7;
+  --color-disable: #c5c5c5;
+  --color-text-inactive: #7b7b7b;
+  --color-text-default: #2c3744;
+  --color-notification-critical: #d82c0d;
+  --color-warning: #ffb934;
+  --color-success: #5aa447;
+  --background-selected: #f1f2f3;
+}
+
+
+
+
+
+
+.header-2 {
+  height: 1.875rem;
+  flex-grow: 0;
+  // font-family: Roboto;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--color-text-default);
 }
