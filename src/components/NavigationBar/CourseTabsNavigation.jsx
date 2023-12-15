@@ -23,12 +23,12 @@ function CourseTabsNavigation({
   }, [courseId]);
 
   return (
-    <div id="courseTabsNavigation" className={classNames('course-tabs-navigation', className)}>
-      <div className="container-fluid">
+    <div id="courseTabsNavigation" className={classNames('course-tabs-navigation mb-3', className)}>
+      <div className="sub-header-container">
         {!!tabs.length
           && (
           <Tabs
-            className="nav-underline-tabs"
+            className="nav-underline-tabs d-flex sub-header-content"
             aria-label={intl.formatMessage(messages.courseMaterial)}
           >
             {tabs.map(({ url, title, slug }) => (
