@@ -25,12 +25,12 @@ export default function Footer() {
           </p>
           <p className="footer-section-phone">
             <img src={phone_icon} alt="phone_icon" />
-            0987654321
+            0782 313 602 (Zalo, Viber)
           </p>
         </div>
 
         {/* About us */}
-        <div className="footer-section">
+        {/* <div className="footer-section">
           <h3>Về chúng tôi</h3>
           <ul>
             <li>
@@ -51,10 +51,10 @@ export default function Footer() {
               <a href="https://funix.edu.vn/faq-2/">FAQ</a>
             </li>
           </ul>
-        </div>
+        </div> */}
 
         {/* information */}
-        <div className="footer-section">
+        {/* <div className="footer-section">
           <h3>Học gì ở FUNiX</h3>
           <ul>
             <li>
@@ -74,10 +74,10 @@ export default function Footer() {
               <a href="https://events.funix.edu.vn/xter">Đời sống sinh viên</a>
             </li>
           </ul>
-        </div>
+        </div> */}
 
         {/* News */}
-        <div className="footer-section">
+        {/* <div className="footer-section">
           <h3>Tin tức</h3>
           <ul>
             <li>
@@ -87,12 +87,14 @@ export default function Footer() {
               <a href="https://funix.edu.vn/events/">Sự kiện</a>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
 
       <div className="footer-bottom">
         <p>
-          @2023. All rights reserved. FUNIX-A member of FPT Corporation
+          {/* @2023. All rights reserved. FUNIX-A member of FPT Corporation
+          funix.edu.vn */}
+          ©2023. Đã đăng ký Bản quyền. FUNIX-Thành viên của Tập đoàn FPT
           funix.edu.vn
         </p>
       </div>

@@ -1,4 +1,5 @@
 #custom-footer {
+  z-index: 5;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -7,11 +8,12 @@
   .footer-container {
     margin: 0 auto;
 
-    width: 67.25rem;
-    display: grid;
-    grid-template-columns: 3.5fr 1fr 1fr 1fr;
-    align-items: start;
-    gap: 2rem;
+    padding: 0 2rem;
+    width: 47.75rem;
+    // display: grid;
+    // grid-template-columns: 3.5fr 1fr 1fr 1fr;
+    // align-items: start;
+    // gap: 2rem;
 
     .footer-section {
       .footer-section-logo {
@@ -27,6 +29,7 @@
       .footer-section-location,
       .footer-section-email,
       .footer-section-phone {
+        width: 100%;
         color: var(--color-text-default);
         font-feature-settings: "clig" off, "liga" off;
         // font-family: Roboto;
@@ -50,7 +53,7 @@
         // font-family: Roboto;
         font-size: 1.25rem;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 500;
         line-height: 150%;
         margin-bottom: 0.5rem;
       }
@@ -86,7 +89,8 @@
   }
 
   .footer-bottom {
-    width: 67.25rem;
+    padding: 0 2rem;
+    width: 47.75rem;
     margin: 0 auto;
     p {
       margin-top: 1.25rem;
