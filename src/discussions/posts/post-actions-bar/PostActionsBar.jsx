@@ -75,8 +75,7 @@ const PostActionsBar = () => {
               onClick={handleCloseInContext}
               alt={intl.formatMessage(messages.close)}
               iconClassNames="spinner-dimensions"
-              className="spinner-dimensions-36 text-black"
-              variant="light"
+              className="spinner-dimensions-36 text-primary-500"
             />
           </div>
         </>
