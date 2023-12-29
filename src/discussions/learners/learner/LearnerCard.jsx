@@ -18,7 +18,7 @@ const LearnerCard = ({ learner }) => {
     0: enableInContextSidebar ? 'in-context' : undefined,
     learnerUsername: learner.username,
     courseId,
-  });
+  })();
 
   return (
     <Link

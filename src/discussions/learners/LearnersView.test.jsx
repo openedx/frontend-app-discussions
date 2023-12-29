@@ -7,7 +7,7 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
@@ -34,7 +34,7 @@ let container;
 function renderComponent() {
   const wrapper = render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider value={{
           page: 'learners',
           learnerUsername: 'learner-1',
@@ -42,10 +42,17 @@ function renderComponent() {
         }}
         >
           <MemoryRouter initialEntries={[`/${courseId}/`]}>
-            <Route path="/:courseId/">
-              <PostActionsBar />
-              <LearnersView />
-            </Route>
+            <Routes>
+              <Route
+                path="/:courseId/"
+                element={(
+                  <>
+                    <PostActionsBar />
+                    <LearnersView />
+                  </>
+                )}
+              />
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>

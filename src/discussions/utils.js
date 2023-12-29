@@ -3,7 +3,9 @@ import { useCallback, useContext, useMemo } from 'react';
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
 import { useSelector } from 'react-redux';
-import { generatePath, useRouteMatch } from 'react-router';
+import {
+  generatePath, matchPath, useLocation,
+} from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import {
@@ -11,7 +13,9 @@ import {
 } from '@edx/paragon/icons';
 
 import { InsertLink } from '../components/icons';
-import { ContentActions, Routes, ThreadType } from '../data/constants';
+import {
+  ContentActions, Routes, ThreadType,
+} from '../data/constants';
 import { ContentSelectors } from './data/constants';
 import { PostCommentsContext } from './post-comments/postCommentsContext';
 import messages from './messages';
@@ -42,8 +46,9 @@ export function isFormikFieldInvalid(field, {
  * @returns {string}
  */
 export function useCommentsPagePath() {
-  const { params } = useRouteMatch(Routes.COMMENTS.PAGE);
-  return Routes.COMMENTS.PAGES[params.page];
+  const location = useLocation();
+  const { params: { page } } = matchPath({ path: Routes.COMMENTS.PAGE }, location.pathname);
+  return Routes.COMMENTS.PAGES[page];
 }
 
 /**
@@ -283,4 +288,8 @@ export function handleKeyDown(event) {
 
 export function isLastElementOfList(list, element) {
   return list[list.length - 1] === element;
+}
+
+export function truncatePath(path) {
+  return path.substring(0, path.lastIndexOf('/'));
 }

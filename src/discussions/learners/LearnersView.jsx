@@ -1,15 +1,13 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Redirect, useLocation, useParams,
-} from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
-import { RequestStatus, Routes } from '../../data/constants';
+import { RequestStatus } from '../../data/constants';
 import { selectConfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
 import NoResults from '../posts/NoResults';
 import {
@@ -27,7 +25,6 @@ import messages from './messages';
 const LearnersView = () => {
   const intl = useIntl();
   const { courseId } = useParams();
-  const location = useLocation();
   const dispatch = useDispatch();
   const orderBy = useSelector(selectLearnerSorting());
   const nextPage = useSelector(selectLearnerNextPage());
@@ -83,14 +80,6 @@ const LearnersView = () => {
         />
       )}
       <div className="list-group list-group-flush learner" role="list">
-        {courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && !learnersTabEnabled && (
-        <Redirect
-          to={{
-            ...location,
-            pathname: Routes.DISCUSSIONS.PATH,
-          }}
-        />
-        )}
         {renderLearnersList}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">

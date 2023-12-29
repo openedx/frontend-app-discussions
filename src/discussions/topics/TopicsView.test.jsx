@@ -3,7 +3,9 @@ import {
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import {
+  MemoryRouter, Route, Routes, useLocation,
+} from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
@@ -28,24 +30,21 @@ let axiosMock;
 let lastLocation;
 let container;
 
+const LocationComponent = () => {
+  lastLocation = useLocation();
+  return null;
+};
+
 function renderComponent() {
   const wrapper = render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider value={{ courseId }}>
           <MemoryRouter initialEntries={[`/${courseId}/topics/`]}>
-            <Route path="/:courseId/topics/">
-              <TopicsView />
-            </Route>
-            <Route path="/:courseId/category/:category">
-              <TopicsView />
-            </Route>
-            <Route
-              render={({ location }) => {
-                lastLocation = location;
-                return null;
-              }}
-            />
+            <Routes>
+              <Route path="/:courseId/topics/*" element={<><TopicsView /><LocationComponent /></>} />
+              <Route path="/:courseId/category/:category" element={<><TopicsView /><LocationComponent /></>} />
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>

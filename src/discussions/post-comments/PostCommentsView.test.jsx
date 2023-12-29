@@ -3,7 +3,9 @@ import {
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
-import { MemoryRouter, Route } from 'react-router';
+import {
+  MemoryRouter, Route, Routes, useLocation,
+} from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
@@ -89,11 +91,10 @@ async function getThreadAPIResponse(attr = null) {
   await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
-async function setupCourseConfig(reasonCodesEnabled = true) {
+async function setupCourseConfig() {
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
     has_moderation_privileges: true,
     isPostingEnabled: true,
-    reason_codes_enabled: reasonCodesEnabled,
     editReasons: [
       { code: 'reason-1', label: 'reason 1' },
       { code: 'reason-2', label: 'reason 2' },
@@ -107,22 +108,28 @@ async function setupCourseConfig(reasonCodesEnabled = true) {
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 }
 
-function renderComponent(postId, isClosed = false) {
+const LocationComponent = () => {
+  testLocation = useLocation();
+  return null;
+};
+
+function renderComponent(postId, isClosed = false, page = 'posts', path = `/${courseId}/posts/${postId}`) {
   const wrapper = render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <DiscussionContext.Provider
-          value={{ courseId, postId, isClosed }}
+          value={{
+            courseId, postId, page, isClosed, topicId: 'topic-id',
+          }}
         >
-          <MemoryRouter initialEntries={[`/${courseId}/posts/${postId}`]}>
+          <MemoryRouter initialEntries={[path]}>
             <DiscussionContent />
-            <Route
-              path="*"
-              render={({ location }) => {
-                testLocation = location;
-                return null;
-              }}
-            />
+            <Routes>
+              <Route
+                path="*"
+                element={<LocationComponent />}
+              />
+            </Routes>
           </MemoryRouter>
         </DiscussionContext.Provider>
       </AppProvider>
@@ -392,12 +399,12 @@ describe('ThreadView', () => {
       assertLastUpdateData({ edit_reason_code: 'reason-1' });
     });
 
-    it('should close the post directly if reason codes are not enabled', async () => {
-      await setupCourseConfig(false);
-      await waitFor(() => renderComponent(discussionPostId));
+    it('should reopen the post', async () => {
+      await setupCourseConfig();
+      renderComponent(closedPostId);
 
-      const post = await screen.findByTestId('post-thread-1');
-      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      const post = screen.getByTestId('post-thread-2');
+      const hoverCard = within(post).getByTestId('hover-card-thread-2');
       await act(async () => {
         fireEvent.click(
           within(hoverCard).getByRole('button', { name: /actions menu/i }),
@@ -405,33 +412,11 @@ describe('ThreadView', () => {
       });
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
       await act(async () => {
-        fireEvent.click(screen.getByRole('button', { name: /close/i }));
+        fireEvent.click(screen.getByRole('button', { name: /reopen/i }));
       });
       expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
-      assertLastUpdateData({ closed: true });
+      assertLastUpdateData({ closed: false });
     });
-
-    it.each([true, false])(
-      'should reopen the post directly when reason codes enabled=%s',
-      async (reasonCodesEnabled) => {
-        await setupCourseConfig(reasonCodesEnabled);
-        renderComponent(closedPostId);
-
-        const post = screen.getByTestId('post-thread-2');
-        const hoverCard = within(post).getByTestId('hover-card-thread-2');
-        await act(async () => {
-          fireEvent.click(
-            within(hoverCard).getByRole('button', { name: /actions menu/i }),
-          );
-        });
-        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
-        await act(async () => {
-          fireEvent.click(screen.getByRole('button', { name: /reopen/i }));
-        });
-        expect(screen.queryByRole('dialog', { name: /close post/i })).not.toBeInTheDocument();
-        assertLastUpdateData({ closed: false });
-      },
-    );
 
     it('should show the editor if the post is edited', async () => {
       await setupCourseConfig(false);
@@ -450,6 +435,28 @@ describe('ThreadView', () => {
       expect(testLocation.pathname).toBe(`/${courseId}/posts/${discussionPostId}/edit`);
     });
 
+    it('should show the editor if the post is edited on topics page', async () => {
+      await setupCourseConfig(false);
+      await waitFor(() => renderComponent(
+        discussionPostId,
+        false,
+        'topics',
+        `/${courseId}/topics/topic-id/posts/${discussionPostId}`,
+      ));
+
+      const post = await screen.findByTestId('post-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      await act(async () => {
+        fireEvent.click(
+          within(hoverCard).getByRole('button', { name: /actions menu/i }),
+        );
+      });
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+      });
+      expect(testLocation.pathname).toBe(`/${courseId}/topics/topic-id/posts/${discussionPostId}/edit`);
+    });
+
     it('should allow pinning the post', async () => {
       await waitFor(() => renderComponent(discussionPostId));
       const post = await screen.findByTestId('post-thread-1');
@@ -463,6 +470,20 @@ describe('ThreadView', () => {
         fireEvent.click(screen.getByRole('button', { name: /pin/i }));
       });
       assertLastUpdateData({ pinned: false });
+    });
+
+    it('should allow copying a link to the post', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      const post = await screen.findByTestId('post-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      Object.assign(navigator, { clipboard: { writeText: jest.fn() } });
+      await act(async () => {
+        fireEvent.click(within(hoverCard).getByRole('button', { name: /actions menu/i }));
+      });
+      await act(async () => {
+        fireEvent.click(within(hoverCard).getByRole('button', { name: /copy link/i }));
+      });
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`http://localhost/${courseId}/posts/${discussionPostId}`);
     });
 
     it('should allow reporting the post', async () => {

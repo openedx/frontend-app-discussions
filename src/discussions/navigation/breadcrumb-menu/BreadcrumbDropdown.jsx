@@ -29,7 +29,7 @@ const BreadcrumbDropdown = ({
         key="null"
         active={!currentItem}
         as={Link}
-        to={showAllPath}
+        to={showAllPath()}
       >
         {showAllMsg}
       </Dropdown.Item>
@@ -39,7 +39,7 @@ const BreadcrumbDropdown = ({
           key={itemLabelFunc(item)}
           active={itemActiveFunc(item)}
           as={Link}
-          to={itemPathFunc(item)}
+          to={itemPathFunc(item)()}
         >
           {itemLabelFunc(item)}
         </Dropdown.Item>

@@ -33,7 +33,6 @@ export const selectIsPostingEnabled = state => state.config.isPostingEnabled;
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,
-  reasonCodesEnabled: state.config.reasonCodesEnabled,
 });
 
 export const selectDiscussionProvider = state => state.config.provider;

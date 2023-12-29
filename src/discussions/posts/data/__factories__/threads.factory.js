@@ -26,6 +26,7 @@ Factory.define('thread')
       'type',
       'voted',
       'pinned',
+      'copy_link',
     ],
     author: 'test_user',
     author_label: 'Staff',

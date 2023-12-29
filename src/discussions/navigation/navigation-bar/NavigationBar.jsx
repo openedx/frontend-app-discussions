@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 
-import { matchPath } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
@@ -16,6 +15,8 @@ const NavigationBar = () => {
   const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
   const showLearnersTab = useShowLearnersTab();
+  const location = useLocation();
+  const isTopicsNavActive = Boolean(matchPath({ path: `${Routes.TOPICS.CATEGORY}/*` }, location.pathname));
 
   const navLinks = useMemo(() => ([
     {
@@ -28,7 +29,6 @@ const NavigationBar = () => {
     },
     {
       route: Routes.TOPICS.ALL,
-      isActive: (match, location) => Boolean(matchPath(location.pathname, { path: Routes.TOPICS.PATH })),
       labelMessage: messages.allTopics,
     },
   ]), []);
@@ -49,8 +49,8 @@ const NavigationBar = () => {
           <Nav.Link
             key={link.route}
             as={NavLink}
-            to={discussionsPath(link.route, { courseId })}
-            isActive={link.isActive}
+            to={discussionsPath(link.route, { courseId })()}
+            className={isTopicsNavActive && link.route === Routes.TOPICS.ALL && 'active'}
           >
             {intl.formatMessage(link.labelMessage)}
           </Nav.Link>

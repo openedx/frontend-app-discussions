@@ -2,8 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -41,7 +40,7 @@ const SectionBaseGroup = ({
         role="option"
         data-subsection-id={subsection.id}
         data-testid="subsection-group"
-        to={sectionUrl(subsection.id)}
+        to={sectionUrl(subsection.id)()}
         onClick={() => isSelected(subsection.id)}
         aria-current={isSelected(section.id) ? 'page' : undefined}
         tabIndex={(isSelected(subsection.id) || index === 0) ? 0 : -1}

@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { ALL_ROUTES } from '../../data/constants';
 import { useIsOnDesktop, useTotalTopicThreadCount } from '../data/hooks';
 import { selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
@@ -15,11 +14,11 @@ import EmptyPage from './EmptyPage';
 
 const EmptyTopics = () => {
   const intl = useIntl();
-  const match = useRouteMatch(ALL_ROUTES);
+  const { topicId } = useParams();
   const dispatch = useDispatch();
   const isOnDesktop = useIsOnDesktop();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
-  const topicThreadCount = useSelector(selectTopicThreadCount(match.params.topicId));
+  const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
 
   const addPost = useCallback(() => (
     dispatch(showPostEditor())
@@ -35,7 +34,7 @@ const EmptyTopics = () => {
     return null;
   }
 
-  if (match.params.topicId) {
+  if (topicId) {
     if (topicThreadCount > 0) {
       title = messages.noPostSelected;
     } else {

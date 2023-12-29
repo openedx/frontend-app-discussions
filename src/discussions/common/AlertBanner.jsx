@@ -10,7 +10,7 @@ import { Report } from '@edx/paragon/icons';
 
 import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
-  selectModerationSettings, selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
+  selectUserHasModerationPrivileges, selectUserIsGroupTa, selectUserIsStaff,
 } from '../data/selectors';
 import messages from '../post-comments/messages';
 import AlertBar from './AlertBar';
@@ -29,7 +29,6 @@ const AlertBanner = ({
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsGlobalStaff = useSelector(selectUserIsStaff);
-  const { reasonCodesEnabled } = useSelector(selectModerationSettings);
   const userIsContentAuthor = getAuthenticatedUser().username === author;
   const canSeeReportedBanner = abuseFlagged;
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
@@ -45,7 +44,7 @@ const AlertBanner = ({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      {reasonCodesEnabled && canSeeLastEditOrClosedAlert && (
+      { canSeeLastEditOrClosedAlert && (
         <>
           {lastEdit?.reason && (
             <AlertBar

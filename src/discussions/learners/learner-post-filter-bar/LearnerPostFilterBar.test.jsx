@@ -5,12 +5,10 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { generatePath, MemoryRouter, Route } from 'react-router';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { Routes } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import { DiscussionContext } from '../../common/context';
 import LearnerPostFilterBar from './LearnerPostFilterBar';
@@ -18,32 +16,21 @@ import LearnerPostFilterBar from './LearnerPostFilterBar';
 let store;
 const username = 'abc123';
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
-const path = generatePath(
-  Routes.LEARNERS.POSTS,
-  { courseId, learnerUsername: username },
-);
 
-function renderComponent() {
-  return render(
-    <IntlProvider locale="en">
-      <AppProvider store={store}>
-        <DiscussionContext.Provider
-          value={{
-            learnerUsername: username,
-            courseId,
-          }}
-        >
-          <MemoryRouter initialEntries={[path]}>
-            <Route
-              path={Routes.LEARNERS.POSTS}
-              component={LearnerPostFilterBar}
-            />
-          </MemoryRouter>
-        </DiscussionContext.Provider>
-      </AppProvider>
-    </IntlProvider>,
-  );
-}
+const renderComponent = () => render(
+  <IntlProvider locale="en">
+    <AppProvider store={store}>
+      <DiscussionContext.Provider
+        value={{
+          learnerUsername: username,
+          courseId,
+        }}
+      >
+        <LearnerPostFilterBar />
+      </DiscussionContext.Provider>
+    </AppProvider>
+  </IntlProvider>,
+);
 
 describe('LearnerPostFilterBar', () => {
   beforeEach(async () => {

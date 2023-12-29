@@ -5,15 +5,15 @@ import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import {
-  generatePath, MemoryRouter, Route, Switch,
-} from 'react-router';
+  generatePath, MemoryRouter, Route, Routes,
+} from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import { getApiBaseUrl, Routes, ThreadType } from '../../data/constants';
+import { getApiBaseUrl, Routes as ROUTES, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import { executeThunk } from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
@@ -39,24 +39,24 @@ const username = 'abc123';
 async function renderComponent({
   postId, topicId, category, myPosts, enableInContextSidebar = false,
 } = { myPosts: false }) {
-  let path = generatePath(Routes.POSTS.ALL_POSTS, { courseId });
-  let page;
+  let path = generatePath(ROUTES.POSTS.ALL_POSTS, { courseId });
+  let page = 'posts';
   if (postId) {
-    path = generatePath(Routes.POSTS.ALL_POSTS, { courseId, postId });
+    path = generatePath(ROUTES.POSTS.ALL_POSTS, { courseId, postId });
     page = 'posts';
   } else if (topicId) {
-    path = generatePath(Routes.POSTS.PATH, { courseId, topicId });
-    page = 'posts';
+    path = generatePath(ROUTES.POSTS.PATH, { courseId, topicId });
+    page = 'topics';
   } else if (category) {
-    path = generatePath(Routes.TOPICS.CATEGORY, { courseId, category });
+    path = generatePath(ROUTES.TOPICS.CATEGORY, { courseId, category });
     page = 'category';
   } else if (myPosts) {
-    path = generatePath(Routes.POSTS.MY_POSTS, { courseId });
+    path = generatePath(ROUTES.POSTS.MY_POSTS, { courseId });
     page = 'my-posts';
   }
   await render(
     <IntlProvider locale="en">
-      <AppProvider store={store}>
+      <AppProvider store={store} wrapWithRouter={false}>
         <MemoryRouter initialEntries={[path]}>
           <DiscussionContext.Provider value={{
             courseId,
@@ -67,15 +67,18 @@ async function renderComponent({
             enableInContextSidebar,
           }}
           >
-            <Switch>
-              <Route path={Routes.POSTS.MY_POSTS}>
-                <PostsView />
-              </Route>
-              <Route
-                path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.TOPICS.CATEGORY]}
-                component={PostsView}
-              />
-            </Switch>
+            <Routes>
+              {
+                [
+                  ROUTES.POSTS.PATH,
+                  ROUTES.POSTS.MY_POSTS,
+                  ROUTES.POSTS.ALL_POSTS,
+                  ROUTES.TOPICS.CATEGORY,
+                ].map((route) => (
+                  <Route key={route} path={route} element={<PostsView />} />
+                ))
+              }
+            </Routes>
           </DiscussionContext.Provider>
         </MemoryRouter>
       </AppProvider>

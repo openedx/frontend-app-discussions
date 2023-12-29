@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars, react/forbid-prop-types */
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
+import { DiscussionContext } from '../../../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../../data/selectors';
 import { discussionsPath } from '../../../utils';
 import { selectTopic } from '../../data/selectors';
@@ -20,6 +20,8 @@ import messages from '../../messages';
 
 const Topic = ({ topicId, showDivider, index }) => {
   const intl = useIntl();
+  const { search } = useLocation();
+  const { enableInContextSidebar } = useContext(DiscussionContext);
   const { courseId } = useParams();
   const topic = useSelector(selectTopic(topicId));
   const {
@@ -28,7 +30,7 @@ const Topic = ({ topicId, showDivider, index }) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
-  const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, { courseId, topicId });
+  const { pathname } = discussionsPath(Routes.TOPICS.TOPIC, { courseId, topicId })();
 
   const isSelected = useCallback((selectedId) => (
     window.location.pathname.includes(selectedId)
@@ -42,7 +44,7 @@ const Topic = ({ topicId, showDivider, index }) => {
         })
       }
       data-topic-id={id}
-      to={topicUrl}
+      to={`${pathname}${enableInContextSidebar ? search : ''}`}
       onClick={() => isSelected(id)}
       aria-current={isSelected(id) ? 'page' : undefined}
       role="option"

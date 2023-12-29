@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
@@ -42,7 +41,7 @@ const Topic = ({
           'border-light-400 border-bottom': showDivider,
         })}
         data-topic-id={topic.id}
-        to={topicUrl}
+        to={topicUrl()}
         onClick={() => isSelected(topic.id)}
         aria-current={isSelected(topic.id) ? 'page' : undefined}
         role="option"

@@ -24,7 +24,6 @@ const configSlice = createSlice({
       dividedInlineDiscussions: [],
       dividedCourseWideDiscussions: [],
     },
-    reasonCodesEnabled: false,
     editReasons: [],
     postCloseReasons: [],
     enableInContext: false,

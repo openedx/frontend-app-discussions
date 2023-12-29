@@ -49,7 +49,7 @@ function renderComponent(id) {
   return render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <DiscussionContext.Provider value={{ courseId }}>
+        <DiscussionContext.Provider value={{ courseId, page: 'posts' }}>
           <PostLink
             key={id}
             postId={id}

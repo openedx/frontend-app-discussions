@@ -5,7 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter } from 'react-router-dom';
 import { Factory } from 'rosie';
 
 import { initializeMockApp } from '@edx/frontend-platform';
@@ -42,7 +42,7 @@ function renderComponent(location = `/${courseId}/`) {
   const wrapper = render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
-        <AppProvider store={store}>
+        <AppProvider store={store} wrapWithRouter={false}>
           <MemoryRouter initialEntries={[location]}>
             <DiscussionsHome />
           </MemoryRouter>
