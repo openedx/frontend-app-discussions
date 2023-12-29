@@ -1,11 +1,10 @@
 import React, { useCallback, useContext } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouteMatch } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { ALL_ROUTES } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
 import { useIsOnDesktop } from '../../data/hooks';
 import { selectPostThreadCount } from '../../data/selectors';
@@ -16,11 +15,11 @@ import { selectCourseWareThreadsCount, selectTotalTopicsThreadsCount } from '../
 
 const EmptyTopics = () => {
   const intl = useIntl();
-  const match = useRouteMatch(ALL_ROUTES);
+  const { category, topicId } = useParams();
   const dispatch = useDispatch();
   const isOnDesktop = useIsOnDesktop();
   const { enableInContextSidebar } = useContext(DiscussionContext);
-  const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(match.params.category));
+  const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
   // hasGlobalThreads is used to determine if there are any post available in courseware and non-courseware topics
   const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
@@ -39,7 +38,7 @@ const EmptyTopics = () => {
     return null;
   }
 
-  if (match.params.topicId) {
+  if (topicId) {
     if (topicThreadsCount > 0) {
       title = messages.noPostSelected;
     } else {
@@ -48,7 +47,7 @@ const EmptyTopics = () => {
       subTitle = messages.emptyTopic;
       fullWidth = true;
     }
-  } else if (match.params.category) {
+  } else if (category) {
     if (enableInContextSidebar && topicThreadsCount > 0) {
       title = messages.noPostSelected;
     } else if (courseWareThreadsCount > 0) {

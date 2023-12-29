@@ -2,14 +2,16 @@ import React, {
   Suspense, useCallback, useContext, useEffect, useState,
 } from 'react';
 
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { ArrowBack } from '@edx/paragon/icons';
 
 import Spinner from '../../components/Spinner';
-import { EndorsementStatus, PostsPages, ThreadType } from '../../data/constants';
+import {
+  EndorsementStatus, PostsPages, ThreadType,
+} from '../../data/constants';
 import { useDispatchWithState } from '../../data/hooks';
 import { DiscussionContext } from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
@@ -27,7 +29,7 @@ const CommentsView = React.lazy(() => import('./comments/CommentsView'));
 
 const PostCommentsView = () => {
   const intl = useIntl();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const isOnDesktop = useIsOnDesktop();
   const [addingResponse, setAddingResponse] = useState(false);
@@ -37,6 +39,9 @@ const PostCommentsView = () => {
   } = useContext(DiscussionContext);
   const commentsCount = useCommentsCount(postId);
   const { closed, id: threadId, type } = usePost(postId);
+  const redirectUrl = discussionsPath(PostsPages[page], {
+    courseId, learnerUsername, category, topicId,
+  })(location);
 
   useEffect(() => {
     if (!threadId) {
@@ -89,9 +94,7 @@ const PostCommentsView = () => {
                 variant="plain"
                 className="px-0 line-height-24 py-0 my-1.5 border-0 font-weight-normal font-style text-primary-500"
                 iconBefore={ArrowBack}
-                onClick={() => history.push(discussionsPath(PostsPages[page], {
-                  courseId, learnerUsername, category, topicId,
-                })(location))}
+                onClick={() => navigate({ ...redirectUrl })}
                 size="sm"
               >
                 {intl.formatMessage(messages.backAlt)}
@@ -106,9 +109,7 @@ const PostCommentsView = () => {
             style={{ padding: '18px' }}
             size="inline"
             className="ml-4 mt-4"
-            onClick={() => history.push(discussionsPath(PostsPages[page], {
-              courseId, learnerUsername, category, topicId,
-            })(location))}
+            onClick={() => navigate({ ...redirectUrl })}
             alt={intl.formatMessage(messages.backAlt)}
           />
         )

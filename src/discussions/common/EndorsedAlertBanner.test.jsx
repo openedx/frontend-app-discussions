@@ -84,7 +84,6 @@ describe.each([
     store = initializeStore({
       config: {
         hasModerationPrivileges: true,
-        reasonCodesEnabled: true,
       },
     });
     const content = buildTestContent(type, props);

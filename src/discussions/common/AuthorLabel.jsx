@@ -2,8 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { generatePath } from 'react-router';
-import { Link } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -51,7 +50,7 @@ const AuthorLabel = ({
 
   const authorName = useMemo(() => (
     <span
-      className={classNames('mr-1.5 font-size-14 font-style font-weight-500', {
+      className={classNames('mr-1.5 font-size-14 font-style font-weight-500 author-name', {
         'text-gray-700': isRetiredUser,
         'text-primary-500': !authorLabelMessage && !isRetiredUser,
       })}

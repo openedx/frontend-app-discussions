@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -55,7 +55,7 @@ const PostEditor = ({
   editExisting,
 }) => {
   const intl = useIntl();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const editorRef = useRef(null);
@@ -75,12 +75,12 @@ const PostEditor = ({
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const settings = useSelector(selectDivisionSettings);
   const { allowAnonymous, allowAnonymousToPeers } = useSelector(selectAnonymousPostingConfig);
-  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+  const { editReasons } = useSelector(selectModerationSettings);
   const userIsStaff = useSelector(selectUserIsStaff);
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
 
-  const canDisplayEditReason = (reasonCodesEnabled && editExisting
+  const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
     && post?.author !== authenticatedUser.username
   );
@@ -126,7 +126,7 @@ const PostEditor = ({
         learnerUsername: post?.author,
         category,
       })(location);
-      history.push(newLocation);
+      navigate({ ...newLocation });
     }
     dispatch(hidePostEditor());
   }, [postId, topicId, post?.author, category, editExisting, commentsPagePath, location]);

@@ -40,10 +40,10 @@ const CommentEditor = ({
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsStaff = useSelector(selectUserIsStaff);
-  const { reasonCodesEnabled, editReasons } = useSelector(selectModerationSettings);
+  const { editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
 
-  const canDisplayEditReason = (reasonCodesEnabled && edit
+  const canDisplayEditReason = (edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
     && author !== authenticatedUser.username
   );

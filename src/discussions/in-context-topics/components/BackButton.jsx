@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, IconButton, Spinner } from '@edx/paragon';
@@ -12,7 +12,7 @@ import messages from '../messages';
 const BackButton = ({
   intl, path, title, loading,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -22,7 +22,7 @@ const BackButton = ({
           iconAs={Icon}
           style={{ padding: '18px' }}
           size="inline"
-          onClick={() => history.push(path)}
+          onClick={() => navigate(path)}
           alt={intl.formatMessage(messages.backAlt)}
         />
         <div className="d-flex flex-fill justify-content-center align-items-center mr-4.5">

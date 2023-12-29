@@ -21,7 +21,7 @@ function renderComponent(location = `/${courseId}/`) {
   return render(
     <IntlProvider locale="en">
       <ResponsiveContext.Provider value={{ width: 1280 }}>
-        <AppProvider store={store}>
+        <AppProvider store={store} wrapWithRouter={false}>
           <MemoryRouter initialEntries={[location]}>
             <NoResults />
           </MemoryRouter>
