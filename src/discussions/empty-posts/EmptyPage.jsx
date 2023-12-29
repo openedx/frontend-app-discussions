@@ -1,9 +1,8 @@
 import React from 'react';
 import propTypes from 'prop-types';
 
+import { Button } from '@openedx/paragon';
 import classNames from 'classnames';
-
-import { Button } from '@edx/paragon';
 
 import EmptyIcon from '../../assets/Empty';
 

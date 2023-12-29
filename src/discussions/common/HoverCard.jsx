@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Button, Icon, IconButton, OverlayTrigger, Tooltip,
+} from '@openedx/paragon';
 import classNames from 'classnames';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
 
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,

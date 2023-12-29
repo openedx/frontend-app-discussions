@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Hyperlink, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +9,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions } from '../../../data/constants';

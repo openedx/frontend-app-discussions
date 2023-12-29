@@ -3,13 +3,13 @@ import {
   useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';

@@ -3,14 +3,14 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
+import { HelpOutline, PostOutline, Report } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../../data/selectors';

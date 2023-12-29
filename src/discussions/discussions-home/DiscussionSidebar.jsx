@@ -3,13 +3,12 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { useWindowSize } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router';
-
-import { useWindowSize } from '@edx/paragon';
 
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes } from '../../data/constants';

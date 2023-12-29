@@ -1,13 +1,13 @@
 import React, { useCallback, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Form, StatefulButton } from '@openedx/paragon';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Spinner as ParagonSpinner } from '@edx/paragon';
+import { Spinner as ParagonSpinner } from '@openedx/paragon';
 
 const Spinner = () => (
   <div className="spinner-container" data-testid="spinner">

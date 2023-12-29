@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Collapsible, Form, Icon, Spinner,
+} from '@openedx/paragon';
+import { Check, Tune } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { capitalize, isEmpty, toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,10 +14,6 @@ import { useParams } from 'react-router-dom';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Collapsible, Form, Icon, Spinner,
-} from '@edx/paragon';
-import { Check, Tune } from '@edx/paragon/icons';
 
 import {
   PostsStatusFilter, RequestStatus,

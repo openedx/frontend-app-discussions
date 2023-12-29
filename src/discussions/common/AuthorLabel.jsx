@@ -1,14 +1,14 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
+import { Institution, School } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import { useShowLearnersTab } from '../data/hooks';

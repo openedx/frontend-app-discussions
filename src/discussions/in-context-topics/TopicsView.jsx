@@ -2,11 +2,10 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
+import { Spinner } from '@openedx/paragon';
 import classNames from 'classnames';
 import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
+import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Redirect, useLocation, useParams,
 } from 'react-router';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus, Routes } from '../../data/constants';

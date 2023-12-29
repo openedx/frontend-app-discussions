@@ -1,10 +1,10 @@
 import React, { useContext, useMemo } from 'react';
 
+import { Nav } from '@openedx/paragon';
 import { matchPath } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';

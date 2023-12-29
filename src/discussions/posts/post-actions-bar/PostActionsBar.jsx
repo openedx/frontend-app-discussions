@@ -1,13 +1,13 @@
 import React, { useCallback, useContext } from 'react';
 
+import {
+  Button, Icon, IconButton,
+} from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton,
-} from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
