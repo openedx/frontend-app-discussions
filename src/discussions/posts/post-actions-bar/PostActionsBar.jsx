@@ -67,15 +67,14 @@ const PostActionsBar = () => {
       )}
       {enableInContextSidebar && (
         <>
-          <div className="border-right border-light-300 mr-3 ml-1.5 my-10px" />
-          <div className="justify-content-center mt-2.5 mx-3px">
+          <div className="border-right border-light-300 mr-2 my-10px" />
+          <div className="d-flex align-items-center justify-content-center">
             <IconButton
               src={Close}
+              size="sm"
               iconAs={Icon}
               onClick={handleCloseInContext}
               alt={intl.formatMessage(messages.close)}
-              iconClassNames="spinner-dimensions"
-              className="spinner-dimensions"
             />
           </div>
         </>

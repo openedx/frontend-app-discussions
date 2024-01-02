@@ -86,7 +86,7 @@ const DiscussionsHome = () => {
           >
             <div
               className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
-                'pl-4 pr-3 py-0': enableInContextSidebar,
+                'pl-4 pr-2 py-0': enableInContextSidebar,
               })}
             >
               {!enableInContextSidebar && (
