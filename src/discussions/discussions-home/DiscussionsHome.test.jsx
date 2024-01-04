@@ -198,9 +198,7 @@ describe('DiscussionsHome', () => {
   );
 
   it('should display empty page message for empty learners list', async () => {
-    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      learners_tab_enabled: true,
-    });
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {});
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/learners`);
 

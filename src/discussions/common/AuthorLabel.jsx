@@ -10,7 +10,6 @@ import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
-import { useShowLearnersTab } from '../data/hooks';
 import messages from '../messages';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
@@ -45,8 +44,7 @@ const AuthorLabel = ({
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
-  const showUserNameAsLink = useShowLearnersTab()
-    && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
+  const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
 
   const authorName = useMemo(() => (
     <span
