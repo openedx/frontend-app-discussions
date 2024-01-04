@@ -7,14 +7,12 @@ import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
-import { useShowLearnersTab } from '../../data/hooks';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
 
 const NavigationBar = () => {
   const intl = useIntl();
   const { courseId } = useContext(DiscussionContext);
-  const showLearnersTab = useShowLearnersTab();
   const location = useLocation();
   const isTopicsNavActive = Boolean(matchPath({ path: `${Routes.TOPICS.CATEGORY}/*` }, location.pathname));
 
@@ -31,16 +29,12 @@ const NavigationBar = () => {
       route: Routes.TOPICS.ALL,
       labelMessage: messages.allTopics,
     },
-  ]), []);
+    {
+      route: Routes.LEARNERS.PATH,
+      labelMessage: messages.learners,
+    },
 
-  useMemo(() => {
-    if (showLearnersTab) {
-      navLinks.push({
-        route: Routes.LEARNERS.PATH,
-        labelMessage: messages.learners,
-      });
-    }
-  }, [showLearnersTab]);
+  ]), []);
 
   return (
     <Nav variant="pills" className="py-2 nav-button-group">

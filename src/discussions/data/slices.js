@@ -16,7 +16,6 @@ const configSlice = createSlice({
     isCourseAdmin: false,
     isCourseStaff: false,
     isUserAdmin: false,
-    learnersTabEnabled: false,
     isPostingEnabled: false,
     settings: {
       divisionScheme: 'none',

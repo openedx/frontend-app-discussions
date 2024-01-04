@@ -14,7 +14,7 @@ import { selectCourseTabs } from '../../components/NavigationBar/data/selectors'
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import { DiscussionContext } from '../common/context';
 import {
-  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useShowLearnersTab, useSidebarVisible,
+  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider, selectEnableInContext } from '../data/selectors';
 import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
@@ -44,7 +44,6 @@ const DiscussionsHome = () => {
   const page = pageParams?.page || null;
   const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
   const { params } = useMatch(matchPattern);
-  const isRedirectToLearners = useShowLearnersTab();
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
@@ -146,7 +145,7 @@ const DiscussionsHome = () => {
                       element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
                     />
                   ))}
-                  {isRedirectToLearners && <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />}
+                  <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
                 </>
               </Routes>
             )}
