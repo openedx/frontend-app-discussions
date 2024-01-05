@@ -31,7 +31,6 @@ import {
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectIsPostingEnabled,
-  selectLearnersTabEnabled,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -170,8 +169,6 @@ export const useAlertBannerVisible = (
     (canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
   );
 };
-
-export const useShowLearnersTab = () => useSelector(selectLearnersTabEnabled);
 
 /**
  * React hook that gets the current topic ID from the current topic or category.

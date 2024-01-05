@@ -34,7 +34,6 @@ const mockThread = async (id, abuseFlagged) => {
   axiosMock = new MockAdapter(getAuthenticatedHttpClient());
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-    learners_tab_enabled: true,
     has_moderation_privileges: true,
   });
   axiosMock.onGet(`${threadsApiUrl}${id}/`).reply(200, Factory.build('thread', {

@@ -69,7 +69,6 @@ describe('LearnersView', () => {
         username: 'test_user',
         administrator: true,
         roles: [],
-        learnersTabEnabled: false,
       },
     });
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
@@ -106,20 +105,12 @@ describe('LearnersView', () => {
 
   async function assignPrivilages(hasModerationPrivileges = false) {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      learners_tab_enabled: true,
       user_is_privileged: true,
       hasModerationPrivileges,
     });
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   }
-
-  test('Learners tab is disabled by default', async () => {
-    await setUpLearnerMockResponse();
-    await renderComponent();
-
-    expect(screen.queryByText('learner-1')).not.toBeInTheDocument();
-  });
 
   test('Learners tab is enabled', async () => {
     await setUpLearnerMockResponse();

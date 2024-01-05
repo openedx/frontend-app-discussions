@@ -53,7 +53,6 @@ describe('Author label', () => {
     store = initializeStore();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-      learners_tab_enabled: true,
       has_moderation_privileges: true,
     });
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
