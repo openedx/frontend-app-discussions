@@ -1,21 +1,18 @@
 import messages from './messages';
 
+/**
+ *
+ * @param {Object} intl
+ * @returns {Object} tour checkpoints
+ */
 export default function tourCheckpoints(intl) {
   return {
-    NOT_RESPONDED_FILTER: [
+    EXAMPLE_TOUR: [
       {
-        body: intl.formatMessage(messages.notRespondedFilterTourBody),
-        placement: 'right',
-        target: '#icon-tune',
-        title: intl.formatMessage(messages.notRespondedFilterTourTitle),
-      },
-    ],
-    RESPONSE_SORT: [
-      {
-        body: intl.formatMessage(messages.responseSortTourBody),
-        placement: 'left',
-        target: '#comment-sort',
-        title: intl.formatMessage(messages.responseSortTourTitle),
+        title: intl.formatMessage(messages.exampleTourTitle),
+        body: intl.formatMessage(messages.exampleTourBody),
+        target: '#example-tour-target',
+        placement: 'bottom',
       },
     ],
   };
