@@ -44,7 +44,6 @@ const CommentSortDropdown = () => {
     <>
       <div className="comments-sort d-flex justify-content-end mx-4 mt-2">
         <Button
-          id="comment-sort"
           alt={intl.formatMessage(messages.actionsAlt)}
           ref={setTarget}
           variant="tertiary"

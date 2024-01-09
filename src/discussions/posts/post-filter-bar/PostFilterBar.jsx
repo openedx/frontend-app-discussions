@@ -197,7 +197,7 @@ const PostFilterBar = () => {
             cohort: capitalize(selectedCohort?.name),
           })}
         </span>
-        <span id="icon-tune">
+        <span>
           <Collapsible.Visible whenClosed>
             <Icon src={Tune} />
           </Collapsible.Visible>
