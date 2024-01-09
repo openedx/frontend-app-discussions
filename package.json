@@ -57,7 +57,7 @@
     "regenerator-runtime": "0.14.1",
     "timeago.js": "4.0.2",
     "tinymce": "5.10.7",
-    "yup": "0.31.1"
+    "yup": "0.32.11"
   },
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
