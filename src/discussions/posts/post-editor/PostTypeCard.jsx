@@ -19,9 +19,9 @@ const PostTypeCard = ({
     <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
       <Card
-        className={classNames('border-2 shadow-none', {
-          'border-primary': selected,
-          'border-light-400': !selected,
+        className={classNames('shadow-none', {
+          'border-primary-500-2': selected,
+          'border-light-400-2': !selected,
         })}
         style={{ cursor: 'pointer', width: `${enableInContextSidebar ? '10.021rem' : '14.25rem'}` }}
       >
