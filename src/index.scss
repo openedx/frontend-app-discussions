@@ -246,8 +246,13 @@ header {
   background-color: #e9e6e4 !important;
 }
 
-.border-2 {
-  border: 2px solid #cccccc !important;
+.border-light-400-2 {
+  border: 2px solid $light-400 !important;
+  border-width: 2px !important;
+}
+
+.border-primary-500-2 {
+  border: 2px solid $primary-500 !important;
   border-width: 2px !important;
 }
 
