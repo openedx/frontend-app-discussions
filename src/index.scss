@@ -521,6 +521,10 @@ header {
   }
 }
 
+.add-comment-btn {
+  border: 1px solid var(--Light-300, $light-300) !important;
+}
+
 .icon-size-24 {
   width: 1.5rem !important;
   height: 1.5rem !important;
