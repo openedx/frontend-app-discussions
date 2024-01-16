@@ -116,7 +116,7 @@ const AuthorLabel = ({
           data-testid="learner-posts-link"
           id="learner-posts-link"
           to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
-          className="text-decoration-none"
+          className="text-decoration-none text-reset"
           style={{ width: 'fit-content' }}
         >
           {!alert && authorName}

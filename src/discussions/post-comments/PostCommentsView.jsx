@@ -115,7 +115,7 @@ const PostCommentsView = () => {
         )
       )}
       <div
-        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
+        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus mx-4 mt-4 mb-0"
       >
         <Post handleAddResponseButton={handleAddResponseButton} />
         {!closed && (
