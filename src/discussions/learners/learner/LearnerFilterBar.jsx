@@ -67,11 +67,12 @@ const LearnerFilterBar = () => {
         },
       );
     }
+    setOpen((prevIsOpen) => !prevIsOpen);
   }, []);
 
   const handleOnToggle = useCallback(() => {
-    setOpen(!isOpen);
-  }, [isOpen]);
+    setOpen((prevIsOpen) => !prevIsOpen);
+  }, []);
 
   return (
     <Collapsible.Advanced

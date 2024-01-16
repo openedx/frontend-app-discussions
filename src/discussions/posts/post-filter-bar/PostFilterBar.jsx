@@ -130,11 +130,12 @@ const PostFilterBar = () => {
     }
 
     sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
+    setOpen((prevIsOpen) => !prevIsOpen);
   }, [currentFilters, currentSorting, dispatch, selectedCohort]);
 
   const handleToggle = useCallback(() => {
-    setOpen(!isOpen);
-  }, [isOpen]);
+    setOpen((prevIsOpen) => !prevIsOpen);
+  }, []);
 
   useEffect(() => {
     if (userHasModerationPrivileges && isEmpty(cohorts)) {
