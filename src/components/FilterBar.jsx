@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { capitalize, toString } from 'lodash';
@@ -93,10 +93,15 @@ const FilterBar = ({
     },
   ];
 
+  const handleFilterToggle = useCallback((event) => {
+    onFilterChange(event);
+    setOpen(false);
+  }, [onFilterChange]);
+
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={() => setOpen(!isOpen)}
+      onToggle={setOpen}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
@@ -126,7 +131,7 @@ const FilterBar = ({
                 name={value.name}
                 className="d-flex flex-column list-group list-group-flush"
                 value={selectedFilters[value.name]}
-                onChange={onFilterChange}
+                onChange={handleFilterToggle}
               >
                 {value.filters.map(filterName => {
                   const element = allFilters.find(obj => obj.id === filterName);
@@ -159,7 +164,7 @@ const FilterBar = ({
                     name="cohort"
                     className="d-flex flex-column list-group list-group-flush w-100"
                     value={selectedFilters.cohort}
-                    onChange={onFilterChange}
+                    onChange={handleFilterToggle}
                   >
                     <ActionItem
                       id="all-groups"
