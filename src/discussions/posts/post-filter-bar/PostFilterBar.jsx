@@ -130,12 +130,8 @@ const PostFilterBar = () => {
     }
 
     sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
-    setOpen((prevIsOpen) => !prevIsOpen);
+    setOpen(false);
   }, [currentFilters, currentSorting, dispatch, selectedCohort]);
-
-  const handleToggle = useCallback(() => {
-    setOpen((prevIsOpen) => !prevIsOpen);
-  }, []);
 
   useEffect(() => {
     if (userHasModerationPrivileges && isEmpty(cohorts)) {
@@ -184,7 +180,7 @@ const PostFilterBar = () => {
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={handleToggle}
+      onToggle={setOpen}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">

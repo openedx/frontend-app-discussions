@@ -94,18 +94,14 @@ const FilterBar = ({
   ];
 
   const handleFilterToggle = useCallback((event) => {
-    setOpen((prevIsOpen) => !prevIsOpen);
     onFilterChange(event);
+    setOpen(false);
   }, [onFilterChange]);
-
-  const handleToggle = useCallback(() => {
-    setOpen((prevIsOpen) => !prevIsOpen);
-  }, []);
 
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={handleToggle}
+      onToggle={setOpen}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
