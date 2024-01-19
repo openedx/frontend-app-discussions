@@ -35,7 +35,7 @@ const HoverCard = ({
 
   return (
     <div
-      className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
+      className="flex-fill justify-content-end align-items-center hover-card bg-white mr-n4 position-absolute"
       data-testid={`hover-card-${id}`}
       id={`hover-card-${id}`}
     >

@@ -267,7 +267,7 @@ const Comment = ({
             ) : (
               !isClosed && isUserPrivilegedInPostingRestriction && (inlineReplies.length >= 5) && (
                 <Button
-                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
+                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
                   onClick={handleAddCommentReply}
