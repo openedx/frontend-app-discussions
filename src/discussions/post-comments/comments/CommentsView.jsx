@@ -9,7 +9,7 @@ import { useUserPostingEnabled } from '../../data/hooks';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
-import { PostCommentsContext } from '../postCommentsContext';
+import PostCommentsContext from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
 const CommentsView = ({ endorsed }) => {

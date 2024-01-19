@@ -1,5 +1,5 @@
 import React, {
-  Suspense, useCallback, useContext, useEffect, useState,
+  Suspense, useCallback, useContext, useEffect, useMemo, useState,
 } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,8 +12,8 @@ import Spinner from '../../components/Spinner';
 import {
   EndorsementStatus, PostsPages, ThreadType,
 } from '../../data/constants';
-import { useDispatchWithState } from '../../data/hooks';
-import { DiscussionContext } from '../common/context';
+import useDispatchWithState from '../../data/hooks';
+import DiscussionContext from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
 import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
@@ -22,7 +22,7 @@ import { discussionsPath } from '../utils';
 import { ResponseEditor } from './comments/comment';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
-import { PostCommentsContext } from './postCommentsContext';
+import PostCommentsContext from './postCommentsContext';
 
 const CommentsSort = React.lazy(() => import('./comments/CommentsSort'));
 const CommentsView = React.lazy(() => import('./comments/CommentsView'));
@@ -61,6 +61,12 @@ const PostCommentsView = () => {
     setAddingResponse(false);
   }, []);
 
+  const postCommentsContextValue = useMemo(() => ({
+    isClosed: closed,
+    postType: type,
+    postId,
+  }));
+
   if (!threadId) {
     if (!isLoading) {
       return (
@@ -79,13 +85,7 @@ const PostCommentsView = () => {
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <PostCommentsContext.Provider value={{
-      isClosed: closed,
-      postType: type,
-      postId,
-    }}
-    >
+    <PostCommentsContext.Provider value={postCommentsContextValue}>
       {!isOnDesktop && (
         enableInContextSidebar ? (
           <>

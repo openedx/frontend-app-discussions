@@ -1,2 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-export { default as TopicsView } from './TopicsView';
+import TopicsView from './TopicsView';
+
+export default TopicsView;

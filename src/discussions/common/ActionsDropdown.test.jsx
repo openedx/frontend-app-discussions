@@ -12,13 +12,13 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { ContentActions } from '../../data/constants';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCourseConfigApiUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import messages from '../messages';
 import { getCommentsApiUrl } from '../post-comments/data/api';
 import { addComment, fetchThreadComments } from '../post-comments/data/thunks';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread } from '../posts/data/thunks';
 import { ACTIONS_LIST } from '../utils';

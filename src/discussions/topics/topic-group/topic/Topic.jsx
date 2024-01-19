@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars, react/forbid-prop-types */
 import React, { useCallback, useContext } from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,7 +10,7 @@ import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import { Routes } from '../../../../data/constants';
-import { DiscussionContext } from '../../../common/context';
+import DiscussionContext from '../../../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../../data/selectors';
 import { discussionsPath } from '../../../utils';
 import { selectTopic } from '../../data/selectors';

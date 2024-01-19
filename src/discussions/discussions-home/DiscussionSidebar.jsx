@@ -13,7 +13,7 @@ import { useWindowSize } from '@edx/paragon';
 
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes as ROUTES } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { useContainerSize, useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../data/selectors';
 

@@ -1,5 +1,6 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
-import React, { lazy, Suspense, useRef } from 'react';
+import React, {
+  lazy, Suspense, useMemo, useRef,
+} from 'react';
 
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
@@ -10,9 +11,9 @@ import {
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
-import { selectCourseTabs } from '../../components/NavigationBar/data/selectors';
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
@@ -60,18 +61,19 @@ const DiscussionsHome = () => {
   const displayContentArea = (postId || postEditorVisible || (learnerUsername && postId));
   if (displayContentArea) { displaySidebar = isOnDesktop; }
 
+  const discussionContextValue = useMemo(() => ({
+    page,
+    courseId,
+    postId,
+    topicId,
+    enableInContextSidebar,
+    category,
+    learnerUsername,
+  }));
+
   return (
     <Suspense fallback={(<Spinner />)}>
-      <DiscussionContext.Provider value={{
-        page,
-        courseId,
-        postId,
-        topicId,
-        enableInContextSidebar,
-        category,
-        learnerUsername,
-      }}
-      >
+      <DiscussionContext.Provider value={discussionContextValue}>
         {!enableInContextSidebar && (
           <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
         )}

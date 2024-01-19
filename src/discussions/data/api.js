@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { ensureConfig, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 

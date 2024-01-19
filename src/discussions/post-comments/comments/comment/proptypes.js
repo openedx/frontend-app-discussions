@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
 
-export const commentShape = PropTypes.shape({
+const commentShape = PropTypes.shape({
   createdAt: PropTypes.string,
   abuseFlagged: PropTypes.bool,
   renderedBody: PropTypes.string,
@@ -20,3 +19,5 @@ export const commentShape = PropTypes.shape({
     }),
   })),
 });
+
+export default commentShape;

@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export, no-unused-expressions */
 import { logError } from '@edx/frontend-platform/logging';
 
 import { getHttpErrorStatus } from '../../../discussions/utils';
@@ -10,7 +9,7 @@ import {
   fetchTabSuccess,
 } from './slice';
 
-export function fetchTab(courseId, rootSlug) {
+export default function fetchTab(courseId, rootSlug) {
   return async (dispatch) => {
     dispatch(fetchTabRequest({ courseId }));
     try {

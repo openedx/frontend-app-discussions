@@ -1,19 +1,13 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars, react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import TopicStats from '../../../components/TopicStats';
 import { Routes } from '../../../data/constants';
-import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
@@ -24,10 +18,6 @@ const Topic = ({
 }) => {
   const intl = useIntl();
   const { courseId } = useParams();
-  const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
-  const userIsGroupTa = useSelector(selectUserIsGroupTa);
-  const { inactiveFlags, activeFlags } = topic;
-  const canSeeReportedStats = (activeFlags || inactiveFlags) && (userHasModerationPrivileges || userIsGroupTa);
   const isSelected = (id) => window.location.pathname.includes(id);
   const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, {
     courseId,
@@ -72,7 +62,8 @@ export const topicShape = PropTypes.shape({
   id: PropTypes.string,
   usage_key: PropTypes.string,
   name: PropTypes.string,
-  thread_counts: PropTypes.shape({
+  displayName: PropTypes.string,
+  threadCounts: PropTypes.shape({
     discussions: PropTypes.number,
     questions: PropTypes.number,
   }),

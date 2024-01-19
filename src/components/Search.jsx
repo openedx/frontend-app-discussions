@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
-import { DiscussionContext } from '../discussions/common/context';
+import DiscussionContext from '../discussions/common/context';
 import { setUsernameSearch } from '../discussions/learners/data';
 import { setSearchQuery } from '../discussions/posts/data';
 import postsMessages from '../discussions/posts/post-actions-bar/messages';

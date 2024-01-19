@@ -9,7 +9,7 @@ import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
 import messages from '../post-comments/messages';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 

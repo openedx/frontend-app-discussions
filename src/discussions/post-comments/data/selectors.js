@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { createSelector } from '@reduxjs/toolkit';
 
 const selectCommentsById = state => state.comments.commentsById;

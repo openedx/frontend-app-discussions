@@ -12,7 +12,7 @@ import { CheckCircle } from '@edx/paragon/icons';
 import { PushPin } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import { selectThread } from '../data/selectors';
 import messages from './messages';

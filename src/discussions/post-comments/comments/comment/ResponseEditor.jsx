@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { DiscussionContext } from '../../../common/context';
+import DiscussionContext from '../../../common/context';
 import CommentEditor from './CommentEditor';
 
 const ResponseEditor = ({

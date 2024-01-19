@@ -12,9 +12,9 @@ import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '../../components/icons';
 import { useUserPostingEnabled } from '../data/hooks';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 const HoverCard = ({
   id,

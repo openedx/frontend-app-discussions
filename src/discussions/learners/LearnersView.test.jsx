@@ -1,4 +1,3 @@
-/* eslint-disable default-param-last */
 import React from 'react';
 
 import {
@@ -16,10 +15,10 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { PostActionsBar } from '../../components';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getDiscussionsConfigUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import { getUserProfileApiUrl, learnersApiUrl } from './data/api';
 import { fetchLearners } from './data/thunks';
 import LearnersView from './LearnersView';
@@ -81,9 +80,9 @@ describe('LearnersView', () => {
     pageSize = 6,
     page = 1,
     username = ['learner-1', 'learner-2', 'learner-3'],
-    searchText,
-    activeFlags,
-    inactiveFlags,
+    searchText = null,
+    activeFlags = null,
+    inactiveFlags = null,
   ) {
     Factory.resetAll();
     const learnersData = Factory.build('learnersResult', {}, {

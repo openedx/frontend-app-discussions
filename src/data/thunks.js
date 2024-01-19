@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export, no-unused-expressions */
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
@@ -88,7 +87,7 @@ function normaliseCourseBlocks({
   };
 }
 
-export function fetchCourseBlocks(courseId, username) {
+export default function fetchCourseBlocks(courseId, username) {
   return async (dispatch) => {
     try {
       dispatch(fetchCourseBlocksRequest({ courseId }));

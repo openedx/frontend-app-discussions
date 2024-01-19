@@ -11,7 +11,7 @@ import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { useUserPostingEnabled } from '../../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';

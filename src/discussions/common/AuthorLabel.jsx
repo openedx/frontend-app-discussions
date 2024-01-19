@@ -11,7 +11,7 @@ import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 import timeLocale from './time-locale';
 
 const AuthorLabel = ({

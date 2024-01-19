@@ -60,8 +60,7 @@ const LearnersView = () => {
       courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learners.map((learner) => (
         <LearnerCard learner={learner} key={learner.username} />
       ))
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    ) || <></>
+    ) || null
   ), [courseConfigLoadingStatus, learners]);
 
   return (

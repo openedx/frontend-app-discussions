@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import PropTypes from 'prop-types';
 
-export const postShape = PropTypes.shape({
+const postShape = PropTypes.shape({
   abuseFlagged: PropTypes.bool,
   author: PropTypes.string,
   commentCount: PropTypes.number,
@@ -18,3 +17,5 @@ export const postShape = PropTypes.shape({
   type: PropTypes.string,
   updatedAt: PropTypes.string,
 });
+
+export default postShape;

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { fetchTab } from './data/thunks';
+import fetchTab from './data/thunks';
 import Tabs from './tabs/Tabs';
 import messages from './messages';
 

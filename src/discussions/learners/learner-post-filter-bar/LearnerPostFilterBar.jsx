@@ -7,8 +7,8 @@ import { useParams } from 'react-router-dom';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import FilterBar from '../../../components/FilterBar';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { setPostFilter } from '../data/slices';
 

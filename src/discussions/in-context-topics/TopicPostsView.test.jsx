@@ -16,13 +16,13 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { PostActionsBar } from '../../components';
 import { Routes as ROUTES } from '../../data/constants';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { getCourseTopicsApiUrl } from './data/api';
 import { selectCoursewareTopics } from './data/selectors';
-import { fetchCourseTopicsV3 } from './data/thunks';
+import fetchCourseTopicsV3 from './data/thunks';
 import TopicPostsView from './TopicPostsView';
 import TopicsView from './TopicsView';
 

@@ -1,2 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-export { default as CourseTabsNavigation } from './CourseTabsNavigation';
+import CourseTabsNavigation from './CourseTabsNavigation';
+
+export default CourseTabsNavigation;

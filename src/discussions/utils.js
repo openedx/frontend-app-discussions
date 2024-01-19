@@ -17,7 +17,7 @@ import {
   ContentActions, Routes, ThreadType,
 } from '../data/constants';
 import { ContentSelectors } from './data/constants';
-import { PostCommentsContext } from './post-comments/postCommentsContext';
+import PostCommentsContext from './post-comments/postCommentsContext';
 import messages from './messages';
 
 /**
