@@ -24,7 +24,6 @@ const MockEditor = ({
   onBlur,
   onEditorChange,
 }) => (
-  // eslint-disable-next-line react/jsx-filename-extension
   <textarea
     data-testid="tinymce-editor"
     onChange={(event) => {

@@ -188,8 +188,16 @@ const FilterBar = ({
 
 FilterBar.propTypes = {
   intl: intlShape.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedFilters: PropTypes.shape.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    filters: PropTypes.arrayOf(PropTypes.string),
+  })).isRequired,
+  selectedFilters: PropTypes.shape({
+    postType: ThreadType,
+    status: PostsStatusFilter,
+    orderBy: ThreadOrdering,
+    cohort: PropTypes.string,
+  }).isRequired,
   onFilterChange: PropTypes.func.isRequired,
   showCohortsFilter: PropTypes.bool,
 };

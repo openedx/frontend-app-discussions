@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus } from './constants';
@@ -16,19 +15,33 @@ const blocksSlice = createSlice({
     blocks: {},
   },
   reducers: {
-    fetchCourseBlocksRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-    },
-    fetchCourseBlocksSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      Object.assign(state, payload);
-    },
-    fetchCourseBlocksFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    fetchCourseBlocksDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
+    fetchCourseBlocksRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    fetchCourseBlocksSuccess: (state, { payload }) => (
+      {
+        ...state,
+        status: RequestStatus.SUCCESSFUL,
+        topics: payload.topics,
+        chapters: payload.chapters,
+        blocks: payload.blocks,
+      }
+    ),
+    fetchCourseBlocksFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
+    fetchCourseBlocksDenied: (state) => (
+      {
+        ...state,
+        status: RequestStatus.DENIED,
+      }
+    ),
   },
 });
 

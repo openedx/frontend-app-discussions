@@ -7,10 +7,11 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '../../components/icons';
+} from '@edx/paragon/icons';
+
+import { ThreadType } from '../../data/constants';
 import { useUserPostingEnabled } from '../data/hooks';
 import PostCommentsContext from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
@@ -127,8 +128,22 @@ HoverCard.propTypes = {
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   onLike: PropTypes.func.isRequired,
   voted: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  endorseIcons: PropTypes.objectOf(PropTypes.any),
+  endorseIcons: PropTypes.objectOf(PropTypes.shape(
+    {
+      id: PropTypes.string,
+      action: PropTypes.string,
+      icon: PropTypes.element,
+      label: {
+        id: PropTypes.string,
+        defaultMessage: PropTypes.string,
+        description: PropTypes.string,
+      },
+      conditions: {
+        endorsed: PropTypes.bool,
+        postType: ThreadType,
+      },
+    },
+  )),
   onFollow: PropTypes.func,
   following: PropTypes.bool,
 };

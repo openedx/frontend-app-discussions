@@ -33,7 +33,6 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
-// eslint-disable-next-line import/no-cycle
 import { EmptyPage } from '../../empty-posts';
 import {
   selectArchivedTopics,

@@ -6,7 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../store';
 import executeThunk from '../test-utils';
-import getBlocksAPIResponse from './__factories__';
+import getBlocksAPIResponse from './__factories__/blocks';
 import { getBlocksAPIURL } from './api';
 import { RequestStatus } from './constants';
 import fetchCourseBlocks from './thunks';
