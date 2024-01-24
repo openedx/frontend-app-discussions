@@ -463,6 +463,12 @@ header {
   margin-bottom: 0px;
 }
 
+code {
+  word-wrap: break-word !important;
+  text-wrap: initial;
+  word-break: break-word !important;
+}
+
 .post-card-comment {
   outline: none;
 
