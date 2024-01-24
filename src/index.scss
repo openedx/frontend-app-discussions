@@ -22,23 +22,23 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .text-staff-color {
-  color: #998200;
+  color: $warning-700;
 }
 
 .outline-staff-color {
-  outline: #998200 solid 2px;
+  outline: $warning-700 solid 2px;
 }
 
 .text-TA-color {
-  color: #175B3C;
+  color: $success-700;
 }
 
 .outline-TA-color {
-  outline: #175B3C solid 2px;
+  outline: $success-700 solid 2px;
 }
 
 .outline-anonymous {
-  outline: #EAE6E5 solid 2px;
+  outline: $light-400 solid 2px;
 }
 
 .font-size-16 {
@@ -170,7 +170,7 @@ $fa-font-path: "~font-awesome/fonts";
 }
 
 .learner > a:hover {
-  background-color: #F2F0EF;
+  background-color: $light-300;
 }
 
 .py-10px {
@@ -227,8 +227,6 @@ header {
 }
 
 #learner-posts-link {
-  color: inherit;
-
   span[role=heading]:hover {
     text-decoration: underline;
   }
@@ -310,7 +308,6 @@ header {
 #courseTabsNavigation {
   font-size: 18px !important;
   z-index: 3;
-  background-color: #fff;
 
   .container-xl {
     font-size: 1.125rem;
@@ -330,10 +327,8 @@ header {
 }
 
 .header-action-bar {
-  background-color: #fff;
   z-index: 2 !important;
   box-shadow: 0px 2px 4px rgb(0 0 0 / 15%), 0px 2px 8px rgb(0 0 0 / 15%);
-  position: sticky;
   top: 0;
 
   .nav-button-group{
@@ -378,8 +373,8 @@ header {
 }
 
 .btn-icon.btn-icon-primary:hover {
-  background-color: #F2F0EF !important;
-  color: #00262B !important
+  background-color: $light-300 !important;
+  color: $primary-500 !important
 }
 
 
@@ -405,19 +400,14 @@ header {
   padding: 24px 24px 10px 24px;
 }
 
-.post-card-margin {
-  margin: 24px 24px 0px 24px;
-}
-
 .hover-card {
   height: 36px !important;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15), 0px 4px 10px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-  background: #FFFFFF;
   max-width: fit-content !important;
   margin-left: auto;
   margin-top: -2.063rem;
-  z-index: 2;
+  z-index: 1;
   right: 32px;
 }
 
@@ -426,18 +416,39 @@ header {
 }
 
 .hover-button:hover {
-  background-color: #F2F0EF !important;
+  background-color: $light-300 !important;
   height: 36px !important;
-  border: none;
+  border: none !important;
 }
 
 .btn-tertiary:hover {
-  background-color: #F2F0EF;
+  background-color: $light-300 !important;
+}
+
+.nav-button-group {
+  .nav-link {
+    &:hover {
+      background-color: $light-300 !important;
+    }
+  }
+
+  .nav-link.active,
+  .show>.nav-link {
+    background-color: $primary-500 !important;
+  }
+}
+
+.course-tabs-navigation {
+  .nav a {
+    &:hover {
+      background-color: $light-300 !important;;
+    }
+  }
 }
 
 .btn-tertiary:disabled {
-  color: #454545;
-  background-color: transparent;
+  color: $gray-700 !important;
+  background-color: transparent !important;
 }
 
 .disable-div {
@@ -488,12 +499,12 @@ header {
 }
 
 .line-height-24 {
-  line-height: 24px;
+  line-height: 24px !important;
 }
 
 .comments-sort {
   margin-bottom: -44px;
-  z-index: 1;
+  z-index: 0;
 }
 
 .comment-line {
@@ -504,10 +515,14 @@ header {
 .post-preview,
 .discussion-comments {
   blockquote {
-    border-left: 2px solid #ccc;
+    border-left: 2px solid $gray-200;
     margin-left: 1.5rem;
     padding-left: 1rem;
   }
+}
+
+.add-comment-btn {
+  border: 1px solid $light-300 !important;
 }
 
 .icon-size-24 {

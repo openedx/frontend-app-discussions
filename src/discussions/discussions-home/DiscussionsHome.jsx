@@ -80,7 +80,7 @@ const DiscussionsHome = () => {
         <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
           <div
-            className={classNames('header-action-bar', {
+            className={classNames('header-action-bar bg-white position-sticky', {
               'shadow-none border-light-300 border-bottom': enableInContextSidebar,
             })}
             ref={postActionBarRef}

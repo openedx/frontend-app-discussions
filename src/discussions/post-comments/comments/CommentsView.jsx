@@ -36,7 +36,7 @@ const CommentsView = ({ endorsed }) => {
 
   const handleDefinition = useCallback((message, commentsLength) => (
     <div
-      className="comment-line mx-4 my-14px text-gray-700 font-style"
+      className="comment-line line-height-24 mx-4 my-14px text-gray-700 font-style"
       role="heading"
       aria-level="2"
     >
