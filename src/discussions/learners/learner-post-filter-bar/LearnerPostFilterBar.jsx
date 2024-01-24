@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import FilterBar from '../../../components/FilterBar';
+import { PostsStatusFilter, ThreadType } from '../../../data/constants';
 import { selectCourseCohorts } from '../../cohorts/data/selectors';
 import { fetchCourseCohorts } from '../../cohorts/data/thunks';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
@@ -58,10 +59,16 @@ const LearnerPostFilterBar = () => {
       }
     } else if (name === 'status') {
       if (postFilter.status !== value) {
+        const newPostType = (value === PostsStatusFilter.UNANSWERED && ThreadType.QUESTION)
+        || (value === PostsStatusFilter.UNRESPONDED && ThreadType.DISCUSSION)
+        || postFilter.postType;
+
         dispatch(setPostFilter({
           ...postFilter,
+          postType: newPostType,
           status: value,
         }));
+
         filterContentEventProperties.statusFilter = value;
       }
     } else if (name === 'orderBy') {
