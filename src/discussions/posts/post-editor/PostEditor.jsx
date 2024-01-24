@@ -33,7 +33,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
-import { EmptyPage } from '../../empty-posts';
+import EmptyPage from '../../empty-posts/EmptyPage';
 import {
   selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,

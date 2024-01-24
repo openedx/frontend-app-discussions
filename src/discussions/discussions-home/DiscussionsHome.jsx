@@ -18,7 +18,8 @@ import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider, selectEnableInContext } from '../data/selectors';
-import { EmptyLearners, EmptyPosts, EmptyTopics } from '../empty-posts';
+import { EmptyLearners, EmptyTopics } from '../empty-posts';
+import EmptyPosts from '../empty-posts/EmptyPosts';
 import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
 import messages from '../messages';
 import { selectPostEditorVisible } from '../posts/data/selectors';
