@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { generatePath, Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -11,6 +11,7 @@ import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
+import { discussionsPath } from '../utils';
 import { DiscussionContext } from './context';
 import timeLocale from './time-locale';
 
@@ -26,7 +27,7 @@ const AuthorLabel = ({
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
-  const { courseId } = useContext(DiscussionContext);
+  const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
 
@@ -109,13 +110,21 @@ const AuthorLabel = ({
     </>
   ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
+  const { pathname } = discussionsPath(Routes.LEARNERS.POSTS, {
+    0: enableInContextSidebar ? 'in-context' : undefined,
+    learnerUsername: author,
+    courseId,
+  })();
+
+  const { search } = useLocation();
+
   return showUserNameAsLink
     ? (
       <div className={className}>
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
-          to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
+          to={`${pathname}${enableInContextSidebar ? search : ''}`}
           className="text-decoration-none"
           style={{ width: 'fit-content' }}
         >
