@@ -59,13 +59,13 @@ const LearnerPostFilterBar = () => {
       }
     } else if (name === 'status') {
       if (postFilter.status !== value) {
-        const newPostType = (value === PostsStatusFilter.UNANSWERED && ThreadType.QUESTION)
+        const postType = (value === PostsStatusFilter.UNANSWERED && ThreadType.QUESTION)
         || (value === PostsStatusFilter.UNRESPONDED && ThreadType.DISCUSSION)
         || postFilter.postType;
 
         dispatch(setPostFilter({
           ...postFilter,
-          postType: newPostType,
+          postType,
           status: value,
         }));
 
