@@ -22,7 +22,7 @@ import { DiscussionContext } from '../../common/context';
 import { fetchCourseTopics } from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
-import { PostEditor } from '../index';
+import PostEditor from './PostEditor';
 
 import '../../cohorts/data/__factories__';
 import '../../data/__factories__';
