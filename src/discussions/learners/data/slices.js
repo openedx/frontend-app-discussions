@@ -28,16 +28,6 @@ const learnersSlice = createSlice({
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => (
-    //   state.status = RequestStatus.SUCCESSFUL;
-    //   state.pages[payload.page - 1] = payload.results;
-    //   state.learnerProfiles = {
-    //     ...state.learnerProfiles,
-    //     ...(payload.learnerProfiles || {}),
-    //   };
-    //   state.nextPage = (payload.page < payload.pagination.numPages) ? payload.page + 1 : null;
-    //   state.totalPages = payload.pagination.numPages;
-    //   state.totalLearners = payload.pagination.count;
-    // },
       {
         ...state,
         status: RequestStatus.SUCCESSFUL,
