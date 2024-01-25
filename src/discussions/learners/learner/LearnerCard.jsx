@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
 import { DiscussionContext } from '../../common/context';
@@ -14,18 +14,16 @@ const LearnerCard = ({ learner }) => {
     username, threads, inactiveFlags, activeFlags, responses, replies,
   } = learner;
   const { enableInContextSidebar, learnerUsername, courseId } = useContext(DiscussionContext);
-  const { pathname } = discussionsPath(Routes.LEARNERS.POSTS, {
+  const linkUrl = discussionsPath(Routes.LEARNERS.POSTS, {
     0: enableInContextSidebar ? 'in-context' : undefined,
     learnerUsername: learner.username,
     courseId,
   })();
 
-  const { search } = useLocation();
-
   return (
     <Link
       className="discussion-post p-0 text-decoration-none text-gray-900 border-bottom border-light-400"
-      to={`${pathname}${enableInContextSidebar ? search : ''}`}
+      to={linkUrl}
     >
       <div
         className="d-flex flex-row flex-fill mw-100 py-3 px-4 border-primary-500"
