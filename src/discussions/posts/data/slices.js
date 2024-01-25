@@ -133,8 +133,10 @@ const threadsSlice = createSlice({
         ...(state.threadsInTopic[payload.topicId] || []),
         payload.id,
       ];
-      // Temporarily add it to the top of the list so it's visible
-      state.pages[0] = [payload.id].concat(state.pages[0] || []);
+      if (!payload.anonymousToPeers) {
+        // Temporarily add it to the top of the list so it's visible
+        state.pages[0] = [payload.id].concat(state.pages[0] || []);
+      }
       state.avatars = { ...state.avatars, ...payload.avatars };
       state.redirectToThread = { topicId: payload.topicId, threadId: payload.id };
       state.threadDraft = null;
