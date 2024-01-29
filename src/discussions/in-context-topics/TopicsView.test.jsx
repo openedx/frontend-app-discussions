@@ -151,12 +151,14 @@ describe('InContext Topics View', () => {
     const sectionGroups = await screen.getAllByTestId('section-group');
 
     coursewareTopics.forEach(async (topic, index) => {
-      const stats = await sectionGroups[index].querySelectorAll('.icon-size:not([data-testid="subsection-group"].icon-size)');
-      const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
+      await waitFor(async () => {
+        const stats = await sectionGroups[index].querySelectorAll('.icon-size:not([data-testid="subsection-group"].icon-size)');
+        const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
 
-      expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
-      expect(stats).toHaveLength(0);
-      expect(subsectionGroups).toHaveLength(2);
+        expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
+        expect(stats).toHaveLength(0);
+        expect(subsectionGroups).toHaveLength(2);
+      });
     });
   });
 
