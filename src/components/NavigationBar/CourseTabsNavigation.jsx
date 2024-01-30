@@ -24,7 +24,7 @@ const CourseTabsNavigation = ({
   }, [courseId]);
 
   return (
-    <div id="courseTabsNavigation" className={classNames('course-tabs-navigation px-4', className)}>
+    <div id="courseTabsNavigation" className={classNames('course-tabs-navigation px-4 bg-white', className)}>
       {!!tabs.length && (
         <Tabs
           className="nav-underline-tabs"
