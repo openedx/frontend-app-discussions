@@ -5,7 +5,7 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import messages from '../messages';
 import DiscussionsRestrictionBanner from './DiscussionsRestrictionBanner';

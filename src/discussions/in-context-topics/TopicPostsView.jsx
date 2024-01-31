@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Spinner } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import { selectTopicThreadsIds } from '../posts/data/selectors';
 import PostsList from '../posts/PostsList';
@@ -18,7 +18,7 @@ import {
   selectArchivedTopic, selectLoadingStatus, selectNonCoursewareTopics,
   selectSubsection, selectSubsectionUnits, selectUnits,
 } from './data/selectors';
-import { fetchCourseTopicsV3 } from './data/thunks';
+import fetchCourseTopicsV3 from './data/thunks';
 import { BackButton, NoResults } from './components';
 import messages from './messages';
 import { Topic } from './topic';

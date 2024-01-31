@@ -6,7 +6,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Nav } from '@edx/paragon';
 
 import { Routes } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { discussionsPath } from '../../utils';
 import messages from './messages';
 

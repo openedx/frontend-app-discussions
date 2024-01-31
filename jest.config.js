@@ -5,10 +5,10 @@ module.exports = createConfig('jest', {
   // If you want to add config BEFORE jest loads, use setupFiles instead.
   setupFiles: ['<rootDir>/.env.test'],
   setupFilesAfterEnv: [
-    '<rootDir>/src/setupTest.js',
+    '<rootDir>/src/setupTest.jsx',
   ],
   coveragePathIgnorePatterns: [
-    'src/setupTest.js',
+    'src/setupTest.jsx',
     'src/i18n',
   ],
 });

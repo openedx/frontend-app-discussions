@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { createSelector } from '@reduxjs/toolkit';
 
 export const selectTopicFilter = state => state.inContextTopics.filter.trim().toLowerCase();

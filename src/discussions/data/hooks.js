@@ -15,13 +15,13 @@ import { breakpoints, useWindowSize } from '@edx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
-import { fetchCourseBlocks } from '../../data/thunks';
-import { DiscussionContext } from '../common/context';
+import fetchCourseBlocks from '../../data/thunks';
+import DiscussionContext from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
 import tourCheckpoints from '../tours/constants';
-import { selectTours } from '../tours/data/selectors';
+import selectTours from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
 import { discussionsPath } from '../utils';
@@ -36,7 +36,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from './selectors';
-import { fetchCourseConfig } from './thunks';
+import fetchCourseConfig from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);

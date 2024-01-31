@@ -19,9 +19,9 @@ import {
   PostsStatusFilter, RequestStatus,
   ThreadOrdering, ThreadType,
 } from '../../../data/constants';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { DiscussionContext } from '../../common/context';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
+import DiscussionContext from '../../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import {
   setCohortFilter, setPostsTypeFilter, setSortedBy, setStatusFilter,
