@@ -26,7 +26,7 @@ const AuthorLabel = ({
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
-  const { courseId } = useContext(DiscussionContext);
+  const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
   let icon = null;
   let authorLabelMessage = null;
 
@@ -44,7 +44,8 @@ const AuthorLabel = ({
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
-  const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
+  const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous)
+                             && !enableInContextSidebar;
 
   const authorName = useMemo(() => (
     <span
