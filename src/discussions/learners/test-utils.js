@@ -4,9 +4,9 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getDiscussionsConfigUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import { getUserProfileApiUrl, learnerPostsApiUrl, learnersApiUrl } from './data/api';
 import { fetchLearners, fetchUserPosts } from './data/thunks';
 

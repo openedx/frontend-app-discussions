@@ -15,12 +15,12 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getApiBaseUrl, Routes as ROUTES, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import { getCoursesApiUrl } from '../learners/data/api';
-import { fetchCourseTopics } from '../topics/data/thunks';
+import fetchCourseTopics from '../topics/data/thunks';
 import { getThreadsApiUrl } from './data/api';
 import { PostsView } from './index';
 

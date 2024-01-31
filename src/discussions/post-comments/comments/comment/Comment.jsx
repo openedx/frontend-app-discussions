@@ -12,7 +12,7 @@ import { Button, useToggle } from '@edx/paragon';
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
-import { DiscussionContext } from '../../../common/context';
+import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
@@ -29,7 +29,7 @@ import {
 } from '../../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../../data/thunks';
 import messages from '../../messages';
-import { PostCommentsContext } from '../../postCommentsContext';
+import PostCommentsContext from '../../postCommentsContext';
 import CommentEditor from './CommentEditor';
 import CommentHeader from './CommentHeader';
 import Reply from './Reply';

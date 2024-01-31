@@ -14,7 +14,7 @@ import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions, getFullUrl } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';

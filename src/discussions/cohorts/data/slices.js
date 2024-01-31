@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus } from '../../../data/constants';
@@ -10,17 +9,26 @@ const cohortsSlice = createSlice({
     cohorts: [],
   },
   reducers: {
-    fetchCohortsRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-      state.cohorts = [];
-    },
-    fetchCohortsSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      state.cohorts = payload;
-    },
-    fetchCohortsFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
+    fetchCohortsRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+        cohorts: [],
+      }
+    ),
+    fetchCohortsSuccess: (state, { payload }) => (
+      {
+        ...state,
+        status: RequestStatus.SUCCESSFUL,
+        cohorts: payload,
+      }
+    ),
+    fetchCohortsFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
   },
 });
 

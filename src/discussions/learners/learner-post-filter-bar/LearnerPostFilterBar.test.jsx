@@ -10,7 +10,7 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import LearnerPostFilterBar from './LearnerPostFilterBar';
 
 let store;

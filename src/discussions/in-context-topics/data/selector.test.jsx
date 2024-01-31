@@ -5,7 +5,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
+import executeThunk from '../../../test-utils';
 import { getCourseTopicsApiUrl } from './api';
 import {
   selectArchivedTopic,
@@ -20,7 +20,7 @@ import {
   selectTotalTopicsThreadsCount,
   selectUnits,
 } from './selectors';
-import { fetchCourseTopicsV3 } from './thunks';
+import fetchCourseTopicsV3 from './thunks';
 
 import './__factories__';
 

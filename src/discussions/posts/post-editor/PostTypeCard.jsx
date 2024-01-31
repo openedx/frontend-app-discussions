@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { Card, Form } from '@edx/paragon';
 
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 
 const PostTypeCard = ({
   value,

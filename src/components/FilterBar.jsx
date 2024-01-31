@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -15,7 +14,7 @@ import {
   PostsStatusFilter, RequestStatus,
   ThreadOrdering, ThreadType,
 } from '../data/constants';
-import { selectCourseCohorts } from '../discussions/cohorts/data/selectors';
+import selectCourseCohorts from '../discussions/cohorts/data/selectors';
 import messages from '../discussions/posts/post-filter-bar/messages';
 import { ActionItem } from '../discussions/posts/post-filter-bar/PostFilterBar';
 
@@ -194,8 +193,16 @@ const FilterBar = ({
 
 FilterBar.propTypes = {
   intl: intlShape.isRequired,
-  filters: PropTypes.array.isRequired,
-  selectedFilters: PropTypes.object.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    filters: PropTypes.arrayOf(PropTypes.string),
+  })).isRequired,
+  selectedFilters: PropTypes.shape({
+    postType: ThreadType,
+    status: PostsStatusFilter,
+    orderBy: ThreadOrdering,
+    cohort: PropTypes.string,
+  }).isRequired,
   onFilterChange: PropTypes.func.isRequired,
   showCohortsFilter: PropTypes.bool,
 };

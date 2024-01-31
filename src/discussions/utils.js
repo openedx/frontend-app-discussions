@@ -9,15 +9,15 @@ import {
 
 import { getConfig } from '@edx/frontend-platform';
 import {
-  CheckCircle, CheckCircleOutline, Delete, Edit, Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
+  CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
+  Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
-import { InsertLink } from '../components/icons';
 import {
   ContentActions, Routes, ThreadType,
 } from '../data/constants';
 import { ContentSelectors } from './data/constants';
-import { PostCommentsContext } from './post-comments/postCommentsContext';
+import PostCommentsContext from './post-comments/postCommentsContext';
 import messages from './messages';
 
 /**

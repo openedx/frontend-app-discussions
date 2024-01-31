@@ -10,7 +10,7 @@ import { Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectAreThreadsFiltered, selectDiscussionProvider } from '../data/selectors';
 import { clearFilter, clearSort } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
@@ -20,7 +20,7 @@ import {
   selectNonCoursewareTopics, selectTopicFilter, selectTopics,
 } from './data/selectors';
 import { setFilter } from './data/slices';
-import { fetchCourseTopicsV3 } from './data/thunks';
+import fetchCourseTopicsV3 from './data/thunks';
 import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
 const TopicsList = () => {

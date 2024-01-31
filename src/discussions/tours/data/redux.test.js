@@ -5,9 +5,9 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { RequestStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
+import executeThunk from '../../../test-utils';
 import { getDiscussionTourUrl } from './api';
-import { selectTours } from './selectors';
+import selectTours from './selectors';
 import {
   discussionsTourRequest,
   discussionsToursRequestError,

@@ -5,11 +5,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../store';
-import { executeThunk } from '../test-utils';
-import { getBlocksAPIResponse } from './__factories__';
+import executeThunk from '../test-utils';
+import getBlocksAPIResponse from './__factories__/blocks';
 import { getBlocksAPIURL } from './api';
 import { RequestStatus } from './constants';
-import { fetchCourseBlocks } from './thunks';
+import fetchCourseBlocks from './thunks';
 
 const blocksAPIURL = getBlocksAPIURL();
 const courseId = 'course-v1:edX+DemoX+Demo_Course';

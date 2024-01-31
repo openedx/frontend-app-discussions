@@ -9,10 +9,10 @@ import {
   Badge, Icon, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
 import {
+  People, QuestionAnswer, QuestionAnswerOutline,
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '@edx/paragon/icons';
 
-import { People, QuestionAnswer, QuestionAnswerOutline } from '../../../components/icons';
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import messages from './messages';
