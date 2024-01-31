@@ -7,12 +7,11 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Badge, Icon } from '@edx/paragon';
-import { CheckCircle } from '@edx/paragon/icons';
+import { CheckCircle, PushPin } from '@edx/paragon/icons';
 
-import { PushPin } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { discussionsPath, isPostPreviewAvailable } from '../../utils';
 import { selectThread } from '../data/selectors';
 import messages from './messages';

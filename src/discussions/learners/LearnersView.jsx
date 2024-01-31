@@ -55,14 +55,14 @@ const LearnersView = () => {
     dispatch(setUsernameSearch(''));
   }, []);
 
-  const renderLearnersList = useMemo(() => (
-    (
-      courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learners.map((learner) => (
+  const renderLearnersList = useMemo(() => {
+    if (courseConfigLoadingStatus === RequestStatus.SUCCESSFUL) {
+      return learners.map((learner) => (
         <LearnerCard learner={learner} key={learner.username} />
-      ))
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    ) || <></>
-  ), [courseConfigLoadingStatus, learners]);
+      ));
+    }
+    return null;
+  }, [courseConfigLoadingStatus, learners]);
 
   return (
     <div className="d-flex flex-column border-right border-light-400">

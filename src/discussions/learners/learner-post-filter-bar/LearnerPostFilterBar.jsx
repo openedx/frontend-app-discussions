@@ -8,8 +8,8 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import FilterBar from '../../../components/FilterBar';
 import { PostsStatusFilter, ThreadType } from '../../../data/constants';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import { setPostFilter } from '../data/slices';
 

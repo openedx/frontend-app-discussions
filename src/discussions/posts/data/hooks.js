@@ -1,11 +1,10 @@
-/* eslint-disable import/prefer-default-export */
 import { useMemo } from 'react';
 
 import { useSelector } from 'react-redux';
 
 import { selectThreadsByIds } from './selectors';
 
-export const usePostList = (ids) => {
+const usePostList = (ids) => {
   const posts = useSelector(selectThreadsByIds(ids));
   const pinnedPostsIds = [];
   const unpinnedPostsIds = [];
@@ -24,3 +23,5 @@ export const usePostList = (ids) => {
 
   return sortedIds;
 };
+
+export default usePostList;

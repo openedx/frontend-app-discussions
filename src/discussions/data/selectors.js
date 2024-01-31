@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({

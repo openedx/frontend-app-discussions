@@ -8,8 +8,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../post-comments/messages';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
-import { DiscussionContext } from './context';
+import PostCommentsContext from '../post-comments/postCommentsContext';
+import DiscussionContext from './context';
 import EndorsedAlertBanner from './EndorsedAlertBanner';
 
 import '../post-comments/data/__factories__';

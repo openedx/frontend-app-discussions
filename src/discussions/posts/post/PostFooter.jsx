@@ -7,9 +7,10 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import { Locked, People } from '@edx/paragon/icons';
+import {
+  Locked, People, StarFilled, StarOutline,
+} from '@edx/paragon/icons';
 
-import { StarFilled, StarOutline } from '../../../components/icons';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';

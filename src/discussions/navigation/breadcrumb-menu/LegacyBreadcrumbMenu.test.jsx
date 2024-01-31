@@ -14,8 +14,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
-import { fetchCourseTopics } from '../../topics/data/thunks';
+import executeThunk from '../../../test-utils';
+import fetchCourseTopics from '../../topics/data/thunks';
 import { LegacyBreadcrumbMenu } from '../index';
 
 import '../../topics/data/__factories__';

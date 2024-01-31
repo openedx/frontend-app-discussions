@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { camelCaseObject, snakeCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 

@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SearchInfo from '../../components/SearchInfo';
 import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectEnableInContext } from '../data/selectors';
 import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
-import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
+import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
 import { selectTopics } from '../topics/data/selectors';
-import { fetchCourseTopics } from '../topics/data/thunks';
+import fetchCourseTopics from '../topics/data/thunks';
 import { handleKeyDown } from '../utils';
 import { selectAllThreadsIds, selectTopicThreadsIds } from './data/selectors';
 import { setSearchQuery } from './data/slices';

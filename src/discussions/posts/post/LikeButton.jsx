@@ -5,8 +5,8 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
+import { ThumbUpFilled, ThumbUpOutline } from '@edx/paragon/icons';
 
-import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
 import messages from './messages';
 
 const LikeButton = ({ count, onClick, voted }) => {

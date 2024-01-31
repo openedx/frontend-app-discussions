@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Edit, Report, ReportGmailerrorred } from '@edx/paragon/icons';
+import {
+  Edit, QuestionAnswerOutline, Report, ReportGmailerrorred,
+} from '@edx/paragon/icons';
 
-import { QuestionAnswerOutline } from '../../../components/icons';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';
 

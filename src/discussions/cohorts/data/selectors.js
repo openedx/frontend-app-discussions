@@ -1,3 +1,3 @@
-/* eslint-disable import/prefer-default-export */
+const selectCourseCohorts = state => state.cohorts.cohorts;
 
-export const selectCourseCohorts = state => state.cohorts.cohorts;
+export default selectCourseCohorts;

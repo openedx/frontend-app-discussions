@@ -9,11 +9,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCourseConfigApiUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import AuthorLabel from './AuthorLabel';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const courseConfigApiUrl = getCourseConfigApiUrl();

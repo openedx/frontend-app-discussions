@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { Routes } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { discussionsPath } from '../../utils';
 import { selectTopicFilter, selectTopicsById } from '../data/selectors';
 import messages from '../messages';
@@ -44,8 +44,7 @@ const TopicGroupBase = ({
 
   const renderFilteredTopics = useMemo(() => {
     if (!hasFilteredSubtopics) {
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      return <></>;
+      return null;
     }
 
     return (

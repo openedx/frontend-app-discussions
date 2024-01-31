@@ -16,9 +16,9 @@ import {
   RequestStatus,
   Routes,
 } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
-import { usePostList } from '../posts/data/hooks';
+import usePostList from '../posts/data/hooks';
 import {
   selectAllThreadsIds,
   selectThreadNextPage,

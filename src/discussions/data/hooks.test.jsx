@@ -8,11 +8,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getCourseConfigApiUrl } from './api';
 import { useCurrentDiscussionTopic, useUserPostingEnabled } from './hooks';
-import { fetchCourseConfig } from './thunks';
+import fetchCourseConfig from './thunks';
 
 const courseId = 'course-v1:edX+TestX+Test_Course';
 const courseConfigApiUrl = getCourseConfigApiUrl();

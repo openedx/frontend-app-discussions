@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { reduce } from 'lodash';
 
 import { logError } from '@edx/frontend-platform/logging';
@@ -53,7 +52,7 @@ function normalizeTopicsV3(topics) {
   };
 }
 
-export function fetchCourseTopicsV3(courseId) {
+export default function fetchCourseTopicsV3(courseId) {
   return async (dispatch) => {
     try {
       dispatch(fetchCourseTopicsRequest({ courseId }));
