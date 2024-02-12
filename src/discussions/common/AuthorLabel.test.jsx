@@ -61,7 +61,7 @@ describe('Author label', () => {
 
   describe.each([
     ['anonymous', null, false, ''],
-    ['ta_user', 'Community TA', true, 'text-TA-color'],
+    ['ta_user', 'Moderator', true, 'text-TA-color'],
     ['retired__user', null, false, ''],
     ['staff_user', 'Staff', true, 'text-staff-color'],
     ['learner_user', null, false, ''],
@@ -106,7 +106,7 @@ describe('Author label', () => {
         const authorElement = container.querySelector('[role=heading]');
         const labelParentNode = authorElement.parentNode.parentNode;
         const labelElement = labelParentNode.lastChild.lastChild;
-        const label = ['TA', 'Staff'].includes(labelElement.textContent) && labelElement.textContent;
+        const label = ['TA', 'Staff', 'Moderator'].includes(labelElement.textContent) && labelElement.textContent;
 
         if (linkToProfile) {
           expect(labelParentNode).toHaveClass(labelColor);
