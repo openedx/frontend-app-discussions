@@ -53,6 +53,8 @@ const DiscussionsHome = () => {
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
+  const isUserEnrolled = enableInContextSidebar ? Boolean(new URLSearchParams(location.search).get('isEnrolled') === 'true') : isEnrolled && courseStatus === LOADED;
+
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
@@ -98,84 +100,79 @@ const DiscussionsHome = () => {
               {!enableInContextSidebar && (
                 <NavigationBar />
               )}
-              {isEnrolled && courseStatus === LOADED && <PostActionsBar />}
+              {isUserEnrolled && <PostActionsBar />}
             </div>
             <DiscussionsRestrictionBanner />
           </div>
-          {courseStatus === LOADED && (
-            <>
-              {provider === DiscussionProvider.LEGACY && (
+          {provider === DiscussionProvider.LEGACY && (
+          <Suspense fallback={(<Spinner />)}>
+            <Routes>
+              {[
+                ROUTES.TOPICS.CATEGORY,
+                ROUTES.TOPICS.CATEGORY_POST,
+                ROUTES.TOPICS.CATEGORY_POST_EDIT,
+                ROUTES.TOPICS.TOPIC,
+                ROUTES.TOPICS.TOPIC_POST,
+                ROUTES.TOPICS.TOPIC_POST_EDIT,
+              ].map((route) => (
+                <Route
+                  key={route}
+                  path={route}
+                  element={<LegacyBreadcrumbMenu />}
+                />
+              ))}
+            </Routes>
+          </Suspense>
+          )}
+          {!isUserEnrolled && (
+            <Suspense fallback={(<Spinner />)}>
+              <Routes>
+                {ALL_ROUTES.map((route) => (
+                  <Route
+                    key={route}
+                    path={route}
+                    element={(<ContentUnavailable subTitleMessage={messages.contentUnavailableSubTitle} />)}
+                  />
+                ))}
+              </Routes>
+            </Suspense>
+          )}
+          {isUserEnrolled && (
+            <div className="d-flex flex-row position-relative">
               <Suspense fallback={(<Spinner />)}>
-                <Routes>
-                  {[
-                    ROUTES.TOPICS.CATEGORY,
-                    ROUTES.TOPICS.CATEGORY_POST,
-                    ROUTES.TOPICS.CATEGORY_POST_EDIT,
-                    ROUTES.TOPICS.TOPIC,
-                    ROUTES.TOPICS.TOPIC_POST,
-                    ROUTES.TOPICS.TOPIC_POST_EDIT,
-                  ].map((route) => (
+                <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
+              </Suspense>
+              {displayContentArea && (
+              <Suspense fallback={(<Spinner />)}>
+                <DiscussionContent />
+              </Suspense>
+              )}
+              {!displayContentArea && (
+              <Routes>
+                <>
+                  {ROUTES.TOPICS.PATH.map(route => (
+                    <Route
+                      key={route}
+                      path={`${route}/*`}
+                      element={(enableInContext || enableInContextSidebar) ? <InContextEmptyTopics /> : <EmptyTopics />}
+                    />
+                  ))}
+                  <Route
+                    path={ROUTES.POSTS.MY_POSTS}
+                    element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
+                  />
+                  {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
                     <Route
                       key={route}
                       path={route}
-                      element={<LegacyBreadcrumbMenu />}
+                      element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
                     />
                   ))}
-                </Routes>
-              </Suspense>
+                  <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
+                </>
+              </Routes>
               )}
-              {!isEnrolled && (
-              <Suspense fallback={(<Spinner />)}>
-                <Routes>
-                  {ALL_ROUTES.map((route) => (
-                    <Route
-                      key={route}
-                      path={route}
-                      element={(<ContentUnavailable subTitleMessage={messages.contentUnavailableSubTitle} />)}
-                    />
-                  ))}
-                </Routes>
-              </Suspense>
-              )}
-              {isEnrolled && (
-              <div className="d-flex flex-row position-relative">
-                <Suspense fallback={(<Spinner />)}>
-                  <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
-                </Suspense>
-                {displayContentArea && (
-                <Suspense fallback={(<Spinner />)}>
-                  <DiscussionContent />
-                </Suspense>
-                )}
-                {!displayContentArea && (
-                <Routes>
-                  <>
-                    {ROUTES.TOPICS.PATH.map(route => (
-                      <Route
-                        key={route}
-                        path={`${route}/*`}
-                        element={(enableInContext || enableInContextSidebar)
-                          ? <InContextEmptyTopics /> : <EmptyTopics />}
-                      />
-                    ))}
-                    <Route
-                      path={ROUTES.POSTS.MY_POSTS}
-                      element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
-                    />
-                    {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
-                      <Route
-                        key={route}
-                        path={route}
-                        element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
-                      />
-                    ))}
-                    <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
-                  </>
-                </Routes>
-                )}
-              </div>
-              )}
-            </>
+            </div>
           )}
           {!enableInContextSidebar && (
             <DiscussionsProductTour />

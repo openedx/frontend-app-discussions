@@ -568,6 +568,10 @@ code {
   word-break: break-all;
 }
 
-.content-unavailable {
-  width: 515px;
+.content-unavailable-desktop {
+  width: 28rem !important;
+}
+
+.content-unavailable-mobile {
+  padding: 0px 16px !important;
 }
