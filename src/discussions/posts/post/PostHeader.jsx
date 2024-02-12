@@ -52,6 +52,7 @@ export const PostAvatar = React.memo(({
           [`outline-${outlineColor}`]: outlineColor,
           'outline-anonymous': !outlineColor,
           'mt-3 ml-2': postType === ThreadType.QUESTION && fromPostLink,
+          'mt-2.5': postType === ThreadType.QUESTION && !fromPostLink,
           'avarat-img-position mt-17px': postType === ThreadType.QUESTION,
         })}
         style={{
