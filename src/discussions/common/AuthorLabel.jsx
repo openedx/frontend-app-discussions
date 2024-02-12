@@ -35,6 +35,11 @@ const AuthorLabel = ({
     authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
   }
 
+  if (authorLabel === 'Moderator') {
+    icon = School;
+    authorLabelMessage = intl.formatMessage(messages.authorLabelModerator);
+  }
+
   if (authorLabel === 'Community TA') {
     icon = School;
     authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
@@ -63,17 +68,21 @@ const AuthorLabel = ({
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
-        overlay={(
-          <Tooltip id={`endorsed-by-${author}-tooltip`}>
-            {author}
-          </Tooltip>
-        )}
+        placement="right"
+        overlay={
+          authorToolTip ? (
+            <Tooltip id={`endorsed-by-${author}-tooltip`}>
+              {author}
+            </Tooltip>
+          ) : (
+            <Tooltip id={`${authorLabel}-role-tooltip`}>
+              {authorLabel}
+            </Tooltip>
+          )
+      }
         trigger={['hover', 'focus']}
       >
-        <div className={classNames('d-flex flex-row align-items-center', {
-          'disable-div': !authorToolTip,
-        })}
-        >
+        <div className={classNames('d-flex flex-row align-items-start')}>
           <Icon
             style={{
               width: '1rem',
