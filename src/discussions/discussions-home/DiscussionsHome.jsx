@@ -12,8 +12,10 @@ import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
+import ContentUnavailable from '../course-content-unavailable/CourseContentUnavailable';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
@@ -41,7 +43,9 @@ const DiscussionsHome = () => {
   const postEditorVisible = useSelector(selectPostEditorVisible);
   const provider = useSelector(selectDiscussionProvider);
   const enableInContext = useSelector(selectEnableInContext);
-  const { courseNumber, courseTitle, org } = useSelector(selectCourseTabs);
+  const {
+    courseNumber, courseTitle, org, courseStatus, isEnrolled,
+  } = useSelector(selectCourseTabs);
   const pageParams = useMatch(ROUTES.COMMENTS.PAGE)?.params;
   const page = pageParams?.page || null;
   const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
@@ -94,65 +98,85 @@ const DiscussionsHome = () => {
               {!enableInContextSidebar && (
                 <NavigationBar />
               )}
-              <PostActionsBar />
+              {isEnrolled && courseStatus === LOADED && <PostActionsBar />}
             </div>
             <DiscussionsRestrictionBanner />
           </div>
-          {provider === DiscussionProvider.LEGACY && (
-            <Suspense fallback={(<Spinner />)}>
-              <Routes>
-                {[
-                  ROUTES.TOPICS.CATEGORY,
-                  ROUTES.TOPICS.CATEGORY_POST,
-                  ROUTES.TOPICS.CATEGORY_POST_EDIT,
-                  ROUTES.TOPICS.TOPIC,
-                  ROUTES.TOPICS.TOPIC_POST,
-                  ROUTES.TOPICS.TOPIC_POST_EDIT,
-                ].map((route) => (
-                  <Route
-                    key={route}
-                    path={route}
-                    element={<LegacyBreadcrumbMenu />}
-                  />
-                ))}
-              </Routes>
-            </Suspense>
-          )}
-          <div className="d-flex flex-row position-relative">
-            <Suspense fallback={(<Spinner />)}>
-              <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
-            </Suspense>
-            {displayContentArea && (
+          {courseStatus === LOADED && (
+            <>
+              {provider === DiscussionProvider.LEGACY && (
               <Suspense fallback={(<Spinner />)}>
-                <DiscussionContent />
-              </Suspense>
-            )}
-            {!displayContentArea && (
-              <Routes>
-                <>
-                  {ROUTES.TOPICS.PATH.map(route => (
-                    <Route
-                      key={route}
-                      path={`${route}/*`}
-                      element={(enableInContext || enableInContextSidebar) ? <InContextEmptyTopics /> : <EmptyTopics />}
-                    />
-                  ))}
-                  <Route
-                    path={ROUTES.POSTS.MY_POSTS}
-                    element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
-                  />
-                  {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
+                <Routes>
+                  {[
+                    ROUTES.TOPICS.CATEGORY,
+                    ROUTES.TOPICS.CATEGORY_POST,
+                    ROUTES.TOPICS.CATEGORY_POST_EDIT,
+                    ROUTES.TOPICS.TOPIC,
+                    ROUTES.TOPICS.TOPIC_POST,
+                    ROUTES.TOPICS.TOPIC_POST_EDIT,
+                  ].map((route) => (
                     <Route
                       key={route}
                       path={route}
-                      element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
+                      element={<LegacyBreadcrumbMenu />}
                     />
                   ))}
-                  <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
-                </>
-              </Routes>
-            )}
-          </div>
+                </Routes>
+              </Suspense>
+              )}
+              {!isEnrolled && (
+              <Suspense fallback={(<Spinner />)}>
+                <Routes>
+                  {ALL_ROUTES.map((route) => (
+                    <Route
+                      key={route}
+                      path={route}
+                      element={(<ContentUnavailable subTitleMessage={messages.contentUnavailableSubTitle} />)}
+                    />
+                  ))}
+                </Routes>
+              </Suspense>
+              )}
+              {isEnrolled && (
+              <div className="d-flex flex-row position-relative">
+                <Suspense fallback={(<Spinner />)}>
+                  <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
+                </Suspense>
+                {displayContentArea && (
+                <Suspense fallback={(<Spinner />)}>
+                  <DiscussionContent />
+                </Suspense>
+                )}
+                {!displayContentArea && (
+                <Routes>
+                  <>
+                    {ROUTES.TOPICS.PATH.map(route => (
+                      <Route
+                        key={route}
+                        path={`${route}/*`}
+                        element={(enableInContext || enableInContextSidebar)
+                          ? <InContextEmptyTopics /> : <EmptyTopics />}
+                      />
+                    ))}
+                    <Route
+                      path={ROUTES.POSTS.MY_POSTS}
+                      element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
+                    />
+                    {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
+                      <Route
+                        key={route}
+                        path={route}
+                        element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
+                      />
+                    ))}
+                    <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
+                  </>
+                </Routes>
+                )}
+              </div>
+              )}
+            </>
+          )}
           {!enableInContextSidebar && (
             <DiscussionsProductTour />
           )}

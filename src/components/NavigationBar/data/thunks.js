@@ -23,6 +23,7 @@ export default function fetchTab(courseId, rootSlug) {
           org: courseHomeCourseMetadata.org,
           courseNumber: courseHomeCourseMetadata.number,
           courseTitle: courseHomeCourseMetadata.title,
+          isEnrolled: courseHomeCourseMetadata.isEnrolled,
         }));
       }
     } catch (e) {

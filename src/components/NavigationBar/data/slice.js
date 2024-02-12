@@ -47,6 +47,7 @@ const slice = createSlice({
         courseTitle: payload.courseTitle,
         courseNumber: payload.courseNumber,
         org: payload.org,
+        isEnrolled: payload.isEnrolled,
       }
     ),
   },
