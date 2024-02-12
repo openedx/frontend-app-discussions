@@ -68,7 +68,7 @@ const AuthorLabel = ({
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
-        placement="right"
+        placement={authorToolTip ? 'top' : 'right'}
         overlay={
           authorToolTip ? (
             <Tooltip id={`endorsed-by-${author}-tooltip`}>
@@ -82,7 +82,7 @@ const AuthorLabel = ({
       }
         trigger={['hover', 'focus']}
       >
-        <div className={classNames('d-flex flex-row align-items-start')}>
+        <div className={classNames('d-flex flex-row align-items-center')}>
           <Icon
             style={{
               width: '1rem',
