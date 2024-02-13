@@ -53,8 +53,7 @@ const DiscussionsHome = () => {
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
-  const isUserEnrolled = enableInContextSidebar ? Boolean(new URLSearchParams(location.search).get('isEnrolled') === 'true') : isEnrolled && courseStatus === LOADED;
-
+  const isUserEnrolled = isEnrolled && courseStatus === LOADED;
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
@@ -100,10 +99,11 @@ const DiscussionsHome = () => {
               {!enableInContextSidebar && (
                 <NavigationBar />
               )}
-              {isUserEnrolled && <PostActionsBar />}
+              {((isEnrolled && courseStatus === LOADED) || enableInContextSidebar) && <PostActionsBar />}
             </div>
             <DiscussionsRestrictionBanner />
           </div>
+
           {provider === DiscussionProvider.LEGACY && (
           <Suspense fallback={(<Spinner />)}>
             <Routes>
@@ -124,55 +124,56 @@ const DiscussionsHome = () => {
             </Routes>
           </Suspense>
           )}
-          {!isUserEnrolled && (
+          {isUserEnrolled && courseStatus === LOADED && (
+          <Suspense fallback={(<Spinner />)}>
+            <Routes>
+              {ALL_ROUTES.map((route) => (
+                <Route
+                  key={route}
+                  path={route}
+                  element={(<ContentUnavailable subTitleMessage={messages.contentUnavailableSubTitle} />)}
+                />
+              ))}
+            </Routes>
+          </Suspense>
+          )}
+          {((!isUserEnrolled && courseStatus === LOADED) || enableInContextSidebar) && (
+          <div className="d-flex flex-row position-relative">
             <Suspense fallback={(<Spinner />)}>
-              <Routes>
-                {ALL_ROUTES.map((route) => (
+              <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
+            </Suspense>
+            {displayContentArea && (
+            <Suspense fallback={(<Spinner />)}>
+              <DiscussionContent />
+            </Suspense>
+            )}
+            {!displayContentArea && (
+            <Routes>
+              <>
+                {ROUTES.TOPICS.PATH.map(route => (
+                  <Route
+                    key={route}
+                    path={`${route}/*`}
+                    element={(enableInContext || enableInContextSidebar)
+                      ? <InContextEmptyTopics /> : <EmptyTopics />}
+                  />
+                ))}
+                <Route
+                  path={ROUTES.POSTS.MY_POSTS}
+                  element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
+                />
+                {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
                   <Route
                     key={route}
                     path={route}
-                    element={(<ContentUnavailable subTitleMessage={messages.contentUnavailableSubTitle} />)}
+                    element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
                   />
                 ))}
-              </Routes>
-            </Suspense>
-          )}
-          {isUserEnrolled && (
-            <div className="d-flex flex-row position-relative">
-              <Suspense fallback={(<Spinner />)}>
-                <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
-              </Suspense>
-              {displayContentArea && (
-              <Suspense fallback={(<Spinner />)}>
-                <DiscussionContent />
-              </Suspense>
-              )}
-              {!displayContentArea && (
-              <Routes>
-                <>
-                  {ROUTES.TOPICS.PATH.map(route => (
-                    <Route
-                      key={route}
-                      path={`${route}/*`}
-                      element={(enableInContext || enableInContextSidebar) ? <InContextEmptyTopics /> : <EmptyTopics />}
-                    />
-                  ))}
-                  <Route
-                    path={ROUTES.POSTS.MY_POSTS}
-                    element={<EmptyPosts subTitleMessage={messages.emptyMyPosts} />}
-                  />
-                  {[`${ROUTES.POSTS.PATH}/*`, ROUTES.POSTS.ALL_POSTS, ROUTES.LEARNERS.POSTS].map((route) => (
-                    <Route
-                      key={route}
-                      path={route}
-                      element={<EmptyPosts subTitleMessage={messages.emptyAllPosts} />}
-                    />
-                  ))}
-                  <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
-                </>
-              </Routes>
-              )}
-            </div>
+                <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
+              </>
+            </Routes>
+            )}
+          </div>
           )}
           {!enableInContextSidebar && (
             <DiscussionsProductTour />

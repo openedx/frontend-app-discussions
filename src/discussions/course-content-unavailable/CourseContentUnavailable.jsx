@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useLocation } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -13,11 +12,9 @@ import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
 import messages from '../messages';
 
 const CourseContentUnavailable = ({ subTitleMessage }) => {
-  const location = useLocation();
   const intl = useIntl();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
-  const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
 
   const redirectToDashboard = useCallback(() => {
     window.location.replace(`${getConfig().LMS_BASE_URL}/dashboard`);
@@ -33,11 +30,9 @@ const CourseContentUnavailable = ({ subTitleMessage }) => {
         <ContentUnavailableIcon />
         <h3 className="pt-3 font-weight-bold text-primary-500 text-center">{intl.formatMessage(messages.contentUnavailableTitle)}</h3>
         <p className="pb-2 text-gray-500 text-center">{intl.formatMessage(subTitleMessage)}</p>
-        {!enableInContextSidebar && (
         <Button onClick={redirectToDashboard} variant="outline-dark" className="font-size-14 py-2 px-2.5">
           {intl.formatMessage(messages.contentUnavailableAction)}
         </Button>
-        )}
       </div>
     </div>
   );
