@@ -27,23 +27,24 @@ const AuthorLabel = ({
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
   const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
-  let icon = null;
-  let authorLabelMessage = null;
 
-  if (authorLabel === 'Staff') {
-    icon = Institution;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
-  }
+  const labelMappings = {
+    Staff: {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    Moderator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
+    },
+    'Community TA': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
+    },
+  };
 
-  if (authorLabel === 'Moderator') {
-    icon = School;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelModerator);
-  }
-
-  if (authorLabel === 'Community TA') {
-    icon = School;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
-  }
+  const labelInfo = labelMappings[authorLabel] || {};
+  const { icon, authorLabelMessage } = labelInfo;
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
@@ -69,17 +70,11 @@ const AuthorLabel = ({
     <>
       <OverlayTrigger
         placement={authorToolTip ? 'top' : 'right'}
-        overlay={
-          authorToolTip ? (
-            <Tooltip id={`endorsed-by-${author}-tooltip`}>
-              {author}
-            </Tooltip>
-          ) : (
-            <Tooltip id={`${authorLabel}-role-tooltip`}>
-              {authorLabel}
-            </Tooltip>
-          )
-      }
+        overlay={(
+          <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-role-tooltip`}>
+            {authorToolTip ? author : authorLabel}
+          </Tooltip>
+        )}
         trigger={['hover', 'focus']}
       >
         <div className={classNames('d-flex flex-row align-items-center')}>
