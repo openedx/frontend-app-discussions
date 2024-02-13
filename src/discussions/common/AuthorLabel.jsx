@@ -28,7 +28,7 @@ const AuthorLabel = ({
   const intl = useIntl();
   const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
 
-  const labelMappings = {
+  const authorLabelMappings = {
     Staff: {
       icon: Institution,
       authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
@@ -43,7 +43,7 @@ const AuthorLabel = ({
     },
   };
 
-  const labelInfo = labelMappings[authorLabel] || {};
+  const labelInfo = authorLabelMappings[authorLabel] || {};
   const { icon, authorLabelMessage } = labelInfo;
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
@@ -71,7 +71,7 @@ const AuthorLabel = ({
       <OverlayTrigger
         placement={authorToolTip ? 'top' : 'right'}
         overlay={(
-          <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-role-tooltip`}>
+          <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-label-tooltip`}>
             {authorToolTip ? author : authorLabel}
           </Tooltip>
         )}
