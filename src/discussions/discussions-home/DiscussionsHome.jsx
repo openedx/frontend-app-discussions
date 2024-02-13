@@ -53,7 +53,6 @@ const DiscussionsHome = () => {
   const isOnDesktop = useIsOnDesktop();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
-  const isUserEnrolled = isEnrolled && courseStatus === LOADED;
   const {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
@@ -99,7 +98,7 @@ const DiscussionsHome = () => {
               {!enableInContextSidebar && (
                 <NavigationBar />
               )}
-              {((isEnrolled && courseStatus === LOADED) || enableInContextSidebar) && <PostActionsBar />}
+              {(isEnrolled || enableInContextSidebar) && <PostActionsBar />}
             </div>
             <DiscussionsRestrictionBanner />
           </div>
@@ -124,7 +123,7 @@ const DiscussionsHome = () => {
             </Routes>
           </Suspense>
           )}
-          {isUserEnrolled && courseStatus === LOADED && (
+          {!isEnrolled && courseStatus === LOADED && (
           <Suspense fallback={(<Spinner />)}>
             <Routes>
               {ALL_ROUTES.map((route) => (
@@ -137,7 +136,7 @@ const DiscussionsHome = () => {
             </Routes>
           </Suspense>
           )}
-          {((!isUserEnrolled && courseStatus === LOADED) || enableInContextSidebar) && (
+          {((isEnrolled && courseStatus === LOADED) || enableInContextSidebar) && (
           <div className="d-flex flex-row position-relative">
             <Suspense fallback={(<Spinner />)}>
               <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />

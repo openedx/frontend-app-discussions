@@ -258,8 +258,6 @@ describe('DiscussionsHome', () => {
   });
 
   it('should display No topic selected for legacy topics view', async () => {
-    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
-    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics`);
 
@@ -267,8 +265,6 @@ describe('DiscussionsHome', () => {
   });
 
   it('should display navigation tabs', async () => {
-    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
-    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     renderComponent(`/${courseId}/topics`);
 
     await waitFor(() => expect(screen.queryByText('Discussion')).toBeInTheDocument());
