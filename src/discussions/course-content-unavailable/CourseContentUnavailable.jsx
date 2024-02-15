@@ -2,12 +2,14 @@ import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
 
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button } from '@edx/paragon';
 
 import ContentUnavailableIcon from '../../assets/ContentUnavailable';
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
 import messages from '../messages';
 
@@ -15,16 +17,17 @@ const CourseContentUnavailable = ({ subTitleMessage }) => {
   const intl = useIntl();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
+  const { courseId } = useSelector(selectCourseTabs);
 
   const redirectToDashboard = useCallback(() => {
-    window.location.replace(`${getConfig().LMS_BASE_URL}/dashboard`);
-  }, []);
+    window.location.replace(`${getConfig().LMS_BASE_URL}/courses/${courseId}/about`);
+  }, [courseId]);
 
   return (
     <div className="min-content-height justify-content-center align-items-center d-flex w-100 flex-column bg-white">
       <div className={classNames('d-flex flex-column align-items-center', {
         'content-unavailable-desktop': isOnDesktop || isOnXLDesktop,
-        'content-unavailable-mobile': !isOnDesktop && !isOnXLDesktop,
+        'py-0 px-3': !isOnDesktop && !isOnXLDesktop,
       })}
       >
         <ContentUnavailableIcon />

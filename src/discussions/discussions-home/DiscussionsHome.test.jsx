@@ -65,7 +65,7 @@ describe('DiscussionsHome', () => {
     });
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     store = initializeStore();
-    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
   });
 
@@ -219,10 +219,10 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/my-posts`);
 
-    await waitFor(() => expect(screen.queryByText('Add a post')).toBeInTheDocument());
+    const addPost = await screen.findByText('Add a post');
 
     await act(async () => {
-      fireEvent.click(screen.queryByText('Add a post'));
+      fireEvent.click(addPost);
     });
 
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
@@ -268,5 +268,35 @@ describe('DiscussionsHome', () => {
     renderComponent(`/${courseId}/topics`);
 
     await waitFor(() => expect(screen.queryByText('Discussion')).toBeInTheDocument());
+  });
+
+  it('should display content unavailable message when the user is not enrolled in the course.', async () => {
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: false })));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+
+    renderComponent();
+
+    await waitFor(() => expect(screen.queryByText('Content unavailable')).toBeInTheDocument());
+  });
+
+  it('should redirect to dashboard when the user clicks on the Enroll button.', async () => {
+    const replaceMock = jest.fn();
+    delete window.location;
+    window.location = { replace: replaceMock };
+
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: false })));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+
+    renderComponent();
+
+    const enrollButton = await screen.findByText('Enroll');
+
+    await act(async () => {
+      fireEvent.click(enrollButton);
+    });
+
+    await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledWith(expect.stringContaining('about'));
+    });
   });
 });
