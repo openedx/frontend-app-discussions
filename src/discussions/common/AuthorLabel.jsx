@@ -7,10 +7,10 @@ import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
+import { getAuthorLabel } from '../utils';
 import DiscussionContext from './context';
 import timeLocale from './time-locale';
 
@@ -27,24 +27,7 @@ const AuthorLabel = ({
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
   const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
-
-  const authorLabelMappings = {
-    Staff: {
-      icon: Institution,
-      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
-    },
-    Moderator: {
-      icon: School,
-      authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
-    },
-    'Community TA': {
-      icon: School,
-      authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
-    },
-  };
-
-  const labelInfo = authorLabelMappings[authorLabel] || {};
-  const { icon, authorLabelMessage } = labelInfo;
+  const { icon, authorLabelMessage } = useMemo(() => getAuthorLabel(intl, authorLabel), [authorLabel]);
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
