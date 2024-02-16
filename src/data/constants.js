@@ -80,6 +80,7 @@ export const RequestStatus = {
  */
 export const AvatarOutlineAndLabelColors = {
   Staff: 'staff-color',
+  Moderator: 'TA-color',
   'Community TA': 'TA-color',
 };
 

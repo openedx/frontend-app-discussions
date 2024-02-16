@@ -153,9 +153,14 @@ const messages = defineMessages({
     defaultMessage: 'Staff',
     description: 'A label for staff users displayed next to their username.',
   },
+  authorLabelModerator: {
+    id: 'discussions.authors.label.moderator',
+    defaultMessage: 'TA',
+    description: 'A label for moderators displayed next to their username.',
+  },
   authorLabelTA: {
     id: 'discussions.authors.label.ta',
-    defaultMessage: 'TA',
+    defaultMessage: 'CTA',
     description: 'A label for community TAs displayed next to their username.',
   },
   loadMorePosts: {

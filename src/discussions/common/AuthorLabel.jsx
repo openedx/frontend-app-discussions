@@ -7,10 +7,10 @@ import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
+import { getAuthorLabel } from '../utils';
 import DiscussionContext from './context';
 import timeLocale from './time-locale';
 
@@ -27,18 +27,7 @@ const AuthorLabel = ({
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
   const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
-  let icon = null;
-  let authorLabelMessage = null;
-
-  if (authorLabel === 'Staff') {
-    icon = Institution;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
-  }
-
-  if (authorLabel === 'Community TA') {
-    icon = School;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
-  }
+  const { icon, authorLabelMessage } = useMemo(() => getAuthorLabel(intl, authorLabel), [authorLabel]);
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
@@ -63,17 +52,15 @@ const AuthorLabel = ({
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
+        placement={authorToolTip ? 'top' : 'right'}
         overlay={(
-          <Tooltip id={`endorsed-by-${author}-tooltip`}>
-            {author}
+          <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-label-tooltip`}>
+            {authorToolTip ? author : authorLabel}
           </Tooltip>
         )}
         trigger={['hover', 'focus']}
       >
-        <div className={classNames('d-flex flex-row align-items-center', {
-          'disable-div': !authorToolTip,
-        })}
-        >
+        <div className={classNames('d-flex flex-row align-items-center')}>
           <Icon
             style={{
               width: '1rem',

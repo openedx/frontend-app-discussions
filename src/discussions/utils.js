@@ -10,7 +10,8 @@ import {
 import { getConfig } from '@edx/frontend-platform';
 import {
   CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
-  Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
+  Institution, Lock, LockOpen, Pin, Report, School,
+  Verified, VerifiedOutline,
 } from '@edx/paragon/icons';
 
 import {
@@ -292,4 +293,23 @@ export function isLastElementOfList(list, element) {
 
 export function truncatePath(path) {
   return path.substring(0, path.lastIndexOf('/'));
+}
+
+export function getAuthorLabel(intl, authorLabel) {
+  const authorLabelMappings = {
+    Staff: {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    Moderator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
+    },
+    'Community TA': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
+    },
+  };
+
+  return authorLabelMappings[authorLabel] || {};
 }
