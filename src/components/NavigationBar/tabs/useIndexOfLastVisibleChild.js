@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import { useWindowSize } from '@edx/paragon';
+import { useWindowSize } from '@openedx/paragon';
 
 const invisibleStyle = {
   position: 'absolute',

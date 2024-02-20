@@ -12,7 +12,7 @@ import {
   CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
   Institution, Lock, LockOpen, Pin, Report, School,
   Verified, VerifiedOutline,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 
 import {
   ContentActions, Routes, ThreadType,

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { Card, Form } from '@edx/paragon';
+import { Card, Form } from '@openedx/paragon';
 
 import DiscussionContext from '../../common/context';
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
+import { Button, Spinner } from '@openedx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Dropdown, DropdownButton } from '@edx/paragon';
+import { Dropdown, DropdownButton } from '@openedx/paragon';
 
 import messages from './messages';
 

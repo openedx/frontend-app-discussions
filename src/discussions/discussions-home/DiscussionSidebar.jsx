@@ -9,7 +9,7 @@ import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
 
-import { useWindowSize } from '@edx/paragon';
+import { useWindowSize } from '@openedx/paragon';
 
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes as ROUTES } from '../../data/constants';

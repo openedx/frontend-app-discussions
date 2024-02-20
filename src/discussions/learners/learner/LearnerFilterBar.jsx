@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Collapsible, Form, Icon } from '@edx/paragon';
-import { Check, Tune } from '@edx/paragon/icons';
+import { Collapsible, Form, Icon } from '@openedx/paragon';
+import { Check, Tune } from '@openedx/paragon/icons';
 
 import { LearnersOrdering } from '../../../data/constants';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';

@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Form, StatefulButton } from '@edx/paragon';
+import { Button, Form, StatefulButton } from '@openedx/paragon';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';

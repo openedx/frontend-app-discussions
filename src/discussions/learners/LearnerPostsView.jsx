@@ -9,8 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, Spinner,
-} from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 
 import {
   RequestStatus,

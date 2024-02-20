@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 import classNames from 'classnames';
 
-import { Button } from '@edx/paragon';
+import { Button } from '@openedx/paragon';
 
 import EmptyIcon from '../../assets/Empty';
 

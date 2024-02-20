@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import {
   Edit, QuestionAnswerOutline, Report, ReportGmailerrorred,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';

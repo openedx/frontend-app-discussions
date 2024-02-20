@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Dropdown } from '@edx/paragon';
+import { Dropdown } from '@openedx/paragon';
 
 import useIndexOfLastVisibleChild from './useIndexOfLastVisibleChild';
 

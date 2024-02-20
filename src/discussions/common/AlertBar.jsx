@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert } from '@openedx/paragon';
 
 import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';

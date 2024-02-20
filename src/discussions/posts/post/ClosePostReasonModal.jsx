@@ -11,7 +11,7 @@ import {
   Button,
   Form,
   ModalDialog,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 
 import { selectModerationSettings } from '../../data/selectors';
 import messages from './messages';

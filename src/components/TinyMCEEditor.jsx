@@ -7,7 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import tinymce from 'tinymce/tinymce';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { ActionRow, AlertModal, Button } from '@edx/paragon';
+import { ActionRow, AlertModal, Button } from '@openedx/paragon';
 
 import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 import messages from '../discussions/messages';

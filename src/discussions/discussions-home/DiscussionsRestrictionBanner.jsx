@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { PageBanner } from '@edx/paragon';
+import { PageBanner } from '@openedx/paragon';
 
 import { RequestStatus } from '../../data/constants';
 import { selectConfigLoadingStatus, selectIsPostingEnabled } from '../data/selectors';

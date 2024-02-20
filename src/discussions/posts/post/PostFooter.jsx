@@ -6,10 +6,10 @@ import { useDispatch } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   Locked, People, StarFilled, StarOutline,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';

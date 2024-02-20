@@ -12,8 +12,8 @@ import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Collapsible, Form, Icon, Spinner,
-} from '@edx/paragon';
-import { Check, Tune } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Check, Tune } from '@openedx/paragon/icons';
 
 import {
   PostsStatusFilter, RequestStatus,

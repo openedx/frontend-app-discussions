@@ -13,8 +13,8 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 import {
   Button, Form, Spinner, StatefulButton,
-} from '@edx/paragon';
-import { Help, Post } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Help, Post } from '@openedx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';

@@ -11,7 +11,7 @@ import {
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';

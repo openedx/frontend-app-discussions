@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Spinner } from '@edx/paragon';
+import { Button, Spinner } from '@openedx/paragon';
 
 import { RequestStatus } from '../../data/constants';
 import DiscussionContext from '../common/context';

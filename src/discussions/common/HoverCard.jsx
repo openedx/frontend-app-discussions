@@ -6,10 +6,10 @@ import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
 import { useUserPostingEnabled } from '../data/hooks';

@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, useToggle } from '@edx/paragon';
+import { Hyperlink, useToggle } from '@openedx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions, getFullUrl } from '../../../data/constants';

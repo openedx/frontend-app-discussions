@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { getIn, useFormikContext } from 'formik';
 
-import { Form, TransitionReplace } from '@edx/paragon';
+import { Form, TransitionReplace } from '@openedx/paragon';
 
 const FormikErrorFeedback = ({ name }) => {
   const { touched, errors } = useFormikContext();

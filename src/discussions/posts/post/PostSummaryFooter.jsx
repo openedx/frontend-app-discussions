@@ -7,11 +7,11 @@ import * as timeago from 'timeago.js';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Badge, Icon, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   People, QuestionAnswer, QuestionAnswerOutline,
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';

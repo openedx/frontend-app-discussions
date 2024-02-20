@@ -9,8 +9,8 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { logError } from '@edx/frontend-platform/logging';
 import {
   Button, Dropdown, Icon, IconButton, ModalPopup, useToggle,
-} from '@edx/paragon';
-import { MoreHoriz } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { MoreHoriz } from '@openedx/paragon/icons';
 
 import { ContentActions } from '../../data/constants';
 import { selectIsPostingEnabled } from '../data/selectors';

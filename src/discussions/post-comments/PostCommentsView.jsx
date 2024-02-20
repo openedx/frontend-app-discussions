@@ -5,8 +5,8 @@ import React, {
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Icon, IconButton } from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
+import { Button, Icon, IconButton } from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 
 import Spinner from '../../components/Spinner';
 import {
