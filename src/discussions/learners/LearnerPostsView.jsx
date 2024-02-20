@@ -2,15 +2,15 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
+import {
+  Button, Icon, IconButton, Spinner,
+} from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton, Spinner,
-} from '@openedx/paragon';
-import { ArrowBack } from '@openedx/paragon/icons';
 
 import {
   RequestStatus,

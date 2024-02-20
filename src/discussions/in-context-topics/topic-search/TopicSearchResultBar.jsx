@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { SearchField } from '@openedx/paragon';
 import { useDispatch } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { SearchField } from '@openedx/paragon';
 
 import { setFilter } from '../data';
 import messages from '../messages';

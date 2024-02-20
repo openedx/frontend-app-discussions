@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import classNames from 'classnames';
-
-import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Icon, IconButton, OverlayTrigger, Tooltip,
 } from '@openedx/paragon';
 import {
   StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
 } from '@openedx/paragon/icons';
+import classNames from 'classnames';
+
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ThreadType } from '../../data/constants';
 import { useUserPostingEnabled } from '../data/hooks';

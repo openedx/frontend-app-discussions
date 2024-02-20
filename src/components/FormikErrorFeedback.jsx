@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getIn, useFormikContext } from 'formik';
-
 import { Form, TransitionReplace } from '@openedx/paragon';
+import { getIn, useFormikContext } from 'formik';
 
 const FormikErrorFeedback = ({ name }) => {
   const { touched, errors } = useFormikContext();

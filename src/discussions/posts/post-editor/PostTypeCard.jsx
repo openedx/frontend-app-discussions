@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import classNames from 'classnames';
-
 import { Card, Form } from '@openedx/paragon';
+import classNames from 'classnames';
 
 import DiscussionContext from '../../common/context';
 

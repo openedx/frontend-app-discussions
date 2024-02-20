@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Button, Form, Spinner, StatefulButton,
+} from '@openedx/paragon';
+import { Help, Post } from '@openedx/paragon/icons';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,10 +15,6 @@ import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import {
-  Button, Form, Spinner, StatefulButton,
-} from '@openedx/paragon';
-import { Help, Post } from '@openedx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';

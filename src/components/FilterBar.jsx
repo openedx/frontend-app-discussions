@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { capitalize, toString } from 'lodash';
-import { useSelector } from 'react-redux';
-
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Collapsible, Form, Icon, Spinner,
 } from '@openedx/paragon';
 import { Tune } from '@openedx/paragon/icons';
+import { capitalize, toString } from 'lodash';
+import { useSelector } from 'react-redux';
+
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
   PostsStatusFilter, RequestStatus,

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
+
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';

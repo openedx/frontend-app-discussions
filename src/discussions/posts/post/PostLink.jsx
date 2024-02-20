@@ -1,13 +1,13 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Badge, Icon } from '@openedx/paragon';
+import { CheckCircle, PushPin } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Badge, Icon } from '@openedx/paragon';
-import { CheckCircle, PushPin } from '@openedx/paragon/icons';
 
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';

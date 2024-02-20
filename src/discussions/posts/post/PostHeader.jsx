@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Avatar, Badge, Icon } from '@openedx/paragon';
+import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Avatar, Badge, Icon } from '@openedx/paragon';
-import { Question } from '@openedx/paragon/icons';
 
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';

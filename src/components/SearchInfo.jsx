@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon } from '@openedx/paragon';
 import { Search } from '@openedx/paragon/icons';
+
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { RequestStatus } from '../data/constants';
 import messages from '../discussions/posts/post-actions-bar/messages';
