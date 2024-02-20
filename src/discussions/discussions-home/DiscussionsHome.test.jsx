@@ -13,18 +13,18 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getCourseMetadataApiUrl } from '../../components/NavigationBar/data/api';
-import { fetchTab } from '../../components/NavigationBar/data/thunks';
+import fetchTab from '../../components/NavigationBar/data/thunks';
 import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCourseConfigApiUrl, getDiscussionsConfigUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import { getCourseTopicsApiUrl } from '../in-context-topics/data/api';
-import { fetchCourseTopicsV3 } from '../in-context-topics/data/thunks';
+import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
 import navigationBarMessages from '../navigation/navigation-bar/messages';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
-import { fetchCourseTopics } from '../topics/data/thunks';
+import fetchCourseTopics from '../topics/data/thunks';
 import DiscussionsHome from './DiscussionsHome';
 
 import '../posts/data/__factories__/threads.factory';

@@ -5,7 +5,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
+import executeThunk from '../../../test-utils';
 import { getThreadsApiUrl } from './api';
 import {
   createNewThread, fetchThread, fetchThreads, removeThread, updateExistingThread,

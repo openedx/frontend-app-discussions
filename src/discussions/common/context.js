@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import React from 'react';
 
-export const DiscussionContext = React.createContext({
+const DiscussionContext = React.createContext({
   page: null,
   courseId: null,
   postId: null,
@@ -10,3 +9,5 @@ export const DiscussionContext = React.createContext({
   category: null,
   learnerUsername: null,
 });
+
+export default DiscussionContext;

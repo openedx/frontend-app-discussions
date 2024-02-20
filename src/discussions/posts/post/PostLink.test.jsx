@@ -10,10 +10,10 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
-import { DiscussionContext } from '../../common/context';
+import executeThunk from '../../../test-utils';
+import DiscussionContext from '../../common/context';
 import { getCourseConfigApiUrl } from '../../data/api';
-import { fetchCourseConfig } from '../../data/thunks';
+import fetchCourseConfig from '../../data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
 import PostLink from './PostLink';

@@ -1,7 +1,5 @@
-/* eslint-disable import/prefer-default-export */
-
 // Course Blocks API response for the demo course.
-export const getBlocksAPIResponse = (newProvider = false) => {
+const getBlocksAPIResponse = (newProvider = false) => {
   const response = {
     root: 'block-v1:edX+DemoX+Demo_Course+type@course+block@course',
     blocks: {
@@ -936,3 +934,5 @@ export const getBlocksAPIResponse = (newProvider = false) => {
   }
   return response;
 };
+
+export default getBlocksAPIResponse;

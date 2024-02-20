@@ -9,7 +9,7 @@ import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import messages from '../post-comments/messages';
 import AlertBanner from './AlertBanner';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 import '../post-comments/data/__factories__';
 import '../posts/data/__factories__';

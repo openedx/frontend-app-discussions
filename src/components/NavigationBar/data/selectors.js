@@ -1,3 +1,3 @@
-/* eslint-disable import/prefer-default-export */
+const selectCourseTabs = state => state.courseTabs;
 
-export const selectCourseTabs = state => state.courseTabs;
+export default selectCourseTabs;

@@ -19,10 +19,10 @@ import { Help, Post } from '@edx/paragon/icons';
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../components/PostPreviewPanel';
-import { useDispatchWithState } from '../../../data/hooks';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { DiscussionContext } from '../../common/context';
+import useDispatchWithState from '../../../data/hooks';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
+import DiscussionContext from '../../common/context';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
@@ -33,8 +33,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
-// eslint-disable-next-line import/no-cycle
-import { EmptyPage } from '../../empty-posts';
+import EmptyPage from '../../empty-posts/EmptyPage';
 import {
   selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,

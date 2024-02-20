@@ -15,11 +15,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getCourseTopicsApiUrl } from './data/api';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
-import { fetchCourseTopicsV3 } from './data/thunks';
+import fetchCourseTopicsV3 from './data/thunks';
 import TopicPostsView from './TopicPostsView';
 import TopicsView from './TopicsView';
 

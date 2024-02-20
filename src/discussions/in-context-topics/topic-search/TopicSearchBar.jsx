@@ -6,7 +6,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, SearchField } from '@edx/paragon';
 import { Search as SearchIcon } from '@edx/paragon/icons';
 
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import postsMessages from '../../posts/post-actions-bar/messages';
 import { setFilter as setTopicFilter } from '../data/slices';
 

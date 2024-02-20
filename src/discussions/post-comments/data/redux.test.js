@@ -6,7 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { EndorsementStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';
-import { executeThunk } from '../../../test-utils';
+import executeThunk from '../../../test-utils';
 import { getCommentsApiUrl } from './api';
 import {
   addComment, editComment, fetchCommentResponses, fetchThreadComments, removeComment,

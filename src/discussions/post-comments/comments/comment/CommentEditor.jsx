@@ -12,8 +12,8 @@ import { Button, Form, StatefulButton } from '@edx/paragon';
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../../components/PostPreviewPanel';
-import { useDispatchWithState } from '../../../../data/hooks';
-import { DiscussionContext } from '../../../common/context';
+import useDispatchWithState from '../../../../data/hooks';
+import DiscussionContext from '../../../common/context';
 import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
@@ -60,7 +60,6 @@ const CommentEditor = ({
 
   const initialValues = {
     comment: rawBody,
-    // eslint-disable-next-line react/prop-types
     editReasonCode: lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
   };
 
@@ -183,7 +182,9 @@ CommentEditor.propTypes = {
   comment: PropTypes.shape({
     author: PropTypes.string,
     id: PropTypes.string,
-    lastEdit: PropTypes.shape({}),
+    lastEdit: PropTypes.shape({
+      reasonCode: PropTypes.shape({}),
+    }),
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
     threadId: PropTypes.string.isRequired,

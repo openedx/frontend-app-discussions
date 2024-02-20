@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import { EndorsementStatus } from '../../../data/constants';
-import { useDispatchWithState } from '../../../data/hooks';
-import { DiscussionContext } from '../../common/context';
+import useDispatchWithState from '../../../data/hooks';
+import DiscussionContext from '../../common/context';
 import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
 import { filterPosts } from '../../utils';

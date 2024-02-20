@@ -9,7 +9,7 @@ import { useUserPostingEnabled } from '../../data/hooks';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
-import { PostCommentsContext } from '../postCommentsContext';
+import PostCommentsContext from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
 const CommentsView = ({ endorsed }) => {
@@ -73,49 +73,46 @@ const CommentsView = ({ endorsed }) => {
   ), [hasMorePages, isLoading, handleLoadMoreResponses]);
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {((hasMorePages && isLoading) || !isLoading) && (
-        <>
-          {endorsedCommentsIds.length > 0 && (
-            <>
-              {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
-              {endorsed === EndorsementStatus.DISCUSSION
-                ? handleComments(endorsedCommentsIds, true)
-                : handleComments(endorsedCommentsIds, false)}
-            </>
-          )}
-          {endorsed !== EndorsementStatus.ENDORSED && (
-            <>
-              {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
-              {unEndorsedCommentsIds.length === 0 && <br />}
-              {handleComments(unEndorsedCommentsIds, false)}
-              {(isUserPrivilegedInPostingRestriction && !!unEndorsedCommentsIds.length && !isClosed) && (
-                <div className="mx-4">
-                  {!addingResponse && (
-                    <Button
-                      variant="plain"
-                      block="true"
-                      className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
-                      line-height-24 font-size-14 text-primary-500"
-                      onClick={handleAddResponse}
-                      data-testid="add-response"
-                    >
-                      {intl.formatMessage(messages.addResponse)}
-                    </Button>
-                  )}
-                  <ResponseEditor
-                    addWrappingDiv
-                    addingResponse={addingResponse}
-                    handleCloseEditor={handleCloseResponseEditor}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </>
-      )}
-    </>
+    ((hasMorePages && isLoading) || !isLoading) && (
+      <>
+        {endorsedCommentsIds.length > 0 && (
+          <>
+            {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
+            {endorsed === EndorsementStatus.DISCUSSION
+              ? handleComments(endorsedCommentsIds, true)
+              : handleComments(endorsedCommentsIds, false)}
+          </>
+        )}
+        {endorsed !== EndorsementStatus.ENDORSED && (
+          <>
+            {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
+            {unEndorsedCommentsIds.length === 0 && <br />}
+            {handleComments(unEndorsedCommentsIds, false)}
+            {(isUserPrivilegedInPostingRestriction && !!unEndorsedCommentsIds.length && !isClosed) && (
+              <div className="mx-4">
+                {!addingResponse && (
+                  <Button
+                    variant="plain"
+                    block="true"
+                    className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
+                    line-height-24 font-size-14 text-primary-500"
+                    onClick={handleAddResponse}
+                    data-testid="add-response"
+                  >
+                    {intl.formatMessage(messages.addResponse)}
+                  </Button>
+                )}
+                <ResponseEditor
+                  addWrappingDiv
+                  addingResponse={addingResponse}
+                  handleCloseEditor={handleCloseResponseEditor}
+                />
+              </div>
+            )}
+          </>
+        )}
+      </>
+    )
   );
 };
 

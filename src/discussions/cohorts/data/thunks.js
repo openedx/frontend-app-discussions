@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
@@ -11,7 +10,7 @@ import {
   fetchCohortsSuccess,
 } from './slices';
 
-export function fetchCourseCohorts(courseId) {
+export default function fetchCourseCohorts(courseId) {
   return async (dispatch) => {
     try {
       dispatch(fetchCohortsRequest());

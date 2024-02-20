@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { useIsOnDesktop } from '../../data/hooks';
 import { selectPostThreadCount } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';

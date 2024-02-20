@@ -11,15 +11,15 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCourseConfigApiUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getCommentsApiUrl } from '../post-comments/data/api';
 import { fetchCommentResponses } from '../post-comments/data/thunks';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 import '../posts/data/__factories__';
 import '../post-comments/data/__factories__';
