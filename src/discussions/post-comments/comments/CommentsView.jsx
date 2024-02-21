@@ -1,8 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Spinner } from '@openedx/paragon';
+
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
 
 import { EndorsementStatus } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../data/hooks';

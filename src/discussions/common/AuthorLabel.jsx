@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import classNames from 'classnames';
 import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
