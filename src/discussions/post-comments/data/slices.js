@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { EndorsementStatus, RequestStatus } from '../../../data/constants';
+import { RequestStatus } from '../../../data/constants';
 
 const commentsSlice = createSlice({
   name: 'comments',
@@ -31,15 +31,14 @@ const commentsSlice = createSlice({
       }
     ),
     fetchCommentsSuccess: (state, { payload }) => {
-      const { threadId, page, endorsed } = payload;
+      const { threadId, page } = payload;
 
       const newState = { ...state };
 
       newState.status = RequestStatus.SUCCESSFUL;
-
       newState.commentsInThreads = {
         ...newState.commentsInThreads,
-        [threadId]: newState.commentsInThreads[threadId] || {},
+        [threadId]: newState.commentsInThreads[threadId] || [],
       };
 
       newState.pagination = {
@@ -50,23 +49,16 @@ const commentsSlice = createSlice({
       if (page === 1) {
         newState.commentsInThreads = {
           ...newState.commentsInThreads,
-          [threadId]: {
-            ...newState.commentsInThreads[threadId],
-            [endorsed]: payload.commentsInThreads[threadId] || [],
-          },
+          [threadId]: [...payload.commentsInThreads[threadId]] || [],
         };
       } else {
         newState.commentsInThreads = {
-          ...newState.commentsInThreads,
-          [threadId]: {
-            ...newState.commentsInThreads[threadId],
-            [endorsed]: [
-              ...new Set([
-                ...(newState.commentsInThreads[threadId][endorsed] || []),
-                ...(payload.commentsInThreads[threadId] || []),
-              ]),
-            ],
-          },
+          [threadId]: [
+            ...new Set([
+              ...(newState.commentsInThreads[threadId] || []),
+              ...(payload.commentsInThreads[threadId] || []),
+            ]),
+          ],
         };
       }
 
@@ -74,11 +66,9 @@ const commentsSlice = createSlice({
         ...newState.pagination,
         [threadId]: {
           ...newState.pagination[threadId],
-          [endorsed]: {
-            currentPage: payload.page,
-            totalPages: payload.pagination.numPages,
-            hasMorePages: Boolean(payload.pagination.next),
-          },
+          currentPage: payload.page,
+          totalPages: payload.pagination.numPages,
+          hasMorePages: Boolean(payload.pagination.next),
         },
       };
 
@@ -181,21 +171,10 @@ const commentsSlice = createSlice({
           ],
         };
       } else {
-        const threadComments = newState.commentsInThreads[payload.threadId] || {};
-        const endorsementStatus = threadComments[EndorsementStatus.DISCUSSION]
-          ? EndorsementStatus.DISCUSSION
-          : EndorsementStatus.UNENDORSED;
-
-        const updatedThreadComments = {
-          ...threadComments,
-          [endorsementStatus]: [
-            ...(threadComments[endorsementStatus] || []),
-            payload.id,
-          ],
-        };
+        const threadComments = newState.commentsInThreads[payload.threadId] || [];
         newState.commentsInThreads = {
           ...newState.commentsInThreads,
-          [payload.threadId]: updatedThreadComments,
+          [payload.threadId]: [...threadComments, payload.id],
         };
       }
 
@@ -225,36 +204,13 @@ const commentsSlice = createSlice({
     ),
     updateCommentSuccess: (state, { payload }) => (
       {
-        ...state,
-        commentsById: {
-          ...state.commentsById,
-          [payload.id]: payload,
-        },
-        commentDraft: null,
-      }
-    ),
-    updateCommentsList: (state, { payload }) => {
-      const { id: commentId, threadId, endorsed } = payload;
-      const commentAddListtype = endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
-      const commentRemoveListType = !endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
-
-      const updatedThread = { ...state.commentsInThreads[threadId] };
-
-      updatedThread[commentRemoveListType] = updatedThread[commentRemoveListType]
-        ?.filter(item => item !== commentId)
-        ?? [];
-      updatedThread[commentAddListtype] = [
-        ...(updatedThread[commentAddListtype] || []), commentId,
-      ];
-
-      return {
-        ...state,
-        commentsInThreads: {
-          ...state.commentsInThreads,
-          [threadId]: updatedThread,
-        },
-      };
-    },
+      ...state,
+      commentsById: {
+        ...state.commentsById,
+        [payload.id]: payload,
+      },
+      commentDraft: null,
+    }),
     deleteCommentRequest: (state) => (
       {
         ...state,
@@ -285,12 +241,9 @@ const commentsSlice = createSlice({
         commentsById: { ...state.commentsById },
       };
 
-      [EndorsementStatus.DISCUSSION, EndorsementStatus.UNENDORSED, EndorsementStatus.ENDORSED].forEach((endorsed) => {
-        newState.commentsInThreads[threadId] = {
-          ...newState.commentsInThreads[threadId],
-          [endorsed]: newState.commentsInThreads[threadId]?.[endorsed]?.filter(item => item !== commentId),
-        };
-      });
+      newState.commentsInThreads[threadId] = [
+        ...newState.commentsInThreads[threadId]?.filter(item => item !== commentId) || [],
+      ];
 
       if (parentId) {
         newState.commentsInComments[parentId] = newState.commentsInComments[parentId].filter(
@@ -328,7 +281,6 @@ export const {
   updateCommentFailed,
   updateCommentRequest,
   updateCommentSuccess,
-  updateCommentsList,
   deleteCommentDenied,
   deleteCommentFailed,
   deleteCommentRequest,

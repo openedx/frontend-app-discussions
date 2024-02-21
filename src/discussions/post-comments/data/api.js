@@ -1,7 +1,7 @@
 import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-import { EndorsementValue } from '../../../data/constants';
+import { ThreadType } from '../../../data/constants';
 
 ensureConfig([
   'LMS_BASE_URL',
@@ -20,7 +20,7 @@ export const getCommentsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussi
  * @returns {Promise<{}>}
  */
 export const getThreadComments = async (threadId, {
-  endorsed,
+  threadType,
   page,
   pageSize,
   reverseOrder,
@@ -29,12 +29,12 @@ export const getThreadComments = async (threadId, {
 } = {}) => {
   const params = snakeCaseObject({
     threadId,
-    endorsed: EndorsementValue[endorsed],
     page,
     pageSize,
     reverseOrder,
     requestedFields: 'profile_image',
     enableInContextSidebar,
+    mergeQuestionTypeResponses: threadType === ThreadType.QUESTION ? true : null,
   });
 
   const { data } = await getAuthenticatedHttpClient().get(getCommentsApiUrl(), { params: { ...params, signal } });

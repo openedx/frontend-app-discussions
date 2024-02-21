@@ -61,10 +61,6 @@ $fa-font-path: "~font-awesome/fonts";
   font-weight: 500 !important;
 }
 
-.font-style-normal {
-  font-style: normal !important;
-}
-
 .post-footer-icon-dimensions {
   width: 32px !important;
   height: 32px !important;
@@ -496,7 +492,7 @@ code {
 }
 
 .font-style {
-  font-style: normal;
+  font-style: normal !important;
 }
 
 .in-context-navbar {
