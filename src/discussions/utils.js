@@ -1,5 +1,10 @@
 import { useCallback, useContext, useMemo } from 'react';
 
+import {
+  CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
+  Institution, Lock, LockOpen, Pin, Report, School,
+  Verified, VerifiedOutline,
+} from '@openedx/paragon/icons';
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -8,11 +13,6 @@ import {
 } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import {
-  CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
-  Institution, Lock, LockOpen, Pin, Report, School,
-  Verified, VerifiedOutline,
-} from '@edx/paragon/icons';
 
 import {
   ContentActions, Routes, ThreadType,

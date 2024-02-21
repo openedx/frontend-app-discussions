@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, IconButton, Spinner } from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 import { useNavigate } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Icon, IconButton, Spinner } from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
 
 import messages from '../messages';
 
