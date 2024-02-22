@@ -193,6 +193,21 @@ const messages = defineMessages({
     defaultMessage: 'Ok',
     description: 'Modal dismiss button text',
   },
+  contentUnavailableTitle: {
+    id: 'discussions.content.unavailable.title',
+    defaultMessage: 'Content unavailable',
+    description: 'Title on content page when the user has not logged into the MFE or not enrolled in the course.',
+  },
+  contentUnavailableSubTitle: {
+    id: 'discussions.content.unavailable.subTitle',
+    defaultMessage: 'You may not be able to see this content because you\'re not logged in, you\'re not enrolled in the course, or your audit access has expired.',
+    description: 'Sub title on content page when the user has not logged into the MFE or not enrolled in the course.',
+  },
+  contentUnavailableAction: {
+    id: 'discussions.content.unavailable.action',
+    defaultMessage: 'Enroll',
+    description: 'Action button on content page when the user has not logged into the MFE or not enrolled in the course.',
+  },
 });
 
 export default messages;

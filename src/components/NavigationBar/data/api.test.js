@@ -34,7 +34,7 @@ describe('Navigation bar api tests', () => {
   });
 
   it('Successfully get navigation tabs', async () => {
-    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
 
     expect(store.getState().courseTabs.tabs).toHaveLength(4);
@@ -58,7 +58,7 @@ describe('Navigation bar api tests', () => {
   it('Denied to get navigation bar when user has no access on course', async () => {
     axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(
       200,
-      (Factory.build('navigationBar', 1, { hasCourseAccess: false })),
+      (Factory.build('navigationBar', 1, { hasCourseAccess: false, isEnrolled: true })),
     );
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
 
