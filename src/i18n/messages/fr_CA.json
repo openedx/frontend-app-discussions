@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "vous suivez cette publication",
   "discussions.post.unfollow.description": "vous ne suivez pas cette publication",
   "discussions.app.title": "Discussions",
+  "discussions.page.title": "Discussions",
   "discussions.posts.actionBar.searchAllPosts": "Recherche dans les publications",
   "discussions.posts.actionBar.search": "{page, select, topics {Rechercher des sujets} posts {Rechercher tous les messages} learners {Rechercher des apprenants} myPosts {Rechercher tous les messages} other {{page}} }",
   "discussions.actionBar.searchInfo": "Affichage des résultats {count} pour \"{text}\"",
