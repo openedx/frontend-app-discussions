@@ -571,3 +571,9 @@ code {
 .content-unavailable-desktop {
   width: 32.188rem !important;
 }
+
+th, td {
+  border: 1px dashed #bbb;
+  padding: 0.4rem;
+  white-space: nowrap;
+}
