@@ -65,6 +65,8 @@ describe('DiscussionsHome', () => {
     });
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     store = initializeStore();
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
   });
 
   async function setUpV1TopicsMockResponse() {
@@ -142,7 +144,9 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    expect(screen.queryByText('Add a post')).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.queryByText('Add a post')).toBeInTheDocument();
+    });
   });
 
   it.each([
@@ -166,7 +170,9 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    expect(screen.queryByText(result)).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.queryByText(result)).toBeInTheDocument();
+    });
   });
 
   it.each([
@@ -193,7 +199,9 @@ describe('DiscussionsHome', () => {
       await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
       await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-      expect(screen.queryByText('No topic selected')).toBeInTheDocument();
+      waitFor(() => {
+        expect(screen.queryByText('No topic selected')).toBeInTheDocument();
+      });
     },
   );
 
@@ -202,14 +210,19 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/learners`);
 
-    expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
+    });
   });
 
   it('should display post editor form when click on add a post button for posts', async () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/my-posts`);
+
+    const addPost = await screen.findByText('Add a post');
+
     await act(async () => {
-      fireEvent.click(screen.queryByText('Add a post'));
+      fireEvent.click(addPost);
     });
 
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
@@ -222,7 +235,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/topics`);
 
-    expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('Nothing here yet')).toBeInTheDocument());
 
     await act(async () => {
       fireEvent.click(screen.queryByText('Add a post'));
@@ -234,28 +247,56 @@ describe('DiscussionsHome', () => {
   it('should display Add a post button for legacy topics view', async () => {
     await renderComponent(`/${courseId}/topics/topic-1`);
 
-    expect(screen.queryByText('Add a post')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('Add a post')).toBeInTheDocument());
   });
 
   it('should display No post selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics/category-1-topic-1`);
 
-    expect(screen.queryByText('No post selected')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('No post selected')).toBeInTheDocument());
   });
 
   it('should display No topic selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics`);
 
-    expect(screen.queryByText('No topic selected')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('No topic selected')).toBeInTheDocument());
   });
 
   it('should display navigation tabs', async () => {
-    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1)));
-    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     renderComponent(`/${courseId}/topics`);
 
-    expect(screen.queryByText('Discussion')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('Discussion')).toBeInTheDocument());
+  });
+
+  it('should display content unavailable message when the user is not enrolled in the course.', async () => {
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: false })));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+
+    renderComponent();
+
+    await waitFor(() => expect(screen.queryByText('Content unavailable')).toBeInTheDocument());
+  });
+
+  it('should redirect to dashboard when the user clicks on the Enroll button.', async () => {
+    const replaceMock = jest.fn();
+    delete window.location;
+    window.location = { replace: replaceMock };
+
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: false })));
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
+
+    renderComponent();
+
+    const enrollButton = await screen.findByText('Enroll');
+
+    await act(async () => {
+      fireEvent.click(enrollButton);
+    });
+
+    await waitFor(() => {
+      expect(window.location.replace).toHaveBeenCalledWith(expect.stringContaining('about'));
+    });
   });
 });

@@ -19,7 +19,7 @@ Factory.define('navigationBar')
     user_message: null,
   }))
   .option('course_id', null, 'course-v1:edX+DemoX+Demo_Course')
-  .attr('is_enrolled', null, false)
+  .sequence('is_enrolled', ['isEnrolled'], (idx, isEnrolled) => isEnrolled)
   .attr('is_self_paced', null, false)
   .attr('is_staff', null, true)
   .attr('number', null, 'DemoX')
