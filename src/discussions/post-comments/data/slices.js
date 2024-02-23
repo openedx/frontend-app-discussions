@@ -204,13 +204,13 @@ const commentsSlice = createSlice({
     ),
     updateCommentSuccess: (state, { payload }) => (
       {
-      ...state,
-      commentsById: {
-        ...state.commentsById,
-        [payload.id]: payload,
-      },
-      commentDraft: null,
-    }),
+        ...state,
+        commentsById: {
+          ...state.commentsById,
+          [payload.id]: payload,
+        },
+        commentDraft: null,
+      }),
     deleteCommentRequest: (state) => (
       {
         ...state,
