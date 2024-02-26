@@ -127,7 +127,7 @@ const Post = ({ handleAddResponseButton }) => {
 
   return (
     <div
-      className="d-flex flex-column w-100 mw-100 post-card-comment"
+      className="d-flex flex-column w-100 mw-100 post-card-comment overflow-auto"
       data-testid={`post-${postId}`}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex="0"
@@ -184,7 +184,7 @@ const Post = ({ handleAddResponseButton }) => {
         title={title}
       />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
-        <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader" testId={postId} />
+        <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader w-100" testId={postId} />
       </div>
       {(topicContext || topic) && (
         <div

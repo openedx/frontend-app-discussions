@@ -19,7 +19,7 @@ const PostPreviewPanel = ({
     <>
       {showPreviewPane && (
         <div
-          className={`w-100 p-2 bg-light-200 rounded box-shadow-down-1 post-preview ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
+          className={`w-100 p-2 bg-light-200 rounded box-shadow-down-1 post-preview overflow-auto ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
           style={{ minHeight: '200px', wordBreak: 'break-word' }}
         >
           <IconButton
