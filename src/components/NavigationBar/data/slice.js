@@ -13,6 +13,7 @@ const slice = createSlice({
     tabs: [],
     courseTitle: null,
     courseNumber: null,
+    isEnrolled: false,
     org: null,
   },
   reducers: {

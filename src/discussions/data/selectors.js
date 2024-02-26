@@ -1,3 +1,5 @@
+import { createSelector } from '@reduxjs/toolkit';
+
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({
@@ -60,3 +62,24 @@ export function selectTopicThreadCount(topicId) {
 export function selectPostThreadCount(state) {
   return state.threads.totalThreads;
 }
+
+export const selectIsUserLearner = createSelector(
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
+  selectUserIsStaff,
+  selectIsCourseAdmin,
+  selectIsCourseStaff,
+  (
+    userHasModerationPrivileges,
+    userIsGroupTa,
+    userIsStaff,
+    userIsCourseAdmin,
+    userIsCourseStaff,
+  ) => (
+    !userHasModerationPrivileges
+    && !userIsGroupTa
+    && !userIsStaff
+    && !userIsCourseAdmin
+    && !userIsCourseStaff
+  ),
+);

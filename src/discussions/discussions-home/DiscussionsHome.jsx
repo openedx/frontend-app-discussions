@@ -12,14 +12,14 @@ import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
-import { LOADED } from '../../components/NavigationBar/data/slice';
+import { LOADING } from '../../components/NavigationBar/data/slice';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
 import ContentUnavailable from '../course-content-unavailable/CourseContentUnavailable';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
-import { selectDiscussionProvider, selectEnableInContext } from '../data/selectors';
+import { selectDiscussionProvider, selectEnableInContext, selectIsUserLearner } from '../data/selectors';
 import { EmptyLearners, EmptyTopics } from '../empty-posts';
 import EmptyPosts from '../empty-posts/EmptyPosts';
 import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
@@ -46,6 +46,7 @@ const DiscussionsHome = () => {
   const {
     courseNumber, courseTitle, org, courseStatus, isEnrolled,
   } = useSelector(selectCourseTabs);
+  const isUserLearner = useSelector(selectIsUserLearner);
   const pageParams = useMatch(ROUTES.COMMENTS.PAGE)?.params;
   const page = pageParams?.page || null;
   const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
@@ -84,7 +85,7 @@ const DiscussionsHome = () => {
         )}
         <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
-          {(isEnrolled || enableInContextSidebar) && (
+          {(isEnrolled || !isUserLearner || enableInContextSidebar) && (
           <div
             className={classNames('header-action-bar bg-white position-sticky', {
               'shadow-none border-light-300 border-bottom': enableInContextSidebar,
@@ -125,9 +126,9 @@ const DiscussionsHome = () => {
             </Routes>
           </Suspense>
           )}
-          {(courseStatus === LOADED || enableInContextSidebar) && (
+          {(courseStatus !== LOADING || enableInContextSidebar) && (
           <div>
-            { isEnrolled === false ? (
+            { isEnrolled === false && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
                 <Routes>
                   {ALL_ROUTES.map((route) => (
