@@ -48,7 +48,8 @@ const ActionsDropdown = ({
     }
   }, [actions, isPostingEnabled]);
 
-  const onClickButton = useCallback(() => {
+  const onClickButton = useCallback((event) => {
+    event.preventDefault();
     setTarget(buttonRef.current);
     open();
   }, [open]);

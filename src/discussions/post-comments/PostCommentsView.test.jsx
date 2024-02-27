@@ -212,6 +212,7 @@ describe('ThreadView', () => {
       })];
     });
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { isPostingEnabled: true });
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await executeThunk(fetchCourseCohorts(courseId), store.dispatch, store.getState);
