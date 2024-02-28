@@ -12,10 +12,10 @@ import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
-import { LOADING } from '../../components/NavigationBar/data/slice';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
-import ContentUnavailable from '../course-content-unavailable/CourseContentUnavailable';
+import ContentUnavailable from '../content-unavailable/ContentUnavailable';
 import {
   useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
@@ -80,55 +80,48 @@ const DiscussionsHome = () => {
   return (
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
-        {!enableInContextSidebar && (
-          <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
-        )}
+        {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
         <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
-          {!enableInContextSidebar && <CourseTabsNavigation activeTab="discussion" courseId={courseId} />}
-          {(isEnrolled || !isUserLearner || enableInContextSidebar) && (
-          <div
-            className={classNames('header-action-bar bg-white position-sticky', {
-              'shadow-none border-light-300 border-bottom': enableInContextSidebar,
-            })}
-            ref={postActionBarRef}
-          >
+          {!enableInContextSidebar && <CourseTabsNavigation />}
+          {(isEnrolled || !isUserLearner) && (
             <div
-              className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
+              className={classNames('header-action-bar bg-white position-sticky', {
+                'shadow-none border-light-300 border-bottom': enableInContextSidebar,
+              })}
+              ref={postActionBarRef}
+            >
+              <div className={classNames('d-flex flex-row justify-content-between navbar fixed-top', {
                 'pl-4 pr-2 py-0': enableInContextSidebar,
               })}
-            >
-              {!enableInContextSidebar && (
-              <NavigationBar />
-              )}
-              <PostActionsBar />
+              >
+                {!enableInContextSidebar && (<NavigationBar />)}
+                <PostActionsBar />
+              </div>
+              <DiscussionsRestrictionBanner />
             </div>
-            <DiscussionsRestrictionBanner />
-          </div>
           )}
-
           {provider === DiscussionProvider.LEGACY && (
-          <Suspense fallback={(<Spinner />)}>
-            <Routes>
-              {[
-                ROUTES.TOPICS.CATEGORY,
-                ROUTES.TOPICS.CATEGORY_POST,
-                ROUTES.TOPICS.CATEGORY_POST_EDIT,
-                ROUTES.TOPICS.TOPIC,
-                ROUTES.TOPICS.TOPIC_POST,
-                ROUTES.TOPICS.TOPIC_POST_EDIT,
-              ].map((route) => (
-                <Route
-                  key={route}
-                  path={route}
-                  element={<LegacyBreadcrumbMenu />}
-                />
-              ))}
-            </Routes>
-          </Suspense>
+            <Suspense fallback={(<Spinner />)}>
+              <Routes>
+                {[
+                  ROUTES.TOPICS.CATEGORY,
+                  ROUTES.TOPICS.CATEGORY_POST,
+                  ROUTES.TOPICS.CATEGORY_POST_EDIT,
+                  ROUTES.TOPICS.TOPIC,
+                  ROUTES.TOPICS.TOPIC_POST,
+                  ROUTES.TOPICS.TOPIC_POST_EDIT,
+                ].map((route) => (
+                  <Route
+                    key={route}
+                    path={route}
+                    element={<LegacyBreadcrumbMenu />}
+                  />
+                ))}
+              </Routes>
+            </Suspense>
           )}
-          {(courseStatus !== LOADING || enableInContextSidebar) && (
-          <div>
-            { isEnrolled === false && isUserLearner ? (
+          {(courseStatus === LOADED) && (
+            !isEnrolled && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
                 <Routes>
                   {ALL_ROUTES.map((route) => (
@@ -140,18 +133,17 @@ const DiscussionsHome = () => {
                   ))}
                 </Routes>
               </Suspense>
-            )
-              : (
-                <div className="d-flex flex-row position-relative">
-                  <Suspense fallback={(<Spinner />)}>
-                    <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
-                  </Suspense>
-                  {displayContentArea && (
+            ) : (
+              <div className="d-flex flex-row position-relative">
+                <Suspense fallback={(<Spinner />)}>
+                  <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
+                </Suspense>
+                {displayContentArea && (
                   <Suspense fallback={(<Spinner />)}>
                     <DiscussionContent />
                   </Suspense>
-                  )}
-                  {!displayContentArea && (
+                )}
+                {!displayContentArea && (
                   <Routes>
                     <>
                       {ROUTES.TOPICS.PATH.map(route => (
@@ -176,14 +168,11 @@ const DiscussionsHome = () => {
                       <Route path={ROUTES.LEARNERS.PATH} element={<EmptyLearners />} />
                     </>
                   </Routes>
-                  )}
-                </div>
-              )}
-          </div>
+                )}
+              </div>
+            )
           )}
-          {!enableInContextSidebar && (
-            <DiscussionsProductTour />
-          )}
+          {!enableInContextSidebar && (<DiscussionsProductTour />)}
         </main>
         {!enableInContextSidebar && <Footer />}
       </DiscussionContext.Provider>
