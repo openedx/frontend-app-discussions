@@ -76,10 +76,12 @@ export const selectIsUserLearner = createSelector(
     userIsCourseAdmin,
     userIsCourseStaff,
   ) => (
-    !userHasModerationPrivileges
-    && !userIsGroupTa
-    && !userIsStaff
-    && !userIsCourseAdmin
-    && !userIsCourseStaff
+    (
+      !userHasModerationPrivileges
+      && !userIsGroupTa
+      && !userIsStaff
+      && !userIsCourseAdmin
+      && !userIsCourseStaff
+    ) || false
   ),
 );

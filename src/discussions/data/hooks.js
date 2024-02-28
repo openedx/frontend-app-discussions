@@ -13,6 +13,7 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 
+import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import fetchCourseBlocks from '../../data/thunks';
@@ -79,6 +80,7 @@ export function useCourseDiscussionData(courseId) {
     async function fetchBaseData() {
       await dispatch(fetchCourseConfig(courseId));
       await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      await dispatch(fetchTab(courseId));
     }
 
     fetchBaseData();

@@ -9,11 +9,11 @@ import {
   fetchTabSuccess,
 } from './slice';
 
-export default function fetchTab(courseId, rootSlug) {
+export default function fetchTab(courseId) {
   return async (dispatch) => {
     dispatch(fetchTabRequest({ courseId }));
     try {
-      const courseHomeCourseMetadata = await getCourseHomeCourseMetadata(courseId, rootSlug);
+      const courseHomeCourseMetadata = await getCourseHomeCourseMetadata(courseId);
       if (!courseHomeCourseMetadata.courseAccess.hasAccess) {
         dispatch(fetchTabDenied({ courseId }));
       } else {
