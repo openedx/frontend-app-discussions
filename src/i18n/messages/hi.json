@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "आप इस पोस्ट का पालन कर रहे हैं",
   "discussions.post.unfollow.description": "आप इस पोस्ट का पालन नहीं कर रहे हैं",
   "discussions.app.title": "चर्चाएँ",
+  "discussions.page.title": "चर्चाएँ",
   "discussions.posts.actionBar.searchAllPosts": "सभी पोस्‍ट खोजें",
   "discussions.posts.actionBar.search": "{page, select, topics {Search topics} posts {Search all posts} learners {Search learners} myPosts {Search all posts} other {{page}} }",
   "discussions.actionBar.searchInfo": "\"{text}\" के लिए {count} परिणाम दिखा रहा है",

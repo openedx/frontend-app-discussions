@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "Sie folgen diesem Beitrag",
   "discussions.post.unfollow.description": "Sie folgen diesem Beitrag nicht",
   "discussions.app.title": "Diskussionen",
+  "discussions.page.title": "Diskussionen",
   "discussions.posts.actionBar.searchAllPosts": "Einträge durchsuchen",
   "discussions.posts.actionBar.search": "{Seite, Auswahl, Themen {Themen durchsuchen} Beiträge {Alle Beiträge durchsuchen} Lernende {Lernende suchen} myPosts {Alle Beiträge durchsuchen} andere { {page} } }",
   "discussions.actionBar.searchInfo": "{count} Ergebnisse für &quot;{text}&quot; werden angezeigt",
