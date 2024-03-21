@@ -21,11 +21,11 @@ let store;
 let axiosMock;
 let container;
 
-function renderComponent(author, authorLabel, linkToProfile, labelColor) {
+function renderComponent(author, authorLabel, linkToProfile, labelColor, enableInContextSidebar) {
   const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <DiscussionContext.Provider value={{ courseId }}>
+        <DiscussionContext.Provider value={{ courseId, enableInContextSidebar }}>
           <AuthorLabel
             author={author}
             authorLabel={authorLabel}
@@ -79,15 +79,24 @@ describe('Author label', () => {
     );
 
     it(
-      `it is "${!linkToProfile && 'not'}" clickable when linkToProfile is ${!!linkToProfile}`,
+      `it is "${(!linkToProfile) && 'not'}" clickable when linkToProfile is ${!!linkToProfile} and enableInContextSidebar is false`,
       async () => {
-        renderComponent(author, authorLabel, linkToProfile, labelColor);
+        renderComponent(author, authorLabel, linkToProfile, labelColor, false);
 
         if (linkToProfile) {
           expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
         } else {
           expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
         }
+      },
+    );
+
+    it(
+      'it is not clickable when enableInContextSidebar is true',
+      async () => {
+        renderComponent(author, authorLabel, linkToProfile, labelColor, true);
+
+        expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
       },
     );
 
