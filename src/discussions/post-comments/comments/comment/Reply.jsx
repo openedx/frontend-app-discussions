@@ -54,7 +54,7 @@ const Reply = ({ responseId }) => {
   }, []);
 
   const handleReplyEndorse = useCallback(() => {
-    dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    dispatch(editComment(id, { endorsed: !endorsed }));
   }, [endorsed, id]);
 
   const handleAbusedFlag = useCallback(() => {

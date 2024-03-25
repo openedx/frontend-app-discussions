@@ -9,9 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import Spinner from '../../components/Spinner';
-import {
-  EndorsementStatus, PostsPages, ThreadType,
-} from '../../data/constants';
+import { PostsPages } from '../../data/constants';
 import useDispatchWithState from '../../data/hooks';
 import DiscussionContext from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
@@ -127,15 +125,7 @@ const PostCommentsView = () => {
       </div>
       <Suspense fallback={(<Spinner />)}>
         {!!commentsCount && <CommentsSort />}
-        {type === ThreadType.DISCUSSION && (
-          <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
-        )}
-        {type === ThreadType.QUESTION && (
-          <>
-            <CommentsView endorsed={EndorsementStatus.ENDORSED} />
-            <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
-          </>
-        )}
+        <CommentsView threadType={type} />
       </Suspense>
     </PostCommentsContext.Provider>
   );

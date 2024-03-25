@@ -82,7 +82,7 @@ const Comment = ({
   }, []);
 
   const handleCommentEndorse = useCallback(async () => {
-    await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    await dispatch(editComment(id, { endorsed: !endorsed }));
     await dispatch(fetchThread(threadId, courseId));
   }, [id, endorsed, threadId]);
 
