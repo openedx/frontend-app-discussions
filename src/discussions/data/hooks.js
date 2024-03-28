@@ -72,19 +72,22 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId) {
+export function useCourseDiscussionData(courseId, isEnrolled) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
-      await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
-      await dispatch(fetchTab(courseId));
+      if (isEnrolled) {
+        await dispatch(fetchCourseConfig(courseId));
+        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      } else {
+        await dispatch(fetchTab(courseId));
+      }
     }
 
     fetchBaseData();
-  }, [courseId]);
+  }, [courseId, isEnrolled]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
