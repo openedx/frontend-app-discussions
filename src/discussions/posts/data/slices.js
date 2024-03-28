@@ -185,7 +185,7 @@ const threadsSlice = createSlice({
         },
         pages: !payload.anonymousToPeers
           ? [
-            ...[payload.id].concat(state.pages[0]) || [],
+            ...(state.pages[0] ? [payload.id].concat(state.pages[0]) : []),
             ...state.pages.slice(1),
           ]
           : [...state.pages],
