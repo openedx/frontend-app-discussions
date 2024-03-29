@@ -3,12 +3,14 @@ import React, {
 } from 'react';
 
 import classNames from 'classnames';
+import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import {
   matchPath, Route, Routes, useLocation, useMatch,
 } from 'react-router-dom';
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
+import { getConfig } from '@edx/frontend-platform';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
@@ -80,6 +82,9 @@ const DiscussionsHome = () => {
   return (
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
+        <Helmet>
+          <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+        </Helmet>
         {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
         <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
