@@ -67,7 +67,7 @@ const PostsList = ({
     if (isTopicTab) {
       loadThreads(topicsIds, 1, true);
     }
-  }, [filters]);
+  }, [filters, JSON.stringify(sortedPostsIds)]);
 
   const postInstances = useMemo(() => (
     sortedPostsIds?.map((postId, idx) => (
