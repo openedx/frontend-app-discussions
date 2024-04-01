@@ -46,7 +46,7 @@ const DiscussionsHome = () => {
   const {
     courseNumber, courseTitle, org, courseStatus, isEnrolled,
   } = useSelector(selectCourseTabs);
-  const isUserLearner = useSelector(selectIsUserLearner);
+  const isUserLearner = useSelector(selectIsUserLearner(courseStatus));
   const pageParams = useMatch(ROUTES.COMMENTS.PAGE)?.params;
   const page = pageParams?.page || null;
   const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
@@ -121,7 +121,7 @@ const DiscussionsHome = () => {
             </Suspense>
           )}
           {(courseStatus === LOADED) && (
-            !isEnrolled && isUserLearner && !enableInContextSidebar ? (
+            !isEnrolled && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
                 <Routes>
                   {ALL_ROUTES.map((route) => (
