@@ -55,7 +55,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
         'd-none': !displaySidebar,
         'd-flex overflow-auto box-shadow-centered-1': displaySidebar,
         'w-100': !isOnDesktop,
-        'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'w-25 sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !enableInContextSidebar,
       })}
