@@ -12,7 +12,7 @@ import Spinner from '../../components/Spinner';
 import { PostsPages } from '../../data/constants';
 import useDispatchWithState from '../../data/hooks';
 import DiscussionContext from '../common/context';
-import { useIsOnDesktop } from '../data/hooks';
+import { useIsOnTablet } from '../data/hooks';
 import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
 import { fetchThread } from '../posts/data/thunks';
@@ -29,7 +29,7 @@ const PostCommentsView = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const location = useLocation();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTablet = useIsOnTablet();
   const [addingResponse, setAddingResponse] = useState(false);
   const [isLoading, submitDispatch] = useDispatchWithState();
   const {
@@ -84,7 +84,7 @@ const PostCommentsView = () => {
 
   return (
     <PostCommentsContext.Provider value={postCommentsContextValue}>
-      {!isOnDesktop && (
+      {!isOnTablet && (
         enableInContextSidebar ? (
           <>
             <div className="px-4 py-1.5 bg-white">

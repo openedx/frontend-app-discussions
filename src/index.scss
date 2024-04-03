@@ -229,15 +229,15 @@ header {
 }
 
 .sidebar-desktop-width {
-  min-width: 29rem !important;
+  max-width: 28rem !important;
+}
 
-  @include media-breakpoint-down(lg) {
-    min-width: 25rem !important;
-  }
+.sidebar-tablet-width {
+  max-width: 20rem !important;
 }
 
 .sidebar-XL-width {
-  min-width: 29rem !important;
+  min-width: 35rem !important;
 }
 
 .filter-menu:focus-visible {
