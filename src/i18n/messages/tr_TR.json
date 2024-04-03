@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "bu iletiyi izliyorsunuz",
   "discussions.post.unfollow.description": "bu iletiyi izlemiyorsunuz",
   "discussions.app.title": "Forumlar",
+  "discussions.page.title": "Forumlar",
   "discussions.posts.actionBar.searchAllPosts": "Tüm gönderilerde ara",
   "discussions.posts.actionBar.search": "",
   "discussions.actionBar.searchInfo": "\"{text}\" için {count} sonuç gösteriliyor",

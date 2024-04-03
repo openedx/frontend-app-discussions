@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "你正在关注这篇文章",
   "discussions.post.unfollow.description": "你没有关注这篇文章",
   "discussions.app.title": "讨论",
+  "discussions.page.title": "讨论",
   "discussions.posts.actionBar.searchAllPosts": "搜索所有帖子",
   "discussions.posts.actionBar.search": "",
   "discussions.actionBar.searchInfo": "显示“{text}”的 {count} 结果",

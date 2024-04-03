@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "sledujete tento příspěvek",
   "discussions.post.unfollow.description": "nesledujete tento příspěvek",
   "discussions.app.title": "Diskuze",
+  "discussions.page.title": "Diskuze",
   "discussions.posts.actionBar.searchAllPosts": "Prohledejte příspěvky",
   "discussions.posts.actionBar.search": "",
   "discussions.actionBar.searchInfo": "Zobrazuji {count} výsledků pro \"{text}\"",

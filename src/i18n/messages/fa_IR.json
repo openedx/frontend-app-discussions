@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "شما این پست را دنبال می کنید",
   "discussions.post.unfollow.description": "شما این پست را دنبال نمی کنید",
   "discussions.app.title": "گفتگوها",
+  "discussions.page.title": "گفتگوها",
   "discussions.posts.actionBar.searchAllPosts": "جستجوی همۀ مطالب ارسالی",
   "discussions.posts.actionBar.search": "",
   "discussions.actionBar.searchInfo": "نمایش {count} نتایج برای  \"{text}\"",

@@ -154,6 +154,7 @@
   "discussions.post.follow.description": "está a seguir esta mensagem",
   "discussions.post.unfollow.description": "não está a seguir este post",
   "discussions.app.title": "Debates",
+  "discussions.page.title": "Debates",
   "discussions.posts.actionBar.searchAllPosts": "Pesquisar publicações",
   "discussions.posts.actionBar.search": "",
   "discussions.actionBar.searchInfo": "Exibindo {count} resultados para \"{text}\"",
