@@ -1,19 +1,17 @@
 import React, {
-  Suspense, useCallback, useContext, useEffect, useState,
+  Suspense, useCallback, useContext, useEffect, useMemo, useState,
 } from 'react';
 
+import { Button, Icon, IconButton } from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Icon, IconButton } from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
 
 import Spinner from '../../components/Spinner';
-import {
-  EndorsementStatus, PostsPages, ThreadType,
-} from '../../data/constants';
-import { useDispatchWithState } from '../../data/hooks';
-import { DiscussionContext } from '../common/context';
+import { PostsPages } from '../../data/constants';
+import useDispatchWithState from '../../data/hooks';
+import DiscussionContext from '../common/context';
 import { useIsOnDesktop } from '../data/hooks';
 import { EmptyPage } from '../empty-posts';
 import { Post } from '../posts';
@@ -22,7 +20,7 @@ import { discussionsPath } from '../utils';
 import { ResponseEditor } from './comments/comment';
 import { useCommentsCount, usePost } from './data/hooks';
 import messages from './messages';
-import { PostCommentsContext } from './postCommentsContext';
+import PostCommentsContext from './postCommentsContext';
 
 const CommentsSort = React.lazy(() => import('./comments/CommentsSort'));
 const CommentsView = React.lazy(() => import('./comments/CommentsView'));
@@ -61,6 +59,12 @@ const PostCommentsView = () => {
     setAddingResponse(false);
   }, []);
 
+  const postCommentsContextValue = useMemo(() => ({
+    isClosed: closed,
+    postType: type,
+    postId,
+  }));
+
   if (!threadId) {
     if (!isLoading) {
       return (
@@ -79,13 +83,7 @@ const PostCommentsView = () => {
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <PostCommentsContext.Provider value={{
-      isClosed: closed,
-      postType: type,
-      postId,
-    }}
-    >
+    <PostCommentsContext.Provider value={postCommentsContextValue}>
       {!isOnDesktop && (
         enableInContextSidebar ? (
           <>
@@ -115,7 +113,7 @@ const PostCommentsView = () => {
         )
       )}
       <div
-        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus"
+        className="discussion-comments d-flex flex-column card border-0 post-card-margin post-card-padding on-focus mx-4 mt-4 mb-0"
       >
         <Post handleAddResponseButton={handleAddResponseButton} />
         {!closed && (
@@ -127,15 +125,7 @@ const PostCommentsView = () => {
       </div>
       <Suspense fallback={(<Spinner />)}>
         {!!commentsCount && <CommentsSort />}
-        {type === ThreadType.DISCUSSION && (
-          <CommentsView endorsed={EndorsementStatus.DISCUSSION} />
-        )}
-        {type === ThreadType.QUESTION && (
-          <>
-            <CommentsView endorsed={EndorsementStatus.ENDORSED} />
-            <CommentsView endorsed={EndorsementStatus.UNENDORSED} />
-          </>
-        )}
+        <CommentsView threadType={type} />
       </Suspense>
     </PostCommentsContext.Provider>
   );

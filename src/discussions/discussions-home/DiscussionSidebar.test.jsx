@@ -11,7 +11,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { fetchConfigSuccess } from '../data/slices';
 import { getThreadsApiUrl } from '../posts/data/api';
 import DiscussionSidebar from './DiscussionSidebar';

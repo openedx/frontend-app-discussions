@@ -15,11 +15,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getCourseTopicsApiUrl } from './data/api';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
-import { fetchCourseTopicsV3 } from './data/thunks';
+import fetchCourseTopicsV3 from './data/thunks';
 import TopicPostsView from './TopicPostsView';
 import TopicsView from './TopicsView';
 
@@ -151,12 +151,14 @@ describe('InContext Topics View', () => {
     const sectionGroups = await screen.getAllByTestId('section-group');
 
     coursewareTopics.forEach(async (topic, index) => {
-      const stats = await sectionGroups[index].querySelectorAll('.icon-size:not([data-testid="subsection-group"].icon-size)');
-      const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
+      await waitFor(async () => {
+        const stats = await sectionGroups[index].querySelectorAll('.icon-size:not([data-testid="subsection-group"].icon-size)');
+        const subsectionGroups = await within(sectionGroups[index]).getAllByTestId('subsection-group');
 
-      expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
-      expect(stats).toHaveLength(0);
-      expect(subsectionGroups).toHaveLength(2);
+        expect(within(sectionGroups[index]).queryByText(topic.displayName)).toBeInTheDocument();
+        expect(stats).toHaveLength(0);
+        expect(subsectionGroups).toHaveLength(2);
+      });
     });
   });
 

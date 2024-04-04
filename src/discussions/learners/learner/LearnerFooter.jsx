@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
+import {
+  Edit, QuestionAnswerOutline, Report, ReportGmailerrorred,
+} from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Edit, Report, ReportGmailerrorred } from '@edx/paragon/icons';
 
-import { QuestionAnswerOutline } from '../../../components/icons';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';
 

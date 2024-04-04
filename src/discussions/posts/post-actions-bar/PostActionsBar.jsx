@@ -1,17 +1,17 @@
 import React, { useCallback, useContext } from 'react';
 
+import {
+  Button, Icon, IconButton,
+} from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton,
-} from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { useUserPostingEnabled } from '../../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
@@ -67,15 +67,14 @@ const PostActionsBar = () => {
       )}
       {enableInContextSidebar && (
         <>
-          <div className="border-right border-light-300 mr-3 ml-1.5 my-10px" />
-          <div className="justify-content-center mt-2.5 mx-3px">
+          <div className="border-right border-light-300 mr-2 my-10px" />
+          <div className="d-flex align-items-center justify-content-center">
             <IconButton
               src={Close}
+              size="sm"
               iconAs={Icon}
               onClick={handleCloseInContext}
               alt={intl.formatMessage(messages.close)}
-              iconClassNames="spinner-dimensions"
-              className="spinner-dimensions"
             />
           </div>
         </>

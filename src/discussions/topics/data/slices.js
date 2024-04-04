@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus, TopicOrdering } from '../../../data/constants';
@@ -22,31 +21,52 @@ const topicsSlice = createSlice({
     },
   },
   reducers: {
-    fetchCourseTopicsRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-    },
-    fetchCourseTopicsSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      state.topics = payload.topics;
-      state.nonCoursewareIds = payload.nonCoursewareIds;
-      state.categoryIds = payload.categoryIds;
-      state.topicsInCategory = payload.topicsInCategory;
-    },
-    fetchCourseTopicsFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    fetchCourseTopicsDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
-    setFilter: (state, { payload }) => {
-      state.filter = payload;
-    },
-    setSortBy: (state, { payload }) => {
-      state.sortBy = payload;
-    },
-    setTopicsCount: (state, { payload }) => {
-      state.results.count = payload;
-    },
+    fetchCourseTopicsRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    fetchCourseTopicsSuccess: (state, { payload }) => (
+      {
+        ...state,
+        status: RequestStatus.SUCCESSFUL,
+        topics: payload.topics,
+        nonCoursewareIds: payload.nonCoursewareIds,
+        categoryIds: payload.categoryIds,
+        topicsInCategory: payload.topicsInCategory,
+      }
+    ),
+    fetchCourseTopicsFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
+    fetchCourseTopicsDenied: (state) => (
+      {
+        ...state,
+        status: RequestStatus.DENIED,
+      }
+    ),
+    setFilter: (state, { payload }) => (
+      {
+        ...state,
+        filter: payload,
+      }
+    ),
+    setSortBy: (state, { payload }) => (
+      {
+        ...state,
+        sortBy: payload,
+      }
+    ),
+    setTopicsCount: (state, { payload }) => (
+      {
+        ...state,
+        results: { ...state.results, count: payload },
+      }
+    ),
   },
 });
 

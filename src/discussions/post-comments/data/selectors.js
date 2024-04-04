@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { createSelector } from '@reduxjs/toolkit';
 
 const selectCommentsById = state => state.comments.commentsById;
@@ -9,9 +8,9 @@ export const selectCommentOrResponseById = commentOrResponseId => createSelector
   comments => comments[commentOrResponseId],
 );
 
-export const selectThreadComments = (threadId, endorsed = null) => createSelector(
+export const selectThreadComments = (threadId) => createSelector(
   [
-    state => state.comments.commentsInThreads[threadId]?.[endorsed] || [],
+    state => state.comments.commentsInThreads[threadId] || [],
     selectCommentsById,
   ],
   mapIdToComment,
@@ -29,12 +28,12 @@ export const selectCommentResponses = commentId => createSelector(
   mapIdToComment,
 );
 
-export const selectThreadHasMorePages = (threadId, endorsed = null) => (
-  state => state.comments.pagination[threadId]?.[endorsed]?.hasMorePages || false
+export const selectThreadHasMorePages = (threadId) => (
+  state => state.comments.pagination[threadId]?.hasMorePages || false
 );
 
-export const selectThreadCurrentPage = (threadId, endorsed = null) => (
-  state => state.comments.pagination[threadId]?.[endorsed]?.currentPage || null
+export const selectThreadCurrentPage = (threadId) => (
+  state => state.comments.pagination[threadId]?.currentPage || null
 );
 
 export const selectCommentHasMorePages = commentId => (

@@ -1,19 +1,21 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Form, StatefulButton } from '@openedx/paragon';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Form, StatefulButton } from '@edx/paragon';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../../components/PostPreviewPanel';
-import { useDispatchWithState } from '../../../../data/hooks';
-import { DiscussionContext } from '../../../common/context';
+import useDispatchWithState from '../../../../data/hooks';
+import DiscussionContext from '../../../common/context';
 import {
   selectModerationSettings,
   selectUserHasModerationPrivileges,
@@ -35,6 +37,7 @@ const CommentEditor = ({
   } = comment;
   const intl = useIntl();
   const editorRef = useRef(null);
+  const formRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -60,7 +63,6 @@ const CommentEditor = ({
 
   const initialValues = {
     comment: rawBody,
-    // eslint-disable-next-line react/prop-types
     editReasonCode: lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
   };
 
@@ -89,6 +91,12 @@ const CommentEditor = ({
   // the current comment id, or the current comment parent or the curren thread.
   const editorId = `comment-editor-${id || parentId || threadId}`;
 
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [formRef]);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -104,7 +112,7 @@ const CommentEditor = ({
         handleChange,
         resetForm,
       }) => (
-        <Form onSubmit={handleSubmit} className={formClasses}>
+        <Form onSubmit={handleSubmit} className={formClasses} ref={formRef}>
           {canDisplayEditReason && (
             <Form.Group
               isInvalid={isFormikFieldInvalid('editReasonCode', {
@@ -183,7 +191,9 @@ CommentEditor.propTypes = {
   comment: PropTypes.shape({
     author: PropTypes.string,
     id: PropTypes.string,
-    lastEdit: PropTypes.shape({}),
+    lastEdit: PropTypes.shape({
+      reasonCode: PropTypes.shape({}),
+    }),
     parentId: PropTypes.string,
     rawBody: PropTypes.string,
     threadId: PropTypes.string.isRequired,

@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
-import { EndorsementStatus, RequestStatus } from '../../../data/constants';
+import { RequestStatus } from '../../../data/constants';
 
 const commentsSlice = createSlice({
   name: 'comments',
@@ -25,155 +24,243 @@ const commentsSlice = createSlice({
     sortOrder: true,
   },
   reducers: {
-    fetchCommentsRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-    },
+    fetchCommentsRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
     fetchCommentsSuccess: (state, { payload }) => {
-      const { threadId, page, endorsed } = payload;
-      // force endorsed to be null, true or false
-      state.status = RequestStatus.SUCCESSFUL;
-      state.commentsInThreads[threadId] = state.commentsInThreads[threadId] || {};
-      state.pagination[threadId] = state.pagination[threadId] || {};
+      const { threadId, page } = payload;
 
-      // Append to existing list of comments list
-      // only if the new fetch is due to pagination
+      const newState = { ...state };
+
+      newState.status = RequestStatus.SUCCESSFUL;
+      newState.commentsInThreads = {
+        ...newState.commentsInThreads,
+        [threadId]: newState.commentsInThreads[threadId] || [],
+      };
+
+      newState.pagination = {
+        ...newState.pagination,
+        [threadId]: newState.pagination[threadId] || {},
+      };
+
       if (page === 1) {
-        state.commentsInThreads[threadId][endorsed] = (payload.commentsInThreads[threadId] || []);
+        newState.commentsInThreads = {
+          ...newState.commentsInThreads,
+          [threadId]: [...payload.commentsInThreads[threadId]] || [],
+        };
       } else {
-        state.commentsInThreads[threadId][endorsed] = [
-          // Newly posted comments will appear twice when fetching more pages.
-          // We use a Set here to remove duplicate entries, then spread it
-          // back into an array.
-          ...new Set([
-            ...(state.commentsInThreads[threadId][endorsed] || []),
-            ...(payload.commentsInThreads[threadId] || []),
-          ]),
-        ];
+        newState.commentsInThreads = {
+          [threadId]: [
+            ...new Set([
+              ...(newState.commentsInThreads[threadId] || []),
+              ...(payload.commentsInThreads[threadId] || []),
+            ]),
+          ],
+        };
       }
 
-      state.pagination[threadId][endorsed] = {
-        currentPage: payload.page,
-        totalPages: payload.pagination.numPages,
-        hasMorePages: Boolean(payload.pagination.next),
+      newState.pagination = {
+        ...newState.pagination,
+        [threadId]: {
+          ...newState.pagination[threadId],
+          currentPage: payload.page,
+          totalPages: payload.pagination.numPages,
+          hasMorePages: Boolean(payload.pagination.next),
+        },
       };
-      state.commentsById = { ...state.commentsById, ...payload.commentsById };
+
+      newState.commentsById = { ...newState.commentsById, ...payload.commentsById };
+
+      return newState;
     },
-    fetchCommentsFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    fetchCommentsDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
-    fetchCommentResponsesRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-    },
-    fetchCommentResponsesFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    fetchCommentResponsesDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
+    fetchCommentsFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
+    fetchCommentsDenied: (state) => (
+      {
+        ...state,
+        status: RequestStatus.DENIED,
+      }
+    ),
+    fetchCommentResponsesRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    fetchCommentResponsesFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
+    fetchCommentResponsesDenied: (state) => (
+      {
+        ...state,
+        status: RequestStatus.DENIED,
+      }
+    ),
     fetchCommentResponsesSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      if (payload.page === 1) {
-        state.commentsInComments[payload.commentId] = payload.commentsInComments[payload.commentId] || [];
-      } else {
-        state.commentsInComments[payload.commentId] = [
-          ...new Set([
-            ...(state.commentsInComments[payload.commentId] || []),
-            ...(payload.commentsInComments[payload.commentId] || []),
-          ]),
-        ];
-      }
-      state.commentsById = { ...state.commentsById, ...payload.commentsById };
-      state.responsesPagination[payload.commentId] = {
-        currentPage: payload.page,
-        totalPages: payload.pagination.numPages,
-        hasMorePages: Boolean(payload.pagination.next),
-      };
-    },
-    postCommentRequest: (state, { payload }) => {
-      state.postStatus = RequestStatus.IN_PROGRESS;
-      state.commentDraft = payload;
-    },
-    postCommentDenied: (state) => {
-      state.postStatus = RequestStatus.DENIED;
-    },
-    postCommentFailed: (state) => {
-      state.postStatus = RequestStatus.FAILED;
-    },
-    postCommentSuccess: (state, { payload }) => {
-      state.postStatus = RequestStatus.SUCCESSFUL;
-      if (payload.parentId) {
-        if (!(payload.parentId in state.commentsInComments)) {
-          state.commentsInComments[payload.parentId] = [];
-        }
-        state.commentsInComments[payload.parentId].push(payload.id);
-      } else {
-        // The comment should be added to either the discussion or unendorsed
-        // sections since a new comment won't be endorsed yet.
-        (
-          state.commentsInThreads[payload.threadId][EndorsementStatus.DISCUSSION]
-          || state.commentsInThreads[payload.threadId][EndorsementStatus.UNENDORSED]
-        ).push(payload.id);
-      }
-      state.commentsById[payload.id] = payload;
-      state.commentDraft = null;
-    },
-    updateCommentRequest: (state, { payload }) => {
-      state.postStatus = RequestStatus.IN_PROGRESS;
-      state.commentDraft = payload;
-    },
-    updateCommentDenied: (state) => {
-      state.postStatus = RequestStatus.DENIED;
-    },
-    updateCommentFailed: (state) => {
-      state.postStatus = RequestStatus.FAILED;
-    },
-    updateCommentSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      state.commentsById[payload.id] = payload;
-      state.commentDraft = null;
-    },
-    updateCommentsList: (state, { payload }) => {
-      const { id: commentId, threadId, endorsed } = payload;
-      const commentAddListtype = endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
-      const commentRemoveListType = !endorsed ? EndorsementStatus.ENDORSED : EndorsementStatus.UNENDORSED;
+      const newState = { ...state };
+      newState.status = RequestStatus.SUCCESSFUL;
 
-      state.commentsInThreads[threadId][commentRemoveListType] = (
-        state.commentsInThreads[threadId]?.[commentRemoveListType]?.filter(item => item !== commentId)
-      );
-      state.commentsInThreads[threadId][commentAddListtype] = [
-        ...state.commentsInThreads[threadId][commentAddListtype], payload.id,
-      ];
+      if (payload.page === 1) {
+        newState.commentsInComments = {
+          ...newState.commentsInComments,
+          [payload.commentId]: payload.commentsInComments[payload.commentId] || [],
+        };
+      } else {
+        newState.commentsInComments = {
+          ...newState.commentsInComments,
+          [payload.commentId]: [
+            ...new Set([
+              ...(newState.commentsInComments[payload.commentId] || []),
+              ...(payload.commentsInComments[payload.commentId] || []),
+            ]),
+          ],
+        };
+      }
+
+      newState.commentsById = { ...newState.commentsById, ...payload.commentsById };
+      newState.responsesPagination = {
+        ...newState.responsesPagination,
+        [payload.commentId]: {
+          currentPage: payload.page,
+          totalPages: payload.pagination.numPages,
+          hasMorePages: Boolean(payload.pagination.next),
+        },
+      };
+
+      return newState;
     },
-    deleteCommentRequest: (state) => {
-      state.postStatus = RequestStatus.IN_PROGRESS;
+    postCommentRequest: (state, { payload }) => (
+      {
+        ...state,
+        postStatus: RequestStatus.IN_PROGRESS,
+        commentDraft: payload,
+      }
+    ),
+    postCommentDenied: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.DENIED,
+      }
+    ),
+    postCommentFailed: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.FAILED,
+      }
+    ),
+    postCommentSuccess: (state, { payload }) => {
+      const newState = { ...state };
+      newState.postStatus = RequestStatus.SUCCESSFUL;
+
+      if (payload.parentId) {
+        newState.commentsInComments = {
+          ...newState.commentsInComments,
+          [payload.parentId]: [
+            ...(newState.commentsInComments[payload.parentId] || []),
+            payload.id,
+          ],
+        };
+      } else {
+        const threadComments = newState.commentsInThreads[payload.threadId] || [];
+        newState.commentsInThreads = {
+          ...newState.commentsInThreads,
+          [payload.threadId]: [...threadComments, payload.id],
+        };
+      }
+
+      newState.commentsById = { ...newState.commentsById, [payload.id]: payload };
+      newState.commentDraft = null;
+
+      return newState;
     },
-    deleteCommentDenied: (state) => {
-      state.postStatus = RequestStatus.DENIED;
-    },
-    deleteCommentFailed: (state) => {
-      state.postStatus = RequestStatus.FAILED;
-    },
+    updateCommentRequest: (state, { payload }) => (
+      {
+        ...state,
+        postStatus: RequestStatus.IN_PROGRESS,
+        commentDraft: payload,
+      }
+    ),
+    updateCommentDenied: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.DENIED,
+      }
+    ),
+    updateCommentFailed: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.FAILED,
+      }
+    ),
+    updateCommentSuccess: (state, { payload }) => (
+      {
+        ...state,
+        commentsById: {
+          ...state.commentsById,
+          [payload.id]: payload,
+        },
+        commentDraft: null,
+      }),
+    deleteCommentRequest: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    deleteCommentDenied: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.DENIED,
+      }
+    ),
+    deleteCommentFailed: (state) => (
+      {
+        ...state,
+        postStatus: RequestStatus.FAILED,
+      }
+    ),
     deleteCommentSuccess: (state, { payload }) => {
       const { commentId } = payload;
       const { threadId, parentId } = state.commentsById[commentId];
 
-      state.postStatus = RequestStatus.SUCCESSFUL;
-      [EndorsementStatus.DISCUSSION, EndorsementStatus.UNENDORSED, EndorsementStatus.ENDORSED].forEach((endorsed) => {
-        state.commentsInThreads[threadId][endorsed] = (
-          state.commentsInThreads[threadId]?.[endorsed]?.filter(item => item !== commentId)
-        );
-      });
+      const newState = {
+        ...state,
+        postStatus: RequestStatus.SUCCESSFUL,
+        commentsInThreads: { ...state.commentsInThreads },
+        commentsInComments: { ...state.commentsInComments },
+        commentsById: { ...state.commentsById },
+      };
+
+      newState.commentsInThreads[threadId] = [
+        ...newState.commentsInThreads[threadId]?.filter(item => item !== commentId) || [],
+      ];
+
       if (parentId) {
-        state.commentsInComments[parentId] = state.commentsInComments[parentId].filter(item => item !== commentId);
+        newState.commentsInComments[parentId] = newState.commentsInComments[parentId].filter(
+          item => item !== commentId,
+        );
       }
-      delete state.commentsById[commentId];
+
+      delete newState.commentsById[commentId];
+
+      return newState;
     },
-    setCommentSortOrder: (state, { payload }) => {
-      state.sortOrder = payload;
-    },
+    setCommentSortOrder: (state, { payload }) => (
+      {
+        ...state,
+        sortOrder: payload,
+      }
+    ),
   },
 });
 
@@ -194,7 +281,6 @@ export const {
   updateCommentFailed,
   updateCommentRequest,
   updateCommentSuccess,
-  updateCommentsList,
   deleteCommentDenied,
   deleteCommentFailed,
   deleteCommentRequest,

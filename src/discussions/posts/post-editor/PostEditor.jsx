@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Button, Form, Spinner, StatefulButton,
+} from '@openedx/paragon';
+import { Help, Post } from '@openedx/paragon/icons';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,18 +15,14 @@ import * as Yup from 'yup';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import {
-  Button, Form, Spinner, StatefulButton,
-} from '@edx/paragon';
-import { Help, Post } from '@edx/paragon/icons';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../components/PostPreviewPanel';
-import { useDispatchWithState } from '../../../data/hooks';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { DiscussionContext } from '../../common/context';
+import useDispatchWithState from '../../../data/hooks';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
+import DiscussionContext from '../../common/context';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
@@ -33,8 +33,7 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../data/selectors';
-// eslint-disable-next-line import/no-cycle
-import { EmptyPage } from '../../empty-posts';
+import EmptyPage from '../../empty-posts/EmptyPage';
 import {
   selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,

@@ -1,21 +1,20 @@
-/* eslint-disable react/forbid-prop-types */
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Collapsible, Form, Icon, Spinner,
+} from '@openedx/paragon';
+import { Tune } from '@openedx/paragon/icons';
 import { capitalize, toString } from 'lodash';
 import { useSelector } from 'react-redux';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import {
-  Collapsible, Form, Icon, Spinner,
-} from '@edx/paragon';
-import { Tune } from '@edx/paragon/icons';
 
 import {
   PostsStatusFilter, RequestStatus,
   ThreadOrdering, ThreadType,
 } from '../data/constants';
-import { selectCourseCohorts } from '../discussions/cohorts/data/selectors';
+import selectCourseCohorts from '../discussions/cohorts/data/selectors';
 import messages from '../discussions/posts/post-filter-bar/messages';
 import { ActionItem } from '../discussions/posts/post-filter-bar/PostFilterBar';
 
@@ -93,10 +92,15 @@ const FilterBar = ({
     },
   ];
 
+  const handleFilterToggle = useCallback((event) => {
+    onFilterChange(event);
+    setOpen(false);
+  }, [onFilterChange]);
+
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={() => setOpen(!isOpen)}
+      onToggle={setOpen}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
@@ -126,7 +130,7 @@ const FilterBar = ({
                 name={value.name}
                 className="d-flex flex-column list-group list-group-flush"
                 value={selectedFilters[value.name]}
-                onChange={onFilterChange}
+                onChange={handleFilterToggle}
               >
                 {value.filters.map(filterName => {
                   const element = allFilters.find(obj => obj.id === filterName);
@@ -159,7 +163,7 @@ const FilterBar = ({
                     name="cohort"
                     className="d-flex flex-column list-group list-group-flush w-100"
                     value={selectedFilters.cohort}
-                    onChange={onFilterChange}
+                    onChange={handleFilterToggle}
                   >
                     <ActionItem
                       id="all-groups"
@@ -189,8 +193,16 @@ const FilterBar = ({
 
 FilterBar.propTypes = {
   intl: intlShape.isRequired,
-  filters: PropTypes.array.isRequired,
-  selectedFilters: PropTypes.object.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    filters: PropTypes.arrayOf(PropTypes.string),
+  })).isRequired,
+  selectedFilters: PropTypes.shape({
+    postType: ThreadType,
+    status: PostsStatusFilter,
+    orderBy: ThreadOrdering,
+    cohort: PropTypes.string,
+  }).isRequired,
   onFilterChange: PropTypes.func.isRequired,
   showCohortsFilter: PropTypes.bool,
 };

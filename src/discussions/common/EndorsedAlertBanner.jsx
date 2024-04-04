@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import { Alert, Icon } from '@openedx/paragon';
+import { CheckCircle, Verified } from '@openedx/paragon/icons';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import { CheckCircle, Verified } from '@edx/paragon/icons';
 
 import { ThreadType } from '../../data/constants';
 import messages from '../post-comments/messages';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import AuthorLabel from './AuthorLabel';
 import timeLocale from './time-locale';
 

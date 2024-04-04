@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Avatar, useToggle } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Avatar, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { AvatarOutlineAndLabelColors, ContentActions } from '../../../../data/constants';
@@ -54,7 +54,7 @@ const Reply = ({ responseId }) => {
   }, []);
 
   const handleReplyEndorse = useCallback(() => {
-    dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    dispatch(editComment(id, { endorsed: !endorsed }));
   }, [endorsed, id]);
 
   const handleAbusedFlag = useCallback(() => {

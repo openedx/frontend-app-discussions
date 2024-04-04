@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
+import { ThumbUpFilled, ThumbUpOutline } from '@openedx/paragon/icons';
 
-import { ThumbUpFilled, ThumbUpOutline } from '../../../components/icons';
+import { useIntl } from '@edx/frontend-platform/i18n';
+
 import messages from './messages';
 
 const LikeButton = ({ count, onClick, voted }) => {

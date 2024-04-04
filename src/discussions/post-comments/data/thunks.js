@@ -1,8 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
-import { ContentActions, EndorsementStatus } from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteComment, getCommentResponses, getThreadComments, postComment, updateComment,
@@ -27,7 +25,6 @@ import {
   updateCommentDenied,
   updateCommentFailed,
   updateCommentRequest,
-  updateCommentsList,
   updateCommentSuccess,
 } from './slices';
 
@@ -79,7 +76,7 @@ export function fetchThreadComments(
   {
     page = 1,
     reverseOrder,
-    endorsed = EndorsementStatus.DISCUSSION,
+    threadType,
     enableInContextSidebar,
     signal,
   } = {},
@@ -88,11 +85,10 @@ export function fetchThreadComments(
     try {
       dispatch(fetchCommentsRequest());
       const data = await getThreadComments(threadId, {
-        page, reverseOrder, endorsed, enableInContextSidebar, signal,
+        page, reverseOrder, threadType, enableInContextSidebar, signal,
       });
       dispatch(fetchCommentsSuccess({
         ...normaliseComments(camelCaseObject(data)),
-        endorsed,
         page,
         threadId,
       }));
@@ -128,15 +124,12 @@ export function fetchCommentResponses(commentId, { page = 1, reverseOrder = true
   };
 }
 
-export function editComment(commentId, comment, action = null) {
+export function editComment(commentId, comment) {
   return async (dispatch) => {
     try {
       dispatch(updateCommentRequest({ commentId }));
       const data = await updateComment(commentId, comment);
       dispatch(updateCommentSuccess(camelCaseObject(data)));
-      if (action === ContentActions.ENDORSE) {
-        dispatch(updateCommentsList(camelCaseObject(data)));
-      }
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(updateCommentDenied());

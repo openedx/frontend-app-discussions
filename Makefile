@@ -1,7 +1,3 @@
-export TRANSIFEX_RESOURCE = frontend-app-discussions
-transifex_resource = frontend-app-discussions
-transifex_langs = "ar,cs,de_DE,es_419,es_AR,es_ES,fa_IR,fr,fr_CA,fr_FR,hi,it_IT,pl,pt_PT,tr_TR,uk,ru,zh_CN"
-
 intl_imports = ./node_modules/.bin/intl-imports.js
 transifex_utils = ./node_modules/.bin/transifex-utils.js
 i18n = ./src/i18n
@@ -56,24 +52,19 @@ push_translations:
 	# Pushing comments to Transifex...
 	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
-ifeq ($(OPENEDX_ATLAS_PULL),)
-# Pulls translations from Transifex.
-pull_translations:
-	tx pull -t -f --mode reviewed --languages=$(transifex_langs)
-else
-# Experimental: OEP-58 Pulls translations using atlas
 pull_translations:
 	rm -rf src/i18n/messages
 	mkdir src/i18n/messages
 	cd src/i18n/messages \
-	  && atlas pull --filter=$(transifex_langs) \
+	  && atlas pull $(ATLAS_OPTIONS) \
 	           translations/frontend-component-header/src/i18n/messages:frontend-component-header  \
 	           translations/frontend-component-footer/src/i18n/messages:frontend-component-footer \
+	           translations/frontend-platform/src/i18n/messages:frontend-platform \
 	           translations/paragon/src/i18n/messages:paragon \
 	           translations/frontend-app-discussions/src/i18n/messages:frontend-app-discussions
 
-	$(intl_imports) frontend-component-header frontend-component-footer paragon frontend-app-discussions
-endif
+	$(intl_imports) frontend-component-header frontend-component-footer frontend-platform paragon frontend-app-discussions
+# endif
 
 # This target is used by Travis.
 validate-no-uncommitted-package-lock-changes:

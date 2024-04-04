@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Hyperlink, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,13 +9,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions, getFullUrl } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
@@ -127,7 +127,7 @@ const Post = ({ handleAddResponseButton }) => {
 
   return (
     <div
-      className="d-flex flex-column w-100 mw-100 post-card-comment"
+      className="d-flex flex-column w-100 mw-100 post-card-comment overflow-auto"
       data-testid={`post-${postId}`}
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex="0"
@@ -184,7 +184,7 @@ const Post = ({ handleAddResponseButton }) => {
         title={title}
       />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
-        <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader" testId={postId} />
+        <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader w-100" testId={postId} />
       </div>
       {(topicContext || topic) && (
         <div

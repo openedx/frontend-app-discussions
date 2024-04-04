@@ -14,10 +14,10 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { getApiBaseUrl } from '../../data/constants';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
-import { fetchCourseTopics } from './data/thunks';
+import fetchCourseTopics from './data/thunks';
 import TopicsView from './TopicsView';
 
 import './data/__factories__';

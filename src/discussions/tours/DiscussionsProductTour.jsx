@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 
+import { ProductTour } from '@openedx/paragon';
 import isEmpty from 'lodash/isEmpty';
 import { useDispatch } from 'react-redux';
-
-import { ProductTour } from '@edx/paragon';
 
 import { useTourConfiguration } from '../data/hooks';
 import { fetchDiscussionTours } from './data/thunks';
@@ -17,14 +16,11 @@ const DiscussionsProductTour = () => {
   }, []);
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {!isEmpty(config) && (
-        <ProductTour
-          tours={config}
-        />
-      )}
-    </>
+    !isEmpty(config) && (
+      <ProductTour
+        tours={config}
+      />
+    )
   );
 };
 

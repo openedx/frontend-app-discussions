@@ -2,14 +2,14 @@ import React, {
   useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 
+import { Icon, SearchField } from '@openedx/paragon';
+import { Search as SearchIcon } from '@openedx/paragon/icons';
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, SearchField } from '@edx/paragon';
-import { Search as SearchIcon } from '@edx/paragon/icons';
 
-import { DiscussionContext } from '../discussions/common/context';
+import DiscussionContext from '../discussions/common/context';
 import { setUsernameSearch } from '../discussions/learners/data';
 import { setSearchQuery } from '../discussions/posts/data';
 import postsMessages from '../discussions/posts/post-actions-bar/messages';

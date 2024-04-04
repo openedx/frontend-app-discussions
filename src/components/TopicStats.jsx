@@ -2,11 +2,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
+import { HelpOutline, PostOutline, Report } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { HelpOutline, PostOutline, Report } from '@edx/paragon/icons';
 
 import {
   selectUserHasModerationPrivileges,

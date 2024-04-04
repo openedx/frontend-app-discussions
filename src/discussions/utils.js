@@ -1,5 +1,10 @@
 import { useCallback, useContext, useMemo } from 'react';
 
+import {
+  CheckCircle, CheckCircleOutline, Delete, Edit, InsertLink,
+  Institution, Lock, LockOpen, Pin, Report, School,
+  Verified, VerifiedOutline,
+} from '@openedx/paragon/icons';
 import { getIn } from 'formik';
 import { uniqBy } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -8,16 +13,12 @@ import {
 } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import {
-  CheckCircle, CheckCircleOutline, Delete, Edit, Lock, LockOpen, Pin, Report, Verified, VerifiedOutline,
-} from '@edx/paragon/icons';
 
-import { InsertLink } from '../components/icons';
 import {
   ContentActions, Routes, ThreadType,
 } from '../data/constants';
 import { ContentSelectors } from './data/constants';
-import { PostCommentsContext } from './post-comments/postCommentsContext';
+import PostCommentsContext from './post-comments/postCommentsContext';
 import messages from './messages';
 
 /**
@@ -292,4 +293,23 @@ export function isLastElementOfList(list, element) {
 
 export function truncatePath(path) {
   return path.substring(0, path.lastIndexOf('/'));
+}
+
+export function getAuthorLabel(intl, authorLabel) {
+  const authorLabelMappings = {
+    Staff: {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    Moderator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
+    },
+    'Community TA': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
+    },
+  };
+
+  return authorLabelMappings[authorLabel] || {};
 }

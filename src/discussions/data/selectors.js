@@ -1,4 +1,7 @@
-/* eslint-disable import/prefer-default-export */
+import { createSelector } from '@reduxjs/toolkit';
+
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({
@@ -13,8 +16,6 @@ export const selectUserIsStaff = state => state.config.isUserAdmin;
 export const selectUserIsGroupTa = state => state.config.isGroupTa;
 
 export const selectConfigLoadingStatus = state => state.config.status;
-
-export const selectLearnersTabEnabled = state => state.config.learnersTabEnabled;
 
 export const selectUserRoles = state => state.config.userRoles;
 
@@ -63,3 +64,29 @@ export function selectTopicThreadCount(topicId) {
 export function selectPostThreadCount(state) {
   return state.threads.totalThreads;
 }
+
+export const selectIsUserLearner = createSelector(
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
+  selectUserIsStaff,
+  selectIsCourseAdmin,
+  selectIsCourseStaff,
+  selectCourseTabs,
+  (
+    userHasModerationPrivileges,
+    userIsGroupTa,
+    userIsStaff,
+    userIsCourseAdmin,
+    userIsCourseStaff,
+    { courseStatus },
+  ) => (
+    (
+      !userHasModerationPrivileges
+      && !userIsGroupTa
+      && !userIsStaff
+      && !userIsCourseAdmin
+      && !userIsCourseStaff
+      && courseStatus === LOADED
+    ) || false
+  ),
+);

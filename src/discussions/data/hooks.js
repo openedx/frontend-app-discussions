@@ -3,6 +3,7 @@ import {
   useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   matchPath, useLocation, useMatch, useNavigate,
@@ -11,17 +12,17 @@ import {
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
 
+import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
-import { fetchCourseBlocks } from '../../data/thunks';
-import { DiscussionContext } from '../common/context';
+import fetchCourseBlocks from '../../data/thunks';
+import DiscussionContext from '../common/context';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
 import tourCheckpoints from '../tours/constants';
-import { selectTours } from '../tours/data/selectors';
+import selectTours from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
 import { discussionsPath } from '../utils';
@@ -31,13 +32,12 @@ import {
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectIsPostingEnabled,
-  selectLearnersTabEnabled,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from './selectors';
-import { fetchCourseConfig } from './thunks';
+import fetchCourseConfig from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
@@ -72,18 +72,22 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId) {
+export function useCourseDiscussionData(courseId, isEnrolled) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
-      await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      if (isEnrolled) {
+        await dispatch(fetchCourseConfig(courseId));
+        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      } else {
+        await dispatch(fetchTab(courseId));
+      }
     }
 
     fetchBaseData();
-  }, [courseId]);
+  }, [courseId, isEnrolled]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
@@ -170,8 +174,6 @@ export const useAlertBannerVisible = (
     (canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
   );
 };
-
-export const useShowLearnersTab = () => useSelector(selectLearnersTabEnabled);
 
 /**
  * React hook that gets the current topic ID from the current topic or category.

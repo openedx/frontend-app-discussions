@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 export const LOADING = 'loading';
@@ -14,30 +13,44 @@ const slice = createSlice({
     tabs: [],
     courseTitle: null,
     courseNumber: null,
+    isEnrolled: false,
     org: null,
   },
   reducers: {
-    fetchTabDenied: (state, { payload }) => {
-      state.courseId = payload.courseId;
-      state.courseStatus = DENIED;
-    },
-    fetchTabFailure: (state, { payload }) => {
-      state.courseId = payload.courseId;
-      state.courseStatus = FAILED;
-    },
-    fetchTabRequest: (state, { payload }) => {
-      state.courseId = payload.courseId;
-      state.courseStatus = LOADING;
-    },
-    fetchTabSuccess: (state, { payload }) => {
-      state.courseId = payload.courseId;
-      state.targetUserId = payload.targetUserId;
-      state.tabs = payload.tabs;
-      state.courseStatus = LOADED;
-      state.courseTitle = payload.courseTitle;
-      state.courseNumber = payload.courseNumber;
-      state.org = payload.org;
-    },
+    fetchTabDenied: (state, { payload }) => (
+      {
+        ...state,
+        courseId: payload.courseId,
+        courseStatus: DENIED,
+      }
+    ),
+    fetchTabFailure: (state, { payload }) => (
+      {
+        ...state,
+        courseId: payload.courseId,
+        courseStatus: FAILED,
+      }
+    ),
+    fetchTabRequest: (state, { payload }) => (
+      {
+        ...state,
+        courseId: payload.courseId,
+        courseStatus: LOADING,
+      }
+    ),
+    fetchTabSuccess: (state, { payload }) => (
+      {
+        ...state,
+        courseId: payload.courseId,
+        targetUserId: payload.targetUserId,
+        tabs: payload.tabs,
+        courseStatus: LOADED,
+        courseTitle: payload.courseTitle,
+        courseNumber: payload.courseNumber,
+        org: payload.org,
+        isEnrolled: payload.isEnrolled,
+      }
+    ),
   },
 });
 
