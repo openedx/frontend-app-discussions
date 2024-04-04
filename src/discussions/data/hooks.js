@@ -13,6 +13,7 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { LOADED } from '../../components/NavigationBar/data/slice';
 import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
@@ -33,6 +34,7 @@ import {
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectIsPostingEnabled,
+  selectIsUserLearner,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -73,7 +75,7 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId, isEnrolled) {
+export function useCourseDiscussionData(courseId) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,12 +85,14 @@ export function useCourseDiscussionData(courseId, isEnrolled) {
     }
 
     fetchBaseData();
-  }, [courseId, isEnrolled]);
+  }, [courseId]);
 }
 
-export function useCourseBlockData(courseId, isEnrolled, courseStatus, isUserLearner) {
+export function useCourseBlockData(courseId) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
+  const { isEnrolled, courseStatus } = useSelector(selectCourseTabs);
+  const isUserLearner = useSelector(selectIsUserLearner);
 
   useEffect(() => {
     async function fetchBaseData() {
