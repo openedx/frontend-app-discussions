@@ -13,6 +13,7 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
@@ -74,20 +75,30 @@ export const useSidebarVisible = () => {
 
 export function useCourseDiscussionData(courseId, isEnrolled) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
-      if (isEnrolled) {
-        await dispatch(fetchCourseConfig(courseId));
-        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
-      } else {
-        await dispatch(fetchTab(courseId));
-      }
+      await dispatch(fetchCourseConfig(courseId));
+      await dispatch(fetchTab(courseId));
     }
 
     fetchBaseData();
   }, [courseId, isEnrolled]);
+}
+
+export function useCourseBlockData(courseId, isEnrolled, courseStatus, isUserLearner) {
+  const dispatch = useDispatch();
+  const { authenticatedUser } = useContext(AppContext);
+
+  useEffect(() => {
+    async function fetchBaseData() {
+      if (courseStatus === LOADED && (!isUserLearner || isEnrolled)) {
+        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      }
+    }
+
+    fetchBaseData();
+  }, [courseId, isEnrolled, courseStatus, isUserLearner]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
