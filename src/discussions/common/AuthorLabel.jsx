@@ -114,7 +114,7 @@ const AuthorLabel = ({
 
   return showUserNameAsLink
     ? (
-      <div className={className}>
+      <div className={`${className} flex-wrap`}>
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
@@ -127,7 +127,7 @@ const AuthorLabel = ({
         {labelContents}
       </div>
     )
-    : <div className={className}>{authorName}{labelContents}</div>;
+    : <div className={`${className} flex-wrap`}>{authorName}{labelContents}</div>;
 };
 
 AuthorLabel.propTypes = {

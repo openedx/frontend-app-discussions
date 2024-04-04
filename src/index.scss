@@ -241,6 +241,10 @@ header {
 
 .sidebar-desktop-width {
   min-width: 29rem !important;
+
+  @include media-breakpoint-down(lg) {
+    min-width: 25rem !important;
+  }
 }
 
 .sidebar-XL-width {
@@ -473,6 +477,10 @@ header {
       display: flex;
     }
   }
+
+  .pgn__avatar {
+    flex-shrink: 0;
+  }
 }
 
 .spinner-dimentions {
@@ -549,7 +557,7 @@ header {
 }
 
 .author-name {
-  line-height: 1;
+  line-height: 1.5;
   word-break: break-all;
 }
 
