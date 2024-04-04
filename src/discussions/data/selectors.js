@@ -1,5 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({
@@ -69,12 +71,14 @@ export const selectIsUserLearner = createSelector(
   selectUserIsStaff,
   selectIsCourseAdmin,
   selectIsCourseStaff,
+  selectCourseTabs,
   (
     userHasModerationPrivileges,
     userIsGroupTa,
     userIsStaff,
     userIsCourseAdmin,
     userIsCourseStaff,
+    { courseStatus },
   ) => (
     (
       !userHasModerationPrivileges
@@ -82,6 +86,7 @@ export const selectIsUserLearner = createSelector(
       && !userIsStaff
       && !userIsCourseAdmin
       && !userIsCourseStaff
+      && courseStatus === LOADED
     ) || false
   ),
 );

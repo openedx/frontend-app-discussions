@@ -58,7 +58,7 @@ const DiscussionsHome = () => {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
 
-  useCourseDiscussionData(courseId);
+  useCourseDiscussionData(courseId, isEnrolled);
   useRedirectToThread(courseId, enableInContextSidebar);
   useFeedbackWrapper();
   /*  Display the content area if we are currently viewing/editing a post or creating one.
@@ -172,7 +172,7 @@ const DiscussionsHome = () => {
               </div>
             )
           )}
-          {!enableInContextSidebar && (<DiscussionsProductTour />)}
+          {!enableInContextSidebar && isEnrolled && (<DiscussionsProductTour />)}
         </main>
         {!enableInContextSidebar && <Footer />}
       </DiscussionContext.Provider>
