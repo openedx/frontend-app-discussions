@@ -1,8 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
-import { LOADED } from '../../components/NavigationBar/data/slice';
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
+import { isCourseStatusValid } from '../utils';
 
 export const selectAnonymousPostingConfig = state => ({
   allowAnonymous: state.config.allowAnonymous,
@@ -86,7 +86,7 @@ export const selectIsUserLearner = createSelector(
       && !userIsStaff
       && !userIsCourseAdmin
       && !userIsCourseStaff
-      && courseStatus === LOADED
+      && isCourseStatusValid(courseStatus)
     ) || false
   ),
 );

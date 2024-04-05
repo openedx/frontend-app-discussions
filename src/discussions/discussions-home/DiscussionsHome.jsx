@@ -12,12 +12,11 @@ import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
-import { LOADED } from '../../components/NavigationBar/data/slice';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
 import ContentUnavailable from '../content-unavailable/ContentUnavailable';
 import {
-  useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
+  useCourseBlockData, useCourseDiscussionData, useIsOnDesktop, useRedirectToThread, useSidebarVisible,
 } from '../data/hooks';
 import { selectDiscussionProvider, selectEnableInContext, selectIsUserLearner } from '../data/selectors';
 import { EmptyLearners, EmptyTopics } from '../empty-posts';
@@ -25,6 +24,7 @@ import EmptyPosts from '../empty-posts/EmptyPosts';
 import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/components';
 import messages from '../messages';
 import { selectPostEditorVisible } from '../posts/data/selectors';
+import { isCourseStatusValid } from '../utils';
 import useFeedbackWrapper from './FeedbackWrapper';
 
 const Footer = lazy(() => import('@edx/frontend-component-footer'));
@@ -58,8 +58,9 @@ const DiscussionsHome = () => {
     courseId, postId, topicId, category, learnerUsername,
   } = params;
 
-  useCourseDiscussionData(courseId, isEnrolled);
+  useCourseDiscussionData(courseId);
   useRedirectToThread(courseId, enableInContextSidebar);
+  useCourseBlockData(courseId);
   useFeedbackWrapper();
   /*  Display the content area if we are currently viewing/editing a post or creating one.
   If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
@@ -120,7 +121,7 @@ const DiscussionsHome = () => {
               </Routes>
             </Suspense>
           )}
-          {(courseStatus === LOADED) && (
+          {isCourseStatusValid(courseStatus) && (
             !isEnrolled && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
                 <Routes>
