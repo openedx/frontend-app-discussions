@@ -10,16 +10,17 @@ import {
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 
+import Head from './components/Head/Head';
 import { DiscussionsHome } from './discussions';
 import messages from './i18n';
 import store from './store';
 
-import './assets/favicon.ico';
 import './index.scss';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
+      <Head />
       <DiscussionsHome />
     </AppProvider>,
     document.getElementById('root'),
