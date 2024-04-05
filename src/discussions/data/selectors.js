@@ -1,3 +1,7 @@
+import { createSelector } from '@reduxjs/toolkit';
+
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import { PostsStatusFilter, ThreadType } from '../../data/constants';
 
 export const selectAnonymousPostingConfig = state => ({
@@ -60,3 +64,29 @@ export function selectTopicThreadCount(topicId) {
 export function selectPostThreadCount(state) {
   return state.threads.totalThreads;
 }
+
+export const selectIsUserLearner = createSelector(
+  selectUserHasModerationPrivileges,
+  selectUserIsGroupTa,
+  selectUserIsStaff,
+  selectIsCourseAdmin,
+  selectIsCourseStaff,
+  selectCourseTabs,
+  (
+    userHasModerationPrivileges,
+    userIsGroupTa,
+    userIsStaff,
+    userIsCourseAdmin,
+    userIsCourseStaff,
+    { courseStatus },
+  ) => (
+    (
+      !userHasModerationPrivileges
+      && !userIsGroupTa
+      && !userIsStaff
+      && !userIsCourseAdmin
+      && !userIsCourseStaff
+      && courseStatus === LOADED
+    ) || false
+  ),
+);

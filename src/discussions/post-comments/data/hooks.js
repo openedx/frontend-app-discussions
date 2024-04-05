@@ -40,13 +40,13 @@ export function usePost(postId) {
   return thread || {};
 }
 
-export function usePostComments(endorsed = null) {
+export function usePostComments(threadType) {
   const { enableInContextSidebar, postId } = useContext(DiscussionContext);
   const [isLoading, dispatch] = useDispatchWithState();
-  const comments = useSelector(selectThreadComments(postId, endorsed));
+  const comments = useSelector(selectThreadComments(postId));
   const reverseOrder = useSelector(selectCommentSortOrder);
-  const hasMorePages = useSelector(selectThreadHasMorePages(postId, endorsed));
-  const currentPage = useSelector(selectThreadCurrentPage(postId, endorsed));
+  const hasMorePages = useSelector(selectThreadHasMorePages(postId));
+  const currentPage = useSelector(selectThreadCurrentPage(postId));
 
   const endorsedCommentsIds = useMemo(() => (
     [...filterPosts(comments, 'endorsed')].map(comment => comment.id)
@@ -58,19 +58,19 @@ export function usePostComments(endorsed = null) {
 
   const handleLoadMoreResponses = useCallback(async () => {
     const params = {
-      endorsed,
+      threadType,
       page: currentPage + 1,
       reverseOrder,
     };
     await dispatch(fetchThreadComments(postId, params));
     trackLoadMoreEvent(postId, params);
-  }, [currentPage, endorsed, postId, reverseOrder]);
+  }, [currentPage, threadType, postId, reverseOrder]);
 
   useEffect(() => {
     const abortController = new AbortController();
 
     dispatch(fetchThreadComments(postId, {
-      endorsed,
+      threadType,
       page: 1,
       reverseOrder,
       enableInContextSidebar,
@@ -80,7 +80,7 @@ export function usePostComments(endorsed = null) {
     return () => {
       abortController.abort();
     };
-  }, [postId, endorsed, reverseOrder, enableInContextSidebar]);
+  }, [postId, threadType, reverseOrder, enableInContextSidebar]);
 
   return {
     endorsedCommentsIds,

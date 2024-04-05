@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Icon, IconButton } from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
+
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Icon, IconButton } from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
@@ -18,7 +19,7 @@ const PostPreviewPanel = ({
     <>
       {showPreviewPane && (
         <div
-          className={`w-100 p-2 bg-light-200 rounded box-shadow-down-1 post-preview ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
+          className={`w-100 p-2 bg-light-200 rounded box-shadow-down-1 post-preview overflow-auto ${isPost ? 'mt-2 mb-5' : 'my-3'}`}
           style={{ minHeight: '200px', wordBreak: 'break-word' }}
         >
           <IconButton

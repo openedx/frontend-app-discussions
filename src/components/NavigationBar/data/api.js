@@ -5,15 +5,12 @@ import { getApiBaseUrl } from '../../../data/constants';
 
 export const getCourseMetadataApiUrl = (courseId) => `${getApiBaseUrl()}/api/course_home/course_metadata/${courseId}`;
 
-function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
+function normalizeCourseHomeCourseMetadata(metadata) {
   const data = camelCaseObject(metadata);
   return {
     ...data,
     tabs: data.tabs.map(tab => ({
-      // The API uses "courseware" as a slug for both courseware and the outline tab.
-      // If needed, we switch it to "outline" here for
-      // use within the MFE to differentiate between course home and courseware.
-      slug: tab.tabId === 'courseware' ? rootSlug : tab.tabId,
+      slug: tab.tabId === 'courseware' ? 'outline' : tab.tabId,
       title: tab.title,
       url: tab.url,
     })),
@@ -21,10 +18,9 @@ function normalizeCourseHomeCourseMetadata(metadata, rootSlug) {
   };
 }
 
-export async function getCourseHomeCourseMetadata(courseId, rootSlug) {
+export async function getCourseHomeCourseMetadata(courseId) {
   const url = getCourseMetadataApiUrl(courseId);
-  // don't know the context of adding timezone in url. hence omitting it
-  // url = appendBrowserTimezoneToUrl(url);
   const { data } = await getAuthenticatedHttpClient().get(url);
-  return normalizeCourseHomeCourseMetadata(data, rootSlug);
+
+  return normalizeCourseHomeCourseMetadata(data);
 }

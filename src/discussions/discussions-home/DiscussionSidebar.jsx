@@ -3,13 +3,12 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { useWindowSize } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
-
-import { useWindowSize } from '@edx/paragon';
 
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes as ROUTES } from '../../data/constants';
@@ -51,7 +50,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
         'd-none': !displaySidebar,
         'd-flex overflow-auto box-shadow-centered-1': displaySidebar,
         'w-100': !isOnDesktop,
-        'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'w-25 sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !enableInContextSidebar,
       })}

@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
 
+import { Button } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button } from '@edx/paragon';
 
 import ContentUnavailableIcon from '../../assets/ContentUnavailable';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
 import messages from '../messages';
 
-const CourseContentUnavailable = ({ subTitleMessage }) => {
+const ContentUnavailable = ({ subTitleMessage }) => {
   const intl = useIntl();
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
@@ -31,7 +31,9 @@ const CourseContentUnavailable = ({ subTitleMessage }) => {
       })}
       >
         <ContentUnavailableIcon />
-        <h3 className="pt-3 font-weight-bold text-primary-500 text-center">{intl.formatMessage(messages.contentUnavailableTitle)}</h3>
+        <h3 className="pt-3 font-weight-bold text-primary-500 text-center">
+          {intl.formatMessage(messages.contentUnavailableTitle)}
+        </h3>
         <p className="pb-2 text-gray-500 text-center">{intl.formatMessage(subTitleMessage)}</p>
         <Button onClick={redirectToDashboard} variant="outline-dark" className="font-size-14 py-2 px-2.5">
           {intl.formatMessage(messages.contentUnavailableAction)}
@@ -41,7 +43,7 @@ const CourseContentUnavailable = ({ subTitleMessage }) => {
   );
 };
 
-CourseContentUnavailable.propTypes = {
+ContentUnavailable.propTypes = {
   subTitleMessage: propTypes.shape({
     id: propTypes.string,
     defaultMessage: propTypes.string,
@@ -49,4 +51,4 @@ CourseContentUnavailable.propTypes = {
   }).isRequired,
 };
 
-export default React.memo(CourseContentUnavailable);
+export default React.memo(ContentUnavailable);

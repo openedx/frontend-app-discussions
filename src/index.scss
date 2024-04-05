@@ -1,6 +1,6 @@
 @import "~@edx/brand/paragon/fonts.scss";
 @import "~@edx/brand/paragon/variables.scss";
-@import "~@edx/paragon/scss/core/core.scss";
+@import "~@openedx/paragon/scss/core/core.scss";
 @import "~@edx/brand/paragon/overrides.scss";
 
 @import "~@edx/frontend-component-footer/dist/footer";
@@ -59,10 +59,6 @@ $fa-font-path: "~font-awesome/fonts";
 
 .font-weight-500 {
   font-weight: 500 !important;
-}
-
-.font-style-normal {
-  font-style: normal !important;
 }
 
 .post-footer-icon-dimensions {
@@ -234,6 +230,10 @@ header {
 
 .sidebar-desktop-width {
   min-width: 29rem !important;
+
+  @include media-breakpoint-down(lg) {
+    min-width: 25rem !important;
+  }
 }
 
 .sidebar-XL-width {
@@ -484,6 +484,10 @@ code {
       display: flex;
     }
   }
+
+  .pgn__avatar {
+    flex-shrink: 0;
+  }
 }
 
 .spinner-dimensions {
@@ -496,7 +500,7 @@ code {
 }
 
 .font-style {
-  font-style: normal;
+  font-style: normal !important;
 }
 
 .in-context-navbar {
@@ -564,10 +568,16 @@ code {
 }
 
 .author-name {
-  line-height: 1;
+  line-height: 1.5;
   word-break: break-all;
 }
 
 .content-unavailable-desktop {
   width: 32.188rem !important;
+}
+
+th, td {
+  border: 1px dashed $gray-200;
+  padding: 0.4rem;
+  white-space: nowrap;
 }

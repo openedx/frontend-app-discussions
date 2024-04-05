@@ -3,11 +3,11 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';
@@ -82,7 +82,7 @@ const Comment = ({
   }, []);
 
   const handleCommentEndorse = useCallback(async () => {
-    await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    await dispatch(editComment(id, { endorsed: !endorsed }));
     await dispatch(fetchThread(threadId, courseId));
   }, [id, endorsed, threadId]);
 

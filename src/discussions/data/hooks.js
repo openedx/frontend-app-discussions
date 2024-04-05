@@ -3,6 +3,7 @@ import {
   useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   matchPath, useLocation, useMatch, useNavigate,
@@ -11,8 +12,8 @@ import {
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
 
+import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import fetchCourseBlocks from '../../data/thunks';
@@ -71,18 +72,22 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId) {
+export function useCourseDiscussionData(courseId, isEnrolled) {
   const dispatch = useDispatch();
   const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
-      await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      if (isEnrolled) {
+        await dispatch(fetchCourseConfig(courseId));
+        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      } else {
+        await dispatch(fetchTab(courseId));
+      }
     }
 
     fetchBaseData();
-  }, [courseId]);
+  }, [courseId, isEnrolled]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {

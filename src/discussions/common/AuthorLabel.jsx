@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import classNames from 'classnames';
 import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
@@ -99,7 +99,7 @@ const AuthorLabel = ({
 
   return showUserNameAsLink
     ? (
-      <div className={className}>
+      <div className={`${className} flex-wrap`}>
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
@@ -112,7 +112,7 @@ const AuthorLabel = ({
         {labelContents}
       </div>
     )
-    : <div className={className}>{authorName}{labelContents}</div>;
+    : <div className={`${className} flex-wrap`}>{authorName}{labelContents}</div>;
 };
 
 AuthorLabel.propTypes = {
