@@ -51,7 +51,7 @@ const DiscussionsHome = () => {
   const page = pageParams?.page || null;
   const matchPattern = ALL_ROUTES.find((route) => matchPath({ path: route }, location.pathname));
   const { params } = useMatch(matchPattern);
-  const isOnTablet = useIsOnTablet();
+  const isOnTabletorDesktop = useIsOnTablet();
   let displaySidebar = useSidebarVisible();
   const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
   const {
@@ -66,7 +66,7 @@ const DiscussionsHome = () => {
   If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
   However, for smaller screens or embeds, only show the sidebar if the content area isn't displayed. */
   const displayContentArea = (postId || postEditorVisible || (learnerUsername && postId));
-  if (displayContentArea) { displaySidebar = isOnTablet; }
+  if (displayContentArea) { displaySidebar = isOnTabletorDesktop; }
 
   const discussionContextValue = useMemo(() => ({
     page,

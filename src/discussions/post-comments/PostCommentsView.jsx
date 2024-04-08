@@ -29,7 +29,7 @@ const PostCommentsView = () => {
   const intl = useIntl();
   const navigate = useNavigate();
   const location = useLocation();
-  const isOnTablet = useIsOnTablet();
+  const isOnTabletorDesktop = useIsOnTablet();
   const [addingResponse, setAddingResponse] = useState(false);
   const [isLoading, submitDispatch] = useDispatchWithState();
   const {
@@ -84,7 +84,7 @@ const PostCommentsView = () => {
 
   return (
     <PostCommentsContext.Provider value={postCommentsContextValue}>
-      {!isOnTablet && (
+      {!isOnTabletorDesktop && (
         enableInContextSidebar ? (
           <>
             <div className="px-4 py-1.5 bg-white">
