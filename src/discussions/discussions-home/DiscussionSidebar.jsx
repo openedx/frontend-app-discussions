@@ -13,7 +13,9 @@ import {
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
-import { useContainerSize, useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
+import {
+  useContainerSize, useIsOnDesktop, useIsOnTablet, useIsOnXLDesktop,
+} from '../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../data/selectors';
 
 const TopicPostsView = lazy(() => import('../in-context-topics/TopicPostsView'));
@@ -26,6 +28,7 @@ const LegacyTopicsView = lazy(() => import('../topics/TopicsView'));
 const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
+  const isOnTablet = useIsOnTablet();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const enableInContext = useSelector(selectEnableInContext);
   const configStatus = useSelector(selectConfigLoadingStatus);
@@ -50,7 +53,8 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
         'd-none': !displaySidebar,
         'd-flex overflow-auto box-shadow-centered-1': displaySidebar,
         'w-100': !isOnDesktop,
-        'w-25 sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'sidebar-tablet-width': isOnTablet && !isOnDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !enableInContextSidebar,
       })}

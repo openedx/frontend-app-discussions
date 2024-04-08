@@ -2,15 +2,15 @@ import React from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { useIsOnDesktop } from '../data/hooks';
+import { useIsOnTablet } from '../data/hooks';
 import messages from '../messages';
 import EmptyPage from './EmptyPage';
 
 const EmptyLearners = () => {
   const intl = useIntl();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
 
-  if (!isOnDesktop) {
+  if (!isOnTabletorDesktop) {
     return null;
   }
 

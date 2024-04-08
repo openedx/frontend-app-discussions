@@ -131,12 +131,17 @@ export function useRedirectToThread(courseId, enableInContextSidebar) {
 
 export function useIsOnDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.medium.minWidth;
+  return windowSize.width >= breakpoints.medium.maxWidth;
+}
+
+export function useIsOnTablet() {
+  const windowSize = useWindowSize();
+  return windowSize.width >= breakpoints.small.maxWidth;
 }
 
 export function useIsOnXLDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.extraLarge.minWidth;
+  return windowSize.width >= breakpoints.extraLarge.maxWidth;
 }
 
 /**

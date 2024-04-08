@@ -10,12 +10,12 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import ContentUnavailableIcon from '../../assets/ContentUnavailable';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
-import { useIsOnDesktop, useIsOnXLDesktop } from '../data/hooks';
+import { useIsOnTablet, useIsOnXLDesktop } from '../data/hooks';
 import messages from '../messages';
 
 const ContentUnavailable = ({ subTitleMessage }) => {
   const intl = useIntl();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
   const isOnXLDesktop = useIsOnXLDesktop();
   const { courseId } = useSelector(selectCourseTabs);
 
@@ -26,8 +26,8 @@ const ContentUnavailable = ({ subTitleMessage }) => {
   return (
     <div className="min-content-height justify-content-center align-items-center d-flex w-100 flex-column bg-white">
       <div className={classNames('d-flex flex-column align-items-center', {
-        'content-unavailable-desktop': isOnDesktop || isOnXLDesktop,
-        'py-0 px-3': !isOnDesktop && !isOnXLDesktop,
+        'content-unavailable-desktop': isOnTabletorDesktop || isOnXLDesktop,
+        'py-0 px-3': !isOnTabletorDesktop && !isOnXLDesktop,
       })}
       >
         <ContentUnavailableIcon />

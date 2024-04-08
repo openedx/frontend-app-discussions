@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { useIsOnDesktop, useTotalTopicThreadCount } from '../data/hooks';
+import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
 import { selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
@@ -16,7 +16,7 @@ const EmptyTopics = () => {
   const intl = useIntl();
   const { topicId } = useParams();
   const dispatch = useDispatch();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
 
@@ -30,7 +30,7 @@ const EmptyTopics = () => {
   let action;
   let actionText;
 
-  if (!isOnDesktop) {
+  if (!isOnTabletorDesktop) {
     return null;
   }
 
