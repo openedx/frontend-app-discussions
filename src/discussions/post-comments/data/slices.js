@@ -36,10 +36,6 @@ const commentsSlice = createSlice({
       const newState = { ...state };
 
       newState.status = RequestStatus.SUCCESSFUL;
-      newState.commentsInThreads = {
-        ...newState.commentsInThreads,
-        [threadId]: newState.commentsInThreads[threadId] || [],
-      };
 
       newState.pagination = {
         ...newState.pagination,
@@ -49,7 +45,7 @@ const commentsSlice = createSlice({
       if (page === 1) {
         newState.commentsInThreads = {
           ...newState.commentsInThreads,
-          [threadId]: [...payload.commentsInThreads[threadId]] || [],
+          [threadId]: payload.commentsInThreads[threadId] ? [...payload.commentsInThreads[threadId]] : [],
         };
       } else {
         newState.commentsInThreads = {
