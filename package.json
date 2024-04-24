@@ -34,9 +34,9 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
-    "@edx/frontend-component-footer": "^13.0.2",
-    "@edx/frontend-component-header": "^5.0.2",
-    "@edx/frontend-platform": "^7.1.0",
+    "@edx/frontend-component-footer": "13.1.0",
+    "@edx/frontend-component-header": "5.3.0",
+    "@edx/frontend-platform": "8.0.0",
     "@edx/openedx-atlas": "^0.6.0",
     "@openedx/paragon": "^22.1.1",
     "@reduxjs/toolkit": "1.9.7",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "1.2.0",
-    "@openedx/frontend-build": "https://github.com/openedx/frontend-build/tarball/bilalqamar95/alpha-eslint-update",
+    "@openedx/frontend-build": "14.0.3",
     "@edx/reactifex": "1.1.0",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "12.1.5",
@@ -75,16 +75,5 @@
     "husky": "7.0.4",
     "jest": "29.7.0",
     "rosie": "2.1.1"
-  },
-  "overrides": {
-    "@edx/frontend-platform": {
-      "@openedx/frontend-build": "1.0.0-semantically-released"
-    },
-    "@edx/frontend-component-footer": {
-      "@openedx/frontend-build": "1.0.0-semantically-released"
-    },
-    "@edx/frontend-component-header": {
-      "@openedx/frontend-build": "1.0.0-semantically-released"
-    }
   }
 }
