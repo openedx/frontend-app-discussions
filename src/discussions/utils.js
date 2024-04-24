@@ -14,6 +14,7 @@ import {
 
 import { getConfig } from '@edx/frontend-platform';
 
+import { DENIED, LOADED } from '../components/NavigationBar/data/slice';
 import {
   ContentActions, Routes, ThreadType,
 } from '../data/constants';
@@ -313,3 +314,5 @@ export function getAuthorLabel(intl, authorLabel) {
 
   return authorLabelMappings[authorLabel] || {};
 }
+
+export const isCourseStatusValid = (courseStatus) => [DENIED, LOADED].includes(courseStatus);

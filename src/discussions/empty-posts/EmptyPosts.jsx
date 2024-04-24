@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { useIsOnDesktop } from '../data/hooks';
+import { useIsOnTablet } from '../data/hooks';
 import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
@@ -15,7 +15,7 @@ import EmptyPage from './EmptyPage';
 const EmptyPosts = ({ subTitleMessage }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
 
@@ -31,7 +31,7 @@ const EmptyPosts = ({ subTitleMessage }) => {
 
   const isEmpty = [0, null].includes(totalThreads) && !isFiltered;
 
-  if (!(isOnDesktop || isEmpty)) {
+  if (!(isOnTabletorDesktop || isEmpty)) {
     return null;
   } if (isEmpty) {
     subTitle = subTitleMessage;

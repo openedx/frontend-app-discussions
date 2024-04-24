@@ -13,6 +13,8 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
 
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
 import fetchTab from '../../components/NavigationBar/data/thunks';
 import { RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
@@ -32,6 +34,7 @@ import {
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectIsPostingEnabled,
+  selectIsUserLearner,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -72,22 +75,34 @@ export const useSidebarVisible = () => {
   return !hideSidebar;
 };
 
-export function useCourseDiscussionData(courseId, isEnrolled) {
+export function useCourseDiscussionData(courseId) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
-      if (isEnrolled) {
-        await dispatch(fetchCourseConfig(courseId));
+      await dispatch(fetchCourseConfig(courseId));
+      await dispatch(fetchTab(courseId));
+    }
+
+    fetchBaseData();
+  }, [courseId]);
+}
+
+export function useCourseBlockData(courseId) {
+  const dispatch = useDispatch();
+  const { authenticatedUser } = useContext(AppContext);
+  const { isEnrolled, courseStatus } = useSelector(selectCourseTabs);
+  const isUserLearner = useSelector(selectIsUserLearner);
+
+  useEffect(() => {
+    async function fetchBaseData() {
+      if (courseStatus === LOADED && (!isUserLearner || isEnrolled)) {
         await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
-      } else {
-        await dispatch(fetchTab(courseId));
       }
     }
 
     fetchBaseData();
-  }, [courseId, isEnrolled]);
+  }, [courseId, isEnrolled, courseStatus, isUserLearner]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
@@ -116,12 +131,17 @@ export function useRedirectToThread(courseId, enableInContextSidebar) {
 
 export function useIsOnDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.medium.minWidth;
+  return windowSize.width >= breakpoints.medium.maxWidth;
+}
+
+export function useIsOnTablet() {
+  const windowSize = useWindowSize();
+  return windowSize.width >= breakpoints.small.maxWidth;
 }
 
 export function useIsOnXLDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.extraLarge.minWidth;
+  return windowSize.width >= breakpoints.extraLarge.maxWidth;
 }
 
 /**

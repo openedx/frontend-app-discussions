@@ -230,7 +230,7 @@ describe('DiscussionsHome', () => {
 
   it('should display post editor form when click on add a post button in legacy topics view', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      enable_in_context: false,
+      enable_in_context: false, hasModerationPrivileges: true,
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/topics`);

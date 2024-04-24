@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import DiscussionContext from '../../common/context';
-import { useIsOnDesktop } from '../../data/hooks';
+import { useIsOnTablet } from '../../data/hooks';
 import { selectPostThreadCount } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import messages from '../../messages';
@@ -17,7 +17,7 @@ const EmptyTopics = () => {
   const intl = useIntl();
   const { category, topicId } = useParams();
   const dispatch = useDispatch();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const courseWareThreadsCount = useSelector(selectCourseWareThreadsCount(category));
   const topicThreadsCount = useSelector(selectPostThreadCount);
@@ -34,7 +34,7 @@ const EmptyTopics = () => {
   let action;
   let actionText;
 
-  if (!isOnDesktop) {
+  if (!isOnTabletorDesktop) {
     return null;
   }
 

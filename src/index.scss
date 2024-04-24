@@ -229,11 +229,15 @@ header {
 }
 
 .sidebar-desktop-width {
-  min-width: 29rem !important;
+  max-width: 28rem !important;
+}
+
+.sidebar-tablet-width {
+  max-width: 20rem !important;
 }
 
 .sidebar-XL-width {
-  min-width: 29rem !important;
+  min-width: 35rem !important;
 }
 
 .filter-menu:focus-visible {
@@ -480,6 +484,10 @@ code {
       display: flex;
     }
   }
+
+  .pgn__avatar {
+    flex-shrink: 0;
+  }
 }
 
 .spinner-dimensions {
@@ -560,7 +568,7 @@ code {
 }
 
 .author-name {
-  line-height: 1;
+  line-height: 1.5;
   word-break: break-all;
 }
 
