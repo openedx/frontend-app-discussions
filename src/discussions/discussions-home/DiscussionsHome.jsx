@@ -82,7 +82,7 @@ const DiscussionsHome = () => {
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
         {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
-        <main className="container-fluid d-flex flex-column p-0 w-100" id="main" tabIndex="-1">
+        <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
           {(isEnrolled || !isUserLearner) && (
             <div
@@ -135,7 +135,7 @@ const DiscussionsHome = () => {
                 </Routes>
               </Suspense>
             ) : (
-              <div className="d-flex flex-row position-relative">
+              <div className="d-flex flex-row position-relative discussion-home">
                 <Suspense fallback={(<Spinner />)}>
                   <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
                 </Suspense>

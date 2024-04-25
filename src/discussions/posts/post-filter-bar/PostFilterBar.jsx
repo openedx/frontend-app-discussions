@@ -44,7 +44,7 @@ export const ActionItem = React.memo(({
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     tabIndex={value === selected ? '0' : '-1'}
   >
-    <Icon src={Check} className={classNames('text-success mr-2', { invisible: value !== selected })} />
+    <Icon src={Check} className={classNames('text-success dropdown-icon-dimensions', { invisible: value !== selected })} />
     <Form.Radio id={id} className="sr-only sr-only-focusable" value={value} tabIndex="0">
       {label}
     </Form.Radio>

@@ -14,7 +14,7 @@ const DiscussionContent = () => {
 
   return (
     <div className="d-flex bg-light-400 flex-column w-75 w-xs-100 w-xl-75 align-items-center overflow-auto">
-      <div className="d-flex flex-column w-100">
+      <div className="d-flex flex-column w-100 thread-content">
         <Suspense fallback={(<Spinner />)}>
           <Routes>
             {postEditorVisible ? (
