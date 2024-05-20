@@ -135,7 +135,7 @@ const DiscussionsHome = () => {
                 </Routes>
               </Suspense>
             ) : (
-              <div className="d-flex flex-row position-relative discussion-home">
+              <div className="d-flex flex-row position-relative">
                 <Suspense fallback={(<Spinner />)}>
                   <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
                 </Suspense>
