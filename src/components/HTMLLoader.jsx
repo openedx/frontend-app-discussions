@@ -9,7 +9,7 @@ import { useDebounce } from '../discussions/data/hooks';
 
 const defaultSanitizeOptions = {
   USE_PROFILES: { html: true },
-  ADD_ATTR: ['columnalign'],
+  ADD_ATTR: ['columnalign', 'target'],
 };
 
 const HTMLLoader = ({
