@@ -129,7 +129,7 @@ const Reply = ({ responseId }) => {
         </div>
         <div
           className="bg-light-300 pl-4 pt-2.5 pr-2.5 pb-10px flex-fill"
-          style={{ borderRadius: '0rem 0.375rem 0.375rem' }}
+          style={{ borderRadius: '0rem 0.375rem 0.375rem', maxWidth: 'calc(100% - 50px)' }}
         >
           <div className="d-flex flex-row justify-content-between">
             <AuthorLabel
