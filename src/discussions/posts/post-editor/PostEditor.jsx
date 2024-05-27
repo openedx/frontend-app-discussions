@@ -241,7 +241,7 @@ const PostEditor = ({
       resetForm,
     }) => (
       <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
-        <h4 className="mb-4 font-style font-size-16" style={{ lineHeight: '16px' }}>
+        <h4 className="mb-4 font-style" style={{ lineHeight: '16px' }}>
           {editExisting
             ? intl.formatMessage(messages.editPostHeading)
             : intl.formatMessage(messages.addPostHeading)}
@@ -423,7 +423,7 @@ const PostEditor = ({
                 onBlur={handleBlur}
                 className="mr-4.5"
               >
-                <span className="font-size-14">
+                <span>
                   {intl.formatMessage(messages.followPost)}
                 </span>
               </Form.Checkbox>
@@ -436,7 +436,7 @@ const PostEditor = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
               >
-                <span className="font-size-14">
+                <span>
                   {intl.formatMessage(messages.anonymousToPeersPost)}
                 </span>
               </Form.Checkbox>

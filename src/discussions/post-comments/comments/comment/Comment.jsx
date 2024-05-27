@@ -249,7 +249,7 @@ const Comment = ({
               onClick={handleLoadMoreComments}
               variant="link"
               block="true"
-              className="font-size-14 line-height-24 font-style pt-10px border-0 font-weight-500 pb-0"
+              className="line-height-24 font-style pt-10px border-0 font-weight-500 pb-0"
               data-testid="load-more-comments-responses"
             >
               {intl.formatMessage(messages.loadMoreComments)}
@@ -267,7 +267,7 @@ const Comment = ({
             ) : (
               !isClosed && isUserPrivilegedInPostingRestriction && (inlineReplies.length >= 5) && (
                 <Button
-                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
+                  className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
                   onClick={handleAddCommentReply}

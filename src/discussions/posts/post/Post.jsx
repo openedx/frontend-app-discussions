@@ -206,13 +206,9 @@ const Post = ({ handleAddResponseButton }) => {
             )}
           >
             {(topicContext && !topic) ? (
-              <>
-                <span className="w-auto">{topicContext.chapterName}</span>
-                <span className="mx-1">/</span>
-                <span className="w-auto">{topicContext.verticalName}</span>
-                <span className="mx-1">/</span>
-                <span className="w-auto">{topicContext.unitName}</span>
-              </>
+              <span>
+                {topicContext.chapterName} / {topicContext.verticalName} / {topicContext.unitName}
+              </span>
             ) : (
               getTopicInfo(topic)
             )}

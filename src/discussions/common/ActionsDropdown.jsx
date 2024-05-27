@@ -99,7 +99,7 @@ const ActionsDropdown = ({
                     src={action.icon}
                     className="icon-size-24"
                   />
-                  <span className="font-weight-normal font-xl ml-2">
+                  <span className="font-weight-normal ml-2">
                     {intl.formatMessage(action.label)}
                   </span>
                 </Dropdown.Item>

@@ -73,7 +73,7 @@ const CommentsView = ({ threadType }) => {
         onClick={handleLoadMoreResponses}
         variant="link"
         block="true"
-        className="px-4 mt-3 border-0 line-height-24 py-0 mb-2 font-style font-weight-500 font-size-14"
+        className="px-4 mt-3 border-0 line-height-24 py-0 mb-2 font-style font-weight-500"
         data-testid="load-more-comments"
       >
         {intl.formatMessage(messages.loadMoreResponses)}
@@ -92,7 +92,7 @@ const CommentsView = ({ threadType }) => {
              variant="plain"
              block="true"
              className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
-                    line-height-24 font-size-14 text-primary-500"
+                    line-height-24 text-primary-500"
              onClick={handleAddResponse}
              data-testid="add-response"
            >

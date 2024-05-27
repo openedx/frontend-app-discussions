@@ -35,7 +35,7 @@ const ContentUnavailable = ({ subTitleMessage }) => {
           {intl.formatMessage(messages.contentUnavailableTitle)}
         </h3>
         <p className="pb-2 text-gray-500 text-center">{intl.formatMessage(subTitleMessage)}</p>
-        <Button onClick={redirectToDashboard} variant="outline-dark" className="font-size-14 py-2 px-2.5">
+        <Button onClick={redirectToDashboard} variant="outline-dark" className="py-2 px-2.5">
           {intl.formatMessage(messages.contentUnavailableAction)}
         </Button>
       </div>
