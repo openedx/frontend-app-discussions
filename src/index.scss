@@ -1,7 +1,4 @@
-@import "~@edx/brand/paragon/fonts.scss";
-@import "~@edx/brand/paragon/variables.scss";
-@import "~@openedx/paragon/scss/core/core.scss";
-@import "~@edx/brand/paragon/overrides.scss";
+@use "@openedx/paragon/styles/css/core/custom-media-breakpoints.css" as paragonCustomMediaBreakpoints;
 
 @import "~@edx/frontend-component-footer/dist/footer";
 @import "~@edx/frontend-component-header/dist/index";
@@ -41,23 +38,23 @@ body,
 }
 
 .text-staff-color {
-  color: $warning-700;
+  color: var(--pgn-color-warning-700);
 }
 
 .outline-staff-color {
-  outline: $warning-700 solid 2px;
+  outline: var(--pgn-color-warning-700) solid 2px;
 }
 
 .text-TA-color {
-  color: $success-700;
+  color: var(--pgn-color-success-700);
 }
 
 .outline-TA-color {
-  outline: $success-700 solid 2px;
+  outline: var(--pgn-color-success-700) solid 2px;
 }
 
 .outline-anonymous {
-  outline: $light-400 solid 2px;
+  outline: var(--pgn-color-light-400) solid 2px;
 }
 
 .font-size-8 {
@@ -173,7 +170,7 @@ body,
 }
 
 .learner > a:hover {
-  background-color: $light-300;
+  background-color: var(--pgn-color-light-300);
 }
 
 .py-10px {
@@ -252,12 +249,12 @@ header {
 }
 
 .border-light-400-2 {
-  border: 2px solid $light-400 !important;
+  border: 2px solid var(--pgn-color-light-400) !important;
   border-width: 2px !important;
 }
 
 .border-primary-500-2 {
-  border: 2px solid $primary-500 !important;
+  border: 2px solid var(--pgn-color-primary-500) !important;
   border-width: 2px !important;
 }
 
@@ -383,8 +380,8 @@ header {
 }
 
 .btn-icon.btn-icon-primary:hover {
-  background-color: $light-300 !important;
-  color: $primary-500 !important
+  background-color: var(--pgn-color-light-300) !important;
+  color: var(--pgn-color-primary-500) !important
 }
 
 
@@ -427,38 +424,38 @@ header {
 }
 
 .hover-button:hover {
-  background-color: $light-300 !important;
+  background-color: var(--pgn-color-light-300) !important;
   height: 36px !important;
   border: none !important;
 }
 
 .btn-tertiary:hover {
-  background-color: $light-300 !important;
+  background-color: var(--pgn-color-light-300) !important;
 }
 
 .nav-button-group {
   .nav-link {
     &:hover {
-      background-color: $light-300 !important;
+      background-color: var(--pgn-color-light-300) !important;
     }
   }
 
   .nav-link.active,
   .show>.nav-link {
-    background-color: $primary-500 !important;
+    background-color: var(--pgn-color-primary-500) !important;
   }
 }
 
 .course-tabs-navigation {
   .nav a {
     &:hover {
-      background-color: $light-300 !important;;
+      background-color: var(--pgn-color-light-300) !important;;
     }
   }
 }
 
 .btn-tertiary:disabled {
-  color: $gray-700 !important;
+  color: var(--pgn-color-gray-700) !important;
   background-color: transparent !important;
 }
 
@@ -535,14 +532,14 @@ code {
 .post-preview,
 .discussion-comments {
   blockquote {
-    border-left: 2px solid $gray-200;
+    border-left: 2px solid var(--pgn-color-gray-200);
     margin-left: 1.5rem;
     padding-left: 1rem;
   }
 }
 
 .add-comment-btn {
-  border: 1px solid $light-300 !important;
+  border: 1px solid var(--pgn-color-light-300) !important;
 }
 
 .icon-size-24 {
@@ -588,7 +585,7 @@ code {
 }
 
 th, td {
-  border: 1px dashed $gray-200;
+  border: 1px dashed var(--pgn-color-gray-200);
   padding: 0.4rem;
   white-space: nowrap;
 }
