@@ -35,7 +35,7 @@ import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/paste';
 /* eslint import/no-webpack-loader-syntax: off */
 // eslint-disable-next-line import/no-unresolved
-import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
+import edxBrandCss from '!!raw-loader!../index.scss';
 // eslint-disable-next-line import/no-unresolved
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 // eslint-disable-next-line import/no-unresolved

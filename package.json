@@ -10,7 +10,7 @@
     "extends @edx/browserslist-config"
   ],
   "scripts": {
-    "build": "fedx-scripts webpack",
+    "build": "sh run-build-for-gh-deps.sh",
     "i18n_extract": "fedx-scripts formatjs extract",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "lint:fix": "fedx-scripts eslint --ext .js --ext .jsx . --fix",
