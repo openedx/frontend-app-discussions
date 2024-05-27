@@ -5,7 +5,7 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Posts API service');
 
-export const getCourseConfigApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
+export const getCourseConfigApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v2/courses/`;
 export const getDiscussionsConfigUrl = (courseId) => `${getCourseConfigApiUrl()}${courseId}/`;
 /**
  * Get discussions course config
