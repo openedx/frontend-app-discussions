@@ -79,7 +79,7 @@ const ActionsDropdown = ({
           placement="bottom-end"
         >
           <div
-            className="bg-white shadow d-flex flex-column"
+            className="bg-white shadow d-flex flex-column mt-1"
             data-testid="actions-dropdown-modal-popup"
           >
             {actions.map(action => (

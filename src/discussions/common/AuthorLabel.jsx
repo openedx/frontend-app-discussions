@@ -85,7 +85,7 @@ const AuthorLabel = ({
       {postCreatedAt && (
         <span
           title={postCreatedAt}
-          className={classNames('align-content-center', {
+          className={classNames('align-content-center post-summary-timestamp', {
             'text-white': alert,
             'text-gray-500': !alert,
           })}
