@@ -24,6 +24,10 @@ body,
   font-size: 14px !important;
 }
 
+.btn-md {
+  font-size: 16px !important;
+}
+
 #post,
 #comment,
 #reply,
@@ -266,6 +270,9 @@ header {
   input[type=checkbox] {
     width: 18px !important;
     height: 18px !important;
+  }
+  h4 {
+    font-size: 16px !important;
   }
 }
 
@@ -605,6 +612,7 @@ th, td {
   }
 
   .badge,
+  .post-summary-timestamp,
   .hover-card button {
     font-size: 8px !important;
   }
@@ -618,6 +626,11 @@ th, td {
   .nav-item a {
     padding-left: 14px !important;
     padding-right: 14px !important;
+  }
+
+  .post-form h4,
+  .btn-md {
+    font-size: 12px !important;
   }
 }
 
@@ -636,10 +649,15 @@ th, td {
   }
 
   .badge,
+  .post-summary-timestamp,
   .hover-card.btn-tertiary {
     font-size: 10px !important;
   }
 
+  .post-form h4,
+  .btn-md {
+    font-size: 14px !important;
+  }
 }
 
 @media only screen and (min-device-width: 769px) {
