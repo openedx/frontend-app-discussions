@@ -79,7 +79,7 @@ const ActionsDropdown = ({
           placement="bottom-end"
         >
           <div
-            className="bg-white shadow d-flex flex-column"
+            className="bg-white shadow d-flex flex-column mt-1"
             data-testid="actions-dropdown-modal-popup"
           >
             {actions.map(action => (
@@ -99,7 +99,7 @@ const ActionsDropdown = ({
                     src={action.icon}
                     className="icon-size-24"
                   />
-                  <span className="font-weight-normal font-xl ml-2">
+                  <span className="font-weight-normal ml-2">
                     {intl.formatMessage(action.label)}
                   </span>
                 </Dropdown.Item>

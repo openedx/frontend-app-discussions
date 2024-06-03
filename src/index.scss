@@ -9,6 +9,25 @@
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 
+body,
+#main
+{
+  font-size: 14px ;
+}
+
+.btn,
+.form-control,
+.dropdown-menu,
+.pgn__modal,
+.pgn__form-control-floating-label-content,
+.pgn__form-label {
+  font-size: 14px !important;
+}
+
+.btn-md {
+  font-size: 16px !important;
+}
+
 #post,
 #comment,
 #reply,
@@ -41,13 +60,6 @@ $fa-font-path: "~font-awesome/fonts";
   outline: $light-400 solid 2px;
 }
 
-.font-size-16 {
-  font-size: 16px !important;
-}
-
-.font-size-14 {
-  font-size: 14px !important;
-}
 
 .font-size-12 {
   font-size: 12px !important;
@@ -233,11 +245,11 @@ header {
 }
 
 .sidebar-tablet-width {
-  max-width: 20rem !important;
+  max-width: 21rem !important;
 }
 
 .sidebar-XL-width {
-  min-width: 35rem !important;
+  min-width: 29rem !important;
 }
 
 .filter-menu:focus-visible {
@@ -258,6 +270,9 @@ header {
   input[type=checkbox] {
     width: 18px !important;
     height: 18px !important;
+  }
+  h4 {
+    font-size: 16px !important;
   }
 }
 
@@ -390,6 +405,7 @@ header {
 
 .badge {
   padding: 1px 5px !important;
+  font-size: 12px !important;
 }
 
 .pgn__checkpoint {
@@ -542,7 +558,7 @@ code {
 .actions-dropdown-item {
   padding: 12px 16px;
   height: 48px !important;
-  width: 304px !important;
+  width: 195px !important
 }
 
 .font-xl {
@@ -580,4 +596,91 @@ th, td {
   border: 1px dashed $gray-200;
   padding: 0.4rem;
   white-space: nowrap;
+}
+
+@media only screen and (max-width: 367px) {
+
+  .discussion-comments h5,
+  .btn,
+  .alert-message-content,
+  .pgn__form-control-floating-label-content,
+  .form-control,
+  .pgn__modal,
+  .pgn__form-label,
+  .dropdown-menu,
+  .tox-tbtn {
+    font-size: 10px !important;
+  }
+
+  .badge,
+  .post-summary-timestamp,
+  .hover-card button {
+    font-size: 8px !important;
+  }
+
+  .header-action-bar button {
+    height: 42px;
+    text-wrap: nowrap;
+    ;
+  }
+
+  .nav-item a {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .post-form h4,
+  .btn-md {
+    font-size: 12px !important;
+  }
+}
+
+@media only screen and (min-width: 367px) and (max-width: 768px) {
+
+  .discussion-comments h5,
+  .btn,
+  .alert-message-content,
+  .pgn__form-control-floating-label-content,
+  .form-control,
+  .pgn__form-label,
+  .pgn__modal,
+  .dropdown-menu,
+  .tox-tbtn {
+    font-size: 12px !important;
+  }
+
+  .badge,
+  .post-summary-timestamp,
+  .hover-card.btn-tertiary {
+    font-size: 10px !important;
+  }
+
+  .post-form h4,
+  .btn-md {
+    font-size: 14px !important;
+  }
+}
+
+@media only screen and (min-device-width: 769px) {
+
+  body,
+  #main {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-device-width: 768px) {
+
+  body,
+  #main {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-device-width: 366px) {
+
+  body,
+  #main {
+    font-size: 10px;
+  }
 }
