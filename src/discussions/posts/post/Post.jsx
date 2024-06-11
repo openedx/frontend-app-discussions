@@ -188,10 +188,7 @@ const Post = ({ handleAddResponseButton }) => {
       </div>
       {(topicContext || topic) && (
         <div
-          className={classNames(
-            'mt-14px font-style font-size-12',
-            { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter },
-          )}
+          className={classNames('mt-14px font-style', { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter })}
           style={{ lineHeight: '20px' }}
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>

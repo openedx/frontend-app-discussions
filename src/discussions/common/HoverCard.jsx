@@ -45,7 +45,7 @@ const HoverCard = ({
           <Button
             variant="tertiary"
             className={classNames(
-              'px-2.5 py-2 border-0 font-style text-gray-700 font-size-12',
+              'px-2.5 py-2 border-0 font-style text-gray-700',
               { 'w-100': enableInContextSidebar },
             )}
             onClick={() => handleResponseCommentButton()}
