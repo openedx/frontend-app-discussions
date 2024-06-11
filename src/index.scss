@@ -60,11 +60,6 @@ body,
   outline: $light-400 solid 2px;
 }
 
-
-.font-size-12 {
-  font-size: 12px !important;
-}
-
 .font-size-8 {
   font-size: 8px !important;
 }
@@ -630,7 +625,7 @@ th, td {
   }
 
   .post-form h4,
-  .btn-md {
+  .discussion-posts .btn-md {
     font-size: 12px !important;
   }
 }
@@ -656,12 +651,12 @@ th, td {
   }
 
   .post-form h4,
-  .btn-md {
+  .discussion-posts .btn-md {
     font-size: 14px !important;
   }
 }
 
-@media only screen and (min-device-width: 769px) {
+@media only screen and (min-width: 769px) {
 
   body,
   #main {
@@ -669,7 +664,7 @@ th, td {
   }
 }
 
-@media only screen and (max-device-width: 768px) {
+@media only screen and (max-width: 768px) {
 
   body,
   #main {
@@ -677,7 +672,7 @@ th, td {
   }
 }
 
-@media only screen and (max-device-width: 366px) {
+@media only screen and (max-width: 366px) {
 
   body,
   #main {
