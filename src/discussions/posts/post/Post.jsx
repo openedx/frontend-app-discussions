@@ -32,7 +32,7 @@ const Post = ({ handleAddResponseButton }) => {
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
     closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,
-    closedByLabel,
+    closedByLabel, users: postUsers,
   } = useSelector(selectThread(postId));
   const intl = useIntl();
   const location = useLocation();
@@ -182,6 +182,7 @@ const Post = ({ handleAddResponseButton }) => {
         lastEdit={lastEdit}
         postType={postType}
         title={title}
+        postUsers={postUsers}
       />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader w-100" testId={postId} />
