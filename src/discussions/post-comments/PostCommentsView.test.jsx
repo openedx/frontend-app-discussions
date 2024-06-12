@@ -18,7 +18,7 @@ import executeThunk from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import fetchCourseCohorts from '../cohorts/data/thunks';
 import DiscussionContext from '../common/context';
-import { getCourseConfigApiUrl } from '../data/api';
+import { getCourseConfigApiUrl, getCourseSettingsApiUrl } from '../data/api';
 import fetchCourseConfig from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
@@ -37,6 +37,7 @@ import '../topics/data/__factories__';
 import '../cohorts/data/__factories__';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
+const courseSettingsApiUrl = getCourseSettingsApiUrl();
 const commentsApiUrl = getCommentsApiUrl();
 const threadsApiUrl = getThreadsApiUrl();
 const discussionPostId = 'thread-1';
@@ -105,7 +106,7 @@ async function setupCourseConfig() {
       { code: 'reason-2', label: 'reason 2' },
     ],
   });
-  axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
+  axiosMock.onGet(`${courseSettingsApiUrl}${courseId}/settings`).reply(200, {});
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 }
 
