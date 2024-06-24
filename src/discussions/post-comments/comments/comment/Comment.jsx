@@ -104,6 +104,10 @@ const Comment = ({
     hideReportConfirmation();
   }, [abuseFlagged, id, hideReportConfirmation]);
 
+  const handleCommentLike = useCallback(async () => {
+    await dispatch(editComment(id, { voted: !voted }));
+  }, [id, voted]);
+
   const actionHandlers = useMemo(() => ({
     [ContentActions.EDIT_CONTENT]: handleEditContent,
     [ContentActions.ENDORSE]: handleCommentEndorse,
@@ -123,10 +127,6 @@ const Comment = ({
       setReplying(true);
     }
   }, [isUserPrivilegedInPostingRestriction]);
-
-  const handleCommentLike = useCallback(async () => {
-    await dispatch(editComment(id, { voted: !voted }));
-  }, [id, voted]);
 
   const handleCloseEditor = useCallback(() => {
     setEditing(false);
