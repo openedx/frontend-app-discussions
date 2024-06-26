@@ -1,32 +1,10 @@
-@import "~@edx/brand/paragon/fonts.scss";
-@import "~@edx/brand/paragon/variables.scss";
-@import "~@openedx/paragon/scss/core/core.scss";
-@import "~@edx/brand/paragon/overrides.scss";
+@use "@openedx/paragon/styles/css/core/custom-media-breakpoints.css" as paragonCustomMediaBreakpoints;
 
 @import "~@edx/frontend-component-footer/dist/footer";
-@import "~@edx/frontend-component-header/dist/index";
+// @import "~@edx/frontend-component-header/dist/index";
 
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
-
-body,
-#main
-{
-  font-size: 14px ;
-}
-
-.btn,
-.form-control,
-.dropdown-menu,
-.pgn__modal,
-.pgn__form-control-floating-label-content,
-.pgn__form-label {
-  font-size: 14px !important;
-}
-
-.btn-md {
-  font-size: 16px !important;
-}
 
 #post,
 #comment,
@@ -41,23 +19,35 @@ body,
 }
 
 .text-staff-color {
-  color: $warning-700;
+  color: var(--pgn-color-warning-700);
 }
 
 .outline-staff-color {
-  outline: $warning-700 solid 2px;
+  outline: var(--pgn-color-warning-700) solid 2px;
 }
 
 .text-TA-color {
-  color: $success-700;
+  color: var(--pgn-color-success-700);
 }
 
 .outline-TA-color {
-  outline: $success-700 solid 2px;
+  outline: var(--pgn-color-success-700) solid 2px;
 }
 
 .outline-anonymous {
-  outline: $light-400 solid 2px;
+  outline: var(--pgn-color-light-400) solid 2px;
+}
+
+.font-size-16 {
+  font-size: 16px !important;
+}
+
+.font-size-14 {
+  font-size: 14px !important;
+}
+
+.font-size-12 {
+  font-size: 12px !important;
 }
 
 .font-size-8 {
@@ -173,7 +163,7 @@ body,
 }
 
 .learner > a:hover {
-  background-color: $light-300;
+  background-color: var(--pgn-color-light-300);
 }
 
 .py-10px {
@@ -240,11 +230,11 @@ header {
 }
 
 .sidebar-tablet-width {
-  max-width: 21rem !important;
+  max-width: 20rem !important;
 }
 
 .sidebar-XL-width {
-  min-width: 29rem !important;
+  min-width: 35rem !important;
 }
 
 .filter-menu:focus-visible {
@@ -252,12 +242,12 @@ header {
 }
 
 .border-light-400-2 {
-  border: 2px solid $light-400 !important;
+  border: 2px solid var(--pgn-color-light-400) !important;
   border-width: 2px !important;
 }
 
 .border-primary-500-2 {
-  border: 2px solid $primary-500 !important;
+  border: 2px solid var(--pgn-color-primary-500) !important;
   border-width: 2px !important;
 }
 
@@ -265,9 +255,6 @@ header {
   input[type=checkbox] {
     width: 18px !important;
     height: 18px !important;
-  }
-  h4 {
-    font-size: 16px !important;
   }
 }
 
@@ -383,8 +370,8 @@ header {
 }
 
 .btn-icon.btn-icon-primary:hover {
-  background-color: $light-300 !important;
-  color: $primary-500 !important
+  background-color: var(--pgn-color-light-300) !important;
+  color: var(--pgn-color-primary-500) !important
 }
 
 
@@ -400,7 +387,6 @@ header {
 
 .badge {
   padding: 1px 5px !important;
-  font-size: 12px !important;
 }
 
 .pgn__checkpoint {
@@ -427,38 +413,38 @@ header {
 }
 
 .hover-button:hover {
-  background-color: $light-300 !important;
+  background-color: var(--pgn-color-light-300) !important;
   height: 36px !important;
   border: none !important;
 }
 
 .btn-tertiary:hover {
-  background-color: $light-300 !important;
+  background-color: var(--pgn-color-light-300) !important;
 }
 
 .nav-button-group {
   .nav-link {
     &:hover {
-      background-color: $light-300 !important;
+      background-color: var(--pgn-color-light-300) !important;
     }
   }
 
   .nav-link.active,
   .show>.nav-link {
-    background-color: $primary-500 !important;
+    background-color: var(--pgn-color-primary-500) !important;
   }
 }
 
 .course-tabs-navigation {
   .nav a {
     &:hover {
-      background-color: $light-300 !important;;
+      background-color: var(--pgn-color-light-300) !important;;
     }
   }
 }
 
 .btn-tertiary:disabled {
-  color: $gray-700 !important;
+  color: var(--pgn-color-gray-700) !important;
   background-color: transparent !important;
 }
 
@@ -535,14 +521,14 @@ code {
 .post-preview,
 .discussion-comments {
   blockquote {
-    border-left: 2px solid $gray-200;
+    border-left: 2px solid var(--pgn-color-gray-200);
     margin-left: 1.5rem;
     padding-left: 1rem;
   }
 }
 
 .add-comment-btn {
-  border: 1px solid $light-300 !important;
+  border: 1px solid var(--pgn-color-light-300) !important;
 }
 
 .icon-size-24 {
@@ -553,7 +539,7 @@ code {
 .actions-dropdown-item {
   padding: 12px 16px;
   height: 48px !important;
-  width: 195px !important
+  width: 304px !important;
 }
 
 .font-xl {
@@ -588,94 +574,7 @@ code {
 }
 
 th, td {
-  border: 1px dashed $gray-200;
+  border: 1px dashed var(--pgn-color-gray-200);
   padding: 0.4rem;
   white-space: nowrap;
-}
-
-@media only screen and (max-width: 367px) {
-
-  .discussion-comments h5,
-  .btn,
-  .alert-message-content,
-  .pgn__form-control-floating-label-content,
-  .form-control,
-  .pgn__modal,
-  .pgn__form-label,
-  .dropdown-menu,
-  .tox-tbtn {
-    font-size: 10px !important;
-  }
-
-  .badge,
-  .post-summary-timestamp,
-  .hover-card button {
-    font-size: 8px !important;
-  }
-
-  .header-action-bar button {
-    height: 42px;
-    text-wrap: nowrap;
-    ;
-  }
-
-  .nav-item a {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .post-form h4,
-  .discussion-posts .btn-md {
-    font-size: 12px !important;
-  }
-}
-
-@media only screen and (min-width: 367px) and (max-width: 768px) {
-
-  .discussion-comments h5,
-  .btn,
-  .alert-message-content,
-  .pgn__form-control-floating-label-content,
-  .form-control,
-  .pgn__form-label,
-  .pgn__modal,
-  .dropdown-menu,
-  .tox-tbtn {
-    font-size: 12px !important;
-  }
-
-  .badge,
-  .post-summary-timestamp,
-  .hover-card.btn-tertiary {
-    font-size: 10px !important;
-  }
-
-  .post-form h4,
-  .discussion-posts .btn-md {
-    font-size: 14px !important;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-
-  body,
-  #main {
-    font-size: 14px;
-  }
-}
-
-@media only screen and (max-width: 768px) {
-
-  body,
-  #main {
-    font-size: 12px;
-  }
-}
-
-@media only screen and (max-width: 366px) {
-
-  body,
-  #main {
-    font-size: 10px;
-  }
 }
