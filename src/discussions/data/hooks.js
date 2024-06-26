@@ -16,10 +16,11 @@ import { AppContext } from '@edx/frontend-platform/react';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { LOADED } from '../../components/NavigationBar/data/slice';
 import fetchTab from '../../components/NavigationBar/data/thunks';
-import { RequestStatus, Routes } from '../../data/constants';
+import { ContentActions, RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import fetchCourseBlocks from '../../data/thunks';
 import DiscussionContext from '../common/context';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
@@ -27,7 +28,8 @@ import tourCheckpoints from '../tours/constants';
 import selectTours from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
-import { discussionsPath } from '../utils';
+import { checkPermissions, discussionsPath } from '../utils';
+import { ContentSelectors } from './constants';
 import {
   selectAreThreadsFiltered,
   selectEnableInContext,
@@ -283,4 +285,11 @@ export const useDebounce = (value, delay) => {
     [value, delay], // Only re-call effect if value or delay changes
   );
   return debouncedValue;
+};
+
+export const useHasLikePermission = (contentType, id) => {
+  const { postType } = useContext(PostCommentsContext);
+  const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
+
+  return checkPermissions(content, ContentActions.VOTE);
 };
