@@ -22,6 +22,10 @@ const commentsSlice = createSlice({
     pagination: {},
     responsesPagination: {},
     sortOrder: true,
+    draft: {
+      responses: [],
+      comments: [],
+    },
   },
   reducers: {
     fetchCommentsRequest: (state) => (
@@ -257,6 +261,12 @@ const commentsSlice = createSlice({
         sortOrder: payload,
       }
     ),
+    setDraftContent: (state, { payload }) => (
+      {
+        ...state,
+        draft: payload,
+      }
+    ),
   },
 });
 
@@ -282,6 +292,7 @@ export const {
   deleteCommentRequest,
   deleteCommentSuccess,
   setCommentSortOrder,
+  setDraftContent,
 } = commentsSlice.actions;
 
 export const commentsReducer = commentsSlice.reducer;

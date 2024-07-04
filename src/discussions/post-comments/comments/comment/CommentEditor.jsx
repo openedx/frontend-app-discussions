@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,12 +17,15 @@ import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
+  selectDraft,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
+import { useAddDraftContent, useRemoveDraftContent } from '../../data/hooks';
+import { setDraftContent } from '../../data/slices';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
@@ -44,7 +47,9 @@ const CommentEditor = ({
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsStaff = useSelector(selectUserIsStaff);
   const { editReasons } = useSelector(selectModerationSettings);
+  const { responses, comments } = useSelector(selectDraft);
   const [submitting, dispatch] = useDispatchWithState();
+  const [editorContent, setEditorContent] = useState();
 
   const canDisplayEditReason = (edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -71,6 +76,11 @@ const CommentEditor = ({
     onCloseEditor();
   }, [onCloseEditor, initialValues]);
 
+  const DeleteEditorContent = async () => {
+    const { updatedResponses, updatedComments } = useRemoveDraftContent(responses, comments, parentId, id, threadId);
+    await dispatch(setDraftContent({ responses: updatedResponses, comments: updatedComments }));
+  };
+
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {
       const payload = {
@@ -86,6 +96,7 @@ const CommentEditor = ({
       editorRef.current.plugins.autosave.removeDraft();
     }
     handleCloseEditor(resetForm);
+    DeleteEditorContent();
   }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
@@ -96,6 +107,32 @@ const CommentEditor = ({
       formRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [formRef]);
+
+  useEffect(() => {
+    const draftObject = parentId
+      ? comments.find(x => x.parentId === parentId && x.id === id)
+      : responses.find(x => x.threadId === threadId && x.id === id);
+
+    setEditorContent(draftObject ? draftObject.content : '');
+  }, [responses, comments, parentId, threadId, id]);
+
+  const SaveDraftComment = async () => {
+    const content = editorRef.current.getContent();
+    const { updatedResponses, updatedComments } = useAddDraftContent(
+      content,
+      responses,
+      comments,
+      parentId,
+      id,
+      threadId,
+    );
+    await dispatch(setDraftContent({ responses: updatedResponses, comments: updatedComments }));
+  };
+
+  const handleEditorChange = (content, setFieldValue) => {
+    setEditorContent(content);
+    setFieldValue('comment', content);
+  };
 
   return (
     <Formik
@@ -111,6 +148,7 @@ const CommentEditor = ({
         handleBlur,
         handleChange,
         resetForm,
+        setFieldValue,
       }) => (
         <Form onSubmit={handleSubmit} className={formClasses} ref={formRef}>
           {canDisplayEditReason && (
@@ -149,9 +187,12 @@ const CommentEditor = ({
               }
             }
             id={editorId}
-            value={values.comment}
-            onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
-            onBlur={formikCompatibleHandler(handleBlur, 'comment')}
+            value={editorContent || values.comment}
+            onEditorChange={(content) => handleEditorChange(content, setFieldValue)}
+            onBlur={() => {
+              formikCompatibleHandler(handleChange, 'comment');
+              SaveDraftComment();
+            }}
           />
           {isFormikFieldInvalid('comment', {
             errors,

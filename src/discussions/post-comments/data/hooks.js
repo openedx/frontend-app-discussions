@@ -102,3 +102,50 @@ export function useCommentsCount(postId) {
 
   return commentsLength;
 }
+
+const removeItem = (list, condition) => {
+  const index = list.findIndex(condition);
+  if (index > -1) {
+    list.splice(index, 1);
+  }
+};
+
+export const useRemoveDraftContent = (responses, comments, parentId, id, threadId) => {
+  const updatedResponses = [...responses];
+  const updatedComments = [...comments];
+
+  if (!parentId) {
+    removeItem(updatedResponses, x => x.threadId === threadId && x.id === id);
+  } else {
+    removeItem(updatedComments, x => x.parentId === parentId && x.id === id);
+  }
+
+  return { updatedResponses, updatedComments };
+};
+
+const updateList = (list, condition, newItem) => {
+  const index = list.findIndex(condition);
+  if (index === -1) {
+    return [...list, newItem];
+  }
+  return list.map((item, i) => (i === index ? {
+    ...item, content: newItem.content, id: newItem.id, parentId: newItem.parentId,
+  } : item));
+};
+
+export const useAddDraftContent = (content, responses, comments, parentId, id, threadId) => {
+  let updatedResponses = [...responses];
+  let updatedComments = [...comments];
+
+  if (!parentId) {
+    updatedResponses = updateList(updatedResponses, (x) => x.threadId === threadId && x.id === id, {
+      threadId, content, parentId, id,
+    });
+  } else {
+    updatedComments = updateList(updatedComments, (x) => x.parentId === parentId && x.id === id, {
+      threadId, content, parentId, id,
+    });
+  }
+
+  return { updatedResponses, updatedComments };
+};
