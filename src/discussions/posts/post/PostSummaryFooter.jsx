@@ -68,7 +68,7 @@ const PostSummaryFooter = ({
       </OverlayTrigger>
 
       {preview && commentCount > 1 && (
-        <div className="d-flex align-items-center ml-4.5 text-gray-700 font-style font-size-12">
+        <div className="d-flex align-items-center ml-4.5 text-gray-700 font-style">
           <OverlayTrigger
             overlay={(
               <Tooltip id={`follow-${postId}-tooltip`}>

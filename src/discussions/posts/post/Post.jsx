@@ -85,6 +85,10 @@ const Post = ({ handleAddResponseButton }) => {
     updateExistingThread(postId, { pinned: !pinned }),
   ), [postId, pinned]);
 
+  const handlePostLike = useCallback(() => {
+    dispatch(updateExistingThread(postId, { voted: !voted }));
+  }, [postId, voted]);
+
   const handlePostReport = useCallback(() => {
     if (abuseFlagged) {
       dispatch(updateExistingThread(postId, { flagged: !abuseFlagged }));
@@ -108,10 +112,6 @@ const Post = ({ handleAddResponseButton }) => {
     dispatch(updateExistingThread(postId, { closed: true, closeReasonCode }));
     hideClosePostModal();
   }, [postId, hideClosePostModal]);
-
-  const handlePostLike = useCallback(() => {
-    dispatch(updateExistingThread(postId, { voted: !voted }));
-  }, [postId, voted]);
 
   const handlePostFollow = useCallback(() => {
     dispatch(updateExistingThread(postId, { following: !following }));
@@ -188,10 +188,7 @@ const Post = ({ handleAddResponseButton }) => {
       </div>
       {(topicContext || topic) && (
         <div
-          className={classNames(
-            'mt-14px font-style font-size-12',
-            { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter },
-          )}
+          className={classNames('mt-14px font-style', { 'w-100': enableInContextSidebar, 'mb-1': !displayPostFooter })}
           style={{ lineHeight: '20px' }}
         >
           <span className="text-gray-500" style={{ lineHeight: '20px' }}>
