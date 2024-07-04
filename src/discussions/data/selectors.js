@@ -91,4 +91,4 @@ export const selectIsUserLearner = createSelector(
   ),
 );
 
-export const selectDraft = state => state.comments.draft || null; 
+export const selectDraft = state => state.comments.draft || null;

@@ -82,14 +82,16 @@ const CommentEditor = ({
   };
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
+    const clonedValues = { ...values };
+    clonedValues.comment = editorContent;
     if (id) {
       const payload = {
-        ...values,
-        editReasonCode: values.editReasonCode || undefined,
+        ...clonedValues,
+        editReasonCode: clonedValues.editReasonCode || undefined,
       };
       await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
+      await dispatch(addComment(clonedValues.comment, threadId, parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
