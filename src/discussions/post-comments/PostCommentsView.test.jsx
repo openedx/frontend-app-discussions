@@ -671,6 +671,30 @@ describe('ThreadView', () => {
       expect(screen.queryByTestId('reply-comment-3')).not.toBeInTheDocument();
     });
 
+    it('successfully added response in the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      let addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Hello, world!' } });
+      });
+      const cancelBtn = screen.queryByText('Cancel');
+      await act(async () => {
+        fireEvent.click(cancelBtn);
+      });
+      addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      expect(screen.queryByText('Hello, world!')).toBeInTheDocument();
+    });
+
     it('pressing load more button will load next page of replies', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
