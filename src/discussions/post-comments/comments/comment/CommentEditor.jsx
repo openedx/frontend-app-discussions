@@ -118,8 +118,7 @@ const CommentEditor = ({
     setEditorContent(draftObject ? draftObject.content : '');
   }, [responses, comments, parentId, threadId, id]);
 
-  const SaveDraftComment = async () => {
-    const content = editorRef.current.getContent();
+  const SaveDraftComment = async (content) => {
     const { updatedResponses, updatedComments } = useAddDraftContent(
       content,
       responses,
@@ -191,9 +190,9 @@ const CommentEditor = ({
             id={editorId}
             value={editorContent || values.comment}
             onEditorChange={(content) => handleEditorChange(content, setFieldValue)}
-            onBlur={() => {
+            onBlur={(content) => {
               formikCompatibleHandler(handleChange, 'comment');
-              SaveDraftComment();
+              SaveDraftComment(typeof content === 'object' ? content.target.getContent() : content);
             }}
           />
           {isFormikFieldInvalid('comment', {
