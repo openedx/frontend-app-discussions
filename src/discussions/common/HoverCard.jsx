@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ThreadType } from '../../data/constants';
-import { useUserPostingEnabled } from '../data/hooks';
+import { useHasLikePermission, useUserPostingEnabled } from '../data/hooks';
 import PostCommentsContext from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
 import DiscussionContext from './context';
@@ -33,6 +33,7 @@ const HoverCard = ({
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
+  const userHasLikePermission = useHasLikePermission(contentType, id);
 
   return (
     <div
@@ -86,6 +87,7 @@ const HoverCard = ({
           iconAs={Icon}
           size="sm"
           alt="Like"
+          disabled={!userHasLikePermission}
           iconClassNames="like-icon-dimensions"
           onClick={(e) => {
             e.preventDefault();
