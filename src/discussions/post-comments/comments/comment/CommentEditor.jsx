@@ -17,15 +17,16 @@ import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
-  selectDraft,
+  selectDraftComments,
+  selectDraftResponses,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
-import { useAddDraftContent, useRemoveDraftContent } from '../../data/hooks';
-import { setDraftContent } from '../../data/slices';
+import { getObjectById, useAddDraftContent, useRemoveDraftContent } from '../../data/hooks';
+import { setDraftComment, setDraftResponse } from '../../data/slices';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
@@ -47,7 +48,8 @@ const CommentEditor = ({
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsStaff = useSelector(selectUserIsStaff);
   const { editReasons } = useSelector(selectModerationSettings);
-  const { responses, comments } = useSelector(selectDraft);
+  const comments = useSelector(selectDraftComments);
+  const responses = useSelector(selectDraftResponses);
   const [submitting, dispatch] = useDispatchWithState();
   const [editorContent, setEditorContent] = useState();
 
@@ -78,7 +80,11 @@ const CommentEditor = ({
 
   const DeleteEditorContent = async () => {
     const { updatedResponses, updatedComments } = useRemoveDraftContent(responses, comments, parentId, id, threadId);
-    await dispatch(setDraftContent({ responses: updatedResponses, comments: updatedComments }));
+    if (parentId) {
+      await dispatch(setDraftComment(updatedComments));
+    } else {
+      await dispatch(setDraftResponse(updatedResponses));
+    }
   };
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
@@ -111,11 +117,16 @@ const CommentEditor = ({
   }, [formRef]);
 
   useEffect(() => {
-    const draftObject = parentId
-      ? comments.find(x => x.parentId === parentId && x.id === id)
-      : responses.find(x => x.threadId === threadId && x.id === id);
+    let draftObject = null;
 
-    setEditorContent(draftObject ? draftObject.content : '');
+    if (id) {
+      draftObject = parentId ? comments?.[id] : responses?.[id];
+    } else {
+      draftObject = parentId ? getObjectById(comments, parentId, true)
+        : getObjectById(responses, threadId, false);
+    }
+
+    setEditorContent(draftObject?.content || '');
   }, [responses, comments, parentId, threadId, id]);
 
   const SaveDraftComment = async (content) => {
@@ -127,7 +138,11 @@ const CommentEditor = ({
       id,
       threadId,
     );
-    await dispatch(setDraftContent({ responses: updatedResponses, comments: updatedComments }));
+    if (parentId) {
+      await dispatch(setDraftComment(updatedComments));
+    } else {
+      await dispatch(setDraftResponse(updatedResponses));
+    }
   };
 
   const handleEditorChange = (content, setFieldValue) => {

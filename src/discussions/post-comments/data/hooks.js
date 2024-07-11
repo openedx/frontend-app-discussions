@@ -3,6 +3,7 @@ import {
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
@@ -103,48 +104,41 @@ export function useCommentsCount(postId) {
   return commentsLength;
 }
 
-const removeItem = (list, condition) => {
-  const index = list.findIndex(condition);
-  if (index > -1) {
-    list.splice(index, 1);
-  }
-};
+export const getObjectById = (draftList, id, isComment) => Object.values(draftList)
+  .find(draft => (isComment ? draft.parentId === id : draft.threadId === id));
 
 export const useRemoveDraftContent = (responses, comments, parentId, id, threadId) => {
-  const updatedResponses = [...responses];
-  const updatedComments = [...comments];
+  const updatedResponses = { ...responses };
+  const updatedComments = { ...comments };
 
   if (!parentId) {
-    removeItem(updatedResponses, x => x.threadId === threadId && x.id === id);
+    const responseObj = id ? updatedResponses[id] : getObjectById(responses, threadId, false);
+    delete updatedResponses[responseObj.id];
   } else {
-    removeItem(updatedComments, x => x.parentId === parentId && x.id === id);
+    const commentObj = id ? updatedComments[id] : getObjectById(comments, parentId, true);
+    delete updatedComments[commentObj.id];
   }
 
   return { updatedResponses, updatedComments };
 };
 
-const updateList = (list, condition, newItem) => {
-  const index = list.findIndex(condition);
-  if (index === -1) {
-    return [...list, newItem];
-  }
-  return list.map((item, i) => (i === index ? {
-    ...item, content: newItem.content, id: newItem.id, parentId: newItem.parentId,
-  } : item));
-};
+const updateDraftList = (draftList, newDraftObject) => ({
+  ...draftList,
+  [newDraftObject.id]: newDraftObject,
+});
 
 export const useAddDraftContent = (content, responses, comments, parentId, id, threadId) => {
-  let updatedResponses = [...responses];
-  let updatedComments = [...comments];
+  let updatedResponses = { ...responses };
+  let updatedComments = { ...comments };
+
+  const newObject = {
+    threadId, content, parentId, id: id || uuidv4(),
+  };
 
   if (!parentId) {
-    updatedResponses = updateList(updatedResponses, (x) => x.threadId === threadId && x.id === id, {
-      threadId, content, parentId, id,
-    });
+    updatedResponses = updateDraftList(responses, newObject);
   } else {
-    updatedComments = updateList(updatedComments, (x) => x.parentId === parentId && x.id === id, {
-      threadId, content, parentId, id,
-    });
+    updatedComments = updateDraftList(comments, newObject);
   }
 
   return { updatedResponses, updatedComments };
