@@ -671,7 +671,109 @@ describe('ThreadView', () => {
       expect(screen.queryByTestId('reply-comment-3')).not.toBeInTheDocument();
     });
 
+    it('successfully added comment in the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      let addCommentBtn = screen.queryByText('Add comment');
+
+      await act(async () => {
+        fireEvent.click(addCommentBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+      });
+
+      const cancelBtn = screen.queryByText('Cancel');
+      await act(async () => {
+        fireEvent.click(cancelBtn);
+      });
+
+      addCommentBtn = screen.queryByText('Add comment');
+      await act(async () => {
+        fireEvent.click(addCommentBtn);
+      });
+
+      expect(screen.queryByText('Draft comment!')).toBeInTheDocument();
+    });
+
+    it('successfully removed comment from the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      let addCommentBtn = screen.queryByText('Add comment');
+
+      await act(async () => {
+        fireEvent.click(addCommentBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+      });
+
+      const submitBtn = screen.queryByText('Submit');
+      await act(async () => {
+        fireEvent.click(submitBtn);
+      });
+
+      addCommentBtn = screen.queryAllByText('Add comment');
+      await act(async () => {
+        fireEvent.click(addCommentBtn[0]);
+      });
+
+      expect(screen.queryByText('Draft comment!')).not.toBeInTheDocument();
+    });
+
     it('successfully added response in the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      let addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Draft Response!' } });
+      });
+      const cancelBtn = screen.queryByText('Cancel');
+      await act(async () => {
+        fireEvent.click(cancelBtn);
+      });
+      addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      expect(screen.queryByText('Draft Response!')).toBeInTheDocument();
+    });
+
+    it('successfully removed response from the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      let addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Draft Response!' } });
+      });
+      const submitBtn = screen.queryByText('Submit');
+      await act(async () => {
+        fireEvent.click(submitBtn);
+      });
+      addResponseBtn = screen.queryByText('Add response');
+      await act(async () => {
+        fireEvent.click(addResponseBtn);
+      });
+
+      expect(screen.queryByText('Draft Response!')).not.toBeInTheDocument();
+    });
+
+    it('successfully maintain response for the specific post in the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
       let addResponseBtn = screen.queryByText('Add response');
@@ -683,13 +785,12 @@ describe('ThreadView', () => {
         const editor = screen.queryByTestId('tinymce-editor');
         fireEvent.change(editor, { target: { value: 'Hello, world!' } });
       });
-      const cancelBtn = screen.queryByText('Cancel');
+
+      await waitFor(() => renderComponent('thread-2'));
+      await waitFor(() => renderComponent(discussionPostId));
+      addResponseBtn = screen.queryAllByText('Add response');
       await act(async () => {
-        fireEvent.click(cancelBtn);
-      });
-      addResponseBtn = screen.queryByText('Add response');
-      await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.click(addResponseBtn[0]);
       });
 
       expect(screen.queryByText('Hello, world!')).toBeInTheDocument();
