@@ -17,16 +17,14 @@ import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
-  selectDraftComments,
-  selectDraftResponses,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../../data/selectors';
 import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
-import { getObjectById, useAddDraftContent, useRemoveDraftContent } from '../../data/hooks';
-import { setDraftComment, setDraftResponse } from '../../data/slices';
+import { useDraftContent } from '../../data/hooks';
+import { setDraftComments, setDraftResponses } from '../../data/slices';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
@@ -48,10 +46,9 @@ const CommentEditor = ({
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsStaff = useSelector(selectUserIsStaff);
   const { editReasons } = useSelector(selectModerationSettings);
-  const comments = useSelector(selectDraftComments);
-  const responses = useSelector(selectDraftResponses);
   const [submitting, dispatch] = useDispatchWithState();
   const [editorContent, setEditorContent] = useState();
+  const draftContent = useDraftContent();
 
   const canDisplayEditReason = (edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -69,7 +66,7 @@ const CommentEditor = ({
   });
 
   const initialValues = {
-    comment: rawBody,
+    comment: editorContent,
     editReasonCode: lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
   };
 
@@ -79,25 +76,23 @@ const CommentEditor = ({
   }, [onCloseEditor, initialValues]);
 
   const DeleteEditorContent = async () => {
-    const { updatedResponses, updatedComments } = useRemoveDraftContent(responses, comments, parentId, id, threadId);
+    const { updatedResponses, updatedComments } = draftContent.removeDraftContent(parentId, id, threadId);
     if (parentId) {
-      await dispatch(setDraftComment(updatedComments));
+      await dispatch(setDraftComments(updatedComments));
     } else {
-      await dispatch(setDraftResponse(updatedResponses));
+      await dispatch(setDraftResponses(updatedResponses));
     }
   };
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
-    const clonedValues = { ...values };
-    clonedValues.comment = editorContent;
     if (id) {
       const payload = {
-        ...clonedValues,
-        editReasonCode: clonedValues.editReasonCode || undefined,
+        ...values,
+        editReasonCode: values.editReasonCode || undefined,
       };
       await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(clonedValues.comment, threadId, parentId, enableInContextSidebar));
+      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
@@ -117,37 +112,31 @@ const CommentEditor = ({
   }, [formRef]);
 
   useEffect(() => {
-    let draftObject = null;
+    const draftHtml = draftContent.getDraftContent(parentId, threadId, id) || rawBody;
+    setEditorContent(draftHtml);
+    initialValues.comment = draftHtml;
+  }, [parentId, threadId, id]);
 
-    if (id) {
-      draftObject = parentId ? comments?.[id] : responses?.[id];
-    } else {
-      draftObject = parentId ? getObjectById(comments, parentId, true)
-        : getObjectById(responses, threadId, false);
+  const extractContent = (content) => {
+    if (typeof content === 'object') {
+      return content.target.getContent();
     }
+    return content;
+  };
+  const saveDraftContent = async (content) => {
+    const draftDataContent = extractContent(content);
 
-    setEditorContent(draftObject?.content || '');
-  }, [responses, comments, parentId, threadId, id]);
-
-  const SaveDraftComment = async (content) => {
-    const { updatedResponses, updatedComments } = useAddDraftContent(
-      content,
-      responses,
-      comments,
+    const { updatedResponses, updatedComments } = draftContent.addDraftContent(
+      draftDataContent,
       parentId,
       id,
       threadId,
     );
     if (parentId) {
-      await dispatch(setDraftComment(updatedComments));
+      await dispatch(setDraftComments(updatedComments));
     } else {
-      await dispatch(setDraftResponse(updatedResponses));
+      await dispatch(setDraftResponses(updatedResponses));
     }
-  };
-
-  const handleEditorChange = (content, setFieldValue) => {
-    setEditorContent(content);
-    setFieldValue('comment', content);
   };
 
   return (
@@ -164,7 +153,6 @@ const CommentEditor = ({
         handleBlur,
         handleChange,
         resetForm,
-        setFieldValue,
       }) => (
         <Form onSubmit={handleSubmit} className={formClasses} ref={formRef}>
           {canDisplayEditReason && (
@@ -203,11 +191,11 @@ const CommentEditor = ({
               }
             }
             id={editorId}
-            value={editorContent || values.comment}
-            onEditorChange={(content) => handleEditorChange(content, setFieldValue)}
+            value={values.comment}
+            onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
             onBlur={(content) => {
               formikCompatibleHandler(handleChange, 'comment');
-              SaveDraftComment(typeof content === 'object' ? content.target.getContent() : content);
+              saveDraftContent(typeof content === 'object' ? content.target.getContent() : content);
             }}
           />
           {isFormikFieldInvalid('comment', {

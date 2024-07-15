@@ -90,7 +90,3 @@ export const selectIsUserLearner = createSelector(
     ) || false
   ),
 );
-
-export const selectDraftComments = state => state.comments.draftComments || null;
-
-export const selectDraftResponses = state => state.comments.draftResponses || null;

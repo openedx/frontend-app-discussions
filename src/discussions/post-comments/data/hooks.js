@@ -14,7 +14,8 @@ import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
 import { filterPosts } from '../../utils';
 import {
-  selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
+  selectCommentSortOrder, selectDraftComments, selectDraftResponses,
+  selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
@@ -104,42 +105,69 @@ export function useCommentsCount(postId) {
   return commentsLength;
 }
 
-export const getObjectById = (draftList, id, isComment) => Object.values(draftList)
-  .find(draft => (isComment ? draft.parentId === id : draft.threadId === id));
+export const useDraftContent = () => {
+  const comments = useSelector(selectDraftComments);
+  const responses = useSelector(selectDraftResponses);
 
-export const useRemoveDraftContent = (responses, comments, parentId, id, threadId) => {
-  const updatedResponses = { ...responses };
-  const updatedComments = { ...comments };
+  const getObjectByParentId = (data, parentId, isComment, id) => Object.values(data)
+    .find(draft => (isComment ? draft.parentId === parentId && (id ? draft.id === id : draft.isNewContent === true)
+      : draft.threadId === parentId && (id ? draft.id === id : draft.isNewContent === true)));
 
-  if (!parentId) {
-    const responseObj = id ? updatedResponses[id] : getObjectById(responses, threadId, false);
-    delete updatedResponses[responseObj.id];
-  } else {
-    const commentObj = id ? updatedComments[id] : getObjectById(comments, parentId, true);
-    delete updatedComments[commentObj.id];
-  }
+  const updateDraftData = (draftData, newDraftObject) => ({
+    ...draftData,
+    [newDraftObject.id]: newDraftObject,
+  });
 
-  return { updatedResponses, updatedComments };
-};
+  const addDraftContent = (content, parentId, id, threadId) => {
+    const newObject = {
+      threadId, content, parentId, id: id || uuidv4(), isNewContent: !id,
+    };
 
-const updateDraftList = (draftList, newDraftObject) => ({
-  ...draftList,
-  [newDraftObject.id]: newDraftObject,
-});
+    const updatedComments = parentId ? updateDraftData(comments, newObject) : comments;
+    const updatedResponses = !parentId ? updateDraftData(responses, newObject) : responses;
 
-export const useAddDraftContent = (content, responses, comments, parentId, id, threadId) => {
-  let updatedResponses = { ...responses };
-  let updatedComments = { ...comments };
-
-  const newObject = {
-    threadId, content, parentId, id: id || uuidv4(),
+    return { updatedComments, updatedResponses };
   };
 
-  if (!parentId) {
-    updatedResponses = updateDraftList(responses, newObject);
-  } else {
-    updatedComments = updateDraftList(comments, newObject);
-  }
+  const getDraftContent = (parentId, threadId, id) => {
+    if (id) {
+      return parentId ? comments?.[id]?.content : responses?.[id]?.content;
+    }
 
-  return { updatedResponses, updatedComments };
+    const data = parentId ? comments : responses;
+    const draftParentId = parentId || threadId;
+    const isComment = !!parentId;
+
+    return getObjectByParentId(data, draftParentId, isComment, id)?.content;
+  };
+
+  const removeItem = (draftData, objId) => {
+    const { [objId]: _, ...newDraftData } = draftData;
+    return newDraftData;
+  };
+
+  const removeDraftContent = (parentId, id, threadId) => {
+    let updatedResponses = responses;
+    let updatedComments = comments;
+
+    if (!parentId) {
+      const responseObj = id ? responses[id] : getObjectByParentId(responses, threadId, false, id);
+      if (responseObj) {
+        updatedResponses = removeItem(responses, responseObj.id);
+      }
+    } else {
+      const commentObj = id ? comments[id] : getObjectByParentId(comments, parentId, true, id);
+      if (commentObj) {
+        updatedComments = removeItem(comments, commentObj.id);
+      }
+    }
+
+    return { updatedResponses, updatedComments };
+  };
+
+  return {
+    addDraftContent,
+    getDraftContent,
+    removeDraftContent,
+  };
 };

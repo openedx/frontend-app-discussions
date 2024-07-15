@@ -259,13 +259,13 @@ const commentsSlice = createSlice({
         sortOrder: payload,
       }
     ),
-    setDraftComment: (state, { payload }) => (
+    setDraftComments: (state, { payload }) => (
       {
         ...state,
         draftComments: payload,
       }
     ),
-    setDraftResponse: (state, { payload }) => (
+    setDraftResponses: (state, { payload }) => (
       {
         ...state,
         draftResponses: payload,
@@ -296,8 +296,8 @@ export const {
   deleteCommentRequest,
   deleteCommentSuccess,
   setCommentSortOrder,
-  setDraftComment,
-  setDraftResponse,
+  setDraftComments,
+  setDraftResponses,
 } = commentsSlice.actions;
 
 export const commentsReducer = commentsSlice.reducer;
