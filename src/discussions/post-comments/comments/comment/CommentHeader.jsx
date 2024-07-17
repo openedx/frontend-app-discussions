@@ -15,6 +15,7 @@ const CommentHeader = ({
   closed,
   createdAt,
   lastEdit,
+  postUsers,
 }) => {
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
@@ -23,6 +24,8 @@ const CommentHeader = ({
     lastEdit,
     closed,
   });
+
+  const profileImage = postUsers && Object.values(postUsers)[0].profile.image;
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
@@ -33,6 +36,7 @@ const CommentHeader = ({
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
           alt={author}
+          src={profileImage?.hasImage ? profileImage?.imageUrlSmall : undefined}
           style={{
             width: '32px',
             height: '32px',
@@ -61,6 +65,7 @@ CommentHeader.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
+  postUsers: PropTypes.shape({}).isRequired,
 };
 
 CommentHeader.defaultProps = {
