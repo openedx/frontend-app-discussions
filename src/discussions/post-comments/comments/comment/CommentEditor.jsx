@@ -75,14 +75,14 @@ const CommentEditor = ({
     onCloseEditor();
   }, [onCloseEditor, initialValues]);
 
-  const deleteEditorContent = async () => {
+  const deleteEditorContent = useCallback(async () => {
     const { updatedResponses, updatedComments } = removeDraftContent(parentId, id, threadId);
     if (parentId) {
       await dispatch(setDraftComments(updatedComments));
     } else {
       await dispatch(setDraftResponses(updatedResponses));
     }
-  };
+  }, [parentId, id, threadId]);
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {
