@@ -82,7 +82,7 @@ const CommentEditor = ({
     } else {
       await dispatch(setDraftResponses(updatedResponses));
     }
-  }, [parentId, id, threadId]);
+  }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {

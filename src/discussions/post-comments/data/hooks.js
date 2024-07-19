@@ -119,9 +119,19 @@ export const useDraftContent = () => {
   });
 
   const addDraftContent = (content, parentId, id, threadId) => {
-    const newObject = {
-      threadId, content, parentId, id: id || uuidv4(), isNewContent: !id,
-    };
+    const data = parentId ? comments : responses;
+    const draftParentId = parentId || threadId;
+    const isComment = !!parentId;
+    const existingObj = getObjectByParentId(data, draftParentId, isComment, id);
+    const newObject = existingObj
+      ? { ...existingObj, content }
+      : {
+        threadId,
+        content,
+        parentId,
+        id: id || uuidv4(),
+        isNewContent: !id,
+      };
 
     const updatedComments = parentId ? updateDraftData(comments, newObject) : comments;
     const updatedResponses = !parentId ? updateDraftData(responses, newObject) : responses;
