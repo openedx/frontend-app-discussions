@@ -698,6 +698,50 @@ describe('ThreadView', () => {
       expect(screen.queryByText('Draft comment!')).toBeInTheDocument();
     });
 
+    it('successfully updated comment in the draft.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = screen.queryByTestId('reply-comment-2');
+      const actionBtn = comment.querySelector('button[aria-label="Actions menu"]');
+
+      await act(async () => {
+        fireEvent.click(actionBtn);
+      });
+
+      let editBtn = screen.queryByTestId('edit');
+
+      await act(async () => {
+        fireEvent.click(editBtn);
+      });
+
+      await waitFor(() => {
+        const editor = screen.queryByTestId('tinymce-editor');
+        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+      });
+
+      const cancelBtn = screen.queryByText('Cancel');
+      await act(async () => {
+        fireEvent.click(cancelBtn);
+      });
+
+      await act(async () => {
+        fireEvent.click(actionBtn);
+      });
+
+      editBtn = screen.queryByTestId('edit');
+
+      await act(async () => {
+        fireEvent.click(editBtn);
+      });
+
+      const submitBtn = screen.queryByText('Submit');
+      await act(async () => {
+        fireEvent.click(submitBtn);
+      });
+
+      await waitFor(() => expect(screen.queryByText('Draft comment!')).toBeInTheDocument());
+    });
+
     it('successfully removed comment from the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
@@ -709,7 +753,7 @@ describe('ThreadView', () => {
 
       await waitFor(() => {
         const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+        fireEvent.change(editor, { target: { value: 'Draft comment 123!' } });
       });
 
       const submitBtn = screen.queryByText('Submit');
@@ -721,8 +765,8 @@ describe('ThreadView', () => {
       await act(async () => {
         fireEvent.click(addCommentBtn[0]);
       });
-
-      expect(screen.queryByText('Draft comment!')).not.toBeInTheDocument();
+      const editor = screen.queryByTestId('tinymce-editor');
+      expect(editor.value).toBe('');
     });
 
     it('successfully added response in the draft.', async () => {
@@ -770,7 +814,8 @@ describe('ThreadView', () => {
         fireEvent.click(addResponseBtn);
       });
 
-      expect(screen.queryByText('Draft Response!')).not.toBeInTheDocument();
+      const editor = screen.queryByTestId('tinymce-editor');
+      expect(editor.value).toBe('');
     });
 
     it('successfully maintain response for the specific post in the draft.', async () => {

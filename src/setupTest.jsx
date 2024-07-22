@@ -19,6 +19,15 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+global.MathJax = {
+  typeset: jest.fn(callback => {
+    if (callback) { callback(); }
+  }),
+  startup: {
+    defaultPageReady: jest.fn(() => Promise.resolve()),
+  },
+};
+
 // Provides a mock editor component that functions like tinyMCE without the overhead
 const MockEditor = ({
   onBlur,
