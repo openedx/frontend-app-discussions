@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: This file is temporary and will be removed after testing
+
 log() {
   echo "=============================== $1 ==============================="
 }
@@ -19,7 +21,7 @@ log "Current directory: $(pwd)"
 run_command "rm -rf frontend-platform"
 run_command "mkdir frontend-platform" || exit
 run_command "ls -l"
-run_command "git clone -b Peter_Kulko/design-tokens-support --single-branch https://github.com/raccoongang/frontend-platform.git frontend-platform-temp"
+run_command "git clone -b dcoa/design-tokens-support --single-branch https://github.com/eduNEXT/frontend-platform.git frontend-platform-temp"
 run_command "cd frontend-platform-temp" || exit
 log "Current directory: $(pwd)"
 run_command "cat package.json" || exit
