@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -22,7 +22,9 @@ import {
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from '../../../data/selectors';
-import { formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
+import { extractContent, formikCompatibleHandler, isFormikFieldInvalid } from '../../../utils';
+import { useDraftContent } from '../../data/hooks';
+import { setDraftComments, setDraftResponses } from '../../data/slices';
 import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
@@ -45,6 +47,8 @@ const CommentEditor = ({
   const userIsStaff = useSelector(selectUserIsStaff);
   const { editReasons } = useSelector(selectModerationSettings);
   const [submitting, dispatch] = useDispatchWithState();
+  const [editorContent, setEditorContent] = useState();
+  const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
 
   const canDisplayEditReason = (edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -62,7 +66,7 @@ const CommentEditor = ({
   });
 
   const initialValues = {
-    comment: rawBody,
+    comment: editorContent,
     editReasonCode: lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
   };
 
@@ -70,6 +74,15 @@ const CommentEditor = ({
     resetForm({ values: initialValues });
     onCloseEditor();
   }, [onCloseEditor, initialValues]);
+
+  const deleteEditorContent = useCallback(async () => {
+    const { updatedResponses, updatedComments } = removeDraftContent(parentId, id, threadId);
+    if (parentId) {
+      await dispatch(setDraftComments(updatedComments));
+    } else {
+      await dispatch(setDraftResponses(updatedResponses));
+    }
+  }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {
@@ -86,6 +99,7 @@ const CommentEditor = ({
       editorRef.current.plugins.autosave.removeDraft();
     }
     handleCloseEditor(resetForm);
+    deleteEditorContent();
   }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
@@ -97,11 +111,33 @@ const CommentEditor = ({
     }
   }, [formRef]);
 
+  useEffect(() => {
+    const draftHtml = getDraftContent(parentId, threadId, id) || rawBody;
+    setEditorContent(draftHtml);
+  }, [parentId, threadId, id]);
+
+  const saveDraftContent = async (content) => {
+    const draftDataContent = extractContent(content);
+
+    const { updatedResponses, updatedComments } = addDraftContent(
+      draftDataContent,
+      parentId,
+      id,
+      threadId,
+    );
+    if (parentId) {
+      await dispatch(setDraftComments(updatedComments));
+    } else {
+      await dispatch(setDraftResponses(updatedResponses));
+    }
+  };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={saveUpdatedComment}
+      enableReinitialize
     >
       {({
         values,
@@ -151,7 +187,10 @@ const CommentEditor = ({
             id={editorId}
             value={values.comment}
             onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
-            onBlur={formikCompatibleHandler(handleBlur, 'comment')}
+            onBlur={(content) => {
+              formikCompatibleHandler(handleChange, 'comment');
+              saveDraftContent(content);
+            }}
           />
           {isFormikFieldInvalid('comment', {
             errors,

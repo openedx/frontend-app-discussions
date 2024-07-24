@@ -94,6 +94,7 @@ const ActionsDropdown = ({
                     handleActions(action.action);
                   }}
                   className="d-flex justify-content-start actions-dropdown-item"
+                  data-testId={action.id}
                 >
                   <Icon
                     src={action.icon}
