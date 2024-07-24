@@ -156,21 +156,14 @@ export const useDraftContent = () => {
     return newDraftData;
   };
 
-  const removeDraftContent = (parentId, id, threadId) => {
-    let updatedResponses = responses;
-    let updatedComments = comments;
+  const updateContent = (items, itemId, parentId, isComment) => {
+    const itemObj = itemId ? items[itemId] : getObjectByParentId(items, parentId, isComment, itemId);
+    return itemObj ? removeItem(items, itemObj.id) : items;
+  };
 
-    if (!parentId) {
-      const responseObj = id ? responses[id] : getObjectByParentId(responses, threadId, false, id);
-      if (responseObj) {
-        updatedResponses = removeItem(responses, responseObj.id);
-      }
-    } else {
-      const commentObj = id ? comments[id] : getObjectByParentId(comments, parentId, true, id);
-      if (commentObj) {
-        updatedComments = removeItem(comments, commentObj.id);
-      }
-    }
+  const removeDraftContent = (parentId, id, threadId) => {
+    const updatedResponses = !parentId ? updateContent(responses, id, threadId, false) : responses;
+    const updatedComments = parentId ? updateContent(comments, id, parentId, true) : comments;
 
     return { updatedResponses, updatedComments };
   };
