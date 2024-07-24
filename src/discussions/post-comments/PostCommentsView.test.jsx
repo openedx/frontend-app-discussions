@@ -674,25 +674,20 @@ describe('ThreadView', () => {
     it('successfully added comment in the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
-      let addCommentBtn = screen.queryByText('Add comment');
-
       await act(async () => {
-        fireEvent.click(addCommentBtn);
+        fireEvent.click(screen.queryByText('Add comment'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Draft comment!' } });
       });
 
-      const cancelBtn = screen.queryByText('Cancel');
       await act(async () => {
-        fireEvent.click(cancelBtn);
+        fireEvent.click(screen.queryByText('Cancel'));
       });
 
-      addCommentBtn = screen.queryByText('Add comment');
       await act(async () => {
-        fireEvent.click(addCommentBtn);
+        fireEvent.click(screen.queryByText('Add comment'));
       });
 
       expect(screen.queryByText('Draft comment!')).toBeInTheDocument();
@@ -708,35 +703,28 @@ describe('ThreadView', () => {
         fireEvent.click(actionBtn);
       });
 
-      let editBtn = screen.queryByTestId('edit');
-
       await act(async () => {
-        fireEvent.click(editBtn);
+        fireEvent.click(screen.queryByTestId('edit'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft comment!' } });
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Draft comment!' } });
       });
 
-      const cancelBtn = screen.queryByText('Cancel');
       await act(async () => {
-        fireEvent.click(cancelBtn);
+        fireEvent.click(screen.queryByText('Cancel'));
       });
 
       await act(async () => {
         fireEvent.click(actionBtn);
       });
 
-      editBtn = screen.queryByTestId('edit');
-
       await act(async () => {
-        fireEvent.click(editBtn);
+        fireEvent.click(screen.queryByTestId('edit'));
       });
 
-      const submitBtn = screen.queryByText('Submit');
       await act(async () => {
-        fireEvent.click(submitBtn);
+        fireEvent.click(screen.queryByText('Submit'));
       });
 
       await waitFor(() => expect(screen.queryByText('Draft comment!')).toBeInTheDocument());
@@ -745,49 +733,42 @@ describe('ThreadView', () => {
     it('successfully removed comment from the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
-      let addCommentBtn = screen.queryByText('Add comment');
-
       await act(async () => {
-        fireEvent.click(addCommentBtn);
+        fireEvent.click(screen.queryByText('Add comment'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft comment 123!' } });
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Draft comment 123!' } });
       });
 
-      const submitBtn = screen.queryByText('Submit');
       await act(async () => {
-        fireEvent.click(submitBtn);
+        fireEvent.click(screen.queryByText('Submit'));
       });
 
-      addCommentBtn = screen.queryAllByText('Add comment');
       await act(async () => {
-        fireEvent.click(addCommentBtn[0]);
+        fireEvent.click(screen.queryAllByText('Add comment')[0]);
       });
-      const editor = screen.queryByTestId('tinymce-editor');
-      expect(editor.value).toBe('');
+
+      expect(screen.queryByTestId('tinymce-editor').value).toBe('');
     });
 
     it('successfully added response in the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
-      let addResponseBtn = screen.queryByText('Add response');
       await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.click(screen.queryByText('Add response'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft Response!' } });
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Draft Response!' } });
       });
-      const cancelBtn = screen.queryByText('Cancel');
+
       await act(async () => {
-        fireEvent.click(cancelBtn);
+        fireEvent.click(screen.queryByText('Cancel'));
       });
-      addResponseBtn = screen.queryByText('Add response');
+
       await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.click(screen.queryByText('Add response'));
       });
 
       expect(screen.queryByText('Draft Response!')).toBeInTheDocument();
@@ -796,46 +777,40 @@ describe('ThreadView', () => {
     it('successfully removed response from the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
-      let addResponseBtn = screen.queryByText('Add response');
       await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.click(screen.queryByText('Add response'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Draft Response!' } });
-      });
-      const submitBtn = screen.queryByText('Submit');
-      await act(async () => {
-        fireEvent.click(submitBtn);
-      });
-      addResponseBtn = screen.queryByText('Add response');
-      await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Draft Response!' } });
       });
 
-      const editor = screen.queryByTestId('tinymce-editor');
-      expect(editor.value).toBe('');
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Submit'));
+      });
+
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Add response'));
+      });
+
+      expect(screen.queryByTestId('tinymce-editor').value).toBe('');
     });
 
     it('successfully maintain response for the specific post in the draft.', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
-      let addResponseBtn = screen.queryByText('Add response');
       await act(async () => {
-        fireEvent.click(addResponseBtn);
+        fireEvent.click(screen.queryByText('Add response'));
       });
 
       await waitFor(() => {
-        const editor = screen.queryByTestId('tinymce-editor');
-        fireEvent.change(editor, { target: { value: 'Hello, world!' } });
+        fireEvent.change(screen.queryByTestId('tinymce-editor'), { target: { value: 'Hello, world!' } });
       });
 
       await waitFor(() => renderComponent('thread-2'));
-      await waitFor(() => renderComponent(discussionPostId));
-      addResponseBtn = screen.queryAllByText('Add response');
+
       await act(async () => {
-        fireEvent.click(addResponseBtn[0]);
+        fireEvent.click(screen.queryAllByText('Add response')[0]);
       });
 
       expect(screen.queryByText('Hello, world!')).toBeInTheDocument();
