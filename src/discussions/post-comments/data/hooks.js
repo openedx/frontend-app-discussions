@@ -3,6 +3,7 @@ import {
 } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
@@ -13,7 +14,8 @@ import { selectThread } from '../../posts/data/selectors';
 import { markThreadAsRead } from '../../posts/data/thunks';
 import { filterPosts } from '../../utils';
 import {
-  selectCommentSortOrder, selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
+  selectCommentSortOrder, selectDraftComments, selectDraftResponses,
+  selectThreadComments, selectThreadCurrentPage, selectThreadHasMorePages,
 } from './selectors';
 import { fetchThreadComments } from './thunks';
 
@@ -102,3 +104,73 @@ export function useCommentsCount(postId) {
 
   return commentsLength;
 }
+
+export const useDraftContent = () => {
+  const comments = useSelector(selectDraftComments);
+  const responses = useSelector(selectDraftResponses);
+
+  const getObjectByParentId = (data, parentId, isComment, id) => Object.values(data)
+    .find(draft => (isComment ? draft.parentId === parentId && (id ? draft.id === id : draft.isNewContent === true)
+      : draft.threadId === parentId && (id ? draft.id === id : draft.isNewContent === true)));
+
+  const updateDraftData = (draftData, newDraftObject) => ({
+    ...draftData,
+    [newDraftObject.id]: newDraftObject,
+  });
+
+  const addDraftContent = (content, parentId, id, threadId) => {
+    const data = parentId ? comments : responses;
+    const draftParentId = parentId || threadId;
+    const isComment = !!parentId;
+    const existingObj = getObjectByParentId(data, draftParentId, isComment, id);
+    const newObject = existingObj
+      ? { ...existingObj, content }
+      : {
+        threadId,
+        content,
+        parentId,
+        id: id || uuidv4(),
+        isNewContent: !id,
+      };
+
+    const updatedComments = parentId ? updateDraftData(comments, newObject) : comments;
+    const updatedResponses = !parentId ? updateDraftData(responses, newObject) : responses;
+
+    return { updatedComments, updatedResponses };
+  };
+
+  const getDraftContent = (parentId, threadId, id) => {
+    if (id) {
+      return parentId ? comments?.[id]?.content : responses?.[id]?.content;
+    }
+
+    const data = parentId ? comments : responses;
+    const draftParentId = parentId || threadId;
+    const isComment = !!parentId;
+
+    return getObjectByParentId(data, draftParentId, isComment, id)?.content;
+  };
+
+  const removeItem = (draftData, objId) => {
+    const { [objId]: _, ...newDraftData } = draftData;
+    return newDraftData;
+  };
+
+  const updateContent = (items, itemId, parentId, isComment) => {
+    const itemObj = itemId ? items[itemId] : getObjectByParentId(items, parentId, isComment, itemId);
+    return itemObj ? removeItem(items, itemObj.id) : items;
+  };
+
+  const removeDraftContent = (parentId, id, threadId) => {
+    const updatedResponses = !parentId ? updateContent(responses, id, threadId, false) : responses;
+    const updatedComments = parentId ? updateContent(comments, id, parentId, true) : comments;
+
+    return { updatedResponses, updatedComments };
+  };
+
+  return {
+    addDraftContent,
+    getDraftContent,
+    removeDraftContent,
+  };
+};

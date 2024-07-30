@@ -316,3 +316,10 @@ export function getAuthorLabel(intl, authorLabel) {
 }
 
 export const isCourseStatusValid = (courseStatus) => [DENIED, LOADED].includes(courseStatus);
+
+export const extractContent = (content) => {
+  if (typeof content === 'object') {
+    return content.target.getContent();
+  }
+  return content;
+};

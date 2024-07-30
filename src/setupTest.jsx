@@ -19,25 +19,35 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+global.MathJax = {
+  typeset: jest.fn(callback => {
+    if (callback) { callback(); }
+  }),
+  startup: {
+    defaultPageReady: jest.fn(() => Promise.resolve()),
+  },
+};
+
 // Provides a mock editor component that functions like tinyMCE without the overhead
 const MockEditor = ({
   onBlur,
   onEditorChange,
+  value,
 }) => (
   <textarea
     data-testid="tinymce-editor"
+    value={value}
     onChange={(event) => {
       onEditorChange(event.currentTarget.value);
-    }}
-    onBlur={event => {
       onBlur(event.currentTarget.value);
     }}
+    onBlur={onBlur}
   />
 );
-
 MockEditor.propTypes = {
   onBlur: PropTypes.func.isRequired,
   onEditorChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
 };
 jest.mock('@tinymce/tinymce-react', () => {
   const originalModule = jest.requireActual('@tinymce/tinymce-react');
