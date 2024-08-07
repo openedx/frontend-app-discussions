@@ -18,6 +18,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
+import PostHelpPanel from '../../../components/PostHelpPanel';
 import PostPreviewPanel from '../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../data/hooks';
 import selectCourseCohorts from '../../cohorts/data/selectors';
@@ -411,6 +412,7 @@ const PostEditor = ({
           />
           <FormikErrorFeedback name="comment" />
         </div>
+        <PostHelpPanel />
         <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (

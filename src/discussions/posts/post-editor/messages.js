@@ -116,6 +116,31 @@ const messages = defineMessages({
     defaultMessage: 'Show preview',
     description: 'show preview button text to allow user to see their post content.',
   },
+  showHelpIcon: {
+    id: 'discussions.editor.posts.showHelp.icon',
+    defaultMessage: 'Show Help',
+    description: 'show help icon to allow user to see important documentation.',
+  },
+  discussionHelpHeader: {
+    id: 'discussions.editor.posts.discussionHelpHeader',
+    defaultMessage: 'Discussions help',
+    description: 'header text for post help section.',
+  },
+  discussionHelpDescription: {
+    id: 'discussions.editor.posts.discussionHelpDescription',
+    defaultMessage: 'Course discussions give you the opportunity to start conversations, ask questions, and interact with other learners. See the links below to learn more:',
+    description: 'description message for post help section.',
+  },
+  discussionHelpCourseParticipation: {
+    id: 'discussions.editor.posts.discussionHelpCourseParticipation',
+    defaultMessage: 'Participating in course discussions',
+    description: 'Documentation link title for participating in course discussions.',
+  },
+  discussionHelpMathExpressions: {
+    id: 'discussions.editor.posts.discussionHelpMathExpressions',
+    defaultMessage: 'Entering math expressions in course discussions',
+    description: 'Documentation link title for entering math expressions in course discussions.',
+  },
   actionsAlt: {
     id: 'discussions.actions.label',
     defaultMessage: 'Actions menu',

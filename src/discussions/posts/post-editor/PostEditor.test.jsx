@@ -368,5 +368,34 @@ describe('PostEditor', () => {
         expect(container.querySelector('[data-testid="hide-preview-button"]')).not.toBeInTheDocument();
       });
     });
+
+    it('should show Help Panel', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="help-button"]'));
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="hide-help-button"]')).toBeInTheDocument();
+      });
+    });
+
+    it('should hide Help Panel', async () => {
+      await renderComponent(true, `/${courseId}/posts/${threadId}/edit`);
+
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="help-button"]'));
+      });
+
+      await act(async () => {
+        fireEvent.click(container.querySelector('[data-testid="hide-help-button"]'));
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector('[data-testid="help-button"]')).toBeInTheDocument();
+        expect(container.querySelector('[data-testid="hide-help-button"]')).not.toBeInTheDocument();
+      });
+    });
   });
 });
