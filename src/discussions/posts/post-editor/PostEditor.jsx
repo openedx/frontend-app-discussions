@@ -410,9 +410,9 @@ const PostEditor = ({
             onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
             onBlur={formikCompatibleHandler(handleBlur, 'comment')}
           />
+          <PostHelpPanel />
           <FormikErrorFeedback name="comment" />
         </div>
-        <PostHelpPanel />
         <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (

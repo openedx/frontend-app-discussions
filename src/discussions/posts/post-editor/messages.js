@@ -141,6 +141,11 @@ const messages = defineMessages({
     defaultMessage: 'Entering math expressions in course discussions',
     description: 'Documentation link title for entering math expressions in course discussions.',
   },
+  discussionHelpTooltip: {
+    id: 'discussions.editor.posts.discussionHelpTooltip',
+    defaultMessage: 'Learn more about MathJax & LaTeX',
+    description: 'Tooltip help message for documentation help.',
+  },
   actionsAlt: {
     id: 'discussions.actions.label',
     defaultMessage: 'Actions menu',

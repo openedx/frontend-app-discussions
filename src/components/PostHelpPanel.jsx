@@ -19,13 +19,15 @@ const PostHelpPanel = () => {
         <IconButtonWithTooltip
           onClick={() => setShowHelpPane(true)}
           alt={intl.formatMessage(messages.showHelpIcon)}
-          tooltipContent={<div>Learn more about MathJax & LaTeX</div>}
+          tooltipContent={<div>{intl.formatMessage(messages.discussionHelpTooltip)}</div>}
           src={HelpOutline}
           iconAs={Icon}
           size="inline"
           className="float-right p-3 help-icon"
-          iconClassNames="icon-size"
+          iconClassNames="help-icon-size"
           data-testid="help-button"
+          invertColors
+          isActive
         />
       </div>
       {showHelpPane && (
@@ -45,10 +47,10 @@ const PostHelpPanel = () => {
           />
           <div className="pt-2 px-3">
             <h4 className="font-weight-bold">{intl.formatMessage(messages.discussionHelpHeader)}</h4>
-            <p className="pt-2 font-size-12">{intl.formatMessage(messages.discussionHelpDescription)}</p>
+            <p className="pt-2">{intl.formatMessage(messages.discussionHelpDescription)}</p>
             <Hyperlink
               target="_blank"
-              className="font-size-12 w-100"
+              className="w-100"
               destination="https://support.edx.org/hc/en-us/sections/115004169687-Participating-in-Course-Discussions"
               showLaunchIcon={false}
             >
@@ -56,7 +58,7 @@ const PostHelpPanel = () => {
             </Hyperlink>
             <Hyperlink
               target="_blank"
-              className="font-size-12 w-100"
+              className="w-100"
               destination="https://support.edx.org/hc/en-us/articles/360000035267-Entering-math-expressions-in-course-discussions"
               showLaunchIcon={false}
             >
