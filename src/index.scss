@@ -593,6 +593,15 @@ th, td {
   white-space: nowrap;
 }
 
+.help-icon {
+  margin: -47px -3px 0px 0px;
+}
+
+.help-icon-size {
+  height: 16px !important;
+  width: 16px !important;
+}
+
 @media only screen and (max-width: 367px) {
 
   .discussion-comments h5,
@@ -603,7 +612,8 @@ th, td {
   .pgn__modal,
   .pgn__form-label,
   .dropdown-menu,
-  .tox-tbtn {
+  .tox-tbtn, 
+  .tooltip {
     font-size: 10px !important;
   }
 
@@ -640,7 +650,8 @@ th, td {
   .pgn__form-label,
   .pgn__modal,
   .dropdown-menu,
-  .tox-tbtn {
+  .tox-tbtn,
+  .tooltip {
     font-size: 12px !important;
   }
 
@@ -659,7 +670,8 @@ th, td {
 @media only screen and (min-width: 769px) {
 
   body,
-  #main {
+  #main,
+  .tooltip {
     font-size: 14px;
   }
 }

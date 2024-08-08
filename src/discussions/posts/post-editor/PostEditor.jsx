@@ -18,6 +18,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
+import PostHelpPanel from '../../../components/PostHelpPanel';
 import PostPreviewPanel from '../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../data/hooks';
 import selectCourseCohorts from '../../cohorts/data/selectors';
@@ -409,6 +410,7 @@ const PostEditor = ({
             onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
             onBlur={formikCompatibleHandler(handleBlur, 'comment')}
           />
+          <PostHelpPanel />
           <FormikErrorFeedback name="comment" />
         </div>
         <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
