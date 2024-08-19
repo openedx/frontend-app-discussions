@@ -61,7 +61,7 @@ const AuthorLabel = ({
     >
       {isRetiredUser ? '[Deactivated]' : authorFirstName}
     </span>
-  ), [authorFirstName, authorFirstName, isRetiredUser]);
+  ), [authorFirstName, authorLabelMessage, isRetiredUser]);
 
   const labelContents = useMemo(() => (
     <>
@@ -134,6 +134,7 @@ const AuthorLabel = ({
 AuthorLabel.propTypes = {
   author: PropTypes.string.isRequired,
   authorLabel: PropTypes.string,
+  authorFirstName: PropTypes.string,
   linkToProfile: PropTypes.bool,
   labelColor: PropTypes.string,
   alert: PropTypes.bool,
