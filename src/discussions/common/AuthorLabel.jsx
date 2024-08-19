@@ -61,7 +61,7 @@ const AuthorLabel = ({
     >
       {isRetiredUser ? '[Deactivated]' : authorFirstName}
     </span>
-  ), [authorFirstName, authorLabelMessage, isRetiredUser]);
+  ), [authorFirstName, authorFirstName, isRetiredUser]);
 
   const labelContents = useMemo(() => (
     <>
