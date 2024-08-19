@@ -19,6 +19,7 @@ import timeLocale from './time-locale';
 const AuthorLabel = ({
   author,
   authorLabel,
+  authorFirstName,
   linkToProfile,
   labelColor,
   alert,
@@ -58,9 +59,9 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : author}
+      {isRetiredUser ? '[Deactivated]' : authorFirstName}
     </span>
-  ), [author, authorLabelMessage, isRetiredUser]);
+  ), [authorFirstName, authorLabelMessage, isRetiredUser]);
 
   const labelContents = useMemo(() => (
     <>
