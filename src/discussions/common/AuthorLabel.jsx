@@ -68,7 +68,7 @@ console.log(authorFirstName, "test")
       <OverlayTrigger
         overlay={(
           <Tooltip id={`endorsed-by-${author}-tooltip`}>
-            {`${authorFirstName ? `${authorFirstName} (${author})` : author}`}
+            {author}
           </Tooltip>
         )}
         trigger={['hover', 'focus']}
@@ -111,7 +111,7 @@ console.log(authorFirstName, "test")
         </span>
       )}
     </>
-  ), [author, authorFirstName, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
+  ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
   return showUserNameAsLink
     ? (
