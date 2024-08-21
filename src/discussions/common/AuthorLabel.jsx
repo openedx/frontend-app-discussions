@@ -18,7 +18,7 @@ import timeLocale from './time-locale';
 
 const AuthorLabel = ({
   author,
-  authorFirstName,
+  author_first_name,
   authorLabel,
   linkToProfile,
   labelColor,
@@ -59,10 +59,10 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName} ` : ''}${author}`}
+      {isRetiredUser ? '[Deactivated]' : `${author_first_name ? `${author_first_name} ` : ''}${author}`}
     </span>
-  ), [author, authorFirstName, authorLabelMessage, isRetiredUser]);
-console.log(authorFirstName, "test")
+  ), [author, author_first_name, authorLabelMessage, isRetiredUser]);
+console.log(author_first_name, "test 1")
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
@@ -133,7 +133,7 @@ console.log(authorFirstName, "test")
 
 AuthorLabel.propTypes = {
   author: PropTypes.string.isRequired,
-  authorFirstName: PropTypes.string,
+  author_first_name: PropTypes.string,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
   labelColor: PropTypes.string,
@@ -144,7 +144,7 @@ AuthorLabel.propTypes = {
 };
 
 AuthorLabel.defaultProps = {
-  authorFirstName: '',
+  author_first_name: '',
   linkToProfile: false,
   authorLabel: null,
   labelColor: '',
