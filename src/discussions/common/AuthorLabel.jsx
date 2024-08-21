@@ -59,7 +59,7 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName} ` : ''}${author}`}
+      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName} (${author})` : author}`}
     </span>
   ), [author, authorFirstName, authorLabelMessage, isRetiredUser]);
 console.log(authorFirstName, "test")
@@ -68,7 +68,7 @@ console.log(authorFirstName, "test")
       <OverlayTrigger
         overlay={(
           <Tooltip id={`endorsed-by-${author}-tooltip`}>
-            {author}
+            {`${authorFirstName ? `${authorFirstName} (${author})` : author}`}
           </Tooltip>
         )}
         trigger={['hover', 'focus']}
@@ -111,7 +111,7 @@ console.log(authorFirstName, "test")
         </span>
       )}
     </>
-  ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
+  ), [author, authorFirstName, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
   return showUserNameAsLink
     ? (
