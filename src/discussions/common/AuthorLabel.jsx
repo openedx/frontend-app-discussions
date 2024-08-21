@@ -59,9 +59,9 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : authorFirstName}
+      {isRetiredUser ? '[Deactivated]' : author}
     </span>
-  ), [authorFirstName, authorLabelMessage, isRetiredUser]);
+  ), [author, authorLabelMessage, isRetiredUser]);
 
   const labelContents = useMemo(() => (
     <>
