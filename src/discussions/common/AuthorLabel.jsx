@@ -59,7 +59,7 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName} (${author})` : author}`}
+      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName}(${author})` : author}`}
     </span>
   ), [author, authorFirstName, authorLabelMessage, isRetiredUser]);
 console.log(authorFirstName, "test")
