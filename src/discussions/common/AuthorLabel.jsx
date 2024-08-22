@@ -62,7 +62,7 @@ const AuthorLabel = ({
       {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName}(${author})` : author}`}
     </span>
   ), [author, authorFirstName, authorLabelMessage, isRetiredUser]);
-console.log(authorFirstName, "test")
+
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
