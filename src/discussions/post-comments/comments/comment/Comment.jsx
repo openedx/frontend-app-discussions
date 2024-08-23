@@ -42,7 +42,7 @@ const Comment = ({
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
-    voted, following, voteCount, authorLabel, author, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
+    voted, following, voteCount, authorLabel, author, authorFirstName, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
     editByLabel, closedByLabel,
   } = comment;
   const intl = useIntl();
@@ -199,6 +199,7 @@ const Comment = ({
           <CommentHeader
             author={author}
             authorLabel={authorLabel}
+            authorFirstName={authorFirstName}
             abuseFlagged={abuseFlagged}
             closed={closed}
             createdAt={createdAt}
