@@ -18,6 +18,7 @@ import timeLocale from './time-locale';
 
 const AuthorLabel = ({
   author,
+  authorFirstName,
   authorLabel,
   linkToProfile,
   labelColor,
@@ -58,9 +59,9 @@ const AuthorLabel = ({
       role="heading"
       aria-level="2"
     >
-      {isRetiredUser ? '[Deactivated]' : author}
+      {isRetiredUser ? '[Deactivated]' : `${authorFirstName ? `${authorFirstName}(${author})` : author}`}
     </span>
-  ), [author, authorLabelMessage, isRetiredUser]);
+  ), [author, authorFirstName, authorLabelMessage, isRetiredUser]);
 
   const labelContents = useMemo(() => (
     <>
@@ -132,6 +133,7 @@ const AuthorLabel = ({
 
 AuthorLabel.propTypes = {
   author: PropTypes.string.isRequired,
+  authorFirstName: PropTypes.string,
   authorLabel: PropTypes.string,
   linkToProfile: PropTypes.bool,
   labelColor: PropTypes.string,
@@ -142,6 +144,7 @@ AuthorLabel.propTypes = {
 };
 
 AuthorLabel.defaultProps = {
+  authorFirstName: '',
   linkToProfile: false,
   authorLabel: null,
   labelColor: '',
