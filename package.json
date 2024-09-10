@@ -16,7 +16,8 @@
     "lint:fix": "fedx-scripts eslint --ext .js --ext .jsx . --fix",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "start": "fedx-scripts webpack-dev-server --progress",
-    "test": "fedx-scripts jest --coverage --passWithNoTests"
+    "test": "fedx-scripts jest --coverage --passWithNoTests",
+    "serve": "fedx-scripts serve"
   },
   "husky": {
     "hooks": {
