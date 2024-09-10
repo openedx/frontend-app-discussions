@@ -76,7 +76,7 @@ const TinyMCEEditor = (props) => {
       const filename = blobInfo.filename();
       const { location } = await uploadFile(blob, filename, courseId, postId || 'root');
       const img = new Image();
-      img.onload = function () {
+      img.onload = () => {
         if (img.height > 999 || img.width > 999) { setShowImageWarning(true); }
       };
       img.src = location;
