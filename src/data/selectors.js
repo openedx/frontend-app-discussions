@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { createSelector } from '@reduxjs/toolkit';
 
 import { selectDiscussionProvider, selectGroupAtSubsection } from '../discussions/data/selectors';

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Alert } from '@openedx/paragon';
+import { Report } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
-import { Report } from '@edx/paragon/icons';
 
 import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {

@@ -1,4 +1,4 @@
-export * from './discussions-home';
-export * from './post-comments';
+export { default as DiscussionsHome } from './discussions-home/DiscussionsHome';
+export { default as PostCommentsView } from './post-comments/PostCommentsView';
 export * from './posts';
-export * from './topics';
+export { default as TopicsView } from './topics/TopicsView';

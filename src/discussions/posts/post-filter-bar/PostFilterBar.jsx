@@ -3,6 +3,10 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Collapsible, Form, Icon, Spinner,
+} from '@openedx/paragon';
+import { Check, Tune } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { capitalize, isEmpty, toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,18 +14,14 @@ import { useParams } from 'react-router-dom';
 
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Collapsible, Form, Icon, Spinner,
-} from '@edx/paragon';
-import { Check, Tune } from '@edx/paragon/icons';
 
 import {
   PostsStatusFilter, RequestStatus,
   ThreadOrdering, ThreadType,
 } from '../../../data/constants';
-import { selectCourseCohorts } from '../../cohorts/data/selectors';
-import { fetchCourseCohorts } from '../../cohorts/data/thunks';
-import { DiscussionContext } from '../../common/context';
+import selectCourseCohorts from '../../cohorts/data/selectors';
+import fetchCourseCohorts from '../../cohorts/data/thunks';
+import DiscussionContext from '../../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import {
   setCohortFilter, setPostsTypeFilter, setSortedBy, setStatusFilter,
@@ -130,11 +130,8 @@ const PostFilterBar = () => {
     }
 
     sendTrackEvent('edx.forum.filter.content', filterContentEventProperties);
+    setOpen(false);
   }, [currentFilters, currentSorting, dispatch, selectedCohort]);
-
-  const handleToggle = useCallback(() => {
-    setOpen(!isOpen);
-  }, [isOpen]);
 
   useEffect(() => {
     if (userHasModerationPrivileges && isEmpty(cohorts)) {
@@ -183,7 +180,7 @@ const PostFilterBar = () => {
   return (
     <Collapsible.Advanced
       open={isOpen}
-      onToggle={handleToggle}
+      onToggle={setOpen}
       className="filter-bar collapsible-card-lg border-0"
     >
       <Collapsible.Trigger className="collapsible-trigger border-0">
@@ -197,7 +194,7 @@ const PostFilterBar = () => {
             cohort: capitalize(selectedCohort?.name),
           })}
         </span>
-        <span id="icon-tune">
+        <span>
           <Collapsible.Visible whenClosed>
             <Icon src={Tune} />
           </Collapsible.Visible>

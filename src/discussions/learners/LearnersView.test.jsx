@@ -1,4 +1,3 @@
-/* eslint-disable default-param-last */
 import React from 'react';
 
 import {
@@ -16,10 +15,10 @@ import { AppProvider } from '@edx/frontend-platform/react';
 
 import { PostActionsBar } from '../../components';
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
-import { DiscussionContext } from '../common/context';
+import executeThunk from '../../test-utils';
+import DiscussionContext from '../common/context';
 import { getDiscussionsConfigUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import { getUserProfileApiUrl, learnersApiUrl } from './data/api';
 import { fetchLearners } from './data/thunks';
 import LearnersView from './LearnersView';
@@ -69,7 +68,6 @@ describe('LearnersView', () => {
         username: 'test_user',
         administrator: true,
         roles: [],
-        learnersTabEnabled: false,
       },
     });
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
@@ -82,9 +80,9 @@ describe('LearnersView', () => {
     pageSize = 6,
     page = 1,
     username = ['learner-1', 'learner-2', 'learner-3'],
-    searchText,
-    activeFlags,
-    inactiveFlags,
+    searchText = null,
+    activeFlags = null,
+    inactiveFlags = null,
   ) {
     Factory.resetAll();
     const learnersData = Factory.build('learnersResult', {}, {
@@ -106,20 +104,12 @@ describe('LearnersView', () => {
 
   async function assignPrivilages(hasModerationPrivileges = false) {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      learners_tab_enabled: true,
       user_is_privileged: true,
       hasModerationPrivileges,
     });
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
   }
-
-  test('Learners tab is disabled by default', async () => {
-    await setUpLearnerMockResponse();
-    await renderComponent();
-
-    expect(screen.queryByText('learner-1')).not.toBeInTheDocument();
-  });
 
   test('Learners tab is enabled', async () => {
     await setUpLearnerMockResponse();

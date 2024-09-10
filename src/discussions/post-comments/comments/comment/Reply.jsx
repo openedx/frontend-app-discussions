@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import { Avatar, useToggle } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Avatar, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { AvatarOutlineAndLabelColors, ContentActions } from '../../../../data/constants';
@@ -54,7 +54,7 @@ const Reply = ({ responseId }) => {
   }, []);
 
   const handleReplyEndorse = useCallback(() => {
-    dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    dispatch(editComment(id, { endorsed: !endorsed }));
   }, [endorsed, id]);
 
   const handleAbusedFlag = useCallback(() => {
@@ -129,9 +129,9 @@ const Reply = ({ responseId }) => {
         </div>
         <div
           className="bg-light-300 pl-4 pt-2.5 pr-2.5 pb-10px flex-fill"
-          style={{ borderRadius: '0rem 0.375rem 0.375rem' }}
+          style={{ borderRadius: '0rem 0.375rem 0.375rem', maxWidth: 'calc(100% - 50px)' }}
         >
-          <div className="d-flex flex-row justify-content-between" style={{ height: '24px' }}>
+          <div className="d-flex flex-row justify-content-between">
             <AuthorLabel
               author={author}
               authorLabel={authorLabel}

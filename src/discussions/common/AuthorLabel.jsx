@@ -1,18 +1,17 @@
 import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import classNames from 'classnames';
 import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon, OverlayTrigger, Tooltip } from '@edx/paragon';
-import { Institution, School } from '@edx/paragon/icons';
 
 import { Routes } from '../../data/constants';
-import { useShowLearnersTab } from '../data/hooks';
 import messages from '../messages';
-import { DiscussionContext } from './context';
+import { getAuthorLabel } from '../utils';
+import DiscussionContext from './context';
 import timeLocale from './time-locale';
 
 const AuthorLabel = ({
@@ -27,26 +26,15 @@ const AuthorLabel = ({
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
-  const { courseId } = useContext(DiscussionContext);
-  let icon = null;
-  let authorLabelMessage = null;
-
-  if (authorLabel === 'Staff') {
-    icon = Institution;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelStaff);
-  }
-
-  if (authorLabel === 'Community TA') {
-    icon = School;
-    authorLabelMessage = intl.formatMessage(messages.authorLabelTA);
-  }
+  const { courseId, enableInContextSidebar } = useContext(DiscussionContext);
+  const { icon, authorLabelMessage } = useMemo(() => getAuthorLabel(intl, authorLabel), [authorLabel]);
 
   const isRetiredUser = author ? author.startsWith('retired__user') : false;
   const showTextPrimary = !authorLabelMessage && !isRetiredUser && !alert;
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
-  const showUserNameAsLink = useShowLearnersTab()
-    && linkToProfile && author && author !== intl.formatMessage(messages.anonymous);
+  const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous)
+                             && !enableInContextSidebar;
 
   const authorName = useMemo(() => (
     <span
@@ -64,17 +52,15 @@ const AuthorLabel = ({
   const labelContents = useMemo(() => (
     <>
       <OverlayTrigger
+        placement={authorToolTip ? 'top' : 'right'}
         overlay={(
-          <Tooltip id={`endorsed-by-${author}-tooltip`}>
-            {author}
+          <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-label-tooltip`}>
+            {authorToolTip ? author : authorLabel}
           </Tooltip>
         )}
         trigger={['hover', 'focus']}
       >
-        <div className={classNames('d-flex flex-row align-items-center', {
-          'disable-div': !authorToolTip,
-        })}
-        >
+        <div className={classNames('d-flex flex-row align-items-center')}>
           <Icon
             style={{
               width: '1rem',
@@ -113,12 +99,12 @@ const AuthorLabel = ({
 
   return showUserNameAsLink
     ? (
-      <div className={className}>
+      <div className={`${className} flex-wrap`}>
         <Link
           data-testid="learner-posts-link"
           id="learner-posts-link"
           to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
-          className="text-decoration-none"
+          className="text-decoration-none text-reset"
           style={{ width: 'fit-content' }}
         >
           {!alert && authorName}
@@ -126,7 +112,7 @@ const AuthorLabel = ({
         {labelContents}
       </div>
     )
-    : <div className={className}>{authorName}{labelContents}</div>;
+    : <div className={`${className} flex-wrap`}>{authorName}{labelContents}</div>;
 };
 
 AuthorLabel.propTypes = {

@@ -1,20 +1,21 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Button, Icon, IconButton, OverlayTrigger, Tooltip,
+} from '@openedx/paragon';
+import {
+  StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
+} from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
 
-import {
-  StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '../../components/icons';
-import { useUserPostingEnabled } from '../data/hooks';
-import { PostCommentsContext } from '../post-comments/postCommentsContext';
+import { ThreadType } from '../../data/constants';
+import { useHasLikePermission, useUserPostingEnabled } from '../data/hooks';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import ActionsDropdown from './ActionsDropdown';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 const HoverCard = ({
   id,
@@ -32,10 +33,11 @@ const HoverCard = ({
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
+  const userHasLikePermission = useHasLikePermission(contentType, id);
 
   return (
     <div
-      className="flex-fill justify-content-end align-items-center hover-card mr-n4 position-absolute"
+      className="flex-fill justify-content-end align-items-center hover-card bg-white mr-n4 position-absolute"
       data-testid={`hover-card-${id}`}
       id={`hover-card-${id}`}
     >
@@ -85,6 +87,7 @@ const HoverCard = ({
           iconAs={Icon}
           size="sm"
           alt="Like"
+          disabled={!userHasLikePermission}
           iconClassNames="like-icon-dimensions"
           onClick={(e) => {
             e.preventDefault();
@@ -127,8 +130,22 @@ HoverCard.propTypes = {
   addResponseCommentButtonMessage: PropTypes.string.isRequired,
   onLike: PropTypes.func.isRequired,
   voted: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  endorseIcons: PropTypes.objectOf(PropTypes.any),
+  endorseIcons: PropTypes.objectOf(PropTypes.shape(
+    {
+      id: PropTypes.string,
+      action: PropTypes.string,
+      icon: PropTypes.element,
+      label: {
+        id: PropTypes.string,
+        defaultMessage: PropTypes.string,
+        description: PropTypes.string,
+      },
+      conditions: {
+        endorsed: PropTypes.bool,
+        postType: ThreadType,
+      },
+    },
+  )),
   onFollow: PropTypes.func,
   following: PropTypes.bool,
 };

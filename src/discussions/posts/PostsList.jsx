@@ -3,18 +3,18 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { Button, Spinner } from '@edx/paragon';
 
 import { RequestStatus } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectConfigLoadingStatus, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
 import { fetchUserPosts } from '../learners/data/thunks';
 import messages from '../messages';
-import { usePostList } from './data/hooks';
+import usePostList from './data/hooks';
 import {
   selectThreadFilters, selectThreadNextPage, selectThreadSorting, threadsLoadingStatus,
 } from './data/selectors';

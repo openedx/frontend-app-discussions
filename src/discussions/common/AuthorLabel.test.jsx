@@ -9,11 +9,11 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCourseConfigApiUrl } from '../data/api';
-import { fetchCourseConfig } from '../data/thunks';
+import fetchCourseConfig from '../data/thunks';
 import AuthorLabel from './AuthorLabel';
-import { DiscussionContext } from './context';
+import DiscussionContext from './context';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const courseConfigApiUrl = getCourseConfigApiUrl();
@@ -21,11 +21,11 @@ let store;
 let axiosMock;
 let container;
 
-function renderComponent(author, authorLabel, linkToProfile, labelColor) {
+function renderComponent(author, authorLabel, linkToProfile, labelColor, enableInContextSidebar) {
   const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
-        <DiscussionContext.Provider value={{ courseId }}>
+        <DiscussionContext.Provider value={{ courseId, enableInContextSidebar }}>
           <AuthorLabel
             author={author}
             authorLabel={authorLabel}
@@ -53,7 +53,6 @@ describe('Author label', () => {
     store = initializeStore();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-      learners_tab_enabled: true,
       has_moderation_privileges: true,
     });
     axiosMock.onGet(`${courseConfigApiUrl}${courseId}/settings`).reply(200, {});
@@ -63,6 +62,7 @@ describe('Author label', () => {
   describe.each([
     ['anonymous', null, false, ''],
     ['ta_user', 'Community TA', true, 'text-TA-color'],
+    ['moderator_user', 'Moderator', true, 'text-TA-color'],
     ['retired__user', null, false, ''],
     ['staff_user', 'Staff', true, 'text-staff-color'],
     ['learner_user', null, false, ''],
@@ -79,9 +79,9 @@ describe('Author label', () => {
     );
 
     it(
-      `it is "${!linkToProfile && 'not'}" clickable when linkToProfile is ${!!linkToProfile}`,
+      `it is "${(!linkToProfile) && 'not'}" clickable when linkToProfile is ${!!linkToProfile} and enableInContextSidebar is false`,
       async () => {
-        renderComponent(author, authorLabel, linkToProfile, labelColor);
+        renderComponent(author, authorLabel, linkToProfile, labelColor, false);
 
         if (linkToProfile) {
           expect(screen.queryByTestId('learner-posts-link')).toBeInTheDocument();
@@ -92,13 +92,22 @@ describe('Author label', () => {
     );
 
     it(
+      'it is not clickable when enableInContextSidebar is true',
+      async () => {
+        renderComponent(author, authorLabel, linkToProfile, labelColor, true);
+
+        expect(screen.queryByTestId('learner-posts-link')).not.toBeInTheDocument();
+      },
+    );
+
+    it(
       `it has "${!linkToProfile && 'not'}" label text and label color when linkToProfile is ${!!linkToProfile}`,
       async () => {
         renderComponent(author, authorLabel, linkToProfile, labelColor);
         const authorElement = container.querySelector('[role=heading]');
         const labelParentNode = authorElement.parentNode.parentNode;
         const labelElement = labelParentNode.lastChild.lastChild;
-        const label = ['TA', 'Staff'].includes(labelElement.textContent) && labelElement.textContent;
+        const label = ['CTA', 'TA', 'Staff'].includes(labelElement.textContent) && labelElement.textContent;
 
         if (linkToProfile) {
           expect(labelParentNode).toHaveClass(labelColor);

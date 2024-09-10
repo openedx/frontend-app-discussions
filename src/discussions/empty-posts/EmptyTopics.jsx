@@ -5,18 +5,18 @@ import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { useIsOnDesktop, useTotalTopicThreadCount } from '../data/hooks';
+import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
 import { selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
-// eslint-disable-next-line import/no-cycle
-import { messages as postMessages, showPostEditor } from '../posts';
+import { showPostEditor } from '../posts/data';
+import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
 const EmptyTopics = () => {
   const intl = useIntl();
   const { topicId } = useParams();
   const dispatch = useDispatch();
-  const isOnDesktop = useIsOnDesktop();
+  const isOnTabletorDesktop = useIsOnTablet();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
 
@@ -30,7 +30,7 @@ const EmptyTopics = () => {
   let action;
   let actionText;
 
-  if (!isOnDesktop) {
+  if (!isOnTabletorDesktop) {
     return null;
   }
 

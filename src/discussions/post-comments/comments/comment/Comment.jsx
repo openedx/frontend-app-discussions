@@ -3,16 +3,16 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { Button, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, useToggle } from '@edx/paragon';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
-import { DiscussionContext } from '../../../common/context';
+import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
@@ -29,7 +29,7 @@ import {
 } from '../../data/selectors';
 import { editComment, fetchCommentResponses, removeComment } from '../../data/thunks';
 import messages from '../../messages';
-import { PostCommentsContext } from '../../postCommentsContext';
+import PostCommentsContext from '../../postCommentsContext';
 import CommentEditor from './CommentEditor';
 import CommentHeader from './CommentHeader';
 import Reply from './Reply';
@@ -82,7 +82,7 @@ const Comment = ({
   }, []);
 
   const handleCommentEndorse = useCallback(async () => {
-    await dispatch(editComment(id, { endorsed: !endorsed }, ContentActions.ENDORSE));
+    await dispatch(editComment(id, { endorsed: !endorsed }));
     await dispatch(fetchThread(threadId, courseId));
   }, [id, endorsed, threadId]);
 
@@ -268,7 +268,7 @@ const Comment = ({
             ) : (
               !isClosed && isUserPrivilegedInPostingRestriction && (inlineReplies.length >= 5) && (
                 <Button
-                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500"
+                  className="d-flex flex-grow mt-2 font-size-14 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
                   onClick={handleAddCommentReply}

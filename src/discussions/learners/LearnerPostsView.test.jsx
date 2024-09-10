@@ -16,10 +16,10 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { initializeStore } from '../../store';
-import { executeThunk } from '../../test-utils';
+import executeThunk from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
-import { fetchCourseCohorts } from '../cohorts/data/thunks';
-import { DiscussionContext } from '../common/context';
+import fetchCourseCohorts from '../cohorts/data/thunks';
+import DiscussionContext from '../common/context';
 import { learnerPostsApiUrl } from './data/api';
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostsView from './LearnerPostsView';

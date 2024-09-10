@@ -16,25 +16,15 @@ const messages = defineMessages({
     defaultMessage: 'Okay',
     description: 'Action to end current tour',
   },
-  notRespondedFilterTourBody: {
-    id: 'tour.body.notRespondedFilter',
-    defaultMessage: 'Now you can filter discussions to find posts with no response.',
-    description: 'Body of the tour for the not responded filter',
+  exampleTourTitle: {
+    id: 'tour.example.title',
+    defaultMessage: 'Example Tour',
+    description: 'Title for example tour',
   },
-  notRespondedFilterTourTitle: {
-    id: 'tour.title.notRespondedFilter',
-    defaultMessage: 'New filtering option!',
-    description: 'Title of the tour for the not responded filter',
-  },
-  responseSortTourBody: {
-    id: 'tour.body.responseSortTour',
-    defaultMessage: 'Responses and comments are now sorted by newest first. Please use this option to change the sort order',
-    description: 'Body of the tour for the response sort',
-  },
-  responseSortTourTitle: {
-    id: 'tour.title.responseSortTour',
-    defaultMessage: 'Sort Responses!',
-    description: 'Title of the tour for the response sort',
+  exampleTourBody: {
+    id: 'tour.example.body',
+    defaultMessage: 'This is an example tour',
+    description: 'Body for example tour',
   },
 });
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { ActionRow, AlertModal, Button } from '@openedx/paragon';
 import { Editor } from '@tinymce/tinymce-react';
 import { useLocation, useParams } from 'react-router-dom';
 // TinyMCE so the global var exists
@@ -7,7 +8,6 @@ import { useLocation, useParams } from 'react-router-dom';
 import tinymce from 'tinymce/tinymce';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { ActionRow, AlertModal, Button } from '@edx/paragon';
 
 import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 import messages from '../discussions/messages';

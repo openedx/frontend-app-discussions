@@ -3,19 +3,18 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 
+import { useWindowSize } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import {
   Navigate, Route, Routes,
 } from 'react-router-dom';
 
-import { useWindowSize } from '@edx/paragon';
-
 import Spinner from '../../components/Spinner';
 import { RequestStatus, Routes as ROUTES } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import {
-  useContainerSize, useIsOnDesktop, useIsOnXLDesktop, useShowLearnersTab,
+  useContainerSize, useIsOnDesktop, useIsOnTablet, useIsOnXLDesktop,
 } from '../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../data/selectors';
 
@@ -29,10 +28,10 @@ const LegacyTopicsView = lazy(() => import('../topics/TopicsView'));
 const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
+  const isOnTablet = useIsOnTablet();
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const enableInContext = useSelector(selectEnableInContext);
   const configStatus = useSelector(selectConfigLoadingStatus);
-  const redirectToLearnersTab = useShowLearnersTab();
   const sidebarRef = useRef(null);
   const postActionBarHeight = useContainerSize(postActionBarRef);
   const { height: windowHeight } = useWindowSize();
@@ -55,6 +54,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
         'd-flex overflow-auto box-shadow-centered-1': displaySidebar,
         'w-100': !isOnDesktop,
         'sidebar-desktop-width': isOnDesktop && !isOnXLDesktop,
+        'sidebar-tablet-width': isOnTablet && !isOnDesktop,
         'w-25 sidebar-XL-width': isOnXLDesktop,
         'min-content-height': !enableInContextSidebar,
       })}
@@ -103,14 +103,12 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
           {ROUTES.TOPICS.PATH.map(path => (
             <Route key={path} path={path} element={<LegacyTopicsView />} />
           ))}
-          {redirectToLearnersTab && (
+          {
             [ROUTES.LEARNERS.POSTS, ROUTES.LEARNERS.POSTS_EDIT].map((route) => (
               <Route key={route} path={route} element={<LearnerPostsView />} />
             ))
-          )}
-          {redirectToLearnersTab && (
-            <Route path={ROUTES.LEARNERS.PATH} element={<LearnersView />} />
-          )}
+          }
+          <Route path={ROUTES.LEARNERS.PATH} element={<LearnersView />} />
           {configStatus === RequestStatus.SUCCESSFUL && (
             <Route path={`${ROUTES.DISCUSSIONS.PATH}/*`} element={<Navigate to="posts" />} />
           )}

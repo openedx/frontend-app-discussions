@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import snakeCase from 'lodash.snakecase';
 
 import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
+
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 
 import messages from '../messages';
 

@@ -3,11 +3,11 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { discussionsPath } from '../../utils';
 import LearnerAvatar from './LearnerAvatar';
 import LearnerFooter from './LearnerFooter';
-import { learnerShape } from './proptypes';
+import learnerShape from './proptypes';
 
 const LearnerCard = ({ learner }) => {
   const {

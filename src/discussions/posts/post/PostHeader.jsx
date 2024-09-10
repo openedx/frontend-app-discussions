@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
+import { Avatar, Badge, Icon } from '@openedx/paragon';
+import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Avatar, Badge, Icon } from '@edx/paragon';
 
-import { Issue, Question } from '../../../components/icons';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
@@ -43,9 +43,9 @@ export const PostAvatar = React.memo(({
     <div className={avatarSpacing}>
       {postType === ThreadType.QUESTION && (
         <Icon
-          src={read ? Issue : Question}
-          className={classNames('position-absolute bg-white rounded-circle question-icon-size', {
-            'question-icon-position': fromPostLink,
+          src={Question}
+          className={classNames('position-absolute rounded-circle question-icon-size', {
+            'question-icon-position': fromPostLink, 'bg-white': !read, 'bg-light-300': read,
           })}
         />
       )}
@@ -54,6 +54,7 @@ export const PostAvatar = React.memo(({
           [`outline-${outlineColor}`]: outlineColor,
           'outline-anonymous': !outlineColor,
           'mt-3 ml-2': postType === ThreadType.QUESTION && fromPostLink,
+          'mt-2.5': postType === ThreadType.QUESTION && !fromPostLink,
           'avarat-img-position mt-17px': postType === ThreadType.QUESTION,
         })}
         style={{

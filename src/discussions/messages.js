@@ -153,9 +153,14 @@ const messages = defineMessages({
     defaultMessage: 'Staff',
     description: 'A label for staff users displayed next to their username.',
   },
+  authorLabelModerator: {
+    id: 'discussions.authors.label.moderator',
+    defaultMessage: 'TA',
+    description: 'A label for moderators displayed next to their username.',
+  },
   authorLabelTA: {
     id: 'discussions.authors.label.ta',
-    defaultMessage: 'TA',
+    defaultMessage: 'CTA',
     description: 'A label for community TAs displayed next to their username.',
   },
   loadMorePosts: {
@@ -187,6 +192,21 @@ const messages = defineMessages({
     id: 'discussions.editor.image.warning.dismiss',
     defaultMessage: 'Ok',
     description: 'Modal dismiss button text',
+  },
+  contentUnavailableTitle: {
+    id: 'discussions.content.unavailable.title',
+    defaultMessage: 'Content unavailable',
+    description: 'Title on content page when the user has not logged into the MFE or not enrolled in the course.',
+  },
+  contentUnavailableSubTitle: {
+    id: 'discussions.content.unavailable.subTitle',
+    defaultMessage: 'You may not be able to see this content because you\'re not logged in, you\'re not enrolled in the course, or your audit access has expired.',
+    description: 'Sub title on content page when the user has not logged into the MFE or not enrolled in the course.',
+  },
+  contentUnavailableAction: {
+    id: 'discussions.content.unavailable.action',
+    defaultMessage: 'Enroll',
+    description: 'Action button on content page when the user has not logged into the MFE or not enrolled in the course.',
   },
 });
 

@@ -3,6 +3,7 @@ import {
   useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 
+import { breakpoints, useWindowSize } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   matchPath, useLocation, useMatch, useNavigate,
@@ -11,33 +12,37 @@ import {
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { AppContext } from '@edx/frontend-platform/react';
-import { breakpoints, useWindowSize } from '@edx/paragon';
 
-import { RequestStatus, Routes } from '../../data/constants';
+import selectCourseTabs from '../../components/NavigationBar/data/selectors';
+import { LOADED } from '../../components/NavigationBar/data/slice';
+import fetchTab from '../../components/NavigationBar/data/thunks';
+import { ContentActions, RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
-import { fetchCourseBlocks } from '../../data/thunks';
-import { DiscussionContext } from '../common/context';
+import fetchCourseBlocks from '../../data/thunks';
+import DiscussionContext from '../common/context';
+import PostCommentsContext from '../post-comments/postCommentsContext';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
 import tourCheckpoints from '../tours/constants';
-import { selectTours } from '../tours/data/selectors';
+import selectTours from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
 import messages from '../tours/messages';
-import { discussionsPath } from '../utils';
+import { checkPermissions, discussionsPath } from '../utils';
+import { ContentSelectors } from './constants';
 import {
   selectAreThreadsFiltered,
   selectEnableInContext,
   selectIsCourseAdmin,
   selectIsCourseStaff,
   selectIsPostingEnabled,
-  selectLearnersTabEnabled,
+  selectIsUserLearner,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
 } from './selectors';
-import { fetchCourseConfig } from './thunks';
+import fetchCourseConfig from './thunks';
 
 export function useTotalTopicThreadCount() {
   const topics = useSelector(selectTopics);
@@ -74,16 +79,32 @@ export const useSidebarVisible = () => {
 
 export function useCourseDiscussionData(courseId) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchBaseData() {
       await dispatch(fetchCourseConfig(courseId));
-      await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      await dispatch(fetchTab(courseId));
     }
 
     fetchBaseData();
   }, [courseId]);
+}
+
+export function useCourseBlockData(courseId) {
+  const dispatch = useDispatch();
+  const { authenticatedUser } = useContext(AppContext);
+  const { isEnrolled, courseStatus } = useSelector(selectCourseTabs);
+  const isUserLearner = useSelector(selectIsUserLearner);
+
+  useEffect(() => {
+    async function fetchBaseData() {
+      if (courseStatus === LOADED && (!isUserLearner || isEnrolled)) {
+        await dispatch(fetchCourseBlocks(courseId, authenticatedUser.username));
+      }
+    }
+
+    fetchBaseData();
+  }, [courseId, isEnrolled, courseStatus, isUserLearner]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
@@ -112,12 +133,17 @@ export function useRedirectToThread(courseId, enableInContextSidebar) {
 
 export function useIsOnDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.medium.minWidth;
+  return windowSize.width >= breakpoints.medium.maxWidth;
+}
+
+export function useIsOnTablet() {
+  const windowSize = useWindowSize();
+  return windowSize.width >= breakpoints.small.maxWidth;
 }
 
 export function useIsOnXLDesktop() {
   const windowSize = useWindowSize();
-  return windowSize.width >= breakpoints.extraLarge.minWidth;
+  return windowSize.width >= breakpoints.extraLarge.maxWidth;
 }
 
 /**
@@ -170,8 +196,6 @@ export const useAlertBannerVisible = (
     (canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
   );
 };
-
-export const useShowLearnersTab = () => useSelector(selectLearnersTabEnabled);
 
 /**
  * React hook that gets the current topic ID from the current topic or category.
@@ -261,4 +285,11 @@ export const useDebounce = (value, delay) => {
     [value, delay], // Only re-call effect if value or delay changes
   );
   return debouncedValue;
+};
+
+export const useHasLikePermission = (contentType, id) => {
+  const { postType } = useContext(PostCommentsContext);
+  const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
+
+  return checkPermissions(content, ContentActions.VOTE);
 };

@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Icon, IconButton, OverlayTrigger, Tooltip,
+} from '@openedx/paragon';
+import {
+  Locked, People, StarFilled, StarOutline,
+} from '@openedx/paragon/icons';
 import { useDispatch } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Icon, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
-import { Locked, People } from '@edx/paragon/icons';
 
-import { StarFilled, StarOutline } from '../../../components/icons';
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';
 import messages from './messages';

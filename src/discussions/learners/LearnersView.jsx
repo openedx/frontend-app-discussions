@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 
+import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@edx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
-import { selectConfigLoadingStatus, selectLearnersTabEnabled } from '../data/selectors';
+import { selectConfigLoadingStatus } from '../data/selectors';
 import NoResults from '../posts/NoResults';
 import {
   learnersLoadingStatus,
@@ -31,18 +31,15 @@ const LearnersView = () => {
   const loadingStatus = useSelector(learnersLoadingStatus());
   const usernameSearch = useSelector(selectUsernameSearch());
   const courseConfigLoadingStatus = useSelector(selectConfigLoadingStatus);
-  const learnersTabEnabled = useSelector(selectLearnersTabEnabled);
   const learners = useSelector(selectAllLearners);
 
   useEffect(() => {
-    if (learnersTabEnabled) {
-      if (usernameSearch) {
-        dispatch(fetchLearners(courseId, { orderBy, usernameSearch }));
-      } else {
-        dispatch(fetchLearners(courseId, { orderBy }));
-      }
+    if (usernameSearch) {
+      dispatch(fetchLearners(courseId, { orderBy, usernameSearch }));
+    } else {
+      dispatch(fetchLearners(courseId, { orderBy }));
     }
-  }, [courseId, orderBy, learnersTabEnabled, usernameSearch]);
+  }, [courseId, orderBy, usernameSearch]);
 
   const loadPage = useCallback(async () => {
     if (nextPage) {
@@ -58,14 +55,14 @@ const LearnersView = () => {
     dispatch(setUsernameSearch(''));
   }, []);
 
-  const renderLearnersList = useMemo(() => (
-    (
-      courseConfigLoadingStatus === RequestStatus.SUCCESSFUL && learnersTabEnabled && learners.map((learner) => (
+  const renderLearnersList = useMemo(() => {
+    if (courseConfigLoadingStatus === RequestStatus.SUCCESSFUL) {
+      return learners.map((learner) => (
         <LearnerCard learner={learner} key={learner.username} />
-      ))
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    ) || <></>
-  ), [courseConfigLoadingStatus, learnersTabEnabled, learners]);
+      ));
+    }
+    return null;
+  }, [courseConfigLoadingStatus, learners]);
 
   return (
     <div className="d-flex flex-column border-right border-light-400">

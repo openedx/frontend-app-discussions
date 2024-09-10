@@ -2,23 +2,23 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
+import {
+  Button, Icon, IconButton, Spinner,
+} from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 import capitalize from 'lodash/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton, Spinner,
-} from '@edx/paragon';
-import { ArrowBack } from '@edx/paragon/icons';
 
 import {
   RequestStatus,
   Routes,
 } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
-import { usePostList } from '../posts/data/hooks';
+import usePostList from '../posts/data/hooks';
 import {
   selectAllThreadsIds,
   selectThreadNextPage,

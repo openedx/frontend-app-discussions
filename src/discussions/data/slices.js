@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign,import/prefer-default-export */
 import { createSlice } from '@reduxjs/toolkit';
 
 import { RequestStatus } from '../../data/constants';
@@ -16,7 +15,6 @@ const configSlice = createSlice({
     isCourseAdmin: false,
     isCourseStaff: false,
     isUserAdmin: false,
-    learnersTabEnabled: false,
     isPostingEnabled: false,
     settings: {
       divisionScheme: 'none',
@@ -29,19 +27,29 @@ const configSlice = createSlice({
     enableInContext: false,
   },
   reducers: {
-    fetchConfigRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
-    },
+    fetchConfigRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
     fetchConfigSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
-      Object.assign(state, payload);
+      const newState = Object.assign(state, payload);
+      newState.status = RequestStatus.SUCCESSFUL;
+      return newState;
     },
-    fetchConfigFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    fetchConfigDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
+    fetchConfigFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
+    fetchConfigDenied: (state) => (
+      {
+        ...state,
+        status: RequestStatus.DENIED,
+      }
+    ),
   },
 });
 

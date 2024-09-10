@@ -1,17 +1,17 @@
 import React, { useCallback, useContext } from 'react';
 
+import {
+  Button, Icon, IconButton,
+} from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Icon, IconButton,
-} from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { DiscussionContext } from '../../common/context';
+import DiscussionContext from '../../common/context';
 import { useUserPostingEnabled } from '../../data/hooks';
 import { selectConfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';

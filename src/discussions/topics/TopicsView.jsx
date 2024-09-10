@@ -7,13 +7,13 @@ import { useParams } from 'react-router-dom';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
-import { DiscussionContext } from '../common/context';
+import DiscussionContext from '../common/context';
 import { selectDiscussionProvider } from '../data/selectors';
 import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
 import { selectCategories, selectNonCoursewareTopics, selectTopicFilter } from './data/selectors';
 import { setFilter, setTopicsCount } from './data/slices';
-import { fetchCourseTopics } from './data/thunks';
+import fetchCourseTopics from './data/thunks';
 import LegacyTopicGroup from './topic-group/LegacyTopicGroup';
 import Topic from './topic-group/topic/Topic';
 import countFilteredTopics from './utils';

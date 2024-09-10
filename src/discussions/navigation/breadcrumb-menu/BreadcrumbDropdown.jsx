@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Dropdown, DropdownButton } from '@openedx/paragon';
 import { Link } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Dropdown, DropdownButton } from '@edx/paragon';
 
 import messages from './messages';
 
@@ -50,11 +50,21 @@ const BreadcrumbDropdown = ({
 };
 
 BreadcrumbDropdown.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  currentItem: PropTypes.any,
+  currentItem: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.string,
+    questions: PropTypes.number,
+    discussions: PropTypes.number,
+    flags: PropTypes.number,
+  }),
   showAllPath: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  items: PropTypes.array.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.string,
+    questions: PropTypes.number,
+    discussions: PropTypes.number,
+    flags: PropTypes.number,
+  })).isRequired,
   itemPathFunc: PropTypes.func.isRequired,
   itemLabelFunc: PropTypes.func.isRequired,
   itemActiveFunc: PropTypes.func.isRequired,

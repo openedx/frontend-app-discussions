@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import {
+  Button, Dropdown, ModalPopup, useToggle,
+} from '@openedx/paragon';
+import { ExpandLess, ExpandMore } from '@openedx/paragon/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Button, Dropdown, ModalPopup, useToggle,
-} from '@edx/paragon';
-import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 
 import { updateUserDiscussionsTourByName } from '../../tours/data';
 import { selectCommentSortOrder } from '../data/selectors';
@@ -44,7 +44,6 @@ const CommentSortDropdown = () => {
     <>
       <div className="comments-sort d-flex justify-content-end mx-4 mt-2">
         <Button
-          id="comment-sort"
           alt={intl.formatMessage(messages.actionsAlt)}
           ref={setTarget}
           variant="tertiary"

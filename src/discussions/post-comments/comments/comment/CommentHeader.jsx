@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Avatar } from '@openedx/paragon';
 import classNames from 'classnames';
-
-import { Avatar } from '@edx/paragon';
 
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';

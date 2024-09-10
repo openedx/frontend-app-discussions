@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  Badge, Icon, OverlayTrigger, Tooltip,
+} from '@openedx/paragon';
+import {
+  People, QuestionAnswer, QuestionAnswerOutline,
+  StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
+} from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import {
-  Badge, Icon, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
-import {
-  StarFilled, StarOutline, ThumbUpFilled, ThumbUpOutline,
-} from '@edx/paragon/icons';
 
-import { People, QuestionAnswer, QuestionAnswerOutline } from '../../../components/icons';
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
 import messages from './messages';
