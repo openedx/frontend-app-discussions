@@ -92,7 +92,7 @@ const threadsSlice = createSlice({
       if (!updatedPages[page - 1]) {
         updatedPages[page - 1] = ids;
       } else {
-        updatedPages[page - 1] = [...new Set([...updatedPages[page - 1], ...ids])];
+        updatedPages[page - 1] = [...new Set([updatedPages[page - 1], ...ids])];
       }
       newState.pages = updatedPages;
 
