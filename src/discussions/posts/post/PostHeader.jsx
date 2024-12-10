@@ -5,6 +5,7 @@ import { Avatar, Badge, Icon } from '@openedx/paragon';
 import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
+import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
@@ -13,7 +14,7 @@ import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
-  author, postType, authorLabel, fromPostLink, read,
+  author, postType, authorLabel, fromPostLink, read, postUsers,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
@@ -37,6 +38,8 @@ export const PostAvatar = React.memo(({
     return spacing;
   }, [postType]);
 
+  const profileImage = getConfig().ENABLE_PROFILE_IMAGE === 'true' && postUsers && Object.values(postUsers)[0].profile.image;
+
   return (
     <div className={avatarSpacing}>
       {postType === ThreadType.QUESTION && (
@@ -59,6 +62,7 @@ export const PostAvatar = React.memo(({
           height: avatarSize,
           width: avatarSize,
         }}
+        src={profileImage?.hasImage ? profileImage?.imageUrlSmall : undefined}
         alt={author}
       />
     </div>
@@ -71,6 +75,7 @@ PostAvatar.propTypes = {
   authorLabel: PropTypes.string,
   fromPostLink: PropTypes.bool,
   read: PropTypes.bool,
+  postUsers: PropTypes.shape({}).isRequired,
 };
 
 PostAvatar.defaultProps = {
@@ -90,6 +95,7 @@ const PostHeader = ({
   title,
   postType,
   preview,
+  postUsers,
 }) => {
   const intl = useIntl();
   const showAnsweredBadge = preview && hasEndorsed && postType === ThreadType.QUESTION;
@@ -101,7 +107,7 @@ const PostHeader = ({
   return (
     <div className={classNames('d-flex flex-fill mw-100', { 'mt-10px': hasAnyAlert && !preview })}>
       <div className="flex-shrink-0">
-        <PostAvatar postType={postType} author={author} authorLabel={authorLabel} />
+        <PostAvatar postType={postType} author={author} authorLabel={authorLabel} postUsers={postUsers} />
       </div>
       <div className="align-items-center d-flex flex-row">
         <div className="d-flex flex-column justify-content-start mw-100">
@@ -151,6 +157,7 @@ PostHeader.propTypes = {
     reason: PropTypes.string,
   }),
   closed: PropTypes.bool,
+  postUsers: PropTypes.shape({}).isRequired,
 };
 
 PostHeader.defaultProps = {

@@ -43,7 +43,7 @@ const Comment = ({
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
     voted, following, voteCount, authorLabel, author, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
-    editByLabel, closedByLabel,
+    editByLabel, closedByLabel, users: postUsers,
   } = comment;
   const intl = useIntl();
   const hasChildren = childCount > 0;
@@ -203,6 +203,7 @@ const Comment = ({
             closed={closed}
             createdAt={createdAt}
             lastEdit={lastEdit}
+            postUsers={postUsers}
           />
           {isEditing ? (
             <CommentEditor
