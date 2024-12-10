@@ -33,14 +33,11 @@ import { ContentSelectors } from './constants';
 import {
   selectAreThreadsFiltered,
   selectEnableInContext,
-  selectIsCourseAdmin,
-  selectIsCourseStaff,
   selectIsPostingEnabled,
   selectIsUserLearner,
   selectPostThreadCount,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
-  selectUserIsStaff,
 } from './selectors';
 import fetchCourseConfig from './thunks';
 
@@ -220,12 +217,9 @@ export const useCurrentDiscussionTopic = () => {
 
 export const useUserPostingEnabled = () => {
   const isPostingEnabled = useSelector(selectIsPostingEnabled);
-  const isUserAdmin = useSelector(selectUserIsStaff);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
-  const isCourseAdmin = useSelector(selectIsCourseAdmin);
-  const isCourseStaff = useSelector(selectIsCourseStaff);
-  const isPrivileged = isUserAdmin || userHasModerationPrivileges || isUserGroupTA || isCourseAdmin || isCourseStaff;
+  const isPrivileged = userHasModerationPrivileges || isUserGroupTA;
 
   return (isPostingEnabled || isPrivileged);
 };
