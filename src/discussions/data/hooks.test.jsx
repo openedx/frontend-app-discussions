@@ -19,11 +19,11 @@ const courseConfigApiUrl = getCourseConfigApiUrl();
 let store;
 let axiosMock;
 
-const generateApiResponse = (isPostingEnabled, isCourseAdmin = false) => ({
+const generateApiResponse = (isPostingEnabled, hasModerationPrivileges = false) => ({
   isPostingEnabled,
-  hasModerationPrivileges: false,
+  hasModerationPrivileges,
   isGroupTa: false,
-  isCourseAdmin,
+  isCourseAdmin: false,
   isCourseStaff: false,
   isUserAdmin: false,
 });
@@ -160,7 +160,7 @@ describe('Hooks', () => {
         expect(queryByText('false')).toBeInTheDocument();
       });
 
-      test('when posting is not disabled and Role is not Learner return true', async () => {
+      test('when posting is disabled and Role is not Learner return true', async () => {
         axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`)
           .reply(200, generateApiResponse(false, true));
         await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
