@@ -115,7 +115,7 @@ const DiscussionsHome = ({ intl }) => {
             courseTitle={courseTitle}
           />
         )}
-        <div className="mx-5 mt-3 px-5">
+        <div className="mx-5 mt-3 px-5" style={{ height: "fit-content" }}>
           {
             unAuthUser && (
               // <Hyperlink
