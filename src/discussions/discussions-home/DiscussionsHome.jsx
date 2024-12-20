@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-import React, { lazy, Suspense, useRef } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
 
 import classNames from "classnames";
 import { useSelector } from "react-redux";
@@ -82,6 +82,10 @@ const DiscussionsHome = () => {
     displaySidebar = isOnDesktop;
   }
 
+  useEffect(() => {
+    console.log(location, "this is location")
+  }, [])
+
   return (
     <Suspense fallback={<Spinner />}>
       <DiscussionContext.Provider
@@ -110,9 +114,6 @@ const DiscussionsHome = () => {
           {!enableInContextSidebar && (
             <CourseTabsNavigation activeTab="discussion" courseId={courseId} />
           )}
-          <Suspense fallback={<Spinner />}>
-            <Route path={Routes.NOT_FOUND.PATH} component={NotFound} />
-          </Suspense>
           <div
             className={classNames("header-action-bar", {
               "shadow-none border-light-300 border-bottom":
