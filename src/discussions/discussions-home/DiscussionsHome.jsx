@@ -28,7 +28,7 @@ import messages from "../messages";
 import { selectPostEditorVisible } from "../posts/data/selectors";
 import useFeedbackWrapper from "./FeedbackWrapper";
 import NotFound from "./notFound";
-import { Button, Hyperlink } from "@edx/paragon";
+import { Button, Hyperlink, Alert } from "@edx/paragon";
 
 const Footer = lazy(() => import("@edx/frontend-component-footer"));
 const PostActionsBar = lazy(() =>
@@ -85,7 +85,7 @@ const DiscussionsHome = ({ intl }) => {
   }
 
   useEffect(() => {
-    console.log(location, "this is location");
+    console.log(location, intl, "this is location");
     if (location?.pathname.includes("not-found")) {
       setUnAuthUser(true);
     } else {
@@ -120,15 +120,18 @@ const DiscussionsHome = ({ intl }) => {
             //   style={{ textDecoration: "underline" }}
             //   destination={`${getConfig().CONTACT_URL}`}
             // >
-            <div>
-              {intl.formatMessage({
-                id: "learning.enrollment.alert",
-                defaultMessage:
-                  "You must be enrolled in the course to see course content.",
-                description:
-                  "Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll.",
-              })}
-            </div>
+            // <div>
+            //   {intl.formatMessage({
+            //     id: "learning.enrollment.alert",
+            //     defaultMessage:
+            //       "You must be enrolled in the course to see course content.",
+            //     description:
+            //       "Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll.",
+            //   })}
+            // </div>
+            <Alert variant="warning" className="mb-3">
+              You must be enrolled in the course to see course content.
+            </Alert>
           )
 
           // </Hyperlink>
