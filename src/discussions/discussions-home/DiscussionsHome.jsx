@@ -115,7 +115,7 @@ const DiscussionsHome = ({ intl }) => {
             courseTitle={courseTitle}
           />
         )}
-        <div className="mx-5 mt-3">
+        <div className="mx-5 mt-3 px-5">
           {
             unAuthUser && (
               // <Hyperlink
@@ -136,7 +136,7 @@ const DiscussionsHome = ({ intl }) => {
                 {/* <p>You must be enrolled in the course to see course content.</p> */}
                 <FormattedMessage
                   id="learning.enrollment.alert"
-                  defaultMessage="You must be enrolled in the course to see course content."
+                  defaultMessage="You must be enrolled in the course to see discussion content."
                   description="Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll."
                 />
               </Alert>
