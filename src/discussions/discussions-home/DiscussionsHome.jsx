@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-import React, { lazy, Suspense, useEffect, useRef } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 
 import classNames from "classnames";
 import { useSelector } from "react-redux";
@@ -28,6 +28,7 @@ import messages from "../messages";
 import { selectPostEditorVisible } from "../posts/data/selectors";
 import useFeedbackWrapper from "./FeedbackWrapper";
 import NotFound from "./notFound";
+import { Button, Hyperlink } from "@edx/paragon";
 
 const Footer = lazy(() => import("@edx/frontend-component-footer"));
 const PostActionsBar = lazy(() =>
@@ -51,8 +52,9 @@ const DiscussionsRestrictionBanner = lazy(() =>
 const DiscussionContent = lazy(() => import("./DiscussionContent"));
 const DiscussionSidebar = lazy(() => import("./DiscussionSidebar"));
 
-const DiscussionsHome = () => {
+const DiscussionsHome = ({ intl }) => {
   const location = useLocation();
+  const [unAuthUser, setUnAuthUser] = useState(false);
   const postActionBarRef = useRef(null);
   const postEditorVisible = useSelector(selectPostEditorVisible);
   const provider = useSelector(selectDiscussionProvider);
@@ -83,8 +85,13 @@ const DiscussionsHome = () => {
   }
 
   useEffect(() => {
-    console.log(location, "this is location")
-  }, [])
+    console.log(location, "this is location");
+    if (location?.pathname.includes("not-found")) {
+      setUnAuthUser(true);
+    } else {
+      setUnAuthUser(false);
+    }
+  }, []);
 
   return (
     <Suspense fallback={<Spinner />}>
@@ -105,6 +112,21 @@ const DiscussionsHome = () => {
             courseNumber={courseNumber}
             courseTitle={courseTitle}
           />
+        )}
+        {unAuthUser && (
+          <Hyperlink
+            className="text-reset"
+            style={{ textDecoration: "underline" }}
+            destination={`${getConfig().CONTACT_URL}`}
+          >
+            {intl.formatMessage({
+              id: "learning.enrollment.alert",
+              defaultMessage:
+                "You must be enrolled in the course to see course content.",
+              description:
+                "Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll.",
+            })}
+          </Hyperlink>
         )}
         <main
           className="container-fluid d-flex flex-column p-0 w-100"
