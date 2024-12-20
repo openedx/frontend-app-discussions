@@ -113,7 +113,7 @@ const DiscussionsHome = ({ intl }) => {
             courseTitle={courseTitle}
           />
         )}
-        {unAuthUser && (
+        {/* {unAuthUser && (
           <Hyperlink
             className="text-reset"
             style={{ textDecoration: "underline" }}
@@ -127,7 +127,7 @@ const DiscussionsHome = ({ intl }) => {
                 "Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll.",
             })}
           </Hyperlink>
-        )}
+        )} */}
         <main
           className="container-fluid d-flex flex-column p-0 w-100"
           id="main"
