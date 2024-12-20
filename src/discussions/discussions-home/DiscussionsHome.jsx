@@ -28,7 +28,9 @@ import messages from "../messages";
 import { selectPostEditorVisible } from "../posts/data/selectors";
 import useFeedbackWrapper from "./FeedbackWrapper";
 import NotFound from "./notFound";
-import { Button, Hyperlink, Alert } from "@edx/paragon";
+import { Alert } from "@edx/paragon";
+import { WarningFilled } from "@edx/paragon/icons";
+import { FormattedMessage } from "@edx/frontend-platform/i18n";
 
 const Footer = lazy(() => import("@edx/frontend-component-footer"));
 const PostActionsBar = lazy(() =>
@@ -129,8 +131,13 @@ const DiscussionsHome = ({ intl }) => {
             //       "Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll.",
             //   })}
             // </div>
-            <Alert variant="warning" className="mb-3">
-              You must be enrolled in the course to see course content.
+            <Alert variant="warning" icon={WarningFilled} className="mb-3">
+              {/* <p>You must be enrolled in the course to see course content.</p> */}
+              <FormattedMessage
+                id="learning.enrollment.alert"
+                defaultMessage="You must be enrolled in the course to see course content."
+                description="Message shown to indicate that a user needs to enroll in a course prior to viewing the course content.  Shown as part of an alert, along with a link to enroll."
+              />
             </Alert>
           )
 
