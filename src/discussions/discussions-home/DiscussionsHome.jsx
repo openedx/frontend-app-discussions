@@ -22,6 +22,7 @@ import { EmptyTopic as InContextEmptyTopics } from '../in-context-topics/compone
 import messages from '../messages';
 import { selectPostEditorVisible } from '../posts/data/selectors';
 import useFeedbackWrapper from './FeedbackWrapper';
+import NotFound from './notFound';
 
 const Footer = lazy(() => import('@edx/frontend-component-footer'));
 const PostActionsBar = lazy(() => import('../posts/post-actions-bar/PostActionsBar'));
@@ -125,6 +126,7 @@ const DiscussionsHome = () => {
                 path={[Routes.POSTS.PATH, Routes.POSTS.ALL_POSTS, Routes.LEARNERS.POSTS]}
                 render={routeProps => <EmptyPosts {...routeProps} subTitleMessage={messages.emptyAllPosts} />}
               />
+              <Route path={Routes.NOT_FOUND.PATH} component={NotFound} />
               {isRedirectToLearners && <Route path={Routes.LEARNERS.PATH} component={EmptyLearners} />}
             </Switch>
             )}
