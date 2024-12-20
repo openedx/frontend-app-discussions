@@ -15,13 +15,13 @@ export async function getCourseTopics(courseId) {
   } catch (error) {
     const { httpErrorStatus } = error && error.customAttributes;
     if (httpErrorStatus === 404) {
-      // global.location.replace(
-      //   `${getConfig().LMS_BASE_URL}/discussions/${courseId}/not-found`
-      // );
+      global.location.replace(
+        `${getConfig().LMS_BASE_URL}/discussions/${courseId}/not-found`
+      );
 
       // return {};
-      throw error;
     }
     console.log(error, "this is error");
+    throw error;
   }
 }
