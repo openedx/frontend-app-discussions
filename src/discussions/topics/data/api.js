@@ -2,7 +2,7 @@
 import { getAuthenticatedHttpClient } from "@edx/frontend-platform/auth";
 
 import { getApiBaseUrl } from "../../../data/constants";
-import { camelCaseObject, getConfig } from "@edx/frontend-platform";
+import { getConfig } from "@edx/frontend-platform";
 
 export const getCourseTopicsApiUrl = () =>
   `${getApiBaseUrl()}/api/discussion/v1/course_topics/`;
@@ -21,7 +21,6 @@ export async function getCourseTopics(courseId) {
 
       // return {};
     }
-    console.log(error, "this is error");
     throw error;
   }
 }
