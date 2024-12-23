@@ -1,9 +1,11 @@
-import { getConfig } from '@edx/frontend-platform';
+import { getConfig } from "@edx/frontend-platform";
 
 export const getApiBaseUrl = () => getConfig().LMS_BASE_URL;
-export const getFullUrl = (path) => (
-  new URL(`${getConfig().PUBLIC_PATH.replace(/\/$/, '')}/${path}`, window.location.origin).href
-);
+export const getFullUrl = (path) =>
+  new URL(
+    `${getConfig().PUBLIC_PATH.replace(/\/$/, "")}/${path}`,
+    window.location.origin
+  ).href;
 
 /**
  * Enum for thread types.
@@ -11,9 +13,9 @@ export const getFullUrl = (path) => (
  * @enum {string}
  */
 export const ThreadType = {
-  ALL: 'all',
-  QUESTION: 'question',
-  DISCUSSION: 'discussion',
+  ALL: "all",
+  QUESTION: "question",
+  DISCUSSION: "discussion",
 };
 
 /**
@@ -22,9 +24,9 @@ export const ThreadType = {
  * @enum
  */
 export const EndorsementStatus = {
-  ENDORSED: 'endorsed',
-  UNENDORSED: 'unendorsed',
-  DISCUSSION: 'discussion',
+  ENDORSED: "endorsed",
+  UNENDORSED: "unendorsed",
+  DISCUSSION: "discussion",
 };
 
 /**
@@ -44,20 +46,20 @@ export const EndorsementValue = {
  * @enum {string}
  */
 export const ContentActions = {
-  EDIT_CONTENT: 'raw_body',
-  PIN: 'pinned',
-  ENDORSE: 'endorsed',
-  CLOSE: 'closed',
-  COPY_LINK: 'copy_link',
-  REPORT: 'abuse_flagged',
-  DELETE: 'delete',
-  FOLLOWING: 'following',
-  CHANGE_GROUP: 'group_id',
-  MARK_READ: 'read',
-  CHANGE_TITLE: 'title',
-  CHANGE_TOPIC: 'topic_id',
-  CHANGE_TYPE: 'type',
-  VOTE: 'voted',
+  EDIT_CONTENT: "raw_body",
+  PIN: "pinned",
+  ENDORSE: "endorsed",
+  CLOSE: "closed",
+  COPY_LINK: "copy_link",
+  REPORT: "abuse_flagged",
+  DELETE: "delete",
+  FOLLOWING: "following",
+  CHANGE_GROUP: "group_id",
+  MARK_READ: "read",
+  CHANGE_TITLE: "title",
+  CHANGE_TOPIC: "topic_id",
+  CHANGE_TYPE: "type",
+  VOTE: "voted",
 };
 
 /**
@@ -66,11 +68,11 @@ export const ContentActions = {
  * @enum {string}
  */
 export const RequestStatus = {
-  IDLE: 'idle',
-  IN_PROGRESS: 'in-progress',
-  SUCCESSFUL: 'successful',
-  FAILED: 'failed',
-  DENIED: 'denied',
+  IDLE: "idle",
+  IN_PROGRESS: "in-progress",
+  SUCCESSFUL: "successful",
+  FAILED: "failed",
+  DENIED: "denied",
 };
 
 /**
@@ -79,8 +81,8 @@ export const RequestStatus = {
  * @enum {string}
  */
 export const AvatarOutlineAndLabelColors = {
-  Staff: 'staff-color',
-  'Community TA': 'TA-color',
+  Staff: "staff-color",
+  "Community TA": "TA-color",
 };
 
 /**
@@ -89,9 +91,9 @@ export const AvatarOutlineAndLabelColors = {
  * @enum {string}
  */
 export const ThreadOrdering = {
-  BY_LAST_ACTIVITY: 'lastActivityAt',
-  BY_COMMENT_COUNT: 'commentCount',
-  BY_VOTE_COUNT: 'voteCount',
+  BY_LAST_ACTIVITY: "lastActivityAt",
+  BY_COMMENT_COUNT: "commentCount",
+  BY_VOTE_COUNT: "voteCount",
 };
 
 /**
@@ -100,12 +102,12 @@ export const ThreadOrdering = {
  * @enum {string}
  */
 export const PostsStatusFilter = {
-  ALL: 'statusAll',
-  UNREAD: 'statusUnread',
-  FOLLOWING: 'statusFollowing',
-  REPORTED: 'statusReported',
-  UNANSWERED: 'statusUnanswered',
-  UNRESPONDED: 'statusUnresponded',
+  ALL: "statusAll",
+  UNREAD: "statusUnread",
+  FOLLOWING: "statusFollowing",
+  REPORTED: "statusReported",
+  UNANSWERED: "statusUnanswered",
+  UNRESPONDED: "statusUnresponded",
 };
 
 /**
@@ -114,21 +116,21 @@ export const PostsStatusFilter = {
  * @enum {string}
  */
 export const TopicsFilter = {
-  ALL: 'allTopics',
-  COURSE_SECTION: 'courseSectionTopics',
-  GENERAL: 'generalTopics',
+  ALL: "allTopics",
+  COURSE_SECTION: "courseSectionTopics",
+  GENERAL: "generalTopics",
 };
 
 export const TopicOrdering = {
-  BY_COURSE_STRUCTURE: 'sortByCourseStructure',
-  BY_LAST_ACTIVITY: 'sortByLastActivity',
-  BY_COMMENT_COUNT: 'sortByCommentCount',
+  BY_COURSE_STRUCTURE: "sortByCourseStructure",
+  BY_LAST_ACTIVITY: "sortByLastActivity",
+  BY_COMMENT_COUNT: "sortByCommentCount",
 };
 
 export const LearnersOrdering = {
-  BY_FLAG: 'flagged',
-  BY_LAST_ACTIVITY: 'activity',
-  BY_RECENCY: 'recency',
+  BY_FLAG: "flagged",
+  BY_LAST_ACTIVITY: "activity",
+  BY_RECENCY: "recency",
 };
 
 /**
@@ -136,11 +138,11 @@ export const LearnersOrdering = {
  * @type {{OPEN_EDX: string, LEGACY: string}}
  */
 export const DiscussionProvider = {
-  LEGACY: 'legacy',
-  OPEN_EDX: 'openedx',
+  LEGACY: "legacy",
+  OPEN_EDX: "openedx",
 };
 
-const BASE_PATH = '/:courseId';
+const BASE_PATH = "/:courseId";
 
 export const Routes = {
   DISCUSSIONS: {
@@ -180,7 +182,7 @@ export const Routes = {
       category: `${BASE_PATH}/category/:category/posts/:postId`,
       topics: `${BASE_PATH}/topics/:topicId/posts/:postId`,
       posts: `${BASE_PATH}/posts/:postId`,
-      'my-posts': `${BASE_PATH}/my-posts/:postId`,
+      "my-posts": `${BASE_PATH}/my-posts/:postId`,
       learners: `${BASE_PATH}/learners/:learnerUsername/posts/:postId`,
     },
   },
@@ -197,13 +199,16 @@ export const Routes = {
     TOPIC_POST: `${BASE_PATH}/topics/:topicId/posts/:postId`,
     TOPIC_POST_EDIT: `${BASE_PATH}/topics/:topicId/posts/:postId/edit`,
   },
+  NOT_FOUND: {
+    PATH: `${BASE_PATH}/discussions/:courseId/not-found`,
+  },
 };
 
 export const PostsPages = {
   category: `${BASE_PATH}/category/:category/posts`,
   topics: `${BASE_PATH}/topics/:topicId/posts`,
   posts: `${BASE_PATH}/posts`,
-  'my-posts': `${BASE_PATH}/my-posts`,
+  "my-posts": `${BASE_PATH}/my-posts`,
   learners: `${BASE_PATH}/learners/:learnerUsername/posts`,
 };
 
