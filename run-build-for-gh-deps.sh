@@ -37,16 +37,16 @@ run_command "cd ../../.."
 log "Current directory: $(pwd)"
 
 # frontend-build
-log "Processing frontend-build"
-run_command "cd node_modules/@openedx/" || exit
-log "Current directory: $(pwd)"
-run_command "rm -rf frontend-build"
-run_command "git clone -b dcoa/design-tokens-support --single-branch https://github.com/eduNEXT/frontend-build.git"
-run_command "cd frontend-build" || exit
-log "Current directory: $(pwd)"
-run_command "npm ci"
-run_command "cd ../../.." || exit
-log "Current directory: $(pwd)"
+# log "Processing frontend-build"
+# run_command "cd node_modules/@openedx/" || exit
+# log "Current directory: $(pwd)"
+# run_command "rm -rf frontend-build"
+# run_command "git clone -b dcoa/design-tokens-support --single-branch https://github.com/eduNEXT/frontend-build.git"
+# run_command "cd frontend-build" || exit
+# log "Current directory: $(pwd)"
+# run_command "npm ci"
+# run_command "cd ../../.." || exit
+# log "Current directory: $(pwd)"
 
 # # paragon
 # log "Processing paragon"
