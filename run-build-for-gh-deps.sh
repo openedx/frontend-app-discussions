@@ -41,7 +41,7 @@ log "Processing frontend-build"
 run_command "cd node_modules/@openedx/" || exit
 log "Current directory: $(pwd)"
 run_command "rm -rf frontend-build"
-run_command "git clone -b dcoa/design-tokens-support --single-branch https://github.com/eduNEXT/frontend-build.git"
+run_command "git clone -b master --single-branch https://github.com/openedx/frontend-build.git"
 run_command "cd frontend-build" || exit
 log "Current directory: $(pwd)"
 run_command "npm ci"
@@ -57,9 +57,9 @@ run_command "rm -rf paragon"
 run_command "mkdir -p paragon"
 run_command "cd paragon" || exit
 log "Current directory: $(pwd)"
-run_command "npm pack @openedx/paragon@23.0.0-alpha.2"
-run_command "tar -xzf openedx-paragon-23.0.0-alpha.2.tgz --strip-components=1"
-run_command "rm openedx-paragon-23.0.0-alpha.2.tgz"
+run_command "npm pack @openedx/paragon@23.4.0"
+run_command "tar -xzf openedx-paragon-23.4.0.tgz --strip-components=1"
+run_command "rm openedx-paragon-23.4.0.tgz"
 run_command "cd ../../.." || exit
 log "Current directory: $(pwd)"
 
