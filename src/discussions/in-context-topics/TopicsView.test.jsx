@@ -2,6 +2,7 @@ import {
   fireEvent, render, screen, waitFor,
   within,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
@@ -165,9 +166,10 @@ describe('InContext Topics View', () => {
   it('The subsection should have a title name, be clickable, and have the stats', async () => {
     await setupMockResponse();
     renderComponent();
+    await screen.findByTestId('redux-provider');
     const subsectionObject = coursewareTopics[0].children[0];
     const subSection = await container.querySelector(`[data-subsection-id=${subsectionObject.id}]`);
-    const subSectionTitle = await within(subSection).queryByText(subsectionObject.displayName);
+    const subSectionTitle = await within(subSection).findByText(subsectionObject.displayName);
     const statsList = await subSection.querySelectorAll('.icon-size');
 
     expect(subSectionTitle).toBeInTheDocument();
@@ -177,11 +179,12 @@ describe('InContext Topics View', () => {
   it('Subsection names should be clickable and redirected to the units lists', async () => {
     await setupMockResponse();
     renderComponent();
+    await screen.findByTestId('redux-provider');
 
     const subsectionObject = coursewareTopics[0].children[0];
     const subSection = await container.querySelector(`[data-subsection-id=${subsectionObject.id}]`);
 
-    await act(async () => { fireEvent.click(subSection); });
+    await userEvent.click(subSection);
     await waitFor(async () => {
       const backButton = await screen.getByLabelText('Back to topics list');
       const topicsList = await screen.getByRole('list');
@@ -198,9 +201,11 @@ describe('InContext Topics View', () => {
   it('The number of units should be matched with the actual unit length.', async () => {
     await setupMockResponse();
     renderComponent();
+    await screen.findByTestId('redux-provider');
+
     const subSection = await container.querySelector(`[data-subsection-id=${coursewareTopics[0].children[0].id}]`);
 
-    await act(async () => { fireEvent.click(subSection); });
+    await userEvent.click(subSection);
     await waitFor(async () => {
       const units = await container.querySelectorAll('.discussion-topic');
 
@@ -211,12 +216,14 @@ describe('InContext Topics View', () => {
   it('A unit should have a title and should be clickable', async () => {
     await setupMockResponse();
     renderComponent();
+    await screen.findByTestId('redux-provider');
+
     const subSectionObject = coursewareTopics[0].children[0];
     const unitObject = subSectionObject.children[0];
 
     const subSection = await container.querySelector(`[data-subsection-id=${subSectionObject.id}]`);
 
-    await act(async () => { fireEvent.click(subSection); });
+    await userEvent.click(subSection);
     await waitFor(async () => {
       const unitElement = await screen.findByText(unitObject.name);
       const unitContainer = await container.querySelector(`[data-topic-id=${unitObject.id}]`);
