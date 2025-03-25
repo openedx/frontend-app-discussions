@@ -90,8 +90,7 @@ describe('DiscussionsHome', () => {
 
   test('full view should hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
-    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
-      .toBeInTheDocument();
+    await screen.findByText(navigationBarMessages.allTopics.defaultMessage);
     expect(screen.queryByRole('button', { name: 'Close' }))
       .not
       .toBeInTheDocument();
@@ -144,9 +143,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    waitFor(() => {
-      expect(screen.queryByText('Add a post')).toBeInTheDocument();
-    });
+    await screen.findByText('Add a post');
   });
 
   it.each([
@@ -206,9 +203,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/learners`);
 
-    waitFor(() => {
-      expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
-    });
+    await screen.findByText('Nothing here yet');
   });
 
   it('should display post editor form when click on add a post button for posts', async () => {
@@ -263,7 +258,7 @@ describe('DiscussionsHome', () => {
   it('should display navigation tabs', async () => {
     renderComponent(`/${courseId}/topics`);
 
-    await waitFor(() => expect(screen.queryByText('Discussion')).toBeInTheDocument());
+    await screen.findByText('Discussion');
   });
 
   it('should display content unavailable message when the user is not enrolled in the course.', async () => {
@@ -272,7 +267,7 @@ describe('DiscussionsHome', () => {
 
     renderComponent();
 
-    await waitFor(() => expect(screen.queryByText('Content unavailable')).toBeInTheDocument());
+    await screen.findByText('Content unavailable');
   });
 
   it('should redirect to dashboard when the user clicks on the Enroll button.', async () => {
