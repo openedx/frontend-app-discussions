@@ -106,8 +106,8 @@ describe('HoverCard', () => {
   });
 
   test('it should have hover card on post', async () => {
-    await waitFor(() => renderComponent(discussionPostId));
-    const post = screen.getByTestId('post-thread-1');
+    renderComponent(discussionPostId);
+    const post = await screen.findByTestId('post-thread-1');
     expect(within(post).getByTestId('hover-card-thread-1')).toBeInTheDocument();
   });
 
