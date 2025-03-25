@@ -76,7 +76,7 @@ How to Contribute
 
 Details about how to become a contributor to the Open edX project may be found in the wiki at `How to contribute`_
 
-.. _How to contribute: https://edx.readthedocs.io/projects/edx-developer-guide/en/latest/process/index.html
+.. _How to contribute: https://docs.openedx.org/en/latest/developers/references/developer_guide/process/index.html
 
 PR description template should be automatically applied if you are sending PR from github interface; otherwise you
 can find it it at `PULL_REQUEST_TEMPLATE.md <https://github.com/openedx/frontend-app-discussions/blob/master/.github/pull_request_template.md>`_
