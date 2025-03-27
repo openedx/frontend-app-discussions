@@ -283,9 +283,9 @@ describe('InContext Topic Posts View', () => {
       await setupTopicsMockResponse(0, 0, 0);
       await renderComponent({ topicId: 'test-topic', category: 'test-category' });
 
-      await waitFor(() => expect(within(container).queryByText('Nothing here yet')).toBeInTheDocument());
-      expect(within(container).queryByText('No topic exists')).toBeInTheDocument();
-      expect(within(container).queryByText('Unnamed Topic')).toBeInTheDocument();
+      await within(container).findByText('Nothing here yet');
+      await within(container).findByText('No topic exists');
+      await within(container).findByText('Unnamed Topic');
     },
   );
 

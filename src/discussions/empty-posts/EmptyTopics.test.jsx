@@ -66,15 +66,13 @@ describe('EmptyTopics', () => {
 
   test('"no topic selected" text shown when viewing topics page', async () => {
     renderComponent(`/${courseId}/topics/`);
-    expect(screen.queryByText(messages.emptyTitle.defaultMessage))
-      .toBeInTheDocument();
+    await screen.findByText(messages.emptyTitle.defaultMessage);
   });
 
   test('"no post selected" text shown when viewing a specific topic', async () => {
     await setupMockResponse();
     renderComponent(`/${courseId}/topics/ncwtopic-3/`);
 
-    expect(screen.queryByText(messages.noPostSelected.defaultMessage))
-      .toBeInTheDocument();
+    await screen.findByText(messages.noPostSelected.defaultMessage);
   });
 });
