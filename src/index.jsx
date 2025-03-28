@@ -1,8 +1,10 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { StrictMode } from 'react';
+
+// eslint-disable-next-line import/no-unresolved
+import { createRoot } from 'react-dom/client';
 
 import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig,
@@ -17,18 +19,20 @@ import store from './store';
 
 import './index.scss';
 
+const rootNode = createRoot(document.getElementById('root'));
 subscribe(APP_READY, () => {
-  ReactDOM.render(
-    <AppProvider store={store}>
-      <Head />
-      <DiscussionsHome />
-    </AppProvider>,
-    document.getElementById('root'),
+  rootNode.render(
+    <StrictMode>
+      <AppProvider store={store}>
+        <Head />
+        <DiscussionsHome />
+      </AppProvider>
+    </StrictMode>,
   );
 });
 
 subscribe(APP_INIT_ERROR, (error) => {
-  ReactDOM.render(<ErrorPage message={error.message} />, document.getElementById('root'));
+  rootNode.render(<ErrorPage message={error.message} />);
 });
 
 initialize({

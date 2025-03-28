@@ -31,6 +31,7 @@ import '../posts/data/__factories__/threads.factory';
 import '../in-context-topics/data/__factories__/inContextTopics.factory';
 import '../topics/data/__factories__/topics.factory';
 import '../../components/NavigationBar/data/__factories__/navigationBar.factory';
+import userEvent from "@testing-library/user-event";
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
@@ -229,7 +230,7 @@ describe('DiscussionsHome', () => {
     await screen.findByText('Nothing here yet');
 
     await act(async () => {
-      fireEvent.click(await screen.findByText('Add a post'));
+      fireEvent.click((await screen.findAllByText('Add a post'))[0]);
     });
 
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
