@@ -84,7 +84,7 @@ describe('DiscussionSidebar', () => {
         },
       })]);
     renderComponent();
-    await waitFor(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    await screen.findAllByText('Thread by other users');
     expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
   });
 
@@ -99,8 +99,8 @@ describe('DiscussionSidebar', () => {
         },
       })]);
     renderComponent();
-    waitFor(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    await screen.findAllByText('Thread by other users');
     expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
-    waitFor(() => expect(container.querySelectorAll('.discussion-post')).toHaveLength(postCount));
+    expect(container.querySelectorAll('.discussion-post')).toHaveLength(postCount);
   });
 });
