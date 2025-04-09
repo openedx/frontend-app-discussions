@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
-import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router-dom';
@@ -85,7 +84,7 @@ describe('DiscussionSidebar', () => {
         },
       })]);
     renderComponent();
-    await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    await screen.findAllByText('Thread by other users');
     expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
   });
 
@@ -100,7 +99,7 @@ describe('DiscussionSidebar', () => {
         },
       })]);
     renderComponent();
-    await act(async () => expect(await screen.findAllByText('Thread by other users')).toBeTruthy());
+    await screen.findAllByText('Thread by other users');
     expect(screen.queryByText('Thread by abc123')).not.toBeInTheDocument();
     expect(container.querySelectorAll('.discussion-post')).toHaveLength(postCount);
   });

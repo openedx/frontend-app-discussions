@@ -229,7 +229,7 @@ describe('DiscussionsHome', () => {
     await screen.findByText('Nothing here yet');
 
     await act(async () => {
-      fireEvent.click(await screen.findByText('Add a post'));
+      fireEvent.click((await screen.findAllByText('Add a post'))[0]);
     });
 
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
