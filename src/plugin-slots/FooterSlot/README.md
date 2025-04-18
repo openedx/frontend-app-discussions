@@ -1,12 +1,13 @@
 # Footer Slot
 
-### Slot ID: `footer_slot`
+### Slot ID: `org.openedx.frontend.layout.footer.v1`
 
-## Description
+### Slot ID Aliases
+* `footer_slot`
 
 This slot is used to replace/modify/hide the footer.
 
-The implementation of the `FooterSlot` component lives in [the `frontend-slot-footer` repository](https://github.com/openedx/frontend-slot-footer/).
+The implementation of the `FooterSlot` component lives in [the `frontend-component-footer` repository](https://github.com/openedx/frontend-component-footer/).
 
 ## Example
 
@@ -23,7 +24,7 @@ import { DIRECT_PLUGIN, PLUGIN_OPERATIONS } from '@openedx/frontend-plugin-frame
 
 const config = {
   pluginSlots: {
-    footer_slot: {
+    'org.openedx.frontend.layout.footer.v1': {
       plugins: [
         {
           // Hide the default footer
