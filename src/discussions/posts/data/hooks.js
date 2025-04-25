@@ -11,10 +11,12 @@ const usePostList = (ids) => {
 
   const sortedIds = useMemo(() => {
     posts.forEach((post) => {
-      if (post.pinned) {
-        pinnedPostsIds.push(post.id);
-      } else {
-        unpinnedPostsIds.push(post.id);
+      if (post) {
+        if (post.pinned) {
+          pinnedPostsIds.push(post.id);
+        } else {
+          unpinnedPostsIds.push(post.id);
+        }
       }
     });
 
