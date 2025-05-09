@@ -24,6 +24,10 @@ body,
   font-size: 16px !important;
 }
 
+.btn-plain {
+    background-color: var(--pgn-color-card-bg-base) !important;
+}
+
 #post,
 #comment,
 #reply,
