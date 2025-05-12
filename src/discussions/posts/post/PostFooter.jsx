@@ -49,18 +49,21 @@ const PostFooter = ({
             </Tooltip>
           )}
         >
-          <IconButton
-            src={following ? StarFilled : StarOutline}
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(updateExistingThread(id, { following: !following }));
-              return true;
-            }}
-            iconAs={Icon}
-            iconClassNames="follow-icon-dimensions"
-            className="post-footer-icon-dimensions"
-            alt="Follow"
-          />
+          <div>
+            <IconButton
+              src={following ? StarFilled : StarOutline}
+              onClick={(e) => {
+                e.preventDefault();
+                dispatch(updateExistingThread(id, { following: !following }));
+                return true;
+              }}
+              iconAs={Icon}
+              iconClassNames="follow-icon-dimensions"
+              className="post-footer-icon-dimensions"
+              alt="Follow"
+            />
+            <span className="sr-only">{intl.formatMessage(following ? messages.unFollow : messages.follow)}</span>
+          </div>
         </OverlayTrigger>
       )}
       <div className="d-flex flex-fill justify-content-end align-items-center">

@@ -26,7 +26,7 @@ const PostTypeCard = ({
       >
         <Card.Section className="px-4 py-3 d-flex flex-column align-items-center">
           <span className="text-primary-300 mb-0.5">{icon}</span>
-          <span className="text-gray-700">{type}</span>
+          <span className="text-gray-700" aria-hidden>{type}</span>
         </Card.Section>
       </Card>
     </label>

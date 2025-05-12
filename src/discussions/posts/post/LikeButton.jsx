@@ -29,14 +29,17 @@ const LikeButton = ({ count, onClick, voted }) => {
           </Tooltip>
         )}
       >
-        <IconButton
-          src={voted ? ThumbUpFilled : ThumbUpOutline}
-          onClick={handleClick}
-          className="post-footer-icon-dimensions"
-          alt="Like"
-          iconAs={Icon}
-          iconClassNames="like-icon-dimensions"
-        />
+        <div>
+          <IconButton
+            src={voted ? ThumbUpFilled : ThumbUpOutline}
+            onClick={handleClick}
+            className="post-footer-icon-dimensions"
+            alt="Like"
+            iconAs={Icon}
+            iconClassNames="like-icon-dimensions"
+          />
+          <span className="sr-only">{intl.formatMessage(messages.like)}</span>
+        </div>
       </OverlayTrigger>
       <div className="font-style">
         {(count && count > 0) ? count : null}
