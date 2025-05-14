@@ -90,8 +90,7 @@ describe('DiscussionsHome', () => {
 
   test('full view should hide close button', async () => {
     renderComponent(`/${courseId}/topics`);
-    expect(screen.queryByText(navigationBarMessages.allTopics.defaultMessage))
-      .toBeInTheDocument();
+    await screen.findByText(navigationBarMessages.allTopics.defaultMessage);
     expect(screen.queryByRole('button', { name: 'Close' }))
       .not
       .toBeInTheDocument();
@@ -144,9 +143,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    waitFor(() => {
-      expect(screen.queryByText('Add a post')).toBeInTheDocument();
-    });
+    await screen.findByText('Add a post');
   });
 
   it.each([
@@ -170,9 +167,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchThreads(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-    waitFor(() => {
-      expect(screen.queryByText(result)).toBeInTheDocument();
-    });
+    await screen.findByText(result);
   });
 
   it.each([
@@ -199,9 +194,7 @@ describe('DiscussionsHome', () => {
       await executeThunk(fetchCourseTopicsV3(courseId), store.dispatch, store.getState);
       await renderComponent(`/${courseId}/${searchByEndPoint}`);
 
-      waitFor(() => {
-        expect(screen.queryByText('No topic selected')).toBeInTheDocument();
-      });
+      await screen.findByText('No topic selected');
     },
   );
 
@@ -210,9 +203,7 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/learners`);
 
-    waitFor(() => {
-      expect(screen.queryByText('Nothing here yet')).toBeInTheDocument();
-    });
+    await screen.findByText('Nothing here yet');
   });
 
   it('should display post editor form when click on add a post button for posts', async () => {
@@ -235,10 +226,10 @@ describe('DiscussionsHome', () => {
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/topics`);
 
-    await waitFor(() => expect(screen.queryByText('Nothing here yet')).toBeInTheDocument());
+    await screen.findByText('Nothing here yet');
 
     await act(async () => {
-      fireEvent.click(screen.queryByText('Add a post'));
+      fireEvent.click((await screen.findAllByText('Add a post'))[0]);
     });
 
     await waitFor(() => expect(container.querySelector('.post-form')).toBeInTheDocument());
@@ -247,27 +238,27 @@ describe('DiscussionsHome', () => {
   it('should display Add a post button for legacy topics view', async () => {
     await renderComponent(`/${courseId}/topics/topic-1`);
 
-    await waitFor(() => expect(screen.queryByText('Add a post')).toBeInTheDocument());
+    await screen.findByText('Add a post');
   });
 
   it('should display No post selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics/category-1-topic-1`);
 
-    await waitFor(() => expect(screen.queryByText('No post selected')).toBeInTheDocument());
+    await screen.findByText('No post selected');
   });
 
   it('should display No topic selected for legacy topics view', async () => {
     await setUpV1TopicsMockResponse();
     await renderComponent(`/${courseId}/topics`);
 
-    await waitFor(() => expect(screen.queryByText('No topic selected')).toBeInTheDocument());
+    await screen.findByText('No topic selected');
   });
 
   it('should display navigation tabs', async () => {
     renderComponent(`/${courseId}/topics`);
 
-    await waitFor(() => expect(screen.queryByText('Discussion')).toBeInTheDocument());
+    await screen.findByText('Discussion');
   });
 
   it('should display content unavailable message when the user is not enrolled in the course.', async () => {
@@ -276,7 +267,7 @@ describe('DiscussionsHome', () => {
 
     renderComponent();
 
-    await waitFor(() => expect(screen.queryByText('Content unavailable')).toBeInTheDocument());
+    await screen.findByText('Content unavailable');
   });
 
   it('should redirect to dashboard when the user clicks on the Enroll button.', async () => {
