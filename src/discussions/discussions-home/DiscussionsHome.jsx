@@ -82,7 +82,7 @@ const DiscussionsHome = () => {
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
         {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
-        <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
+        <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main-content" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
           {(isEnrolled || !isUserLearner) && (
             <div
