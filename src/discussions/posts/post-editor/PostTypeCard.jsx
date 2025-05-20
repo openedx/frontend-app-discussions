@@ -15,7 +15,7 @@ const PostTypeCard = ({
   const { enableInContextSidebar } = useContext(DiscussionContext);
   // Need to use regular label since Form.Label doesn't support overriding htmlFor
   return (
-    <label htmlFor={`post-type-${value}`} className="d-flex p-0 my-0 mr-3">
+    <div className="d-flex p-0 my-0 mr-3">
       <Form.Radio value={value} id={`post-type-${value}`} className="sr-only">{type}</Form.Radio>
       <Card
         className={classNames('shadow-none', {
@@ -29,7 +29,7 @@ const PostTypeCard = ({
           <span className="text-gray-700" aria-hidden>{type}</span>
         </Card.Section>
       </Card>
-    </label>
+    </div>
   );
 };
 
