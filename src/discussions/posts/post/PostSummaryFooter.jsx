@@ -44,9 +44,10 @@ const PostSummaryFooter = ({
             </Tooltip>
           )}
         >
-          <Icon src={voted ? ThumbUpFilled : ThumbUpOutline} className="post-summary-like-dimensions mr-0.5">
+          <div>
+            <Icon src={voted ? ThumbUpFilled : ThumbUpOutline} className="post-summary-like-dimensions mr-0.5" />
             <span className="sr-only">{' '}{intl.formatMessage(voted ? messages.likedPost : messages.postLikes)}</span>
-          </Icon>
+          </div>
         </OverlayTrigger>
         <div className="font-style">
           {(voteCount && voteCount > 0) ? voteCount : null}
@@ -60,11 +61,12 @@ const PostSummaryFooter = ({
           </Tooltip>
         )}
       >
-        <Icon src={following ? StarFilled : StarOutline} className="post-summary-icons-dimensions mr-0.5">
+        <div>
+          <Icon src={following ? StarFilled : StarOutline} className="post-summary-icons-dimensions mr-0.5" />
           <span className="sr-only">
             {' '}{intl.formatMessage(following ? messages.srOnlyFollowDescription : messages.srOnlyUnFollowDescription)}
           </span>
-        </Icon>
+        </div>
       </OverlayTrigger>
 
       {preview && commentCount > 1 && (
@@ -76,12 +78,13 @@ const PostSummaryFooter = ({
               </Tooltip>
             )}
           >
-            <Icon
-              src={unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline}
-              className="post-summary-comment-count-dimensions mr-0.5"
-            >
+            <div>
+              <Icon
+                src={unreadCommentCount ? QuestionAnswer : QuestionAnswerOutline}
+                className="post-summary-comment-count-dimensions mr-0.5"
+              />
               <span className="sr-only">{' '} {intl.formatMessage(messages.activity)}</span>
-            </Icon>
+            </div>
           </OverlayTrigger>
           {commentCount}
         </div>
