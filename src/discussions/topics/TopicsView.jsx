@@ -92,10 +92,10 @@ const TopicsView = () => {
           onClear={handleOnClear}
         />
       )}
-      <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
+      <ul className="list-group list-group-flush flex-fill" data-testid="list" onKeyDown={e => handleKeyDown(e)}>
         <CourseWideTopics />
         <LegacyCoursewareTopics />
-      </div>
+      </ul>
       {
         filteredTopicsCount === 0
         && loadingStatus === RequestStatus.SUCCESSFUL

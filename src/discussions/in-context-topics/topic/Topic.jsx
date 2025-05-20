@@ -25,7 +25,7 @@ const Topic = ({
   });
 
   return (
-    <>
+    <li>
       <Link
         className={classNames('discussion-topic p-0 text-decoration-none text-primary-500', {
           'border-light-400 border-bottom': showDivider,
@@ -54,7 +54,7 @@ const Topic = ({
           <div className="divider pt-1 bg-light-300" />
         </>
       )}
-    </>
+    </li>
   );
 };
 
