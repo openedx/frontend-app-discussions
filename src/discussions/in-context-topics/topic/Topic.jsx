@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -10,7 +10,7 @@ import TopicStats from '../../../components/TopicStats';
 import { Routes } from '../../../data/constants';
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
-import { useNavigate } from 'react-router-dom';
+
 
 const Topic = ({
   topic,
@@ -36,13 +36,14 @@ const Topic = ({
           navigate(topicUrl());
         }}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             isSelected(topic.id);
             navigate(topicUrl());
           }
         }}
         aria-current={isSelected(topic.id) ? 'page' : undefined}
+        aria-selected={isSelected(topic.id)}
         role="option"
         tabIndex={(isSelected(topic.id) || index === 0) ? 0 : -1}
         style={{ cursor: 'pointer' }}
