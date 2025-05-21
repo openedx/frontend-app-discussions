@@ -55,7 +55,7 @@ const messages = defineMessages({
   },
   postTitle: {
     id: 'discussions.post.editor.title',
-    defaultMessage: 'Post title',
+    defaultMessage: 'Post title*',
   },
   titleDescription: {
     id: 'discussions.post.editor.titleDescription',
