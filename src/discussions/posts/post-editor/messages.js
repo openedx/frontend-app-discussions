@@ -57,6 +57,10 @@ const messages = defineMessages({
     id: 'discussions.post.editor.title',
     defaultMessage: 'Post title*',
   },
+  postContent: {
+    id: 'discussions.post.editor.postContent',
+    defaultMessage: 'Post content*',
+  },
   titleDescription: {
     id: 'discussions.post.editor.titleDescription',
     defaultMessage: 'Add a clear and descriptive title to encourage participation.',
