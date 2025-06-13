@@ -33,6 +33,7 @@ import {
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
+  selectIsNotifyAllLearnersEnabled
 } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import {
@@ -79,6 +80,7 @@ const PostEditor = ({
   const userIsStaff = useSelector(selectUserIsStaff);
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
+  const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -108,6 +110,7 @@ const PostEditor = ({
     title: post?.title || '',
     comment: post?.rawBody || '',
     follow: isEmpty(post?.following) ? true : post?.following,
+    notifyAllLearners: isEmpty(post?.notifyAllLearners) ? false : post?.notifyAllLearners,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
     cohort: post?.cohort || 'default',
@@ -161,6 +164,7 @@ const PostEditor = ({
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
         enableInContextSidebar,
+        notifyAllLearners: values.notifyAllLearners
       }));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
@@ -440,6 +444,26 @@ const PostEditor = ({
               >
                 <span>
                   {intl.formatMessage(messages.anonymousToPeersPost)}
+                </span>
+              </Form.Checkbox>
+            </Form.Group>
+            )}
+          </>
+          )}
+        </div>
+        <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
+          {!editExisting && (
+          <>
+            {isNotifyAllLearnersEnabled && (<Form.Group>
+              <Form.Checkbox
+                name="notifyAllLearners"
+                checked={values.notifyAllLearners}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="mr-4.5 mt-1.5"
+              >
+                <span>
+                  {intl.formatMessage(messages.notifyAllLearners)}
                 </span>
               </Form.Checkbox>
             </Form.Group>
