@@ -15,7 +15,7 @@ import {
 import timeLocale from '../../../common/time-locale';
 import { ContentTypes } from '../../../data/constants';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { selectAuthorAvatars } from '../../../posts/data/selectors';
+import { selectAuthorAvatar } from '../../../posts/data/selectors';
 import { selectCommentOrResponseById } from '../../data/selectors';
 import { editComment, removeComment } from '../../data/thunks';
 import messages from '../../messages';
@@ -39,7 +39,7 @@ const Reply = ({ responseId }) => {
     lastEdit,
     closed,
   });
-  const authorAvatars = useSelector(selectAuthorAvatars(author));
+  const authorAvatars = useSelector(selectAuthorAvatar(author));
 
   const handleDeleteConfirmation = useCallback(() => {
     dispatch(removeComment(id));

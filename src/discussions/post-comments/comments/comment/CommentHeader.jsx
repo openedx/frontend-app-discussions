@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
-import { selectAuthorAvatars } from '../../../posts/data/selectors';
+import { selectAuthorAvatar } from '../../../posts/data/selectors';
 
 const CommentHeader = ({
   author,
@@ -25,7 +25,7 @@ const CommentHeader = ({
     lastEdit,
     closed,
   });
-  const authorAvatars = useSelector(selectAuthorAvatars(author));
+  const authorAvatars = useSelector(selectAuthorAvatar(author));
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {

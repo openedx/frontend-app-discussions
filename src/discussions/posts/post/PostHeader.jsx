@@ -11,14 +11,14 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
-import { selectAuthorAvatars } from '../data/selectors';
+import { selectAuthorAvatar } from '../data/selectors';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
   author, postType, authorLabel, fromPostLink, read,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
-  const authorAvatars = useSelector(selectAuthorAvatars(author));
+  const authorAvatars = useSelector(selectAuthorAvatar(author));
 
   const avatarSize = useMemo(() => {
     let size = '2rem';

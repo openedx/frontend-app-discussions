@@ -57,6 +57,6 @@ export const selectThreadFilters = () => state => state.threads.filters;
 
 export const selectThreadNextPage = () => state => state.threads.nextPage;
 
-export const selectAuthorAvatars = author => state => (
+export const selectAuthorAvatar = author => state => (
   state.threads.avatars?.[author]?.profile.image
 );
