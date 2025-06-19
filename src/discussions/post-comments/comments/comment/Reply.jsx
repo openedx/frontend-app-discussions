@@ -15,6 +15,7 @@ import {
 import timeLocale from '../../../common/time-locale';
 import { ContentTypes } from '../../../data/constants';
 import { useAlertBannerVisible } from '../../../data/hooks';
+import { selectAuthorAvatars } from '../../../posts/data/selectors';
 import { selectCommentOrResponseById } from '../../data/selectors';
 import { editComment, removeComment } from '../../data/thunks';
 import messages from '../../messages';
@@ -38,6 +39,7 @@ const Reply = ({ responseId }) => {
     lastEdit,
     closed,
   });
+  const authorAvatars = useSelector(selectAuthorAvatars(author));
 
   const handleDeleteConfirmation = useCallback(() => {
     dispatch(removeComment(id));
@@ -121,6 +123,7 @@ const Reply = ({ responseId }) => {
           <Avatar
             className={`ml-0.5 mt-0.5 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             alt={author}
+            src={authorAvatars?.imageUrlSmall}
             style={{
               width: '32px',
               height: '32px',
