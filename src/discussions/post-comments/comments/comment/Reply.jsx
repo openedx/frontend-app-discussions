@@ -39,7 +39,7 @@ const Reply = ({ responseId }) => {
     lastEdit,
     closed,
   });
-  const authorAvatars = useSelector(selectAuthorAvatar(author));
+  const authorAvatar = useSelector(selectAuthorAvatar(author));
 
   const handleDeleteConfirmation = useCallback(() => {
     dispatch(removeComment(id));
@@ -123,7 +123,7 @@ const Reply = ({ responseId }) => {
           <Avatar
             className={`ml-0.5 mt-0.5 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             alt={author}
-            src={authorAvatars?.imageUrlSmall}
+            src={authorAvatar?.imageUrlSmall}
             style={{
               width: '32px',
               height: '32px',

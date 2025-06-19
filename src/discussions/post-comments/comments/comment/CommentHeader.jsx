@@ -25,7 +25,7 @@ const CommentHeader = ({
     lastEdit,
     closed,
   });
-  const authorAvatars = useSelector(selectAuthorAvatar(author));
+  const authorAvatar = useSelector(selectAuthorAvatar(author));
 
   return (
     <div className={classNames('d-flex flex-row justify-content-between', {
@@ -36,7 +36,7 @@ const CommentHeader = ({
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
           alt={author}
-          src={authorAvatars?.imageUrlSmall}
+          src={authorAvatar?.imageUrlSmall}
           style={{
             width: '32px',
             height: '32px',
