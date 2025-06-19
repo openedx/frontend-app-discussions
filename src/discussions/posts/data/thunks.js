@@ -204,7 +204,7 @@ export function createNewThread({
   anonymousToPeers,
   cohort,
   enableInContextSidebar,
-  notifyAllLearners
+  notifyAllLearners,
 }) {
   return async (dispatch) => {
     try {
@@ -218,7 +218,7 @@ export function createNewThread({
         anonymous,
         anonymousToPeers,
         cohort,
-        notifyAllLearners
+        notifyAllLearners,
       }));
       const data = await postThread(courseId, topicId, type, title, content, {
         cohort,

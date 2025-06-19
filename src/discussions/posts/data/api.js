@@ -98,7 +98,7 @@ export const postThread = async (
     cohort,
     anonymous,
     anonymousToPeers,
-    notifyAllLearners
+    notifyAllLearners,
   } = {},
   enableInContextSidebar = false,
 ) => {

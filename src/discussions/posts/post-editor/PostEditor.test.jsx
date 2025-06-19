@@ -18,12 +18,12 @@ import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import executeThunk from '../../../test-utils';
 import { getCohortsApiUrl } from '../../cohorts/data/api';
-import fetchCourseConfig from '../../data/thunks';
 import DiscussionContext from '../../common/context';
+import { getCourseConfigApiUrl } from '../../data/api';
+import fetchCourseConfig from '../../data/thunks';
 import fetchCourseTopics from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
-import { getCourseConfigApiUrl } from '../../data/api';
 import PostEditor from './PostEditor';
 
 import '../../cohorts/data/__factories__';
@@ -146,42 +146,40 @@ describe('PostEditor', () => {
     });
   });
 
-    describe.each([
+  describe.each([
     {
-      is_notify_all_learners_enabled: true,
+      isNotifyAllLearnersEnabled: true,
       description: 'when "Notify All Learners" is enabled',
     },
     {
-     is_notify_all_learners_enabled: false,
-     description: 'when "Notify All Learners" is disabled',
+      isNotifyAllLearnersEnabled: false,
+      description: 'when "Notify All Learners" is disabled',
     },
-  ])('$description', ({is_notify_all_learners_enabled,}) => {
+  ])('$description', ({ isNotifyAllLearnersEnabled }) => {
     beforeEach(async () => {
       store = initializeStore({
         config: {
           provider: 'legacy',
-          is_notify_all_learners_enabled,
+          is_notify_all_learners_enabled: isNotifyAllLearnersEnabled,
           moderationSettings: {},
         },
       });
 
       axiosMock
         .onGet(`${courseConfigApiUrl}${courseId}/`)
-        .reply(200, { is_notify_all_learners_enabled: is_notify_all_learners_enabled });
-      
+        .reply(200, { is_notify_all_learners_enabled: isNotifyAllLearnersEnabled });
+
       await store.dispatch(fetchCourseConfig(courseId));
       renderComponent();
-      
     });
 
-    test(`should ${is_notify_all_learners_enabled ? 'show' : 'not show'} the "Notify All Learners" option`, async () => {
-      if (is_notify_all_learners_enabled) {
+    test(`should ${isNotifyAllLearnersEnabled ? 'show' : 'not show'} the "Notify All Learners" option`, async () => {
+      if (isNotifyAllLearnersEnabled) {
         await waitFor(() => expect(screen.queryByText('Notify All Learners')).toBeInTheDocument());
       } else {
-        await waitFor(() =>expect(screen.queryByText('Notify All Learners')).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.queryByText('Notify All Learners')).not.toBeInTheDocument());
       }
     });
-
   });
 
   describe('cohorting', () => {

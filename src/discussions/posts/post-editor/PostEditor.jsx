@@ -29,11 +29,11 @@ import {
   selectAnonymousPostingConfig,
   selectDivisionSettings,
   selectEnableInContext,
+  selectIsNotifyAllLearnersEnabled,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
-  selectIsNotifyAllLearnersEnabled
 } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import {
@@ -164,7 +164,7 @@ const PostEditor = ({
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
         enableInContextSidebar,
-        notifyAllLearners: values.notifyAllLearners
+        notifyAllLearners: values.notifyAllLearners,
       }));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
