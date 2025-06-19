@@ -110,7 +110,7 @@ const PostEditor = ({
     title: post?.title || '',
     comment: post?.rawBody || '',
     follow: isEmpty(post?.following) ? true : post?.following,
-    notifyAllLearners: isEmpty(post?.notifyAllLearners) ? false : post?.notifyAllLearners,
+    notifyAllLearners: false,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
     cohort: post?.cohort || 'default',
@@ -220,6 +220,8 @@ const PostEditor = ({
     anonymousToPeers: Yup.bool()
       .default(false)
       .nullable(),
+    notifyAllLearners: Yup.bool()
+      .default(false),
     cohort: Yup.string()
       .nullable()
       .default(null),
@@ -421,6 +423,21 @@ const PostEditor = ({
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (
           <>
+            {isNotifyAllLearnersEnabled && (
+            <Form.Group>
+              <Form.Checkbox
+                name="notifyAllLearners"
+                checked={values.notifyAllLearners}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="mr-4.5"
+              >
+                <span>
+                  {intl.formatMessage(messages.notifyAllLearners)}
+                </span>
+              </Form.Checkbox>
+            </Form.Group>
+            )}
             <Form.Group>
               <Form.Checkbox
                 name="follow"
@@ -444,26 +461,6 @@ const PostEditor = ({
               >
                 <span>
                   {intl.formatMessage(messages.anonymousToPeersPost)}
-                </span>
-              </Form.Checkbox>
-            </Form.Group>
-            )}
-          </>
-          )}
-        </div>
-        <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
-          {!editExisting && (
-          <>
-            {isNotifyAllLearnersEnabled && (<Form.Group>
-              <Form.Checkbox
-                name="notifyAllLearners"
-                checked={values.notifyAllLearners}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="mr-4.5 mt-1.5"
-              >
-                <span>
-                  {intl.formatMessage(messages.notifyAllLearners)}
                 </span>
               </Form.Checkbox>
             </Form.Group>
