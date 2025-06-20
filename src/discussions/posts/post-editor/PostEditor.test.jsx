@@ -19,6 +19,8 @@ import { initializeStore } from '../../../store';
 import executeThunk from '../../../test-utils';
 import { getCohortsApiUrl } from '../../cohorts/data/api';
 import DiscussionContext from '../../common/context';
+import { getCourseConfigApiUrl } from '../../data/api';
+import fetchCourseConfig from '../../data/thunks';
 import fetchCourseTopics from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
@@ -31,6 +33,7 @@ import '../data/__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
+const courseConfigApiUrl = getCourseConfigApiUrl();
 const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
@@ -140,6 +143,42 @@ describe('PostEditor', () => {
       await renderComponent();
 
       expect(mockSelectThread).not.toHaveBeenCalled();
+    });
+  });
+
+  describe.each([
+    {
+      isNotifyAllLearnersEnabled: true,
+      description: 'when "Notify All Learners" is enabled',
+    },
+    {
+      isNotifyAllLearnersEnabled: false,
+      description: 'when "Notify All Learners" is disabled',
+    },
+  ])('$description', ({ isNotifyAllLearnersEnabled }) => {
+    beforeEach(async () => {
+      store = initializeStore({
+        config: {
+          provider: 'legacy',
+          is_notify_all_learners_enabled: isNotifyAllLearnersEnabled,
+          moderationSettings: {},
+        },
+      });
+
+      axiosMock
+        .onGet(`${courseConfigApiUrl}${courseId}/`)
+        .reply(200, { is_notify_all_learners_enabled: isNotifyAllLearnersEnabled });
+
+      await store.dispatch(fetchCourseConfig(courseId));
+      renderComponent();
+    });
+
+    test(`should ${isNotifyAllLearnersEnabled ? 'show' : 'not show'} the "Notify All Learners" option`, async () => {
+      if (isNotifyAllLearnersEnabled) {
+        await waitFor(() => expect(screen.queryByText('Notify All Learners')).toBeInTheDocument());
+      } else {
+        await waitFor(() => expect(screen.queryByText('Notify All Learners')).not.toBeInTheDocument());
+      }
     });
   });
 

@@ -31,6 +31,8 @@ export const selectEnableInContext = state => state.config.enableInContext;
 
 export const selectIsPostingEnabled = state => state.config.isPostingEnabled;
 
+export const selectIsNotifyAllLearnersEnabled = state => state.config.isNotifyAllLearnersEnabled;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,
