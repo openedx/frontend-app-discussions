@@ -100,9 +100,9 @@ const PostsView = () => {
       )}
       <PostFilterBar />
       <div className="border-bottom border-light-400" />
-      <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
+      <ul className="list-group list-group-flush flex-fill" data-testid="list" onKeyDown={e => handleKeyDown(e)}>
         {postsListComponent}
-      </div>
+      </ul>
     </div>
   );
 };

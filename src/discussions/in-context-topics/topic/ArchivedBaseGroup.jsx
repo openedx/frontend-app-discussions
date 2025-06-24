@@ -23,7 +23,7 @@ const ArchivedBaseGroup = ({
   ), [archivedTopics]);
 
   return (
-    <>
+    <li>
       {showDivider && (
         <>
           <div className="divider border-top border-light-500" />
@@ -37,7 +37,7 @@ const ArchivedBaseGroup = ({
         <div className="pt-3 px-4 font-weight-bold">{intl.formatMessage(messages.archivedTopics)}</div>
         {renderArchivedTopics}
       </div>
-    </>
+    </li>
   );
 };
 
