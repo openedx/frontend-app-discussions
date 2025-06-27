@@ -29,6 +29,7 @@ import {
   selectAnonymousPostingConfig,
   selectDivisionSettings,
   selectEnableInContext,
+  selectIsNotifyAllLearnersEnabled,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -79,6 +80,7 @@ const PostEditor = ({
   const userIsStaff = useSelector(selectUserIsStaff);
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
+  const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -108,6 +110,7 @@ const PostEditor = ({
     title: post?.title || '',
     comment: post?.rawBody || '',
     follow: isEmpty(post?.following) ? true : post?.following,
+    notifyAllLearners: false,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
     cohort: post?.cohort || 'default',
@@ -161,6 +164,7 @@ const PostEditor = ({
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
         cohort,
         enableInContextSidebar,
+        notifyAllLearners: values.notifyAllLearners,
       }));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
@@ -216,6 +220,8 @@ const PostEditor = ({
     anonymousToPeers: Yup.bool()
       .default(false)
       .nullable(),
+    notifyAllLearners: Yup.bool()
+      .default(false),
     cohort: Yup.string()
       .nullable()
       .default(null),
@@ -417,6 +423,21 @@ const PostEditor = ({
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (
           <>
+            {isNotifyAllLearnersEnabled && (
+            <Form.Group>
+              <Form.Checkbox
+                name="notifyAllLearners"
+                checked={values.notifyAllLearners}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="mr-4.5"
+              >
+                <span>
+                  {intl.formatMessage(messages.notifyAllLearners)}
+                </span>
+              </Form.Checkbox>
+            </Form.Group>
+            )}
             <Form.Group>
               <Form.Checkbox
                 name="follow"
