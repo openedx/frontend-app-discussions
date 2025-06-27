@@ -4,18 +4,21 @@ import PropTypes from 'prop-types';
 import { Avatar, Badge, Icon } from '@openedx/paragon';
 import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
+import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
 import { useAlertBannerVisible } from '../../data/hooks';
+import { selectAuthorAvatar } from '../data/selectors';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
   author, postType, authorLabel, fromPostLink, read,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
+  const authorAvatars = useSelector(selectAuthorAvatar(author));
 
   const avatarSize = useMemo(() => {
     let size = '2rem';
@@ -60,6 +63,7 @@ export const PostAvatar = React.memo(({
           width: avatarSize,
         }}
         alt={author}
+        src={authorAvatars?.imageUrlSmall}
       />
     </div>
   );

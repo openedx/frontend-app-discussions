@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import camelCase from 'lodash/camelCase';
 
 const selectThreads = state => state.threads.threadsById;
 
@@ -56,3 +57,7 @@ export const selectThreadSorting = () => state => state.threads.sortedBy;
 export const selectThreadFilters = () => state => state.threads.filters;
 
 export const selectThreadNextPage = () => state => state.threads.nextPage;
+
+export const selectAuthorAvatar = author => state => (
+  state.threads.avatars?.[camelCase(author)]?.profile.image
+);
