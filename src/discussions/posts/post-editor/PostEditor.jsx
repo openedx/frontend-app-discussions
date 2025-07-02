@@ -43,6 +43,7 @@ import {
   selectNonCoursewareTopics as inContextNonCourseware,
 } from '../../in-context-topics/data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
+import { updateUserDiscussionsTourByName } from '../../tours/data';
 import {
   discussionsPath, formikCompatibleHandler, isFormikFieldInvalid, useCommentsPagePath,
 } from '../../utils';
@@ -90,6 +91,21 @@ const PostEditor = ({
   const editReasonCodeValidation = canDisplayEditReason && {
     editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
   };
+
+  const enableNotifyAllLearnersTour = useCallback((enabled) => {
+    const data = {
+      enabled,
+      tourName: 'notify_all_learners',
+    };
+    dispatch(updateUserDiscussionsTourByName(data));
+  }, []);
+
+  useEffect(() => {
+    enableNotifyAllLearnersTour(true);
+    return () => {
+      enableNotifyAllLearnersTour(false);
+    };
+  }, []);
 
   const canSelectCohort = useCallback((tId) => {
     // If the user isn't privileged, they can't edit the cohort.
@@ -427,6 +443,7 @@ const PostEditor = ({
             <Form.Group>
               <Form.Checkbox
                 name="notifyAllLearners"
+                id="notify-learners"
                 checked={values.notifyAllLearners}
                 onChange={handleChange}
                 onBlur={handleBlur}

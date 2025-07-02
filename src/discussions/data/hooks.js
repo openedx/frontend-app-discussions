@@ -252,7 +252,7 @@ export const useTourConfiguration = () => {
         enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
         onDismiss: () => handleOnDismiss(tour.id),
         onEnd: () => handleOnEnd(tour.id),
-        checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
+        checkpoints: tourCheckpoints(intl)[tour.tourName],
       }
     ))
   ), [tours, enableInContextSidebar]);

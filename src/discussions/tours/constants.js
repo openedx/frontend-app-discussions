@@ -7,11 +7,11 @@ import messages from './messages';
  */
 export default function tourCheckpoints(intl) {
   return {
-    EXAMPLE_TOUR: [
+    notify_all_learners: [
       {
-        title: intl.formatMessage(messages.exampleTourTitle),
-        body: intl.formatMessage(messages.exampleTourBody),
-        target: '#example-tour-target',
+        title: intl.formatMessage(messages.notifyAllLearnersTourTitle),
+        body: intl.formatMessage(messages.notifyAllLearnersTourBody),
+        target: '#notify-learners',
         placement: 'bottom',
       },
     ],

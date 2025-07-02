@@ -16,15 +16,15 @@ const messages = defineMessages({
     defaultMessage: 'Okay',
     description: 'Action to end current tour',
   },
-  exampleTourTitle: {
-    id: 'tour.example.title',
-    defaultMessage: 'Example Tour',
-    description: 'Title for example tour',
+  notifyAllLearnersTourTitle: {
+    id: 'tour.title.notifyAllLearners',
+    defaultMessage: 'Let your learners know.',
+    description: 'Title of the tour to notify all learners',
   },
-  exampleTourBody: {
-    id: 'tour.example.body',
-    defaultMessage: 'This is an example tour',
-    description: 'Body for example tour',
+  notifyAllLearnersTourBody: {
+    id: 'tour.body.notifyAllLearners',
+    defaultMessage: 'Check this box to notify all learners.',
+    description: 'Body of the tour to notify all learners',
   },
 });
 
