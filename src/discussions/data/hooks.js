@@ -224,10 +224,6 @@ export const useUserPostingEnabled = () => {
   return (isPostingEnabled || isPrivileged);
 };
 
-function camelToConstant(string) {
-  return string.replace(/[A-Z]/g, (match) => `_${match}`).toUpperCase();
-}
-
 export const useTourConfiguration = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
