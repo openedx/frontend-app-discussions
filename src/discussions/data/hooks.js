@@ -224,10 +224,6 @@ export const useUserPostingEnabled = () => {
   return (isPostingEnabled || isPrivileged);
 };
 
-function camelToConstant(string) {
-  return string.replace(/[A-Z]/g, (match) => `_${match}`).toUpperCase();
-}
-
 export const useTourConfiguration = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -252,7 +248,7 @@ export const useTourConfiguration = () => {
         enabled: tour && Boolean(tour.enabled && tour.showTour && !enableInContextSidebar),
         onDismiss: () => handleOnDismiss(tour.id),
         onEnd: () => handleOnEnd(tour.id),
-        checkpoints: tourCheckpoints(intl)[camelToConstant(tour.tourName)],
+        checkpoints: tourCheckpoints(intl)[tour.tourName],
       }
     ))
   ), [tours, enableInContextSidebar]);
