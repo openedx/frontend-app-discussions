@@ -35,6 +35,7 @@ const LearnerFooter = ({
       >
         <div className="d-flex align-items-center">
           <Icon src={QuestionAnswerOutline} className="icon-size mr-2" />
+          <span className="sr-only">{intl.formatMessage(messages.allActivity)}</span>
           {threads + responses + replies}
         </div>
       </OverlayTrigger>
@@ -51,6 +52,7 @@ const LearnerFooter = ({
       >
         <div className="d-flex align-items-center">
           <Icon src={Edit} className="icon-size mr-2 ml-4" />
+          <span className="sr-only">{intl.formatMessage(messages.posts)}</span>
           {threads}
         </div>
       </OverlayTrigger>
