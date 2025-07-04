@@ -109,11 +109,11 @@ const TopicsView = () => {
           {filteredTopics.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
         </>
       )}
-      <div
+      <ul
         className={classNames('list-group list-group-flush flex-fill', {
           'justify-content-center': loadingStatus === RequestStatus.IN_PROGRESS && isEmpty(topics),
         })}
-        role="list"
+        data-testid="list"
         onKeyDown={e => handleKeyDown(e)}
       >
         {topicFilter ? (
@@ -126,7 +126,7 @@ const TopicsView = () => {
         ) : (
           <TopicsList />
         )}
-      </div>
+      </ul>
     </div>
   );
 };

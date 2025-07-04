@@ -75,7 +75,7 @@ const TopicPostsView = () => {
         />
       )}
       <div className="border-bottom border-light-400" />
-      <div className="list-group list-group-flush flex-fill" role="list" onKeyDown={e => handleKeyDown(e)}>
+      <ul className="list-group list-group-flush flex-fill" data-testid="list" onKeyDown={e => handleKeyDown(e)}>
         {topicId ? (
           <PostsList
             postsIds={postsIds}
@@ -94,11 +94,11 @@ const TopicPostsView = () => {
           <NoResults />
         )}
         {(category && topicsInProgress) && (
-          <div className="d-flex justify-content-center p-4">
+          <li className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
-          </div>
+          </li>
         )}
-      </div>
+      </ul>
     </div>
   );
 };
