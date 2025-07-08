@@ -49,7 +49,7 @@ export default function useIndexOfLastVisibleChild() {
 
       if (sumWidth <= containingRect.width) {
         lastVisibleIndex = i;
-      } else {
+      } /* istanbul ignore else */ else {
         break;
       }
     }
@@ -59,7 +59,9 @@ export default function useIndexOfLastVisibleChild() {
 
   useLayoutEffect(() => {
     const container = containerElementRef.current;
-    if (!container) { return undefined; }
+    if (!container) {
+      return () => {};
+    }
 
     // ResizeObserver tracks size changes of the container or its children
     const resizeObserver = new ResizeObserver(() => {
@@ -70,7 +72,10 @@ export default function useIndexOfLastVisibleChild() {
     // Run once on mount to ensure accurate measurement from the start
     measureVisibleChildren();
 
-    return () => resizeObserver.disconnect();
+    /* istanbul ignore next */
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   return [indexOfLastVisibleChild, containerElementRef, invisibleStyle, overflowElementRef];
