@@ -49,7 +49,7 @@ export default function useIndexOfLastVisibleChild() {
 
       if (sumWidth <= containingRect.width) {
         lastVisibleIndex = i;
-      } /* istanbul ignore else */ else {
+      } else {
         break;
       }
     }
