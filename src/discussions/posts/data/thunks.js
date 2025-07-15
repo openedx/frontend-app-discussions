@@ -205,6 +205,7 @@ export function createNewThread({
   cohort,
   enableInContextSidebar,
   notifyAllLearners,
+  recaptchaToken,
 }) {
   return async (dispatch) => {
     try {
@@ -219,6 +220,7 @@ export function createNewThread({
         anonymousToPeers,
         cohort,
         notifyAllLearners,
+        recaptchaToken,
       }));
       const data = await postThread(courseId, topicId, type, title, content, {
         cohort,
@@ -226,6 +228,7 @@ export function createNewThread({
         anonymous,
         anonymousToPeers,
         notifyAllLearners,
+        recaptchaToken,
       }, enableInContextSidebar);
       dispatch(postThreadSuccess(camelCaseObject(data)));
     } catch (error) {

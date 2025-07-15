@@ -84,6 +84,8 @@ export const getThread = async (threadId, courseId) => {
  * @param {boolean} following Follow the thread after creating
  * @param {boolean} anonymous Should the thread be anonymous to all users
  * @param {boolean} anonymousToPeers Should the thread be anonymous to peers
+ * @param notifyAllLearners
+ * @param recaptchaToken
  * @param {boolean} enableInContextSidebar
  * @returns {Promise<{}>}
  */
@@ -99,6 +101,7 @@ export const postThread = async (
     anonymous,
     anonymousToPeers,
     notifyAllLearners,
+    recaptchaToken,
   } = {},
   enableInContextSidebar = false,
 ) => {
@@ -114,6 +117,7 @@ export const postThread = async (
     groupId: cohort,
     enableInContextSidebar,
     notifyAllLearners,
+    recaptchaToken,
   });
   const { data } = await getAuthenticatedHttpClient()
     .post(getThreadsApiUrl(), postData);
