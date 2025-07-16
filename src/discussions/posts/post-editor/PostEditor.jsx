@@ -28,9 +28,11 @@ import DiscussionContext from '../../common/context';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
+  selectCaptchaSettings,
   selectDivisionSettings,
   selectEnableInContext,
   selectIsNotifyAllLearnersEnabled,
+  selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -84,6 +86,8 @@ const PostEditor = ({
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
   const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
+  const captchaSettings = useSelector(selectCaptchaSettings);
+  const isUserLearner = useSelector(selectIsUserLearner);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -94,15 +98,9 @@ const PostEditor = ({
     editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
   };
 
-  // CAPTCHA validation - only required for new posts from non-staff users
-  // const shouldRequireCaptcha = !editExisting && !userIsStaff && !userIsGroupTa && !userHasModerationPrivileges;
-  // const captchaValidation = shouldRequireCaptcha && {
-  //   recaptchaToken: Yup.string().required(intl.formatMessage(messages.captchaError || 'Please complete the CAPTCHA verification')),
-  // };
-  // CAPTCHA validation - only required for new posts from non-staff users
-  const shouldRequireCaptcha = true
-  const captchaValidation =  {
-    recaptchaToken: Yup.string().required( 'Please complete the CAPTCHA verification'),
+  const shouldRequireCaptcha = !postId && captchaSettings.enabled && isUserLearner;
+  const captchaValidation = {
+    recaptchaToken: Yup.string().required('Please complete the CAPTCHA verification'),
   };
 
   const enableNotifyAllLearnersTour = useCallback((enabled) => {
@@ -118,6 +116,14 @@ const PostEditor = ({
     return () => {
       enableNotifyAllLearnersTour(false);
     };
+  }, []);
+
+  const handleCaptchaChange = useCallback((token, setFieldValue) => {
+    setFieldValue('recaptchaToken', token || '');
+  }, []);
+
+  const handleCaptchaExpired = useCallback((setFieldValue) => {
+    setFieldValue('recaptchaToken', '');
   }, []);
 
   const canSelectCohort = useCallback((tId) => {
@@ -206,7 +212,7 @@ const PostEditor = ({
           cohort,
           enableInContextSidebar,
           notifyAllLearners: values.notifyAllLearners,
-          recaptchaToken: values.recaptchaToken, // Include CAPTCHA token
+          ...(shouldRequireCaptcha ? { recaptchaToken: values.recaptchaToken } : {}),
         }));
       }
 
@@ -279,22 +285,14 @@ const PostEditor = ({
     cohort: Yup.string()
       .nullable()
       .default(null),
-    recaptchaToken: Yup.string(),
+    ...(shouldRequireCaptcha ? { recaptchaToken: Yup.string().required() } : { }),
     ...editReasonCodeValidation,
-    ...captchaValidation,
+    ...(shouldRequireCaptcha ? captchaValidation : {}),
   });
 
   const handleInContextSelectLabel = (section, subsection) => (
     `${section.displayName} / ${subsection.displayName}` || intl.formatMessage(messages.unnamedTopics)
   );
-
-  const handleCaptchaChange = useCallback((token, setFieldValue) => {
-    setFieldValue('recaptchaToken', token || '');
-  }, []);
-
-  const handleCaptchaExpired = useCallback((setFieldValue) => {
-    setFieldValue('recaptchaToken', '');
-  }, []);
 
   return (
     <Formik
@@ -485,31 +483,6 @@ const PostEditor = ({
           <FormikErrorFeedback name="comment" />
         </div>
         <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
-
-        {/* CAPTCHA Section - Only show for new posts from non-staff users */}
-        <div className="mb-3">
-          <Form.Group
-            isInvalid={isFormikFieldInvalid('recaptchaToken', {
-              errors,
-              touched,
-            })}
-          >
-            <Form.Label className="h6">
-              {('Verify you are human')}
-            </Form.Label>
-            <div className="d-flex justify-content-start">
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey=""
-                onChange={(token) => handleCaptchaChange(token, setFieldValue)}
-                onExpired={() => handleCaptchaExpired(setFieldValue)}
-                onError={() => handleCaptchaExpired(setFieldValue)}
-              />
-            </div>
-            <FormikErrorFeedback name="recaptchaToken" />
-          </Form.Group>
-        </div>
-
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (
           <>
@@ -559,6 +532,31 @@ const PostEditor = ({
           </>
           )}
         </div>
+        {/* CAPTCHA Section - Only show for new posts for non-staff users */}
+        {shouldRequireCaptcha && (
+        <div className="mb-3">
+          <Form.Group
+            isInvalid={isFormikFieldInvalid('recaptchaToken', {
+              errors,
+              touched,
+            })}
+          >
+            <Form.Label className="h6">
+              Verify you are human
+            </Form.Label>
+            <div className="d-flex justify-content-start">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={captchaSettings.siteKey}
+                onChange={(token) => handleCaptchaChange(token, setFieldValue)}
+                onExpired={() => handleCaptchaExpired(setFieldValue)}
+                onError={() => handleCaptchaExpired(setFieldValue)}
+              />
+            </div>
+            <FormikErrorFeedback name="recaptchaToken" />
+          </Form.Group>
+        </div>
+        )}
         <div className="d-flex justify-content-end">
           <Button
             variant="outline-primary"

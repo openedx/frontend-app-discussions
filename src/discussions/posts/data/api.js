@@ -117,7 +117,7 @@ export const postThread = async (
     groupId: cohort,
     enableInContextSidebar,
     notifyAllLearners,
-    recaptchaToken,
+    captchaToken: recaptchaToken,
   });
   const { data } = await getAuthenticatedHttpClient()
     .post(getThreadsApiUrl(), postData);

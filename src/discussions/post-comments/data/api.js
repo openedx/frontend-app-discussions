@@ -73,10 +73,16 @@ export const getCommentResponses = async (commentId, {
  * @param {boolean} enableInContextSidebar
  * @returns {Promise<{}>}
  */
-export const postComment = async (comment, threadId, parentId = null, enableInContextSidebar = false) => {
+export const postComment = async (
+  comment,
+  threadId,
+  parentId = null,
+  enableInContextSidebar = false,
+  recaptchaToken = '',
+) => {
   const { data } = await getAuthenticatedHttpClient()
     .post(getCommentsApiUrl(), snakeCaseObject({
-      threadId, raw_body: comment, parentId, enableInContextSidebar,
+      threadId, raw_body: comment, parentId, enableInContextSidebar, captchaToken: recaptchaToken,
     }));
   return data;
 };

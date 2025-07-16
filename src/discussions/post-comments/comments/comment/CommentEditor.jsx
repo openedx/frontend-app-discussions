@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Form, StatefulButton } from '@openedx/paragon';
 import { Formik } from 'formik';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
@@ -17,6 +18,8 @@ import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
+  selectCaptchaSettings,
+  selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -40,6 +43,7 @@ const CommentEditor = ({
   const intl = useIntl();
   const editorRef = useRef(null);
   const formRef = useRef(null);
+  const recaptchaRef = useRef(null);
   const { authenticatedUser } = useContext(AppContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -49,6 +53,14 @@ const CommentEditor = ({
   const [submitting, dispatch] = useDispatchWithState();
   const [editorContent, setEditorContent] = useState();
   const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
+  const isUserLearner = useSelector(selectIsUserLearner);
+  const captchaSettings = useSelector(selectCaptchaSettings);
+
+  const shouldRequireCaptcha = !id && captchaSettings.enabled && isUserLearner;
+
+  const captchaValidation = {
+    recaptchaToken: Yup.string().required('Please complete the CAPTCHA verification'),
+  };
 
   const canDisplayEditReason = (edit
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -62,16 +74,31 @@ const CommentEditor = ({
   const validationSchema = Yup.object().shape({
     comment: Yup.string()
       .required(),
+    ...(shouldRequireCaptcha ? { recaptchaToken: Yup.string().required() } : { }),
     ...editReasonCodeValidation,
+    ...(shouldRequireCaptcha ? captchaValidation : {}),
   });
 
   const initialValues = {
     comment: editorContent,
     editReasonCode: lastEdit?.reasonCode || (userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined),
+    recaptchaToken: '',
   };
+
+  const handleCaptchaChange = useCallback((token, setFieldValue) => {
+    setFieldValue('recaptchaToken', token || '');
+  }, []);
+
+  const handleCaptchaExpired = useCallback((setFieldValue) => {
+    setFieldValue('recaptchaToken', '');
+  }, []);
 
   const handleCloseEditor = useCallback((resetForm) => {
     resetForm({ values: initialValues });
+    // Reset CAPTCHA when hiding editor
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
     onCloseEditor();
   }, [onCloseEditor, initialValues]);
 
@@ -84,7 +111,13 @@ const CommentEditor = ({
     }
   }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
-  const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
+  const saveUpdatedComment = useCallback(async (values, { resetForm, setFieldError }) => {
+    // Validate CAPTCHA for new comments from non-staff users
+    if (shouldRequireCaptcha && !values.recaptchaToken) {
+      setFieldError('recaptchaToken', 'Please complete the CAPTCHA verification');
+      return;
+    }
+
     if (id) {
       const payload = {
         ...values,
@@ -92,7 +125,7 @@ const CommentEditor = ({
       };
       await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar));
+      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar, ...(shouldRequireCaptcha ? values.recaptchaToken : '')));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
@@ -100,7 +133,7 @@ const CommentEditor = ({
     }
     handleCloseEditor(resetForm);
     deleteEditorContent();
-  }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor]);
+  }, [id, threadId, parentId, enableInContextSidebar, handleCloseEditor, shouldRequireCaptcha]);
   // The editorId is used to autosave contents to localstorage. This format means that the autosave is scoped to
   // the current comment id, or the current comment parent or the curren thread.
   const editorId = `comment-editor-${id || parentId || threadId}`;
@@ -147,6 +180,7 @@ const CommentEditor = ({
         handleBlur,
         handleChange,
         resetForm,
+        setFieldValue,
       }) => (
         <Form onSubmit={handleSubmit} className={formClasses} ref={formRef}>
           {canDisplayEditReason && (
@@ -202,6 +236,32 @@ const CommentEditor = ({
               </Form.Control.Feedback>
             )}
           <PostPreviewPanel htmlNode={values.comment} />
+          {/* CAPTCHA Section - Only show for new posts from non-staff users */}
+          { shouldRequireCaptcha && (
+          <div className="mb-3">
+            <Form.Group
+              isInvalid={isFormikFieldInvalid('recaptchaToken', {
+                errors,
+                touched,
+              })}
+            >
+              <Form.Label className="h6">
+                Verify you are human
+              </Form.Label>
+              <div className="d-flex justify-content-start">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey="6LfbfYArAAAAAFRWnXP9f-sMhBak6ZlQ0srCZdYw"
+                  onChange={(token) => handleCaptchaChange(token, setFieldValue)}
+                  onExpired={() => handleCaptchaExpired(setFieldValue)}
+                  onError={() => handleCaptchaExpired(setFieldValue)}
+                />
+              </div>
+              <FormikErrorFeedback name="recaptchaToken" />
+            </Form.Group>
+          </div>
+          ) }
+
           <div className="d-flex py-2 justify-content-end">
             <Button
               variant="outline-primary"
