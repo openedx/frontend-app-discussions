@@ -19,7 +19,7 @@ import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
   selectCaptchaSettings,
-  selectIsUserLearner,
+  // selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -53,10 +53,10 @@ const CommentEditor = ({
   const [submitting, dispatch] = useDispatchWithState();
   const [editorContent, setEditorContent] = useState();
   const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
-  const isUserLearner = useSelector(selectIsUserLearner);
+  // const isUserLearner = useSelector(selectIsUserLearner);
   const captchaSettings = useSelector(selectCaptchaSettings);
 
-  const shouldRequireCaptcha = !id && captchaSettings.enabled && isUserLearner;
+  const shouldRequireCaptcha = !id && captchaSettings.enabled;
 
   const captchaValidation = {
     recaptchaToken: Yup.string().required('Please complete the CAPTCHA verification'),
