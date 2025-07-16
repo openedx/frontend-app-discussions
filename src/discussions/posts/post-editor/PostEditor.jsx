@@ -32,7 +32,6 @@ import {
   selectDivisionSettings,
   selectEnableInContext,
   selectIsNotifyAllLearnersEnabled,
-  // selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -87,7 +86,6 @@ const PostEditor = ({
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
   const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
   const captchaSettings = useSelector(selectCaptchaSettings);
-  // const isUserLearner = useSelector(selectIsUserLearner);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -533,7 +531,7 @@ const PostEditor = ({
           )}
         </div>
         {/* CAPTCHA Section - Only show for new posts for non-staff users */}
-        {shouldRequireCaptcha && (
+        {shouldRequireCaptcha && captchaSettings.siteKey && (
         <div className="mb-3">
           <Form.Group
             isInvalid={isFormikFieldInvalid('recaptchaToken', {

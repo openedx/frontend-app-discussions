@@ -19,7 +19,6 @@ import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import {
   selectCaptchaSettings,
-  // selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -53,7 +52,6 @@ const CommentEditor = ({
   const [submitting, dispatch] = useDispatchWithState();
   const [editorContent, setEditorContent] = useState();
   const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
-  // const isUserLearner = useSelector(selectIsUserLearner);
   const captchaSettings = useSelector(selectCaptchaSettings);
 
   const shouldRequireCaptcha = !id && captchaSettings.enabled;
@@ -237,7 +235,7 @@ const CommentEditor = ({
             )}
           <PostPreviewPanel htmlNode={values.comment} />
           {/* CAPTCHA Section - Only show for new posts from non-staff users */}
-          { shouldRequireCaptcha && (
+          { shouldRequireCaptcha && captchaSettings.siteKey && (
           <div className="mb-3">
             <Form.Group
               isInvalid={isFormikFieldInvalid('recaptchaToken', {
@@ -251,7 +249,7 @@ const CommentEditor = ({
               <div className="d-flex justify-content-start">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey="6LfbfYArAAAAAFRWnXP9f-sMhBak6ZlQ0srCZdYw"
+                  sitekey={captchaSettings.siteKey}
                   onChange={(token) => handleCaptchaChange(token, setFieldValue)}
                   onExpired={() => handleCaptchaExpired(setFieldValue)}
                   onError={() => handleCaptchaExpired(setFieldValue)}
