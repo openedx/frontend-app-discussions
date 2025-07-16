@@ -175,6 +175,16 @@ const messages = defineMessages({
     defaultMessage: 'Archived',
     description: 'Heading for displaying topics that are archived.',
   },
+  captchaVerificationLabel: {
+    id: 'discussions.captcha.verification.label',
+    defaultMessage: 'Please complete the CAPTCHA verification',
+    description: 'Please complete the CAPTCHA to continue.',
+  },
+  verifyHumanLabel: {
+    id: 'discussions.verify.human.label',
+    defaultMessage: 'Verify you are human',
+    description: 'Verify you are human description.',
+  },
 });
 
 export default messages;

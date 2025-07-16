@@ -98,7 +98,7 @@ const PostEditor = ({
 
   const shouldRequireCaptcha = !postId && captchaSettings.enabled;
   const captchaValidation = {
-    recaptchaToken: Yup.string().required('Please complete the CAPTCHA verification'),
+    recaptchaToken: Yup.string().required(intl.formatMessage(messages.captchaVerificationLabel)),
   };
 
   const enableNotifyAllLearnersTour = useCallback((enabled) => {
@@ -182,7 +182,7 @@ const PostEditor = ({
   const submitForm = useCallback(async (values, { resetForm, setFieldError }) => {
     // Validate CAPTCHA for new posts from non-staff users
     if (shouldRequireCaptcha && !values.recaptchaToken) {
-      setFieldError('recaptchaToken', 'Please complete the CAPTCHA verification');
+      setFieldError('recaptchaToken', intl.formatMessage(messages.captchaVerificationLabel));
       return;
     }
 
@@ -540,7 +540,7 @@ const PostEditor = ({
             })}
           >
             <Form.Label className="h6">
-              Verify you are human
+              {intl.formatMessage(messages.verifyHumanLabel)}
             </Form.Label>
             <div className="d-flex justify-content-start">
               <ReCAPTCHA
