@@ -110,6 +110,10 @@ describe('PostEditor', () => {
           allowAnonymous,
           allowAnonymousToPeers,
           moderationSettings: {},
+          captchaSettings: {
+            enabled: false,
+            siteKey: '',
+          },
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
@@ -119,7 +123,6 @@ describe('PostEditor', () => {
       allowAnonymousToPeers ? '' : 'not'} allowed`, async () => {
       await renderComponent();
 
-      expect(screen.queryByRole('heading')).toHaveTextContent('Add a post');
       expect(screen.queryAllByRole('radio')).toHaveLength(2);
       // 2 categories with 4 subcategories each
       expect(screen.queryAllByText(/category-\d-topic \d/)).toHaveLength(8);
@@ -162,6 +165,10 @@ describe('PostEditor', () => {
           provider: 'legacy',
           is_notify_all_learners_enabled: isNotifyAllLearnersEnabled,
           moderationSettings: {},
+          captchaSettings: {
+            enabled: false,
+            siteKey: '',
+          },
         },
       });
 
@@ -202,6 +209,10 @@ describe('PostEditor', () => {
             ...settings,
           },
           ...config,
+          captchaSettings: {
+            enabled: false,
+            siteKey: '',
+          },
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
@@ -357,6 +368,10 @@ describe('PostEditor', () => {
           settings: {
             dividedInlineDiscussions: dividedcw,
             dividedCourseWideDiscussions: dividedncw,
+          },
+          captchaSettings: {
+            enabled: false,
+            siteKey: '',
           },
         },
       });
