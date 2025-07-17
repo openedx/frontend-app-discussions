@@ -93,21 +93,21 @@ describe('Post comments view api tests', () => {
         raw_body: content,
         rendered_body: content,
       }));
-    await executeThunk(addComment(content, threadId, null, false, 'recaptcha-token'), store.dispatch, store.getState);
+    await executeThunk(addComment(content, threadId, 'parent_id', false, 'recaptcha-token'), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('successful');
   });
 
   it('failed to add comment', async () => {
     axiosMock.onPost(commentsApiUrl).reply(404);
-    await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
+    await executeThunk(addComment(content, threadId, 'parent_id', false, 'recaptcha-token'), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('failed');
   });
 
   it('denied to add comment', async () => {
     axiosMock.onPost(commentsApiUrl).reply(403, {});
-    await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
+    await executeThunk(addComment(content, threadId, 'parent_id', false, 'recaptcha-token'), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('denied');
   });

@@ -1,6 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
@@ -26,6 +23,9 @@ import fetchCourseConfig from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
+import MockReCAPTCHA, {
+  mockOnChange, mockOnError, mockOnExpired,
+} from '../posts/post-editor/mocksData/react-google-recaptcha';
 import fetchCourseTopics from '../topics/data/thunks';
 import { getDiscussionTourUrl } from '../tours/data/api';
 import selectTours from '../tours/data/selectors';
@@ -53,43 +53,6 @@ let axiosMock;
 let testLocation;
 let container;
 let unmount;
-
-const mockOnChange = jest.fn();
-const mockOnExpired = jest.fn();
-const mockOnError = jest.fn();
-const mockReset = jest.fn();
-
-const MockReCAPTCHA = React.forwardRef((props, ref) => {
-  const { onChange, onExpired, onError } = props;
-  React.useImperativeHandle(ref, () => ({
-    reset: mockReset,
-  }));
-
-  return (
-    <div data-testid="mocked-recaptcha" ref={ref}>
-      <button type="button" onClick={() => { mockOnChange(); onChange?.('mock-token'); }}>
-        Solve CAPTCHA
-      </button>
-      <button type="button" onClick={() => { mockOnExpired(); onExpired?.(); }}>
-        Expire CAPTCHA
-      </button>
-      <button type="button" onClick={() => { mockOnError(); onError?.(); }}>
-        Error CAPTCHA
-      </button>
-    </div>
-  );
-});
-
-MockReCAPTCHA.propTypes = {
-  onChange: PropTypes.func,
-  onExpired: PropTypes.func,
-  onError: PropTypes.func,
-};
-MockReCAPTCHA.defaultProps = {
-  onChange: () => {},
-  onExpired: () => {},
-  onError: () => {},
-};
 
 jest.mock('react-google-recaptcha', () => MockReCAPTCHA);
 

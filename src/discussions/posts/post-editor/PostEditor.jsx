@@ -347,6 +347,7 @@ const PostEditor = ({
               aria-describedby="topicAreaInput"
               floatingLabel={intl.formatMessage(messages.topicArea)}
               disabled={enableInContextSidebar}
+              data-testid="topic-select"
             >
               {nonCoursewareTopics.map(topic => (
                 <option
@@ -434,6 +435,7 @@ const PostEditor = ({
               aria-describedby="titleInput"
               floatingLabel={intl.formatMessage(messages.postTitle)}
               value={values.title}
+              data-testid="post-title-input"
             />
             <FormikErrorFeedback name="title" />
           </Form.Group>

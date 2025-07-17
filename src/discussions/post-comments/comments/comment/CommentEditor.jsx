@@ -109,13 +109,7 @@ const CommentEditor = ({
     }
   }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
-  const saveUpdatedComment = useCallback(async (values, { resetForm, setFieldError }) => {
-    // Validate CAPTCHA for new comments from non-staff users
-    if (shouldRequireCaptcha && !values.recaptchaToken) {
-      setFieldError('recaptchaToken', intl.formatMessage(messages.captchaVerificationLabel));
-      return;
-    }
-
+  const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
     if (id) {
       const payload = {
         ...values,

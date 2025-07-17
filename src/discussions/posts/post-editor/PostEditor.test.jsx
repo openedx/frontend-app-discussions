@@ -66,6 +66,114 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
   container = wrapper.container;
 }
 
+describe('PostEditor submit Form', () => {
+  beforeEach(async () => {
+    initializeMockApp({
+      authenticatedUser: {
+        userId: 3,
+        username: 'abc123',
+        administrator: true,
+        roles: [],
+      },
+    });
+
+    Factory.resetAll();
+    axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    const cwtopics = Factory.buildList('category', 2);
+    Factory.reset('topic');
+    axiosMock.onGet(topicsApiUrl).reply(200, {
+      courseware_topics: cwtopics,
+      non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw-' }),
+    });
+
+    store = initializeStore({
+      config: {
+        provider: 'legacy',
+        allowAnonymous: true,
+        allowAnonymousToPeers: true,
+        hasModerationPrivileges: true,
+        settings: {
+          dividedInlineDiscussions: ['category-1-topic-2'],
+          dividedCourseWideDiscussions: ['ncw-topic-2'],
+        },
+        captchaSettings: {
+          enabled: true,
+          siteKey: 'test-key',
+        },
+      },
+    });
+    await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
+  });
+
+  test('successfully submits a new post with CAPTCHA', async () => {
+    const newThread = Factory.build('thread', { id: 'new-thread-1' });
+    axiosMock.onPost(threadsApiUrl).reply(200, newThread);
+
+    await renderComponent();
+
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('topic-select'), {
+        target: { value: 'ncw-topic-1' },
+      });
+      const postTitle = await screen.findByTestId('post-title-input');
+      const tinymceEditor = await screen.findByTestId('tinymce-editor');
+      const solveButton = screen.getByText('Solve CAPTCHA');
+
+      fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
+      fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
+      fireEvent.click(solveButton);
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+    });
+
+    await waitFor(() => {
+      expect(axiosMock.history.post).toHaveLength(1);
+      expect(JSON.parse(axiosMock.history.post[0].data)).toMatchObject({
+        course_id: 'course-v1:edX+DemoX+Demo_Course',
+        topic_id: 'ncw-topic-1',
+        type: 'discussion',
+        title: 'Test Post Title',
+        raw_body: 'Test Post Content',
+        following: true,
+        anonymous: false,
+        anonymous_to_peers: false,
+        enable_in_context_sidebar: false,
+        notify_all_learners: false,
+        captcha_token: 'mock-token',
+      });
+    });
+  });
+
+  test('fails to submit a new post with CAPTCHA if token is missing', async () => {
+    const newThread = Factory.build('thread', { id: 'new-thread-1' });
+    axiosMock.onPost(threadsApiUrl).reply(200, newThread);
+
+    await renderComponent();
+
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('topic-select'), {
+        target: { value: 'ncw-topic-1' },
+      });
+      const postTitle = await screen.findByTestId('post-title-input');
+      const tinymceEditor = await screen.findByTestId('tinymce-editor');
+
+      fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
+      fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Please complete the CAPTCHA verification')).toBeInTheDocument();
+    });
+  });
+});
+
 describe('PostEditor', () => {
   beforeEach(async () => {
     initializeMockApp({
