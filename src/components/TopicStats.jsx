@@ -41,6 +41,11 @@ const TopicStats = ({
       >
         <div className="d-flex align-items-center mr-3.5">
           <Icon src={PostOutline} className="icon-size mr-2" />
+          <span className="sr-only">
+            {intl.formatMessage(messages.discussions, {
+              count: threadCounts?.discussion || 0,
+            })}
+          </span>
           {threadCounts?.discussion || 0}
         </div>
       </OverlayTrigger>
@@ -59,6 +64,11 @@ const TopicStats = ({
       >
         <div className="d-flex align-items-center mr-3.5">
           <Icon src={HelpOutline} className="icon-size mr-2" />
+          <span className="sr-only">
+            {intl.formatMessage(messages.questions, {
+              count: threadCounts?.question || 0,
+            })}
+          </span>
           {threadCounts?.question || 0}
         </div>
       </OverlayTrigger>
@@ -85,6 +95,10 @@ const TopicStats = ({
         >
           <div className="d-flex align-items-center">
             <Icon src={Report} className="icon-size mr-2 text-danger" />
+            <span className="sr-only">
+              {intl.formatMessage(inactiveFlags ? messages.previouslyReported : messages.reported)}
+            </span>
+
             {activeFlags}{Boolean(inactiveFlags) && `/${inactiveFlags}`}
           </div>
         </OverlayTrigger>
