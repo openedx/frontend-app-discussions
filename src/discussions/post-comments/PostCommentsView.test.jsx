@@ -321,7 +321,7 @@ describe('ThreadView', () => {
       await waitFor(() => {
         expect(axiosMock.history.post).toHaveLength(1);
         expect(JSON.parse(axiosMock.history.post[0].data)).toMatchObject({
-          captcha_token: 'm',
+          captcha_token: 'mock-token',
           enable_in_context_sidebar: false,
           parent_id: 'comment-1',
           raw_body: 'New comment with CAPTCHA',
