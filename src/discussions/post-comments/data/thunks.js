@@ -141,15 +141,16 @@ export function editComment(commentId, comment) {
   };
 }
 
-export function addComment(comment, threadId, parentId = null, enableInContextSidebar = false) {
+export function addComment(comment, threadId, parentId = null, enableInContextSidebar = false, recaptchaToken = '') {
   return async (dispatch) => {
     try {
       dispatch(postCommentRequest({
         comment,
         threadId,
         parentId,
+        recaptchaToken,
       }));
-      const data = await postComment(comment, threadId, parentId, enableInContextSidebar);
+      const data = await postComment(comment, threadId, parentId, enableInContextSidebar, recaptchaToken);
       dispatch(postCommentSuccess(camelCaseObject(data)));
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {

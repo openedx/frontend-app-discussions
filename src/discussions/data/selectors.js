@@ -33,6 +33,8 @@ export const selectIsPostingEnabled = state => state.config.isPostingEnabled;
 
 export const selectIsNotifyAllLearnersEnabled = state => state.config.isNotifyAllLearnersEnabled;
 
+export const selectCaptchaSettings = state => state.config.captchaSettings;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,

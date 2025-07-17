@@ -22,6 +22,10 @@ const configSlice = createSlice({
       dividedInlineDiscussions: [],
       dividedCourseWideDiscussions: [],
     },
+    captchaSettings: {
+      enabled: false,
+      siteKey: '',
+    },
     editReasons: [],
     postCloseReasons: [],
     enableInContext: false,

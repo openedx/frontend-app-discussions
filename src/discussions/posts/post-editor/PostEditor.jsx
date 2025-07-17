@@ -9,6 +9,7 @@ import {
 import { Help, Post } from '@openedx/paragon/icons';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -27,6 +28,7 @@ import DiscussionContext from '../../common/context';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
+  selectCaptchaSettings,
   selectDivisionSettings,
   selectEnableInContext,
   selectIsNotifyAllLearnersEnabled,
@@ -61,6 +63,7 @@ const PostEditor = ({
   const location = useLocation();
   const dispatch = useDispatch();
   const editorRef = useRef(null);
+  const recaptchaRef = useRef(null);
   const { courseId, postId } = useParams();
   const { authenticatedUser } = useContext(AppContext);
   const { category, enableInContextSidebar } = useContext(DiscussionContext);
@@ -82,6 +85,7 @@ const PostEditor = ({
   const archivedTopics = useSelector(selectArchivedTopics);
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
   const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
+  const captchaSettings = useSelector(selectCaptchaSettings);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -90,6 +94,11 @@ const PostEditor = ({
 
   const editReasonCodeValidation = canDisplayEditReason && {
     editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
+  };
+
+  const shouldRequireCaptcha = !postId && captchaSettings.enabled;
+  const captchaValidation = {
+    recaptchaToken: Yup.string().required(intl.formatMessage(messages.captchaVerificationLabel)),
   };
 
   const enableNotifyAllLearnersTour = useCallback((enabled) => {
@@ -105,6 +114,14 @@ const PostEditor = ({
     return () => {
       enableNotifyAllLearnersTour(false);
     };
+  }, []);
+
+  const handleCaptchaChange = useCallback((token, setFieldValue) => {
+    setFieldValue('recaptchaToken', token || '');
+  }, []);
+
+  const handleCaptchaExpired = useCallback((setFieldValue) => {
+    setFieldValue('recaptchaToken', '');
   }, []);
 
   const canSelectCohort = useCallback((tId) => {
@@ -133,10 +150,15 @@ const PostEditor = ({
     editReasonCode: post?.lastEdit?.reasonCode || (
       userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined
     ),
+    recaptchaToken: '',
   };
 
   const hideEditor = useCallback((resetForm) => {
     resetForm({ values: initialValues });
+    // Reset CAPTCHA when hiding editor
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
     if (editExisting) {
       const newLocation = discussionsPath(commentsPagePath, {
         courseId,
@@ -168,7 +190,7 @@ const PostEditor = ({
       }));
     } else {
       const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
-      // if not allowed to set cohort, always undefined, so no value is sent to backend
+      // Include CAPTCHA token in the request for new posts
       await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
@@ -181,16 +203,17 @@ const PostEditor = ({
         cohort,
         enableInContextSidebar,
         notifyAllLearners: values.notifyAllLearners,
+        ...(shouldRequireCaptcha ? { recaptchaToken: values.recaptchaToken } : {}),
       }));
     }
-    /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
+
     if (editorRef.current) {
       editorRef.current.plugins.autosave.removeDraft();
     }
     hideEditor(resetForm);
   }, [
     allowAnonymous, allowAnonymousToPeers, canSelectCohort, editExisting,
-    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId,
+    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha,
   ]);
 
   useEffect(() => {
@@ -241,7 +264,9 @@ const PostEditor = ({
     cohort: Yup.string()
       .nullable()
       .default(null),
+    ...(shouldRequireCaptcha ? { recaptchaToken: Yup.string().required() } : { }),
     ...editReasonCodeValidation,
+    ...(shouldRequireCaptcha ? captchaValidation : {}),
   });
 
   const handleInContextSelectLabel = (section, subsection) => (
@@ -262,6 +287,7 @@ const PostEditor = ({
       handleBlur,
       handleChange,
       resetForm,
+      setFieldValue,
     }) => (
       <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
         <h4 className="mb-4 font-style" style={{ lineHeight: '16px' }}>
@@ -302,6 +328,7 @@ const PostEditor = ({
               aria-describedby="topicAreaInput"
               floatingLabel={intl.formatMessage(messages.topicArea)}
               disabled={enableInContextSidebar}
+              data-testid="topic-select"
             >
               {nonCoursewareTopics.map(topic => (
                 <option
@@ -389,6 +416,7 @@ const PostEditor = ({
               aria-describedby="titleInput"
               floatingLabel={intl.formatMessage(messages.postTitle)}
               value={values.title}
+              data-testid="post-title-input"
             />
             <FormikErrorFeedback name="title" />
           </Form.Group>
@@ -485,6 +513,31 @@ const PostEditor = ({
           </>
           )}
         </div>
+        {/* CAPTCHA Section - Only show for new posts for non-staff users */}
+        {shouldRequireCaptcha && captchaSettings.siteKey && (
+        <div className="mb-3">
+          <Form.Group
+            isInvalid={isFormikFieldInvalid('recaptchaToken', {
+              errors,
+              touched,
+            })}
+          >
+            <Form.Label className="h6">
+              {intl.formatMessage(messages.verifyHumanLabel)}
+            </Form.Label>
+            <div className="d-flex justify-content-start">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={captchaSettings.siteKey}
+                onChange={(token) => handleCaptchaChange(token, setFieldValue)}
+                onExpired={() => handleCaptchaExpired(setFieldValue)}
+                onError={() => handleCaptchaExpired(setFieldValue)}
+              />
+            </div>
+            <FormikErrorFeedback name="recaptchaToken" />
+          </Form.Group>
+        </div>
+        )}
         <div className="d-flex justify-content-end">
           <Button
             variant="outline-primary"
