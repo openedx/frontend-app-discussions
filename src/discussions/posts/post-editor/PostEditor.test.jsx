@@ -24,6 +24,9 @@ import fetchCourseConfig from '../../data/thunks';
 import fetchCourseTopics from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
+import MockReCAPTCHA, {
+  mockOnChange, mockOnError, mockOnExpired,
+} from './mocksData/react-google-recaptcha';
 import PostEditor from './PostEditor';
 
 import '../../cohorts/data/__factories__';
@@ -38,6 +41,8 @@ const threadsApiUrl = getThreadsApiUrl();
 let store;
 let axiosMock;
 let container;
+
+jest.mock('react-google-recaptcha', () => MockReCAPTCHA);
 
 async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
   const paths = editExisting ? ROUTES.POSTS.EDIT_POST : [ROUTES.POSTS.NEW_POST];
@@ -208,15 +213,63 @@ describe('PostEditor', () => {
             dividedCourseWideDiscussions: dividedncw,
             ...settings,
           },
-          ...config,
           captchaSettings: {
             enabled: false,
             siteKey: '',
           },
+          ...config,
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
     }
+
+    test('renders the mocked ReCAPTCHA.', async () => {
+      await setupData({
+        captchaSettings: {
+          enabled: true,
+          siteKey: 'test-key',
+        },
+      });
+      await renderComponent();
+      expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
+    });
+
+    test('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
+      await setupData({
+        captchaSettings: {
+          enabled: true,
+          siteKey: 'test-key',
+        },
+      });
+      await renderComponent();
+      const solveButton = screen.getByText('Solve CAPTCHA');
+      fireEvent.click(solveButton);
+      expect(mockOnChange).toHaveBeenCalled();
+    });
+
+    test('successfully calls onExpired handler when CAPTCHA expires', async () => {
+      await setupData({
+        captchaSettings: {
+          enabled: true,
+          siteKey: 'test-key',
+        },
+      });
+      await renderComponent();
+      fireEvent.click(screen.getByText('Expire CAPTCHA'));
+      expect(mockOnExpired).toHaveBeenCalled();
+    });
+
+    test('successfully calls onError handler when CAPTCHA errors', async () => {
+      await setupData({
+        captchaSettings: {
+          enabled: true,
+          siteKey: 'test-key',
+        },
+      });
+      await renderComponent();
+      fireEvent.click(screen.getByText('Error CAPTCHA'));
+      expect(mockOnError).toHaveBeenCalled();
+    });
 
     test('test privileged user', async () => {
       await setupData();

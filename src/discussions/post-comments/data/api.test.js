@@ -93,7 +93,7 @@ describe('Post comments view api tests', () => {
         raw_body: content,
         rendered_body: content,
       }));
-    await executeThunk(addComment(content, threadId, null), store.dispatch, store.getState);
+    await executeThunk(addComment(content, threadId, null, false, 'recaptcha-token'), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('successful');
   });

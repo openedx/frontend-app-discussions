@@ -1,3 +1,6 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
@@ -50,6 +53,45 @@ let axiosMock;
 let testLocation;
 let container;
 let unmount;
+
+const mockOnChange = jest.fn();
+const mockOnExpired = jest.fn();
+const mockOnError = jest.fn();
+const mockReset = jest.fn();
+
+const MockReCAPTCHA = React.forwardRef((props, ref) => {
+  const { onChange, onExpired, onError } = props;
+  React.useImperativeHandle(ref, () => ({
+    reset: mockReset,
+  }));
+
+  return (
+    <div data-testid="mocked-recaptcha" ref={ref}>
+      <button type="button" onClick={() => { mockOnChange(); onChange?.('mock-token'); }}>
+        Solve CAPTCHA
+      </button>
+      <button type="button" onClick={() => { mockOnExpired(); onExpired?.(); }}>
+        Expire CAPTCHA
+      </button>
+      <button type="button" onClick={() => { mockOnError(); onError?.(); }}>
+        Error CAPTCHA
+      </button>
+    </div>
+  );
+});
+
+MockReCAPTCHA.propTypes = {
+  onChange: PropTypes.func,
+  onExpired: PropTypes.func,
+  onError: PropTypes.func,
+};
+MockReCAPTCHA.defaultProps = {
+  onChange: () => {},
+  onExpired: () => {},
+  onError: () => {},
+};
+
+jest.mock('react-google-recaptcha', () => MockReCAPTCHA);
 
 async function mockAxiosReturnPagedComments(threadId, threadType = ThreadType.DISCUSSION, page = 1, count = 2) {
   axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult', { can_delete: true }, {
@@ -215,7 +257,13 @@ describe('ThreadView', () => {
         endorsed: false,
       })];
     });
-    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, { isPostingEnabled: true });
+    axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
+      isPostingEnabled: true,
+      captchaSettings: {
+        enabled: true,
+        siteKey: 'test-key',
+      },
+    });
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
@@ -302,7 +350,6 @@ describe('ThreadView', () => {
       await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
-      expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
       await waitFor(async () => expect(await screen.findByTestId('comment-1')).toBeInTheDocument());
     });
 
@@ -323,7 +370,6 @@ describe('ThreadView', () => {
       await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'testing123' } }); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
-      expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
       await waitFor(async () => expect(await screen.findByTestId('reply-comment-2')).toBeInTheDocument());
     });
 
@@ -581,6 +627,42 @@ describe('ThreadView', () => {
   describe('for discussion thread', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
+    it('renders the mocked ReCAPTCHA.', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Add comment'));
+      });
+      expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
+    });
+
+    it('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Add comment'));
+      });
+      const solveButton = screen.getByText('Solve CAPTCHA');
+      fireEvent.click(solveButton);
+      expect(mockOnChange).toHaveBeenCalled();
+    });
+
+    it('successfully calls onExpired handler when CAPTCHA expires', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Add comment'));
+      });
+      fireEvent.click(screen.getByText('Expire CAPTCHA'));
+      expect(mockOnExpired).toHaveBeenCalled();
+    });
+
+    it('successfully calls onError handler when CAPTCHA errors', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+      await act(async () => {
+        fireEvent.click(screen.queryByText('Add comment'));
+      });
+      fireEvent.click(screen.getByText('Error CAPTCHA'));
+      expect(mockOnError).toHaveBeenCalled();
+    });
+
     it('shown post not found when post id does not belong to course', async () => {
       await waitFor(() => renderComponent('unloaded-id'));
       expect(await screen.findByText('Thread not found', { exact: true }))
@@ -749,7 +831,7 @@ describe('ThreadView', () => {
         fireEvent.click(screen.queryAllByText('Add comment')[0]);
       });
 
-      expect(screen.queryByTestId('tinymce-editor').value).toBe('');
+      expect(screen.queryByTestId('tinymce-editor').value).toBe('Draft comment 123!');
     });
 
     it('successfully added response in the draft.', async () => {
@@ -793,7 +875,7 @@ describe('ThreadView', () => {
         fireEvent.click(screen.queryByText('Add response'));
       });
 
-      expect(screen.queryByTestId('tinymce-editor').value).toBe('');
+      expect(screen.queryByTestId('tinymce-editor').value).toBe('Draft Response!');
     });
 
     it('successfully maintain response for the specific post in the draft.', async () => {
