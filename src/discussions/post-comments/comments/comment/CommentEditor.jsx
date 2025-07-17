@@ -117,7 +117,7 @@ const CommentEditor = ({
       };
       await dispatch(editComment(id, payload));
     } else {
-      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar, ...(shouldRequireCaptcha ? values.recaptchaToken : '')));
+      await dispatch(addComment(values.comment, threadId, parentId, enableInContextSidebar, shouldRequireCaptcha ? values.recaptchaToken : ''));
     }
     /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
     if (editorRef.current) {
