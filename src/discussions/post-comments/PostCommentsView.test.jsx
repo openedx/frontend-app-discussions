@@ -1054,6 +1054,20 @@ describe('MockReCAPTCHA', () => {
     jest.clearAllMocks();
   });
 
+  test('uses defaultProps when props are not provided', () => {
+    render(<MockReCAPTCHA />);
+
+    expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Solve CAPTCHA'));
+    fireEvent.click(screen.getByText('Expire CAPTCHA'));
+    fireEvent.click(screen.getByText('Error CAPTCHA'));
+
+    expect(mockOnChange).toHaveBeenCalled();
+    expect(mockOnExpired).toHaveBeenCalled();
+    expect(mockOnError).toHaveBeenCalled();
+  });
+
   it('triggers all callbacks and exposes reset via ref', () => {
     const onChange = jest.fn();
     const onExpired = jest.fn();
