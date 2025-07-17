@@ -340,6 +340,29 @@ describe('ThreadView', () => {
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
     });
 
+    it('should allow posting a comment with CAPTCHA', async () => {
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+      await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'New comment with CAPTCHA' } }); });
+      await act(async () => { fireEvent.click(screen.getByText('Solve CAPTCHA')); });
+      await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
+
+      await waitFor(() => {
+        expect(axiosMock.history.post).toHaveLength(1);
+        expect(JSON.parse(axiosMock.history.post[0].data)).toMatchObject({
+          captcha_token: 'm',
+          enable_in_context_sidebar: false,
+          parent_id: 'comment-1',
+          raw_body: 'New comment with CAPTCHA',
+          thread_id: 'thread-1',
+        });
+        expect(mockOnChange).toHaveBeenCalled();
+      });
+    });
+
     it('should allow posting a comment', async () => {
       await waitFor(() => renderComponent(discussionPostId));
 
