@@ -179,57 +179,38 @@ const PostEditor = ({
     [],
   );
 
-  const submitForm = useCallback(async (values, { resetForm, setFieldError }) => {
-    // Validate CAPTCHA for new posts from non-staff users
-    if (shouldRequireCaptcha && !values.recaptchaToken) {
-      setFieldError('recaptchaToken', intl.formatMessage(messages.captchaVerificationLabel));
-      return;
+  const submitForm = useCallback(async (values, { resetForm }) => {
+    if (editExisting) {
+      await dispatchSubmit(updateExistingThread(postId, {
+        topicId: values.topic,
+        type: values.postType,
+        title: values.title,
+        content: values.comment,
+        editReasonCode: values.editReasonCode || undefined,
+      }));
+    } else {
+      const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
+      // Include CAPTCHA token in the request for new posts
+      await dispatchSubmit(createNewThread({
+        courseId,
+        topicId: values.topic,
+        type: values.postType,
+        title: values.title,
+        content: values.comment,
+        following: values.follow,
+        anonymous: allowAnonymous ? values.anonymous : undefined,
+        anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
+        cohort,
+        enableInContextSidebar,
+        notifyAllLearners: values.notifyAllLearners,
+        ...(shouldRequireCaptcha ? { recaptchaToken: values.recaptchaToken } : {}),
+      }));
     }
 
-    try {
-      if (editExisting) {
-        await dispatchSubmit(updateExistingThread(postId, {
-          topicId: values.topic,
-          type: values.postType,
-          title: values.title,
-          content: values.comment,
-          editReasonCode: values.editReasonCode || undefined,
-        }));
-      } else {
-        const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
-        // Include CAPTCHA token in the request for new posts
-        await dispatchSubmit(createNewThread({
-          courseId,
-          topicId: values.topic,
-          type: values.postType,
-          title: values.title,
-          content: values.comment,
-          following: values.follow,
-          anonymous: allowAnonymous ? values.anonymous : undefined,
-          anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
-          cohort,
-          enableInContextSidebar,
-          notifyAllLearners: values.notifyAllLearners,
-          ...(shouldRequireCaptcha ? { recaptchaToken: values.recaptchaToken } : {}),
-        }));
-      }
-
-      /* istanbul ignore if: TinyMCE is mocked so this cannot be easily tested */
-      if (editorRef.current) {
-        editorRef.current.plugins.autosave.removeDraft();
-      }
-      hideEditor(resetForm);
-    } catch (error) {
-      // Reset CAPTCHA on error
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset();
-      }
-      // Clear the CAPTCHA token so user has to complete it again
-      if (shouldRequireCaptcha) {
-        setFieldError('recaptchaToken', '');
-      }
-      throw error; // Re-throw to let the existing error handling work
+    if (editorRef.current) {
+      editorRef.current.plugins.autosave.removeDraft();
     }
+    hideEditor(resetForm);
   }, [
     allowAnonymous, allowAnonymousToPeers, canSelectCohort, editExisting,
     enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha,
