@@ -1,3 +1,5 @@
+import React, { useRef } from 'react';
+
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
@@ -24,7 +26,10 @@ import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
 import MockReCAPTCHA, {
-  mockOnChange, mockOnError, mockOnExpired,
+  mockOnChange,
+  mockOnError,
+  mockOnExpired,
+  mockReset,
 } from '../posts/post-editor/mocksData/react-google-recaptcha';
 import fetchCourseTopics from '../topics/data/thunks';
 import { getDiscussionTourUrl } from '../tours/data/api';
@@ -1041,5 +1046,49 @@ describe('ThreadView', () => {
       await unmount();
       expect(responseSortTour().enabled).toBeFalsy();
     });
+  });
+});
+
+describe('MockReCAPTCHA', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('triggers all callbacks and exposes reset via ref', () => {
+    const onChange = jest.fn();
+    const onExpired = jest.fn();
+    const onError = jest.fn();
+
+    const Wrapper = () => {
+      const recaptchaRef = useRef(null);
+      return (
+        <div>
+          <MockReCAPTCHA
+            ref={recaptchaRef}
+            onChange={onChange}
+            onExpired={onExpired}
+            onError={onError}
+          />
+          <button onClick={() => recaptchaRef.current.reset()} data-testid="reset-btn" type="button">Reset</button>
+        </div>
+      );
+    };
+
+    const { getByText, getByTestId } = render(<Wrapper />);
+
+    fireEvent.click(getByText('Solve CAPTCHA'));
+    fireEvent.click(getByText('Expire CAPTCHA'));
+    fireEvent.click(getByText('Error CAPTCHA'));
+
+    fireEvent.click(getByTestId('reset-btn'));
+
+    expect(mockOnChange).toHaveBeenCalled();
+    expect(mockOnExpired).toHaveBeenCalled();
+    expect(mockOnError).toHaveBeenCalled();
+
+    expect(onChange).toHaveBeenCalledWith('mock-token');
+    expect(onExpired).toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
+    expect(mockReset).toHaveBeenCalled();
   });
 });
