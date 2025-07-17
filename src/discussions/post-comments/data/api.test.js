@@ -39,7 +39,7 @@ describe('Post comments view api tests', () => {
     axiosMock.reset();
   });
 
-  test('successfully get thread comments', async () => {
+  it('successfully get thread comments', async () => {
     axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
     await executeThunk(fetchThreadComments(threadId, { endorsed: 'discussion' }), store.dispatch, store.getState);
 
@@ -92,8 +92,11 @@ describe('Post comments view api tests', () => {
         thread_id: threadId,
         raw_body: content,
         rendered_body: content,
+        parent_id: 'parent_id',
+        enable_in_context_sidebar: true,
+        captcha_token: 'recaptcha-token',
       }));
-    await executeThunk(addComment(content, threadId, 'parent_id', false, 'recaptcha-token'), store.dispatch, store.getState);
+    await executeThunk(addComment(content, threadId, 'parent_id', true, 'recaptcha-token'), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('successful');
   });
@@ -163,5 +166,77 @@ describe('Post comments view api tests', () => {
     await executeThunk(removeComment(commentId, threadId), store.dispatch, store.getState);
 
     expect(store.getState().comments.postStatus).toEqual('denied');
+  });
+
+  it('successfully added comment with default parentId', async () => {
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(commentsApiUrl).reply(200, Factory.build('comment', {
+      thread_id: threadId,
+      raw_body: content,
+      rendered_body: content,
+      parent_id: null, // Explicitly expect null in response
+    }));
+    await executeThunk(addComment(content, threadId, null, false, ''), store.dispatch, store.getState);
+
+    expect(store.getState().comments.postStatus).toEqual('successful');
+  });
+
+  it('successfully added comment with explicit enableInContextSidebar false', async () => {
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(commentsApiUrl).reply(200, Factory.build('comment', {
+      thread_id: threadId,
+      raw_body: content,
+      rendered_body: content,
+    }));
+    await executeThunk(addComment(content, threadId, null, false, 'recaptcha-token'), store.dispatch, store.getState);
+
+    expect(store.getState().comments.postStatus).toEqual('successful');
+  });
+
+  it('successfully added comment with empty recaptchaToken', async () => {
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(commentsApiUrl).reply(200, Factory.build('comment', {
+      thread_id: threadId,
+      raw_body: content,
+      rendered_body: content,
+    }));
+    await executeThunk(addComment(content, threadId, null, true, ''), store.dispatch, store.getState);
+
+    expect(store.getState().comments.postStatus).toEqual('successful');
+  });
+
+  it('successfully added comment with undefined parentId', async () => {
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(commentsApiUrl).reply(200, Factory.build('comment', {
+      thread_id: threadId,
+      raw_body: content,
+      rendered_body: content,
+      parent_id: null, // Expect null as the function should handle undefined as null
+    }));
+    await executeThunk(addComment(content, threadId, undefined, false, ''), store.dispatch, store.getState);
+
+    expect(store.getState().comments.postStatus).toEqual('successful');
+  });
+
+  it('successfully added comment with null recaptchaToken', async () => {
+    axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult'));
+    await executeThunk(fetchThreadComments(threadId), store.dispatch, store.getState);
+
+    axiosMock.onPost(commentsApiUrl).reply(200, Factory.build('comment', {
+      thread_id: threadId,
+      raw_body: content,
+      rendered_body: content,
+    }));
+    await executeThunk(addComment(content, threadId, null, false, null), store.dispatch, store.getState);
+
+    expect(store.getState().comments.postStatus).toEqual('successful');
   });
 });

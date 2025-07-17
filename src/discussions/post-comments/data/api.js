@@ -76,9 +76,9 @@ export const getCommentResponses = async (commentId, {
 export const postComment = async (
   comment,
   threadId,
-  parentId = null,
-  enableInContextSidebar = false,
-  recaptchaToken = '',
+  parentId,
+  enableInContextSidebar,
+  recaptchaToken,
 ) => {
   const { data } = await getAuthenticatedHttpClient()
     .post(getCommentsApiUrl(), snakeCaseObject({
