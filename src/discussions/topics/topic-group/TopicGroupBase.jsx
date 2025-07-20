@@ -64,7 +64,7 @@ const TopicGroupBase = ({
   }
 
   return (
-    <div
+    <li
       className="discussion-topic-group d-flex flex-column text-primary-500"
       data-category-id={groupId}
       data-testid="topic-group"
@@ -82,7 +82,7 @@ const TopicGroupBase = ({
         )}
       </div>
       {renderFilteredTopics}
-    </div>
+    </li>
   );
 };
 

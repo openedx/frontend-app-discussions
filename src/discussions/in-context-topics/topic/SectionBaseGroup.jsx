@@ -60,7 +60,7 @@ const SectionBaseGroup = ({
   ), [section, sectionUrl, isSelected]);
 
   return (
-    <div
+    <li
       className="discussion-topic-group d-flex flex-column text-primary-500"
       data-section-id={sectionId}
       data-testid="section-group"
@@ -75,7 +75,7 @@ const SectionBaseGroup = ({
           <div className="divider pt-1 bg-light-300" />
         </>
       )}
-    </div>
+    </li>
   );
 };
 

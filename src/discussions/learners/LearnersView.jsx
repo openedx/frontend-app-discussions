@@ -76,7 +76,7 @@ const LearnersView = () => {
           onClear={handleOnClear}
         />
       )}
-      <div className="list-group list-group-flush learner" role="list">
+      <ul className="list-group list-group-flush learner" data-testid="list">
         {renderLearnersList}
         {loadingStatus === RequestStatus.IN_PROGRESS ? (
           <div className="d-flex justify-content-center p-4">
@@ -90,7 +90,7 @@ const LearnersView = () => {
           )
         )}
         { usernameSearch !== '' && learners.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
-      </div>
+      </ul>
     </div>
   );
 };

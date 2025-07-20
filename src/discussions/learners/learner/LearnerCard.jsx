@@ -21,41 +21,43 @@ const LearnerCard = ({ learner }) => {
   })();
 
   return (
-    <Link
-      className="discussion-post p-0 text-decoration-none text-gray-900 border-bottom border-light-400"
-      to={linkUrl}
-    >
-      <div
-        className="d-flex flex-row flex-fill mw-100 py-3 px-4 border-primary-500"
-        style={username === learnerUsername ? {
-          borderRightWidth: '4px',
-          borderRightStyle: 'solid',
-        } : null}
+    <li>
+      <Link
+        className="discussion-post p-0 text-decoration-none text-gray-900 border-bottom border-light-400"
+        to={linkUrl}
       >
-        <LearnerAvatar username={username} />
-        <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
-          <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
-            <div className="d-flex align-items-center flex-fill">
-              <div
-                className="text-truncate font-weight-500 text-primary-500 font-style"
-              >
-                {username}
+        <div
+          className="d-flex flex-row flex-fill mw-100 py-3 px-4 border-primary-500"
+          style={username === learnerUsername ? {
+            borderRightWidth: '4px',
+            borderRightStyle: 'solid',
+          } : null}
+        >
+          <LearnerAvatar username={username} />
+          <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
+            <div className="d-flex flex-column justify-content-start mw-100 flex-fill">
+              <div className="d-flex align-items-center flex-fill">
+                <div
+                  className="text-truncate font-weight-500 text-primary-500 font-style"
+                >
+                  {username}
+                </div>
               </div>
+              {threads !== null && (
+                <LearnerFooter
+                  inactiveFlags={inactiveFlags}
+                  activeFlags={activeFlags}
+                  threads={threads}
+                  responses={responses}
+                  replies={replies}
+                  username={username}
+                />
+              )}
             </div>
-            {threads !== null && (
-              <LearnerFooter
-                inactiveFlags={inactiveFlags}
-                activeFlags={activeFlags}
-                threads={threads}
-                responses={responses}
-                replies={replies}
-                username={username}
-              />
-            )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </li>
   );
 };
 

@@ -138,12 +138,12 @@ describe('InContext Topics View', () => {
   it('Section groups should be listed in the middle of the topics list.', async () => {
     await setupMockResponse();
     renderComponent();
-    const topicsList = await screen.getByRole('list');
+    const topicsList = await screen.getByTestId('list');
     const sectionGroups = await screen.getAllByTestId('section-group');
 
-    expect(topicsList.children[1]).toStrictEqual(topicsList.querySelector('.divider'));
+    expect(topicsList.children[1].querySelector('.divider')).toStrictEqual(topicsList.querySelector('.divider'));
     expect(sectionGroups.length).toBe(2);
-    expect(topicsList.children[5]).toStrictEqual(topicsList.querySelector('.divider'));
+    expect(topicsList.children[3].querySelector('.divider')).toStrictEqual(topicsList.querySelector('.divider'));
   });
 
   it('A section group should have only a title and required subsections.', async () => {
@@ -187,7 +187,7 @@ describe('InContext Topics View', () => {
     await userEvent.click(subSection);
     await waitFor(async () => {
       const backButton = await screen.getByLabelText('Back to topics list');
-      const topicsList = await screen.getByRole('list');
+      const topicsList = await screen.getByTestId('list');
       const subSectionHeading = await screen.findByText(subsectionObject.displayName);
       const units = await topicsList.querySelectorAll('.discussion-topic');
 
