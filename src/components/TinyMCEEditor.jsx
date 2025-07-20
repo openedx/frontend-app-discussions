@@ -152,6 +152,7 @@ const TinyMCEEditor = (props) => {
           relative_urls: false,
           default_link_target: '_blank',
           target_list: false,
+          placeholder: props.placeholder,
           images_upload_handler: uploadHandler,
           setup,
         }}
