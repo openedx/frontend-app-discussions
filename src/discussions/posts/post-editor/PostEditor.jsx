@@ -307,13 +307,13 @@ const PostEditor = ({
             value="discussion"
             selected={values.postType === 'discussion'}
             type={intl.formatMessage(messages.discussionType)}
-            icon={<Post />}
+            icon={<Post aria-hidden />}
           />
           <PostTypeCard
             value="question"
             selected={values.postType === 'question'}
             type={intl.formatMessage(messages.questionType)}
-            icon={<Help />}
+            icon={<Help aria-hidden />}
           />
         </Form.RadioSet>
         <div className="d-flex flex-row my-4.5 justify-content-between">

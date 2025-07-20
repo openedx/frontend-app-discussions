@@ -14,6 +14,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { ThreadType } from '../../data/constants';
 import { useHasLikePermission, useUserPostingEnabled } from '../data/hooks';
 import PostCommentsContext from '../post-comments/postCommentsContext';
+import messages from '../posts/post/messages';
 import ActionsDropdown from './ActionsDropdown';
 import DiscussionContext from './context';
 
@@ -67,17 +68,20 @@ const HoverCard = ({
             )}
             trigger={['hover', 'focus']}
           >
-            <IconButton
-              src={endorseIcons.icon}
-              iconAs={Icon}
-              onClick={() => {
-                const actionFunction = actionHandlers[endorseIcons.action];
-                actionFunction();
-              }}
-              className={['endorse', 'unendorse'].includes(endorseIcons.id) ? 'text-dark-500' : 'text-success-500'}
-              size="sm"
-              alt="Endorse"
-            />
+            <div>
+              <IconButton
+                src={endorseIcons.icon}
+                iconAs={Icon}
+                onClick={() => {
+                  const actionFunction = actionHandlers[endorseIcons.action];
+                  actionFunction();
+                }}
+                className={['endorse', 'unendorse'].includes(endorseIcons.id) ? 'text-dark-500' : 'text-success-500'}
+                size="sm"
+                alt="Endorse"
+              />
+              <span className="sr-only">{intl.formatMessage(endorseIcons.label)}</span>
+            </div>
           </OverlayTrigger>
         </div>
       )}
@@ -94,6 +98,7 @@ const HoverCard = ({
             onLike();
           }}
         />
+        <span className="sr-only">{intl.formatMessage(messages.like)}</span>
       </div>
       {following !== undefined && (
         <div className="hover-button">
@@ -108,6 +113,7 @@ const HoverCard = ({
               onFollow();
             }}
           />
+          <span className="sr-only">{intl.formatMessage(messages.follow)}</span>
         </div>
       )}
       <div className="hover-button ml-auto">
