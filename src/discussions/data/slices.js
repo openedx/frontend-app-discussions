@@ -30,6 +30,8 @@ const configSlice = createSlice({
     editReasons: [],
     postCloseReasons: [],
     enableInContext: false,
+    isEmailVerified: false,
+    onlyVerifiedUsersCanPost: false,
   },
   reducers: {
     fetchConfigRequest: (state) => (

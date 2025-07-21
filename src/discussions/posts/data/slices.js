@@ -54,6 +54,7 @@ const threadsSlice = createSlice({
     postEditorVisible: false,
     redirectToThread: null,
     sortedBy: ThreadOrdering.BY_LAST_ACTIVITY,
+    confirmEmailStatus: RequestStatus.IDLE,
   },
   reducers: {
     fetchLearnerThreadsRequest: (state, { payload }) => (
@@ -376,6 +377,28 @@ const threadsSlice = createSlice({
         pages: [],
       }
     ),
+    sendAccountActivationEmailRequest: (state) => (
+      {
+        ...state,
+        confirmEmailStatus: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    sendAccountActivationEmailSuccess: (state) => ({
+      ...state,
+      confirmEmailStatus: RequestStatus.SUCCESSFUL,
+    }),
+    sendAccountActivationEmailFailed: (state) => (
+      {
+        ...state,
+        confirmEmailStatus: RequestStatus.FAILED,
+      }
+    ),
+    sendAccountActivationEmailDenied: (state) => (
+      {
+        ...state,
+        confirmEmailStatus: RequestStatus.DENIED,
+      }
+    ),
   },
 });
 
@@ -414,6 +437,10 @@ export const {
   clearPostsPages,
   clearFilter,
   clearSort,
+  sendAccountActivationEmailDenied,
+  sendAccountActivationEmailFailed,
+  sendAccountActivationEmailRequest,
+  sendAccountActivationEmailSuccess,
 } = threadsSlice.actions;
 
 export const threadsReducer = threadsSlice.reducer;

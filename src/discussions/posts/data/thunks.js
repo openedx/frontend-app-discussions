@@ -6,7 +6,7 @@ import {
 } from '../../../data/constants';
 import { getHttpErrorStatus } from '../../utils';
 import {
-  deleteThread, getThread, getThreads, postThread, updateThread,
+  deleteThread, getThread, getThreads, postThread, sendEmailForAccountActivation, updateThread,
 } from './api';
 import {
   deleteThreadDenied,
@@ -26,6 +26,10 @@ import {
   postThreadFailed,
   postThreadRequest,
   postThreadSuccess,
+  sendAccountActivationEmailDenied,
+  sendAccountActivationEmailFailed,
+  sendAccountActivationEmailRequest,
+  sendAccountActivationEmailSuccess,
   updateThreadAsRead,
   updateThreadDenied,
   updateThreadFailed,
@@ -299,6 +303,23 @@ export function removeThread(threadId) {
         dispatch(deleteThreadDenied());
       } else {
         dispatch(deleteThreadFailed());
+      }
+      logError(error);
+    }
+  };
+}
+
+export function sendAccountActivationEmail() {
+  return async (dispatch) => {
+    try {
+      dispatch(sendAccountActivationEmailRequest());
+      const data = await sendEmailForAccountActivation();
+      dispatch(sendAccountActivationEmailSuccess(camelCaseObject(data)));
+    } catch (error) {
+      if (getHttpErrorStatus(error) === 403) {
+        dispatch(sendAccountActivationEmailDenied());
+      } else {
+        dispatch(sendAccountActivationEmailFailed());
       }
       logError(error);
     }

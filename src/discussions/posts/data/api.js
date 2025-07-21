@@ -204,3 +204,13 @@ export const uploadFile = async (blob, filename, courseId, threadKey) => {
   }
   return data;
 };
+
+/**
+ * Post send Account Activation Email.
+ */
+export const sendEmailForAccountActivation = async () => {
+  const url = `${getConfig().LMS_BASE_URL}/api/send_account_activation_email`;
+  const { data } = await getAuthenticatedHttpClient()
+    .post(url);
+  return data;
+};

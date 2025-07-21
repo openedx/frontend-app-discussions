@@ -1,14 +1,19 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
+import { RequestStatus } from '../../data/constants';
+import { Confirmation } from '../common';
 import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
-import { selectTopicThreadCount } from '../data/selectors';
+import {
+  selectConfirmEmailStatus, selectIsEmailVerified, selectOnlyVerifiedUsersCanPost, selectTopicThreadCount,
+} from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
+import { sendAccountActivationEmail } from '../posts/data/thunks';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
@@ -18,11 +23,25 @@ const EmptyTopics = () => {
   const dispatch = useDispatch();
   const isOnTabletorDesktop = useIsOnTablet();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
+  const [isConfirming, setIsConfirming] = useState(false);
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
+  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+  const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
 
-  const addPost = useCallback(() => (
-    dispatch(showPostEditor())
-  ), []);
+  useEffect(() => {
+    if (confirmEmailStatus === RequestStatus.SUCCESSFUL) {
+      setIsConfirming(false);
+    }
+  }, [confirmEmailStatus]);
+
+  const addPost = useCallback(() => {
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { setIsConfirming(true); }
+  }, []);
+
+  const handleConfirmation = useCallback(() => {
+    dispatch(sendAccountActivationEmail());
+  }, []);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -53,13 +72,26 @@ const EmptyTopics = () => {
   }
 
   return (
-    <EmptyPage
-      title={intl.formatMessage(title)}
-      subTitle={subTitle ? intl.formatMessage(subTitle) : null}
-      action={action}
-      actionText={actionText ? intl.formatMessage(actionText) : null}
-      fullWidth={fullWidth}
-    />
+    <>
+      <EmptyPage
+        title={intl.formatMessage(title)}
+        subTitle={subTitle ? intl.formatMessage(subTitle) : null}
+        action={action}
+        actionText={actionText ? intl.formatMessage(actionText) : null}
+        fullWidth={fullWidth}
+      />
+      {!onlyVerifiedUsersCanPost && (
+      <Confirmation
+        isOpen={isConfirming}
+        title={intl.formatMessage(postMessages.confirmEmailTitle)}
+        description={intl.formatMessage(postMessages.confirmEmailDescription)}
+        onClose={() => setIsConfirming(false)}
+        confirmAction={handleConfirmation}
+        closeButtonVariant="tertiary"
+        confirmButtonText={intl.formatMessage(postMessages.confirmEmailButton)}
+      />
+      )}
+    </>
   );
 };
 
