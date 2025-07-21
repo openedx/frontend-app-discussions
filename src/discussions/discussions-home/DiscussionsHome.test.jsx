@@ -207,6 +207,9 @@ describe('DiscussionsHome', () => {
   });
 
   it('should display post editor form when click on add a post button for posts', async () => {
+    axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
+      enableInContext: true, provider: 'openedx', hasModerationPrivileges: true, isEmailVerified: true,
+    });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/my-posts`);
 
@@ -221,7 +224,7 @@ describe('DiscussionsHome', () => {
 
   it('should display post editor form when click on add a post button in legacy topics view', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      enable_in_context: false, hasModerationPrivileges: true,
+      enable_in_context: false, hasModerationPrivileges: true, isEmailVerified: true,
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/topics`);
