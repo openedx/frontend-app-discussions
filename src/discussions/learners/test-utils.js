@@ -54,9 +54,10 @@ export async function setupPostsMockResponse({
   return store.getState().threads;
 }
 
-export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges) {
+export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges, hasBulkDeletePrivileges) {
   axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
     hasModerationPrivileges,
+    hasBulkDeletePrivileges,
   });
 
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);

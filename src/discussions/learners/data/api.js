@@ -11,7 +11,7 @@ export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussio
 export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/v1/accounts`;
 export const learnerPostsApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/learner/`;
 export const learnersApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/activity_stats/`;
-export const deletePostsApiUrl = (courseId) => `${getConfig().LMS_BASE_URL}/api/discussion/v1/bulk_delete_user_posts/${courseId}`;
+export const deletePostsApiUrl = (courseId, username, courseOrOrg, execute) => `${getConfig().LMS_BASE_URL}/api/discussion/v1/bulk_delete_user_posts/${courseId}?username=${username}&course_or_org=${courseOrOrg}&execute=${execute}`;
 
 /**
  * Fetches all the learners in the given course.
@@ -97,15 +97,9 @@ export async function getUserPosts(courseId, {
  *  }
  */
 export async function deleteUserPosts(courseId, username, courseOrOrg, execute) {
-  const params = snakeCaseObject({
-    username,
-    courseOrOrg,
-    execute,
-  });
-  const queryString = Object.entries(params)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&');
-  const url = `${deletePostsApiUrl(courseId)}?${queryString}`;
-  const { data } = await getAuthenticatedHttpClient().post(url, null);
+  const { data } = await getAuthenticatedHttpClient().post(
+    deletePostsApiUrl(courseId, username, courseOrOrg, execute),
+    null,
+  );
   return data;
 }

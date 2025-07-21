@@ -129,11 +129,10 @@ const learnersSlice = createSlice({
         error: payload.error,
       }
     ),
-    deleteOrgUserPostsCount: (state, { payload }) => (
+    deleteOrgUserPostsCount: (state) => (
       {
         ...state,
         status: RequestStatus.SUCCESSFUL,
-        deleteOrgCounts: payload,
       }
     ),
   },

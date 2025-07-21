@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  fireEvent, render, screen, waitFor,
+  fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -219,5 +219,17 @@ describe('Learner Posts View', () => {
 
     expect(loadMoreButton).not.toBeInTheDocument();
     expect(container.querySelectorAll('.discussion-post')).toHaveLength(4);
+  });
+
+  test('should display dropdown menu button for bulk delete user posts for privileged users', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    await renderComponent();
+    expect(within(container).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+  });
+
+  test('should NOT display dropdown menu button for bulk delete user posts for other users', async () => {
+    await setUpPrivilages(axiosMock, store, true, false);
+    await renderComponent();
+    expect(within(container).queryByRole('button', { name: /actions menu/i })).not.toBeInTheDocument();
   });
 });
