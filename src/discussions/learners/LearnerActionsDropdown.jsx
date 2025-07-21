@@ -13,7 +13,6 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { useLearnerActions } from './utils';
 
 const LearnerActionsDropdown = ({
-  contentType,
   actionHandlers,
   dropDownIconSize,
   userHasBulkDeletePrivileges,
@@ -22,7 +21,7 @@ const LearnerActionsDropdown = ({
   const intl = useIntl();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
-  const actions = useLearnerActions(contentType, userHasBulkDeletePrivileges);
+  const actions = useLearnerActions(userHasBulkDeletePrivileges);
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
@@ -97,7 +96,6 @@ const LearnerActionsDropdown = ({
 LearnerActionsDropdown.propTypes = {
   actionHandlers: PropTypes.objectOf(PropTypes.func).isRequired,
   dropDownIconSize: PropTypes.bool,
-  contentType: PropTypes.oneOf(['LEARNER']).isRequired,
   userHasBulkDeletePrivileges: PropTypes.bool,
 };
 

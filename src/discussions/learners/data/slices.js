@@ -25,6 +25,10 @@ const learnersSlice = createSlice({
       cohort: '',
     },
     usernameSearch: null,
+    bulkDeleteStats: {
+      commentCount: 0,
+      threadCount: 0,
+    },
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => (
@@ -84,55 +88,24 @@ const learnersSlice = createSlice({
         postFilter: payload,
       }
     ),
-    deleteCourseUserPostsRequest: (state) => (
+    deleteUserPostsRequest: (state) => (
       {
         ...state,
         status: RequestStatus.IN_PROGRESS,
       }
     ),
-    deleteCourseUserPostsSuccess: (state) => (
+    deleteUserPostsSuccess: (state, { payload }) => (
       {
         ...state,
         status: RequestStatus.SUCCESSFUL,
+        bulkDeleteStats: payload,
       }
     ),
-    deleteCourseUserPostsFailed: (state, { payload }) => (
+    deleteUserPostsFailed: (state, { payload }) => (
       {
         ...state,
         status: RequestStatus.FAILED,
         error: payload.error,
-      }
-    ),
-    deleteCourseUserPostsCount: (state, { payload }) => (
-      {
-        ...state,
-        status: RequestStatus.SUCCESSFUL,
-        deleteCourseCounts: payload,
-      }
-    ),
-    deleteOrgUserPostsRequest: (state) => (
-      {
-        ...state,
-        status: RequestStatus.IN_PROGRESS,
-      }
-    ),
-    deleteOrgUserPostsSuccess: (state) => (
-      {
-        ...state,
-        status: RequestStatus.SUCCESSFUL,
-      }
-    ),
-    deleteOrgUserPostsFailed: (state, { payload }) => (
-      {
-        ...state,
-        status: RequestStatus.FAILED,
-        error: payload.error,
-      }
-    ),
-    deleteOrgUserPostsCount: (state) => (
-      {
-        ...state,
-        status: RequestStatus.SUCCESSFUL,
       }
     ),
   },
@@ -146,14 +119,9 @@ export const {
   setSortedBy,
   setUsernameSearch,
   setPostFilter,
-  deleteCourseUserPostsRequest,
-  deleteCourseUserPostsSuccess,
-  deleteCourseUserPostsFailed,
-  deleteCourseUserPostsCount,
-  deleteOrgUserPostsRequest,
-  deleteOrgUserPostsSuccess,
-  deleteOrgUserPostsFailed,
-  deleteOrgUserPostsCount,
+  deleteUserPostsRequest,
+  deleteUserPostsSuccess,
+  deleteUserPostsFailed,
 } = learnersSlice.actions;
 
 export const learnersReducer = learnersSlice.reducer;

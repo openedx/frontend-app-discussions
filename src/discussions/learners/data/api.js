@@ -96,7 +96,7 @@ export async function getUserPosts(courseId, {
  *    comment_count: number
  *  }
  */
-export async function deleteUserPosts(courseId, username, courseOrOrg, execute) {
+export async function deleteUserPostsApi(courseId, username, courseOrOrg, execute) {
   const { data } = await getAuthenticatedHttpClient().post(
     deletePostsApiUrl(courseId, username, courseOrOrg, execute),
     null,

@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 
 import {
   ActionRow,
-  Button,
   ModalDialog,
-  Spinner,
+  Spinner, StatefulButton,
 } from '@openedx/paragon';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -23,6 +22,7 @@ const Confirmation = ({
   confirmButtonVariant,
   confirmButtonText,
   isDataLoading,
+  bulkDeleting,
 }) => {
   const intl = useIntl();
 
@@ -43,17 +43,22 @@ const Confirmation = ({
           </ModalDialog.Header>
           <ModalDialog.Body>
             {description}
-            <br />
-            {boldDescription && <p className="font-weight-bold pt-2">{boldDescription}</p>}
+            {boldDescription && <><br /><p className="font-weight-bold pt-2">{boldDescription}</p></>}
           </ModalDialog.Body>
           <ModalDialog.Footer>
             <ActionRow>
               <ModalDialog.CloseButton variant={closeButtonVariant}>
                 {intl.formatMessage(messages.confirmationCancel)}
               </ModalDialog.CloseButton>
-              <Button variant={confirmButtonVariant} onClick={confirmAction}>
-                { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
-              </Button>
+              <StatefulButton
+                labels={{
+                  default: confirmButtonText || intl.formatMessage(messages.confirmationConfirm),
+                  pending: intl.formatMessage(messages.deletingAction),
+                }}
+                state={bulkDeleting ? 'pending' : confirmButtonVariant}
+                variant={confirmButtonVariant}
+                onClick={confirmAction}
+              />
             </ActionRow>
           </ModalDialog.Footer>
         </>
@@ -73,6 +78,7 @@ Confirmation.propTypes = {
   confirmButtonVariant: PropTypes.string,
   confirmButtonText: PropTypes.string,
   isDataLoading: PropTypes.bool,
+  bulkDeleting: PropTypes.bool,
 };
 
 Confirmation.defaultProps = {
@@ -81,6 +87,7 @@ Confirmation.defaultProps = {
   confirmButtonText: '',
   boldDescription: '',
   isDataLoading: false,
+  bulkDeleting: false,
 };
 
 export default React.memo(Confirmation);

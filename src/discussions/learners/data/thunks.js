@@ -13,20 +13,16 @@ import {
 import { normaliseThreads } from '../../posts/data/thunks';
 import { getHttpErrorStatus } from '../../utils';
 import {
-  deleteUserPosts,
+  deleteUserPostsApi,
   getLearners,
   getUserPosts,
   getUserProfiles,
 } from './api';
+import { BulkDeleteType } from './constants';
 import {
-  deleteCourseUserPostsCount,
-  deleteCourseUserPostsFailed,
-  deleteCourseUserPostsRequest,
-  deleteCourseUserPostsSuccess,
-  deleteOrgUserPostsCount,
-  deleteOrgUserPostsFailed,
-  deleteOrgUserPostsRequest,
-  deleteOrgUserPostsSuccess,
+  deleteUserPostsFailed,
+  deleteUserPostsRequest,
+  deleteUserPostsSuccess,
   fetchLearnersDenied,
   fetchLearnersFailed,
   fetchLearnersRequest,
@@ -135,36 +131,20 @@ export function fetchUserPosts(courseId, {
   };
 }
 
-export const deleteCourseUserPosts = (courseId, username, execute = false) => async (dispatch) => {
+export const deleteUserPosts = (
+  courseId,
+  username,
+  courseOrOrg = BulkDeleteType.COURSE,
+  execute = false,
+) => async (dispatch) => {
   try {
-    dispatch(deleteCourseUserPostsRequest({ courseId, username }));
-    const response = await deleteUserPosts(courseId, username, 'course', execute);
+    dispatch(deleteUserPostsRequest({ courseId, username }));
+    const response = await deleteUserPostsApi(courseId, username, courseOrOrg, execute);
     const camelCaseResponse = camelCaseObject(response);
-    if (execute) {
-      dispatch(deleteCourseUserPostsSuccess(camelCaseResponse));
-    } else {
-      dispatch(deleteCourseUserPostsCount(camelCaseResponse));
-    }
+    dispatch(deleteUserPostsSuccess(camelCaseResponse));
     return camelCaseResponse;
   } catch (error) {
-    dispatch(deleteCourseUserPostsFailed({ error: getHttpErrorStatus(error) }));
-    throw error;
-  }
-};
-
-export const deleteOrgUserPosts = (courseId, username, execute = false) => async (dispatch) => {
-  try {
-    dispatch(deleteOrgUserPostsRequest({ courseId, username }));
-    const response = await deleteUserPosts(courseId, username, 'org', execute);
-    const camelCaseResponse = camelCaseObject(response);
-    if (execute) {
-      dispatch(deleteOrgUserPostsSuccess(camelCaseResponse));
-    } else {
-      dispatch(deleteOrgUserPostsCount(camelCaseResponse));
-    }
-    return camelCaseResponse;
-  } catch (error) {
-    dispatch(deleteOrgUserPostsFailed({ error: getHttpErrorStatus(error) }));
+    dispatch(deleteUserPostsFailed({ error: getHttpErrorStatus(error) }));
     throw error;
   }
 };

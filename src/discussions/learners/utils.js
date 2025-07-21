@@ -5,7 +5,6 @@ import { Delete } from '@openedx/paragon/icons';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ContentActions } from '../../data/constants';
-import { ContentTypes } from '../data/constants';
 import messages from './messages';
 
 export const LEARNER_ACTIONS_LIST = [
@@ -23,11 +22,11 @@ export const LEARNER_ACTIONS_LIST = [
   },
 ];
 
-export function useLearnerActions(contentType, userHasBulkDeletePrivileges = false) {
+export function useLearnerActions(userHasBulkDeletePrivileges = false) {
   const intl = useIntl();
 
   const actions = useMemo(() => {
-    if (contentType !== ContentTypes.LEARNER || !userHasBulkDeletePrivileges) {
+    if (!userHasBulkDeletePrivileges) {
       return [];
     }
     return LEARNER_ACTIONS_LIST.map(action => ({
@@ -37,7 +36,7 @@ export function useLearnerActions(contentType, userHasBulkDeletePrivileges = fal
         defaultMessage: intl.formatMessage(action.label),
       },
     }));
-  }, [contentType, userHasBulkDeletePrivileges, intl]);
+  }, [userHasBulkDeletePrivileges, intl]);
 
   return actions;
 }

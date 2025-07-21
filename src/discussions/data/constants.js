@@ -9,5 +9,4 @@ export const ContentSelectors = {
 export const ContentTypes = {
   POST: 'POST',
   COMMENT: 'COMMENT',
-  LEARNER: 'LEARNER',
 };
