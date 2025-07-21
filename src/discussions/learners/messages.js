@@ -62,6 +62,48 @@ const messages = defineMessages({
     defaultMessage: 'Posts',
     description: 'Tooltip text for all posts icon',
   },
+  deleteCoursePosts: {
+    id: 'discussions.learner.actions.deleteCoursePosts',
+    defaultMessage: 'Delete user posts within this course',
+    description: 'Action to delete user posts within a specific course',
+  },
+  deleteCoursePostsTitle: {
+    id: 'discussions.learner.deleteCoursePosts.title',
+    defaultMessage: 'Are you sure you want to delete this user\'s discussion contributions?',
+    description: 'Title for delete course posts confirmation dialog',
+  },
+  deleteCoursePostsDescription: {
+    id: 'discussions.learner.deleteCoursePosts.description',
+    defaultMessage: 'You are about to delete {count} discussion contributions by this user in this course. '
+        + 'This includes all discussion threads, responses, and comments authored by them. ',
+    description: 'Description for delete course posts confirmation dialog',
+  },
+  deleteOrgPosts: {
+    id: 'discussions.learner.actions.deleteOrgPosts',
+    defaultMessage: 'Delete user posts within this organization',
+    description: 'Action to delete user posts within the organization',
+  },
+  deleteOrgPostsTitle: {
+    id: 'discussions.learner.deleteOrgPosts.title',
+    defaultMessage: 'Are you sure you want to delete this user\'s discussion contributions?',
+    description: 'Title for delete organization posts confirmation dialog',
+  },
+  deleteOrgPostsDescription: {
+    id: 'discussions.learner.deleteOrgPosts.description',
+    defaultMessage: 'You are about to delete {count} discussion contributions by this user across the organization. '
+        + 'This includes all discussion threads, responses, and comments authored by them. ',
+    description: 'Description for delete organization posts confirmation dialog',
+  },
+  deletePostsConfirm: {
+    id: 'discussions.learner.deleteOrgPosts.confirm',
+    defaultMessage: 'Delete',
+    description: 'Confirm button text for delete organization posts',
+  },
+  deletePostsBoldDescription: {
+    id: 'discussions.learner.deletePosts.boldDescription',
+    defaultMessage: 'This action cannot be undone.',
+    description: 'Bold disclaimer description for delete confirmation dialog',
+  },
 });
 
 export default messages;

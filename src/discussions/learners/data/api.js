@@ -11,6 +11,7 @@ export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussio
 export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/v1/accounts`;
 export const learnerPostsApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/learner/`;
 export const learnersApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/activity_stats/`;
+export const deletePostsApiUrl = (courseId) => `${getConfig().LMS_BASE_URL}/api/discussion/v1/bulk_delete_user_posts/${courseId}`;
 
 /**
  * Fetches all the learners in the given course.
@@ -80,5 +81,31 @@ export async function getUserPosts(courseId, {
 
   const { data } = await getAuthenticatedHttpClient()
     .get(learnerPostsApiUrl(courseId), { params });
+  return data;
+}
+
+/**
+ * Deletes posts by a specific user in a course or organization
+ * @param {string} courseId Course ID of the course
+ * @param {string} username Username of the user whose posts are to be deleted
+ * @param {string} courseOrOrg Can be 'course' or 'org' to specify deletion scope
+ * @param {boolean} execute If true, deletes posts; if false, returns count of threads and comments
+ * @returns API Response object in the format
+ *  {
+ *    thread_count: number,
+ *    comment_count: number
+ *  }
+ */
+export async function deleteUserPosts(courseId, username, courseOrOrg, execute) {
+  const params = snakeCaseObject({
+    username,
+    courseOrOrg,
+    execute,
+  });
+  const queryString = Object.entries(params)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join('&');
+  const url = `${deletePostsApiUrl(courseId)}?${queryString}`;
+  const { data } = await getAuthenticatedHttpClient().post(url, null);
   return data;
 }

@@ -12,8 +12,21 @@ import {
 } from '../../posts/data/slices';
 import { normaliseThreads } from '../../posts/data/thunks';
 import { getHttpErrorStatus } from '../../utils';
-import { getLearners, getUserPosts, getUserProfiles } from './api';
 import {
+  deleteUserPosts,
+  getLearners,
+  getUserPosts,
+  getUserProfiles,
+} from './api';
+import {
+  deleteCourseUserPostsCount,
+  deleteCourseUserPostsFailed,
+  deleteCourseUserPostsRequest,
+  deleteCourseUserPostsSuccess,
+  deleteOrgUserPostsCount,
+  deleteOrgUserPostsFailed,
+  deleteOrgUserPostsRequest,
+  deleteOrgUserPostsSuccess,
   fetchLearnersDenied,
   fetchLearnersFailed,
   fetchLearnersRequest,
@@ -121,3 +134,37 @@ export function fetchUserPosts(courseId, {
     }
   };
 }
+
+export const deleteCourseUserPosts = (courseId, username, execute = false) => async (dispatch) => {
+  try {
+    dispatch(deleteCourseUserPostsRequest({ courseId, username }));
+    const response = await deleteUserPosts(courseId, username, 'course', execute);
+    const camelCaseResponse = camelCaseObject(response);
+    if (execute) {
+      dispatch(deleteCourseUserPostsSuccess(camelCaseResponse));
+    } else {
+      dispatch(deleteCourseUserPostsCount(camelCaseResponse));
+    }
+    return camelCaseResponse;
+  } catch (error) {
+    dispatch(deleteCourseUserPostsFailed({ error: getHttpErrorStatus(error) }));
+    throw error;
+  }
+};
+
+export const deleteOrgUserPosts = (courseId, username, execute = false) => async (dispatch) => {
+  try {
+    dispatch(deleteOrgUserPostsRequest({ courseId, username }));
+    const response = await deleteUserPosts(courseId, username, 'org', execute);
+    const camelCaseResponse = camelCaseObject(response);
+    if (execute) {
+      dispatch(deleteOrgUserPostsSuccess(camelCaseResponse));
+    } else {
+      dispatch(deleteOrgUserPostsCount(camelCaseResponse));
+    }
+    return camelCaseResponse;
+  } catch (error) {
+    dispatch(deleteOrgUserPostsFailed({ error: getHttpErrorStatus(error) }));
+    throw error;
+  }
+};
