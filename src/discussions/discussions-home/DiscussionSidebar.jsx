@@ -110,7 +110,7 @@ const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
           }
           <Route path={ROUTES.LEARNERS.PATH} element={<LearnersView />} />
           {configStatus === RequestStatus.SUCCESSFUL && (
-            <Route path={`${ROUTES.DISCUSSIONS.PATH}/*`} element={<Navigate to="posts" />} />
+            <Route path={`${ROUTES.DISCUSSIONS.PATH}/*`} element={<Navigate to="posts" replace />} />
           )}
         </Routes>
       </Suspense>
