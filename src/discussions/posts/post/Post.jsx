@@ -1,4 +1,6 @@
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useMemo, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import { Hyperlink, useToggle } from '@openedx/paragon';
@@ -11,17 +13,20 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import HTMLLoader from '../../../components/HTMLLoader';
-import { ContentActions, getFullUrl } from '../../../data/constants';
+import { ContentActions, getFullUrl, RequestStatus } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
 import { AlertBanner, Confirmation } from '../../common';
 import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import { ContentTypes } from '../../data/constants';
-import { selectUserHasModerationPrivileges } from '../../data/selectors';
+import {
+  selectConfirmEmailStatus, selectIsEmailVerified, selectOnlyVerifiedUsersCanPost, selectUserHasModerationPrivileges,
+} from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
-import { removeThread, updateExistingThread } from '../data/thunks';
+import { removeThread, sendAccountActivationEmail, updateExistingThread } from '../data/thunks';
+import postMessages from '../post-actions-bar/messages';
 import ClosePostReasonModal from './ClosePostReasonModal';
 import messages from './messages';
 import PostFooter from './PostFooter';
@@ -39,6 +44,7 @@ const Post = ({ handleAddResponseButton }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
+  const [isConfirming, setIsConfirming] = useState(false);
   const topic = useSelector(selectTopic(topicId));
   const getTopicSubsection = useSelector(selectorForUnitSubsection);
   const topicContext = useSelector(selectTopicContext(topicId));
@@ -46,7 +52,17 @@ const Post = ({ handleAddResponseButton }) => {
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+  const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
+
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
+
+  useEffect(() => {
+    if (confirmEmailStatus === RequestStatus.SUCCESSFUL) {
+      setIsConfirming(false);
+    }
+  }, [confirmEmailStatus]);
 
   const handleDeleteConfirmation = useCallback(async () => {
     const basePath = truncatePath(location.pathname);
@@ -125,6 +141,10 @@ const Post = ({ handleAddResponseButton }) => {
     getTopicCategoryName(topicData) ? `${getTopicCategoryName(topicData)} / ${topicData.name}` : `${topicData.name}`
   ), [getTopicCategoryName]);
 
+  const handleConfirmation = useCallback(() => {
+    dispatch(sendAccountActivationEmail());
+  }, [sendAccountActivationEmail]);
+
   return (
     <div
       className="d-flex flex-column w-100 mw-100 post-card-comment overflow-auto"
@@ -155,7 +175,7 @@ const Post = ({ handleAddResponseButton }) => {
         id={postId}
         contentType={ContentTypes.POST}
         actionHandlers={actionHandlers}
-        handleResponseCommentButton={handleAddResponseButton}
+        handleResponseCommentButton={isEmailVerified ? handleAddResponseButton : () => setIsConfirming(true)}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
         onLike={handlePostLike}
         onFollow={handlePostFollow}
@@ -229,6 +249,17 @@ const Post = ({ handleAddResponseButton }) => {
         onCancel={hideClosePostModal}
         onConfirm={handleClosePostConfirmation}
       />
+      {!onlyVerifiedUsersCanPost && (
+      <Confirmation
+        isOpen={isConfirming}
+        title={intl.formatMessage(postMessages.confirmEmailTitle)}
+        description={intl.formatMessage(postMessages.confirmEmailDescription)}
+        onClose={() => setIsConfirming(false)}
+        confirmAction={handleConfirmation}
+        closeButtonVariant="tertiary"
+        confirmButtonText={intl.formatMessage(postMessages.confirmEmailButton)}
+      />
+      )}
     </div>
   );
 };

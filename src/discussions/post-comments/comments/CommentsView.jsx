@@ -1,12 +1,19 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Spinner } from '@openedx/paragon';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { ThreadType } from '../../../data/constants';
+import { RequestStatus, ThreadType } from '../../../data/constants';
+import { Confirmation } from '../../common';
 import { useUserPostingEnabled } from '../../data/hooks';
+import { selectConfirmEmailStatus, selectIsEmailVerified, selectOnlyVerifiedUsersCanPost } from '../../data/selectors';
+import { sendAccountActivationEmail } from '../../posts/data/thunks';
+import postMessages from '../../posts/post-actions-bar/messages';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
@@ -16,8 +23,19 @@ import { Comment, ResponseEditor } from './comment';
 const CommentsView = ({ threadType }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const dispatch = useDispatch();
   const { isClosed } = useContext(PostCommentsContext);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+  const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
+
+  useEffect(() => {
+    if (confirmEmailStatus === RequestStatus.SUCCESSFUL) {
+      setIsConfirming(false);
+    }
+  }, [confirmEmailStatus]);
 
   const {
     endorsedCommentsIds,
@@ -28,12 +46,16 @@ const CommentsView = ({ threadType }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    setAddingResponse(true);
+    if (isEmailVerified) { setAddingResponse(true); } else { setIsConfirming(true); }
   }, []);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);
   }, []);
+
+  const handleConfirmation = useCallback(() => {
+    dispatch(sendAccountActivationEmail());
+  }, [sendAccountActivationEmail]);
 
   const handleDefinition = useCallback((message, commentsLength) => (
     <div
@@ -104,6 +126,17 @@ const CommentsView = ({ threadType }) => {
              addingResponse={addingResponse}
              handleCloseEditor={handleCloseResponseEditor}
            />
+           {!onlyVerifiedUsersCanPost && (
+           <Confirmation
+             isOpen={isConfirming}
+             title={intl.formatMessage(postMessages.confirmEmailTitle)}
+             description={intl.formatMessage(postMessages.confirmEmailDescription)}
+             onClose={() => setIsConfirming(false)}
+             confirmAction={handleConfirmation}
+             closeButtonVariant="tertiary"
+             confirmButtonText={intl.formatMessage(postMessages.confirmEmailButton)}
+           />
+           )}
          </div>
       )}
     </>
