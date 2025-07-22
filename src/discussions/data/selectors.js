@@ -11,6 +11,8 @@ export const selectAnonymousPostingConfig = state => ({
 
 export const selectUserHasModerationPrivileges = state => state.config.hasModerationPrivileges;
 
+export const selectUserHasBulkDeletePrivileges = state => state.config.hasBulkDeletePrivileges;
+
 export const selectUserIsStaff = state => state.config.isUserAdmin;
 
 export const selectUserIsGroupTa = state => state.config.isGroupTa;
