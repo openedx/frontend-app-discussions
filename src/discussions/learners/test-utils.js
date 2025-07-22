@@ -61,10 +61,10 @@ export async function setupPostsMockResponse({
 
 export async function setupDeleteUserPostsMockResponse({
   username = 'abc123',
-  courseOrOrg = 'course',
+  courseOrOrg,
   statusCode = 202,
-  execute = false,
-  response = { comment_count: 3, thread_count: 2 },
+  execute,
+  response,
 } = {}) {
   const store = initializeStore();
   const axiosMock = new MockAdapter(getAuthenticatedHttpClient());

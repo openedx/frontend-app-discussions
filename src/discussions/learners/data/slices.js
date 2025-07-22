@@ -101,11 +101,10 @@ const learnersSlice = createSlice({
         bulkDeleteStats: payload,
       }
     ),
-    deleteUserPostsFailed: (state, { payload }) => (
+    deleteUserPostsFailed: (state) => (
       {
         ...state,
         status: RequestStatus.FAILED,
-        error: payload.error,
       }
     ),
   },

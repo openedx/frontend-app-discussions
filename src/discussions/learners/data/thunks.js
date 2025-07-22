@@ -18,7 +18,6 @@ import {
   getUserPosts,
   getUserProfiles,
 } from './api';
-import { BulkDeleteType } from './constants';
 import {
   deleteUserPostsFailed,
   deleteUserPostsRequest,
@@ -134,15 +133,15 @@ export function fetchUserPosts(courseId, {
 export const deleteUserPosts = (
   courseId,
   username,
-  courseOrOrg = BulkDeleteType.COURSE,
-  execute = false,
+  courseOrOrg,
+  execute,
 ) => async (dispatch) => {
   try {
     dispatch(deleteUserPostsRequest({ courseId, username }));
     const response = await deleteUserPostsApi(courseId, username, courseOrOrg, execute);
     dispatch(deleteUserPostsSuccess(camelCaseObject(response)));
   } catch (error) {
-    dispatch(deleteUserPostsFailed({ error: getHttpErrorStatus(error) }));
-    throw error;
+    dispatch(deleteUserPostsFailed());
+    logError(error);
   }
 };

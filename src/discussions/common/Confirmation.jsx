@@ -29,7 +29,7 @@ const Confirmation = ({
 
   return (
     <ModalDialog title={title} isOpen={isOpen} hasCloseButton={false} onClose={onClose} zIndex={5000}>
-      {isDataLoading ? (
+      {isDataLoading && !isConfirmButtonPending ? (
         <ModalDialog.Body>
           <div className="d-flex justify-content-center p-4">
             <Spinner animation="border" variant="primary" size="lg" />
