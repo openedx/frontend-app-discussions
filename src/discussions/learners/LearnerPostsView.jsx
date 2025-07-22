@@ -36,7 +36,7 @@ import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
 import { discussionsPath } from '../utils';
 import { BulkDeleteType } from './data/constants';
-import { selectBulkDeleteStats } from './data/selectors';
+import { learnersLoadingStatus, selectBulkDeleteStats } from './data/selectors';
 import { deleteUserPosts, fetchUserPosts } from './data/thunks';
 import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import LearnerActionsDropdown from './LearnerActionsDropdown';
@@ -51,6 +51,7 @@ const LearnerPostsView = () => {
   const [bulkDeleting, dispatchDelete] = useDispatchWithState();
   const postsIds = useSelector(selectAllThreadsIds);
   const loadingStatus = useSelector(threadsLoadingStatus());
+  const learnerLoadingStatus = useSelector(learnersLoadingStatus());
   const postFilter = useSelector(state => state.learners.postFilter);
   const { courseId, learnerUsername: username } = useContext(DiscussionContext);
   const nextPage = useSelector(selectThreadNextPage());
@@ -59,9 +60,8 @@ const LearnerPostsView = () => {
   const userHasBulkDeletePrivileges = useSelector(selectUserHasBulkDeletePrivileges);
   const bulkDeleteStats = useSelector(selectBulkDeleteStats());
   const sortedPostsIds = usePostList(postsIds);
-  const [isDeletingCourse, showDeleteCourseConfirmation, hideDeleteCourseConfirmation] = useToggle(false);
-  const [isDeletingOrg, showDeleteOrgConfirmation, hideDeleteOrgConfirmation] = useToggle(false);
-  const [isLoadingPostsStats, setIsLoadingPostsStats] = useState(false);
+  const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
+  const [isDeletingCourseOrOrg, setIsDeletingCourseOrOrg] = useState(BulkDeleteType.COURSE);
 
   const loadMorePosts = useCallback((pageNum = undefined) => {
     const params = {
@@ -76,21 +76,16 @@ const LearnerPostsView = () => {
   }, [courseId, postFilter, username, userHasModerationPrivileges, userIsStaff]);
 
   const handleShowDeleteConfirmation = useCallback(async (courseOrOrg) => {
-    setIsLoadingPostsStats(true);
-    if (courseOrOrg === BulkDeleteType.COURSE) {
-      showDeleteCourseConfirmation();
-    } else if (courseOrOrg === BulkDeleteType.ORG) {
-      showDeleteOrgConfirmation();
-    }
+    setIsDeletingCourseOrOrg(courseOrOrg);
+    showDeleteConfirmation();
     await dispatch(deleteUserPosts(courseId, username, courseOrOrg, false));
-    setIsLoadingPostsStats(false);
-  }, [courseId, username, showDeleteCourseConfirmation]);
+  }, [courseId, username, showDeleteConfirmation]);
 
   const handleDeletePosts = useCallback(async (courseOrOrg) => {
     await dispatchDelete(deleteUserPosts(courseId, username, courseOrOrg, true));
     navigate({ ...discussionsPath(Routes.LEARNERS.PATH, { courseId })(location) });
-    hideDeleteCourseConfirmation();
-  }, [courseId, username, hideDeleteCourseConfirmation]);
+    hideDeleteConfirmation();
+  }, [courseId, username, hideDeleteConfirmation]);
 
   const actionHandlers = useMemo(() => ({
     [ContentActions.DELETE_COURSE_POSTS]: () => handleShowDeleteConfirmation(BulkDeleteType.COURSE),
@@ -115,34 +110,6 @@ const LearnerPostsView = () => {
 
   return (
     <div className="discussion-posts d-flex flex-column">
-      <Confirmation
-        isOpen={isDeletingCourse}
-        title={intl.formatMessage(messages.deletePostsTitle)}
-        description={!isLoadingPostsStats ? intl.formatMessage(messages.deleteCoursePostsDescription, {
-          count: bulkDeleteStats.threadCount + bulkDeleteStats.commentCount,
-        }) : ''}
-        boldDescription={intl.formatMessage(messages.deletePostsBoldDescription)}
-        onClose={hideDeleteCourseConfirmation}
-        confirmAction={() => handleDeletePosts(BulkDeleteType.COURSE)}
-        confirmButtonText={intl.formatMessage(messages.deletePostsConfirm)}
-        confirmButtonVariant="danger"
-        isDataLoading={isLoadingPostsStats}
-        bulkDeleting={bulkDeleting}
-      />
-      <Confirmation
-        isOpen={isDeletingOrg}
-        title={intl.formatMessage(messages.deletePostsTitle)}
-        description={!isLoadingPostsStats ? intl.formatMessage(messages.deleteOrgPostsDescription, {
-          count: bulkDeleteStats.threadCount + bulkDeleteStats.commentCount,
-        }) : ''}
-        boldDescription={intl.formatMessage(messages.deletePostsBoldDescription)}
-        onClose={hideDeleteOrgConfirmation}
-        confirmAction={() => handleDeletePosts(BulkDeleteType.ORG)}
-        confirmButtonText={intl.formatMessage(messages.deletePostsConfirm)}
-        confirmButtonVariant="danger"
-        isDataLoading={isLoadingPostsStats}
-        bulkDeleting={bulkDeleting}
-      />
       <div className="row d-flex align-items-center justify-content-between px-2.5">
         <div className="col-1">
           <IconButton
@@ -187,6 +154,23 @@ const LearnerPostsView = () => {
           )
         )}
       </div>
+      <Confirmation
+        isOpen={isDeleting}
+        title={intl.formatMessage(messages.deletePostsTitle)}
+        description={learnerLoadingStatus === RequestStatus.SUCCESSFUL
+          ? intl.formatMessage(messages.deletePostsDescription, {
+            count: bulkDeleteStats.threadCount + bulkDeleteStats.commentCount,
+            bulkType: isDeletingCourseOrOrg,
+          }) : ''}
+        boldDescription={intl.formatMessage(messages.deletePostsBoldDescription)}
+        onClose={hideDeleteConfirmation}
+        confirmAction={() => handleDeletePosts(isDeletingCourseOrOrg)}
+        confirmButtonText={intl.formatMessage(messages.deletePostsConfirm)}
+        confirmButtonVariant="danger"
+        isDataLoading={!(learnerLoadingStatus === RequestStatus.SUCCESSFUL)}
+        isConfirmButtonPending={bulkDeleting}
+        pendingConfirmButtonText={intl.formatMessage(messages.deletePostConfirmPending)}
+      />
     </div>
   );
 };

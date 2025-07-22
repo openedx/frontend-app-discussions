@@ -22,7 +22,8 @@ const Confirmation = ({
   confirmButtonVariant,
   confirmButtonText,
   isDataLoading,
-  bulkDeleting,
+  isConfirmButtonPending,
+  pendingConfirmButtonText,
 }) => {
   const intl = useIntl();
 
@@ -53,9 +54,10 @@ const Confirmation = ({
               <StatefulButton
                 labels={{
                   default: confirmButtonText || intl.formatMessage(messages.confirmationConfirm),
-                  pending: intl.formatMessage(messages.deletingAction),
+                  pending: pendingConfirmButtonText || confirmButtonText
+                      || intl.formatMessage(messages.confirmationConfirm),
                 }}
-                state={bulkDeleting ? 'pending' : confirmButtonVariant}
+                state={isConfirmButtonPending ? 'pending' : confirmButtonVariant}
                 variant={confirmButtonVariant}
                 onClick={confirmAction}
               />
@@ -78,7 +80,8 @@ Confirmation.propTypes = {
   confirmButtonVariant: PropTypes.string,
   confirmButtonText: PropTypes.string,
   isDataLoading: PropTypes.bool,
-  bulkDeleting: PropTypes.bool,
+  isConfirmButtonPending: PropTypes.bool,
+  pendingConfirmButtonText: PropTypes.string,
 };
 
 Confirmation.defaultProps = {
@@ -87,7 +90,8 @@ Confirmation.defaultProps = {
   confirmButtonText: '',
   boldDescription: '',
   isDataLoading: false,
-  bulkDeleting: false,
+  isConfirmButtonPending: false,
+  pendingConfirmButtonText: '',
 };
 
 export default React.memo(Confirmation);

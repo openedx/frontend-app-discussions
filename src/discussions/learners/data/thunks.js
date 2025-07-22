@@ -140,9 +140,7 @@ export const deleteUserPosts = (
   try {
     dispatch(deleteUserPostsRequest({ courseId, username }));
     const response = await deleteUserPostsApi(courseId, username, courseOrOrg, execute);
-    const camelCaseResponse = camelCaseObject(response);
-    dispatch(deleteUserPostsSuccess(camelCaseResponse));
-    return camelCaseResponse;
+    dispatch(deleteUserPostsSuccess(camelCaseObject(response)));
   } catch (error) {
     dispatch(deleteUserPostsFailed({ error: getHttpErrorStatus(error) }));
     throw error;

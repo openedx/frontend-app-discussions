@@ -31,11 +31,6 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
     description: 'Action to delete a post or comment',
   },
-  deletingAction: {
-    id: 'discussions.actions.delete',
-    defaultMessage: 'Deleting',
-    description: 'Deleting action in progress',
-  },
   confirmationConfirm: {
     id: 'discussions.confirmation.button.confirm',
     defaultMessage: 'Confirm',
