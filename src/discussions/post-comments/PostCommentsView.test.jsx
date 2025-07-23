@@ -311,13 +311,25 @@ describe('ThreadView', () => {
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
     });
 
-    it('should open the confirmation link dialogue box.', async () => {
+    it('should open the confirmation link dialogue box by clicking on add comment button.', async () => {
       await setupCourseConfig(false, true);
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
       await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+
+      expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
+    });
+
+    it('should open the confirmation link dialogue box by clicking on add response.', async () => {
+      await setupCourseConfig(false, true);
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const post = await screen.findByTestId('post-thread-1');
+      const hoverCard = within(post).getByTestId('hover-card-thread-1');
+      const addResponseButton = within(hoverCard).getByRole('button', { name: /Add response/i });
+      await act(async () => { fireEvent.click(addResponseButton); });
 
       expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
     });
@@ -1072,6 +1084,17 @@ describe('ThreadView', () => {
       await unmount();
       expect(responseSortTour().enabled).toBeFalsy();
     });
+  });
+
+  it('should open the confirmation link dialogue box on add response button.', async () => {
+    await setupCourseConfig(false, true);
+    await waitFor(() => renderComponent(discussionPostId));
+
+    const addResponseButton = screen.getByTestId('add-response');
+
+    await act(async () => { fireEvent.click(addResponseButton); });
+
+    expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
   });
 });
 
