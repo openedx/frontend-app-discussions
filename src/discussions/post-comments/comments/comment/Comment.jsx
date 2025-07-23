@@ -183,7 +183,7 @@ const Comment = ({
             id={id}
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={isEmailVerified ? handleAddCommentButton : () => openEmailConfirmation()}
+            handleResponseCommentButton={isEmailVerified ? handleAddCommentButton : openEmailConfirmation}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -274,7 +274,7 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
-                  onClick={isEmailVerified ? handleAddCommentReply : () => openEmailConfirmation()}
+                  onClick={isEmailVerified ? handleAddCommentReply : openEmailConfirmation}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>
