@@ -157,11 +157,10 @@ const LearnerPostsView = () => {
       <Confirmation
         isOpen={isDeleting}
         title={intl.formatMessage(messages.deletePostsTitle)}
-        description={learnerLoadingStatus === RequestStatus.SUCCESSFUL
-          ? intl.formatMessage(messages.deletePostsDescription, {
-            count: bulkDeleteStats.threadCount + bulkDeleteStats.commentCount,
-            bulkType: isDeletingCourseOrOrg,
-          }) : ''}
+        description={intl.formatMessage(messages.deletePostsDescription, {
+          count: bulkDeleteStats.threadCount + bulkDeleteStats.commentCount,
+          bulkType: isDeletingCourseOrOrg,
+        })}
         boldDescription={intl.formatMessage(messages.deletePostsBoldDescription)}
         onClose={hideDeleteConfirmation}
         confirmAction={() => handleDeletePosts(isDeletingCourseOrOrg)}
