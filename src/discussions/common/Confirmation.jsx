@@ -19,6 +19,7 @@ const Confirmation = ({
   onClose,
   confirmAction,
   closeButtonVariant,
+  confirmButtonState,
   confirmButtonVariant,
   confirmButtonText,
   isDataLoading,
@@ -43,7 +44,7 @@ const Confirmation = ({
               {title}
             </ModalDialog.Title>
           </ModalDialog.Header>
-          <ModalDialog.Body>
+          <ModalDialog.Body style={{ whiteSpace: 'pre-line' }}>
             {description}
             {boldDescription && <><br /><p className="font-weight-bold pt-2">{boldDescription}</p></>}
           </ModalDialog.Body>
@@ -58,7 +59,7 @@ const Confirmation = ({
                   pending: pendingConfirmButtonText || confirmButtonText
                       || intl.formatMessage(messages.confirmationConfirm),
                 }}
-                state={isConfirmButtonPending ? 'pending' : confirmButtonVariant}
+                state={isConfirmButtonPending ? 'pending' : confirmButtonState}
                 variant={confirmButtonVariant}
                 onClick={confirmAction}
               />
@@ -84,6 +85,7 @@ Confirmation.propTypes = {
   isConfirmButtonPending: PropTypes.bool,
   pendingConfirmButtonText: PropTypes.string,
   closeButtonText: PropTypes.string,
+  confirmButtonState: PropTypes.string,
 };
 
 Confirmation.defaultProps = {
@@ -95,6 +97,7 @@ Confirmation.defaultProps = {
   isConfirmButtonPending: false,
   pendingConfirmButtonText: '',
   closeButtonText: '',
+  confirmButtonState: 'default',
 };
 
 export default React.memo(Confirmation);

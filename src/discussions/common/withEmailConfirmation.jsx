@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import { selectOnlyVerifiedUsersCanPost } from '../data/selectors';
+import { RequestStatus } from '../../data/constants';
+import { selectConfirmEmailStatus, selectOnlyVerifiedUsersCanPost } from '../data/selectors';
 import { sendAccountActivationEmail } from '../posts/data/thunks';
 import postMessages from '../posts/post-actions-bar/messages';
 import { Confirmation } from '.';
@@ -15,6 +16,7 @@ const withEmailConfirmation = (WrappedComponent) => {
     const dispatch = useDispatch();
     const [isConfirming, setIsConfirming] = useState(false);
     const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+    const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
 
     const openConfirmation = () => setIsConfirming(true);
     const closeConfirmation = () => setIsConfirming(false);
@@ -22,6 +24,12 @@ const withEmailConfirmation = (WrappedComponent) => {
     const handleConfirmation = useCallback(() => {
       dispatch(sendAccountActivationEmail());
     }, [dispatch]);
+
+    const confirmButtonState = useMemo(() => {
+      if (confirmEmailStatus === RequestStatus.IN_PROGRESS) { return 'pending'; }
+      if (confirmEmailStatus === RequestStatus.SUCCESSFUL) { return 'complete'; }
+      return 'primary';
+    }, [confirmEmailStatus]);
 
     return (
       <>
@@ -38,8 +46,10 @@ const withEmailConfirmation = (WrappedComponent) => {
            onClose={closeConfirmation}
            confirmAction={handleConfirmation}
            closeButtonVariant="tertiary"
+           confirmButtonState={confirmButtonState}
            confirmButtonText={intl.formatMessage(postMessages.confirmEmailButton)}
            closeButtonText={intl.formatMessage(postMessages.closeButton)}
+           confirmButtonVariant="danger"
          />
          )}
       </>

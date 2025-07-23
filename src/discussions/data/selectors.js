@@ -41,6 +41,8 @@ export const selectIsEmailVerified = state => state.config.isEmailVerified;
 
 export const selectOnlyVerifiedUsersCanPost = state => state.config.onlyVerifiedUsersCanPost;
 
+export const selectConfirmEmailStatus = state => state.threads.confirmEmailStatus;
+
 export const selectModerationSettings = state => ({
   postCloseReasons: state.config.postCloseReasons,
   editReasons: state.config.editReasons,
