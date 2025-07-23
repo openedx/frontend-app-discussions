@@ -66,4 +66,17 @@ describe('EmptyPage', () => {
     fireEvent.click(confirmButton);
     expect(sendEmailForAccountActivation).toHaveBeenCalled();
   });
+
+  it('should close the confirmation dialogue box.', async () => {
+    renderComponent(`/${courseId}/my-posts/`);
+
+    const addPostButton = screen.getByRole('button', { name: 'Add a post' });
+    await userEvent.click(addPostButton);
+    const confirmButton = screen.getByText('Close');
+    fireEvent.click(confirmButton);
+
+    expect(sendEmailForAccountActivation).toHaveBeenCalled();
+
+    expect(screen.queryByText('Close')).not.toBeInTheDocument();
+  });
 });
