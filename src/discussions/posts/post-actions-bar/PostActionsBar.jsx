@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Button, Icon, IconButton,
@@ -12,8 +13,13 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
 import DiscussionContext from '../../common/context';
+import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectConfigLoadingStatus, selectEnableInContext } from '../../data/selectors';
+import {
+  selectConfigLoadingStatus,
+  selectEnableInContext,
+  selectIsEmailVerified,
+} from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
@@ -21,11 +27,12 @@ import messages from './messages';
 
 import './actionBar.scss';
 
-const PostActionsBar = () => {
+const PostActionsBar = ({ openEmailConfirmation }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectConfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
@@ -34,8 +41,8 @@ const PostActionsBar = () => {
   }, []);
 
   const handleAddPost = useCallback(() => {
-    dispatch(showPostEditor());
-  }, []);
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
@@ -83,4 +90,8 @@ const PostActionsBar = () => {
   );
 };
 
-export default PostActionsBar;
+PostActionsBar.propTypes = {
+  openEmailConfirmation: PropTypes.func.isRequired,
+};
+
+export default React.memo(withEmailConfirmation(PostActionsBar));

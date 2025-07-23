@@ -1,4 +1,5 @@
 import React, { useCallback, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -6,14 +7,15 @@ import { useParams } from 'react-router-dom';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import DiscussionContext from '../../common/context';
+import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useIsOnTablet } from '../../data/hooks';
-import { selectPostThreadCount } from '../../data/selectors';
+import { selectIsEmailVerified, selectPostThreadCount } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import messages from '../../messages';
 import { messages as postMessages, showPostEditor } from '../../posts';
 import { selectCourseWareThreadsCount, selectTotalTopicsThreadsCount } from '../data/selectors';
 
-const EmptyTopics = () => {
+const EmptyTopics = ({ openEmailConfirmation }) => {
   const intl = useIntl();
   const { category, topicId } = useParams();
   const dispatch = useDispatch();
@@ -23,10 +25,11 @@ const EmptyTopics = () => {
   const topicThreadsCount = useSelector(selectPostThreadCount);
   // hasGlobalThreads is used to determine if there are any post available in courseware and non-courseware topics
   const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
+  const isEmailVerified = useSelector(selectIsEmailVerified);
 
-  const addPost = useCallback(() => (
-    dispatch(showPostEditor())
-  ), []);
+  const addPost = useCallback(() => {
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -75,4 +78,8 @@ const EmptyTopics = () => {
   );
 };
 
-export default EmptyTopics;
+EmptyTopics.propTypes = {
+  openEmailConfirmation: PropTypes.func.isRequired,
+};
+
+export default React.memo(withEmailConfirmation(EmptyTopics));

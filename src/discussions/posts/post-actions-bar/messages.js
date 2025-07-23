@@ -51,6 +51,26 @@ const messages = defineMessages({
     defaultMessage: 'Close',
     description: 'Alt description for close icon button for closing in-context sidebar.',
   },
+  confirmEmailTitle: {
+    id: 'discussion.posts.confirm.email.title',
+    defaultMessage: 'Confirm your email',
+    description: 'Confirm email title for unverified users.',
+  },
+  confirmEmailDescription: {
+    id: 'discussion.posts.confirm.email.description',
+    defaultMessage: 'You’ll need to confirm your email before you can participate in discussions. Click the button below to receive an email with a confirmation link. Open it, then refresh this page to start contributing.\n\nCan’t find it? Check your spam folder or resend the email.',
+    description: 'Confirm email description for unverified users.',
+  },
+  confirmEmailButton: {
+    id: 'discussion.posts.confirm.email.button',
+    defaultMessage: 'Send confirmation link',
+    description: 'Confirmation link email button.',
+  },
+  closeButton: {
+    id: 'discussion.posts.close.button',
+    defaultMessage: 'Close',
+    description: 'Close button.',
+  },
 });
 
 export default messages;

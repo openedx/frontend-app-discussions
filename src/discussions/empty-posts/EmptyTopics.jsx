@@ -1,28 +1,33 @@
 import React, { useCallback } from 'react';
+import propTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
+import withEmailConfirmation from '../common/withEmailConfirmation';
 import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
-import { selectTopicThreadCount } from '../data/selectors';
+import {
+  selectIsEmailVerified, selectTopicThreadCount,
+} from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyTopics = () => {
+const EmptyTopics = ({ openEmailConfirmation }) => {
   const intl = useIntl();
   const { topicId } = useParams();
   const dispatch = useDispatch();
   const isOnTabletorDesktop = useIsOnTablet();
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
+  const isEmailVerified = useSelector(selectIsEmailVerified);
 
-  const addPost = useCallback(() => (
-    dispatch(showPostEditor())
-  ), []);
+  const addPost = useCallback(() => {
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -63,4 +68,8 @@ const EmptyTopics = () => {
   );
 };
 
-export default EmptyTopics;
+EmptyTopics.propTypes = {
+  openEmailConfirmation: propTypes.func.isRequired,
+};
+
+export default React.memo(withEmailConfirmation(EmptyTopics));

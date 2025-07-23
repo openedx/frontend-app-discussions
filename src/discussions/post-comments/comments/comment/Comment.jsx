@@ -14,8 +14,10 @@ import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
+import withEmailConfirmation from '../../../common/withEmailConfirmation';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
+import { selectIsEmailVerified } from '../../../data/selectors';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
@@ -38,6 +40,7 @@ const Comment = ({
   commentId,
   marginBottom,
   showFullThread = true,
+  openEmailConfirmation,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
@@ -60,6 +63,7 @@ const Comment = ({
   const hasMorePages = useSelector(selectCommentHasMorePages(id));
   const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
   const actions = useActions(ContentTypes.COMMENT, id);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
 
@@ -179,7 +183,7 @@ const Comment = ({
             id={id}
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={handleAddCommentButton}
+            handleResponseCommentButton={isEmailVerified ? handleAddCommentButton : openEmailConfirmation}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -270,7 +274,7 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
-                  onClick={handleAddCommentReply}
+                  onClick={isEmailVerified ? handleAddCommentReply : openEmailConfirmation}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>
@@ -287,6 +291,7 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
+  openEmailConfirmation: PropTypes.func.isRequired,
 };
 
 Comment.defaultProps = {
@@ -294,4 +299,4 @@ Comment.defaultProps = {
   showFullThread: true,
 };
 
-export default React.memo(Comment);
+export default React.memo(withEmailConfirmation(Comment));

@@ -115,6 +115,7 @@ async function setupCourseConfig() {
       { code: 'reason-1', label: 'reason 1' },
       { code: 'reason-2', label: 'reason 2' },
     ],
+    isEmailVerified: true,
   });
   axiosMock.onGet(`${courseSettingsApiUrl}${courseId}/settings`).reply(200, {});
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
@@ -295,6 +296,7 @@ describe('ThreadView', () => {
     });
 
     it('should show and hide the editor', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const post = screen.getByTestId('post-thread-1');
@@ -309,6 +311,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment with CAPTCHA', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
@@ -332,6 +335,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const post = await screen.findByTestId('post-thread-1');
@@ -353,6 +357,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
@@ -619,6 +624,7 @@ describe('ThreadView', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
     it('renders the mocked ReCAPTCHA.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -627,6 +633,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -637,6 +644,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onExpired handler when CAPTCHA expires', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -646,6 +654,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onError handler when CAPTCHA errors', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -745,6 +754,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully added comment in the draft.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       await act(async () => {
@@ -804,6 +814,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully removed comment from the draft.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       await act(async () => {
@@ -826,6 +837,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully added response in the draft.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       await act(async () => {
@@ -848,6 +860,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully removed response from the draft.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       await act(async () => {
@@ -870,6 +883,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully maintain response for the specific post in the draft.', async () => {
+      await setupCourseConfig();
       await waitFor(() => renderComponent(discussionPostId));
 
       await act(async () => {

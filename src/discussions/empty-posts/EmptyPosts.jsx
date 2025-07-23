@@ -5,23 +5,29 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
+import withEmailConfirmation from '../common/withEmailConfirmation';
 import { useIsOnTablet } from '../data/hooks';
-import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';
+import {
+  selectAreThreadsFiltered,
+  selectIsEmailVerified,
+  selectPostThreadCount,
+} from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyPosts = ({ subTitleMessage }) => {
+const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const isOnTabletorDesktop = useIsOnTablet();
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
 
-  const addPost = useCallback(() => (
-    dispatch(showPostEditor())
-  ), []);
+  const addPost = useCallback(() => {
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   let title = messages.noPostSelected;
   let subTitle = null;
@@ -58,6 +64,7 @@ EmptyPosts.propTypes = {
     defaultMessage: propTypes.string,
     description: propTypes.string,
   }).isRequired,
+  openEmailConfirmation: propTypes.func.isRequired,
 };
 
-export default React.memo(EmptyPosts);
+export default React.memo(withEmailConfirmation(EmptyPosts));

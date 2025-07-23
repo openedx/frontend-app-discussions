@@ -2,21 +2,25 @@ import React, { useCallback, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Spinner } from '@openedx/paragon';
+import { useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ThreadType } from '../../../data/constants';
+import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
+import { selectIsEmailVerified } from '../../data/selectors';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
 import PostCommentsContext from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
-const CommentsView = ({ threadType }) => {
+const CommentsView = ({ threadType, openEmailConfirmation }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
 
   const {
@@ -28,8 +32,8 @@ const CommentsView = ({ threadType }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    setAddingResponse(true);
-  }, []);
+    if (isEmailVerified) { setAddingResponse(true); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);
@@ -115,6 +119,7 @@ CommentsView.propTypes = {
   threadType: PropTypes.oneOf([
     ThreadType.DISCUSSION, ThreadType.QUESTION,
   ]).isRequired,
+  openEmailConfirmation: PropTypes.func.isRequired,
 };
 
-export default React.memo(CommentsView);
+export default React.memo(withEmailConfirmation(CommentsView));

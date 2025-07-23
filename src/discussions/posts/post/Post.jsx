@@ -16,8 +16,11 @@ import { selectorForUnitSubsection, selectTopicContext } from '../../../data/sel
 import { AlertBanner, Confirmation } from '../../common';
 import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
+import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { ContentTypes } from '../../data/constants';
-import { selectUserHasModerationPrivileges } from '../../data/selectors';
+import {
+  selectIsEmailVerified, selectUserHasModerationPrivileges,
+} from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
@@ -27,7 +30,7 @@ import messages from './messages';
 import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
 
-const Post = ({ handleAddResponseButton }) => {
+const Post = ({ handleAddResponseButton, openEmailConfirmation }) => {
   const { enableInContextSidebar, postId } = useContext(DiscussionContext);
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
@@ -46,6 +49,8 @@ const Post = ({ handleAddResponseButton }) => {
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const isEmailVerified = useSelector(selectIsEmailVerified);
+
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
   const handleDeleteConfirmation = useCallback(async () => {
@@ -155,7 +160,7 @@ const Post = ({ handleAddResponseButton }) => {
         id={postId}
         contentType={ContentTypes.POST}
         actionHandlers={actionHandlers}
-        handleResponseCommentButton={handleAddResponseButton}
+        handleResponseCommentButton={isEmailVerified ? handleAddResponseButton : () => openEmailConfirmation()}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
         onLike={handlePostLike}
         onFollow={handlePostFollow}
@@ -235,6 +240,7 @@ const Post = ({ handleAddResponseButton }) => {
 
 Post.propTypes = {
   handleAddResponseButton: PropTypes.func.isRequired,
+  openEmailConfirmation: PropTypes.func.isRequired,
 };
 
-export default React.memo(Post);
+export default React.memo(withEmailConfirmation(Post));
