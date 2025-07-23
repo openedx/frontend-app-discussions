@@ -103,7 +103,7 @@ async function getThreadAPIResponse(attr = null) {
   await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
-async function setupCourseConfig() {
+async function setupCourseConfig(isEmailVerified = true, onlyVerifiedUsersCanPost = false) {
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
     has_moderation_privileges: true,
     isPostingEnabled: true,
@@ -115,7 +115,8 @@ async function setupCourseConfig() {
       { code: 'reason-1', label: 'reason 1' },
       { code: 'reason-2', label: 'reason 2' },
     ],
-    isEmailVerified: true,
+    isEmailVerified,
+    onlyVerifiedUsersCanPost,
   });
   axiosMock.onGet(`${courseSettingsApiUrl}${courseId}/settings`).reply(200, {});
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
@@ -308,6 +309,17 @@ describe('ThreadView', () => {
 
       await act(async () => { fireEvent.click(screen.getByRole('button', { name: /cancel/i })); });
       expect(screen.queryByTestId('tinymce-editor')).not.toBeInTheDocument();
+    });
+
+    it('should open the confirmation link dialogue box.', async () => {
+      await setupCourseConfig(false, true);
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+      await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+
+      expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
     });
 
     it('should allow posting a comment with CAPTCHA', async () => {
