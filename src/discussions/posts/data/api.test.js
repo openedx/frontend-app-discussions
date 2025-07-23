@@ -48,4 +48,22 @@ describe('Threads/Posts api tests', () => {
 
     expect(store.getState().threads.confirmEmailStatus).toEqual('successful');
   });
+
+  test('fails to send email for account activation (server error)', async () => {
+    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/api/send_account_activation_email`)
+      .reply(500);
+
+    await executeThunk(sendAccountActivationEmail(), store.dispatch, store.getState);
+
+    expect(store.getState().threads.confirmEmailStatus).toEqual('failed');
+  });
+
+  test('denied sending email for account activation (unauthorized)', async () => {
+    axiosMock.onPost(`${getConfig().LMS_BASE_URL}/api/send_account_activation_email`)
+      .reply(403);
+
+    await executeThunk(sendAccountActivationEmail(), store.dispatch, store.getState);
+
+    expect(store.getState().threads.confirmEmailStatus).toEqual('denied');
+  });
 });
