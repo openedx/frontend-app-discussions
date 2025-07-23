@@ -18,7 +18,7 @@ import { useUserPostingEnabled } from '../../data/hooks';
 import {
   selectConfigLoadingStatus,
   selectEnableInContext,
-  selectIsEmailVerified,
+  selectShouldShowEmailConfirmation,
 } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
@@ -32,7 +32,7 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectConfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
-  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
@@ -41,8 +41,8 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
   }, []);
 
   const handleAddPost = useCallback(() => {
-    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>

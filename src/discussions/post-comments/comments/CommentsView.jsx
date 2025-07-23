@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { ThreadType } from '../../../data/constants';
 import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectIsEmailVerified } from '../../data/selectors';
+import { selectShouldShowEmailConfirmation } from '../../data/selectors';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
@@ -20,8 +20,8 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
-  const isEmailVerified = useSelector(selectIsEmailVerified);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
+  const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
 
   const {
     endorsedCommentsIds,
@@ -32,8 +32,8 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    if (isEmailVerified) { setAddingResponse(true); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { setAddingResponse(true); }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);

@@ -9,8 +9,8 @@ import withEmailConfirmation from '../common/withEmailConfirmation';
 import { useIsOnTablet } from '../data/hooks';
 import {
   selectAreThreadsFiltered,
-  selectIsEmailVerified,
   selectPostThreadCount,
+  selectShouldShowEmailConfirmation,
 } from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
@@ -23,11 +23,11 @@ const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
   const isOnTabletorDesktop = useIsOnTablet();
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
-  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
 
   const addPost = useCallback(() => {
-    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
 
   let title = messages.noPostSelected;
   let subTitle = null;

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
@@ -61,7 +62,7 @@ describe('EmptyTopics', () => {
       },
     });
 
-    store = initializeStore({ config: { provider: 'legacy' } });
+    store = initializeStore({ config: { provider: 'legacy', onlyVerifiedUsersCanPost: true } });
   });
 
   test('"no topic selected" text shown when viewing topics page', async () => {
@@ -74,5 +75,14 @@ describe('EmptyTopics', () => {
     renderComponent(`/${courseId}/topics/ncwtopic-3/`);
 
     await screen.findByText(messages.noPostSelected.defaultMessage);
+  });
+
+  it('should open the confirmation link dialogue box.', async () => {
+    renderComponent(`/${courseId}/topics/ncwtopic-3/`);
+
+    const addPostButton = screen.getByRole('button', { name: 'Add a post' });
+    await userEvent.click(addPostButton);
+
+    expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
   });
 });

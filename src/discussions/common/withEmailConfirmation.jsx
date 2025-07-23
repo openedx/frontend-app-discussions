@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { RequestStatus } from '../../data/constants';
-import { selectConfirmEmailStatus, selectOnlyVerifiedUsersCanPost } from '../data/selectors';
+import { selectConfirmEmailStatus, selectShouldShowEmailConfirmation } from '../data/selectors';
 import { sendAccountActivationEmail } from '../posts/data/thunks';
 import postMessages from '../posts/post-actions-bar/messages';
 import { Confirmation } from '.';
@@ -15,7 +15,7 @@ const withEmailConfirmation = (WrappedComponent) => {
     const intl = useIntl();
     const dispatch = useDispatch();
     const [isConfirming, setIsConfirming] = useState(false);
-    const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+    const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
     const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
 
     const openConfirmation = useCallback(() => {
@@ -42,7 +42,7 @@ const withEmailConfirmation = (WrappedComponent) => {
           {...props}
           openEmailConfirmation={openConfirmation}
         />
-        {!onlyVerifiedUsersCanPost
+        {shouldShowEmailConfirmation
          && (
          <Confirmation
            isOpen={isConfirming}

@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import DiscussionContext from '../../common/context';
 import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useIsOnTablet } from '../../data/hooks';
-import { selectIsEmailVerified, selectPostThreadCount } from '../../data/selectors';
+import { selectPostThreadCount, selectShouldShowEmailConfirmation } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import messages from '../../messages';
 import { messages as postMessages, showPostEditor } from '../../posts';
@@ -25,11 +25,11 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
   const topicThreadsCount = useSelector(selectPostThreadCount);
   // hasGlobalThreads is used to determine if there are any post available in courseware and non-courseware topics
   const hasGlobalThreads = useSelector(selectTotalTopicsThreadsCount) > 0;
-  const isEmailVerified = useSelector(selectIsEmailVerified);
+  const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
 
   const addPost = useCallback(() => {
-    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;

@@ -1,3 +1,4 @@
+import { ResponsiveContext } from '@openedx/paragon';
 import {
   fireEvent, render, screen, waitFor,
   within,
@@ -18,6 +19,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
 import DiscussionContext from '../common/context';
+import EmptyTopics from './components/EmptyTopics';
 import { getCourseTopicsApiUrl } from './data/api';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
 import fetchCourseTopicsV3 from './data/thunks';
@@ -39,6 +41,24 @@ const LocationComponent = () => {
   lastLocation = useLocation();
   return null;
 };
+
+function renderEmptyTopicComponent(topicId = 'sample-topic-id') {
+  return render(
+    <IntlProvider locale="en">
+      <ResponsiveContext.Provider value={{ width: 1280 }}>
+        <AppProvider store={store} wrapWithRouter={false}>
+          <DiscussionContext.Provider value={{ courseId, category }}>
+            <MemoryRouter initialEntries={[`/discussion/${category}/${topicId}`]}>
+              <Routes>
+                <Route path="/discussion/:category/:topicId" element={<EmptyTopics />} />
+              </Routes>
+            </MemoryRouter>
+          </DiscussionContext.Provider>
+        </AppProvider>
+      </ResponsiveContext.Provider>
+    </IntlProvider>,
+  );
+}
 
 function renderComponent() {
   const wrapper = render(
@@ -72,7 +92,9 @@ describe('InContext Topics View', () => {
     });
 
     store = initializeStore({
-      config: { enableInContext: true, provider: 'openedx', hasModerationPrivileges: true },
+      config: {
+        enableInContext: true, provider: 'openedx', hasModerationPrivileges: true, onlyVerifiedUsersCanPost: true,
+      },
     });
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
@@ -237,5 +259,15 @@ describe('InContext Topics View', () => {
         expect(lastLocation.pathname.endsWith(`/topics/${unitObject.id}`)).toBeTruthy();
       });
     });
+  });
+
+  it('should open the confirmation link dialogue box.', async () => {
+    renderEmptyTopicComponent();
+
+    const addPostButton = screen.getByRole('button', { name: /Add a post/i });
+    await userEvent.click(addPostButton);
+
+    const confirmationText = await screen.findByText(/send confirmation link/i);
+    expect(confirmationText).toBeInTheDocument();
   });
 });

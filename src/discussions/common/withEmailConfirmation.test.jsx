@@ -44,7 +44,9 @@ describe('EmptyPage', () => {
       },
     });
 
-    store = initializeStore();
+    store = initializeStore({
+      config: { provider: 'openedx', onlyVerifiedUsersCanPost: true },
+    });
   });
 
   it('should open the confirmation link dialogue box.', async () => {
