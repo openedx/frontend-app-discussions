@@ -18,8 +18,13 @@ const withEmailConfirmation = (WrappedComponent) => {
     const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
     const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
 
-    const openConfirmation = () => setIsConfirming(true);
-    const closeConfirmation = () => setIsConfirming(false);
+    const openConfirmation = useCallback(() => {
+      setIsConfirming(true);
+    }, []);
+
+    const closeConfirmation = useCallback(() => {
+      setIsConfirming(false);
+    }, []);
 
     const handleConfirmation = useCallback(() => {
       dispatch(sendAccountActivationEmail());
