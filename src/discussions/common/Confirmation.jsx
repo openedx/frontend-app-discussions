@@ -24,6 +24,7 @@ const Confirmation = ({
   isDataLoading,
   isConfirmButtonPending,
   pendingConfirmButtonText,
+  closeButtonText,
 }) => {
   const intl = useIntl();
 
@@ -49,7 +50,7 @@ const Confirmation = ({
           <ModalDialog.Footer>
             <ActionRow>
               <ModalDialog.CloseButton variant={closeButtonVariant}>
-                {intl.formatMessage(messages.confirmationCancel)}
+                {closeButtonText || intl.formatMessage(messages.confirmationCancel)}
               </ModalDialog.CloseButton>
               <StatefulButton
                 labels={{
@@ -82,6 +83,7 @@ Confirmation.propTypes = {
   isDataLoading: PropTypes.bool,
   isConfirmButtonPending: PropTypes.bool,
   pendingConfirmButtonText: PropTypes.string,
+  closeButtonText: PropTypes.string,
 };
 
 Confirmation.defaultProps = {
@@ -92,6 +94,7 @@ Confirmation.defaultProps = {
   isDataLoading: false,
   isConfirmButtonPending: false,
   pendingConfirmButtonText: '',
+  closeButtonText: '',
 };
 
 export default React.memo(Confirmation);

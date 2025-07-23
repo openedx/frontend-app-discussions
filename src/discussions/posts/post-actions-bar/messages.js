@@ -58,13 +58,18 @@ const messages = defineMessages({
   },
   confirmEmailDescription: {
     id: 'discussion.posts.confirm.email.description',
-    defaultMessage: 'You need to confirm your email to make a contribution in discussion forums. Click on the button to receive an email with confirmation link. Please reload the page once you have done so.',
+    defaultMessage: 'You’ll need to confirm your email before you can participate in discussions. Click the button below to receive an email with a confirmation link. Open it, then refresh this page to start contributing.\n\nCan’t find it? Check your spam folder or resend the email.',
     description: 'Confirm email description for unverified users.',
   },
   confirmEmailButton: {
     id: 'discussion.posts.confirm.email.button',
     defaultMessage: 'Send confirmation link',
     description: 'Confirmation link email button.',
+  },
+  closeButton: {
+    id: 'discussion.posts.close.button',
+    defaultMessage: 'Close',
+    description: 'Close button.',
   },
 });
 

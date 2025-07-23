@@ -10,16 +10,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
-import { ContentActions, EndorsementStatus, RequestStatus } from '../../../../data/constants';
+import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
+import withEmailConfirmation from '../../../common/withEmailConfirmation';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
-import { selectConfirmEmailStatus, selectIsEmailVerified, selectOnlyVerifiedUsersCanPost } from '../../../data/selectors';
-import { fetchThread, sendAccountActivationEmail } from '../../../posts/data/thunks';
+import { selectIsEmailVerified } from '../../../data/selectors';
+import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
-import postMessages from '../../../posts/post-actions-bar/messages';
 import { useActions } from '../../../utils';
 import {
   selectCommentCurrentPage,
@@ -40,6 +40,7 @@ const Comment = ({
   commentId,
   marginBottom,
   showFullThread = true,
+  openEmailConfirmation,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
@@ -53,7 +54,6 @@ const Comment = ({
   const dispatch = useDispatch();
   const { courseId } = useContext(DiscussionContext);
   const { isClosed } = useContext(PostCommentsContext);
-  const [isConfirming, setIsConfirming] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [isReplying, setReplying] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
@@ -64,16 +64,8 @@ const Comment = ({
   const currentPage = useSelector(selectCommentCurrentPage(id));
   const sortedOrder = useSelector(selectCommentSortOrder);
   const isEmailVerified = useSelector(selectIsEmailVerified);
-  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
-  const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
   const actions = useActions(ContentTypes.COMMENT, id);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
-
-  useEffect(() => {
-    if (confirmEmailStatus === RequestStatus.SUCCESSFUL) {
-      setIsConfirming(false);
-    }
-  }, [confirmEmailStatus]);
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -152,10 +144,6 @@ const Comment = ({
     setReplying(false);
   }, []);
 
-  const handleConfirmation = useCallback(() => {
-    dispatch(sendAccountActivationEmail());
-  }, [sendAccountActivationEmail]);
-
   return (
     <div className={classNames({ 'mb-3': (showFullThread && !marginBottom) })}>
       {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
@@ -195,7 +183,7 @@ const Comment = ({
             id={id}
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={isEmailVerified ? handleAddCommentButton : () => setIsConfirming(true)}
+            handleResponseCommentButton={isEmailVerified ? handleAddCommentButton : () => openEmailConfirmation()}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -286,23 +274,12 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
-                  onClick={isEmailVerified ? handleAddCommentReply : () => setIsConfirming(true)}
+                  onClick={isEmailVerified ? handleAddCommentReply : () => openEmailConfirmation()}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>
               )
             )
-          )}
-          {!onlyVerifiedUsersCanPost && (
-          <Confirmation
-            isOpen={isConfirming}
-            title={intl.formatMessage(postMessages.confirmEmailTitle)}
-            description={intl.formatMessage(postMessages.confirmEmailDescription)}
-            onClose={() => setIsConfirming(false)}
-            confirmAction={handleConfirmation}
-            closeButtonVariant="tertiary"
-            confirmButtonText={intl.formatMessage(postMessages.confirmEmailButton)}
-          />
           )}
         </div>
       </div>
@@ -314,6 +291,7 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
+  openEmailConfirmation: PropTypes.func.isRequired,
 };
 
 Comment.defaultProps = {
@@ -321,4 +299,4 @@ Comment.defaultProps = {
   showFullThread: true,
 };
 
-export default React.memo(Comment);
+export default React.memo(withEmailConfirmation(Comment));

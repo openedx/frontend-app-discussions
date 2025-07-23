@@ -1,6 +1,5 @@
-import React, {
-  useCallback, useContext, useEffect, useState,
-} from 'react';
+import React, { useCallback, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Button, Icon, IconButton,
@@ -13,53 +12,37 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
-import { Confirmation } from '../../common';
 import DiscussionContext from '../../common/context';
+import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
 import {
   selectConfigLoadingStatus,
-  selectConfirmEmailStatus,
   selectEnableInContext,
   selectIsEmailVerified,
-  selectOnlyVerifiedUsersCanPost,
 } from '../../data/selectors';
 import { TopicSearchBar as IncontextSearch } from '../../in-context-topics/topic-search';
 import { postMessageToParent } from '../../utils';
 import { showPostEditor } from '../data';
-import { sendAccountActivationEmail } from '../data/thunks';
 import messages from './messages';
 
 import './actionBar.scss';
 
-const PostActionsBar = () => {
+const PostActionsBar = ({ openEmailConfirmation }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const [isConfirming, setIsConfirming] = useState(false);
   const loadingStatus = useSelector(selectConfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
   const isEmailVerified = useSelector(selectIsEmailVerified);
-  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
-  const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
-
-  useEffect(() => {
-    if (confirmEmailStatus === RequestStatus.SUCCESSFUL) {
-      setIsConfirming(false);
-    }
-  }, [confirmEmailStatus]);
 
   const handleCloseInContext = useCallback(() => {
     postMessageToParent('learning.events.sidebar.close');
   }, []);
 
   const handleAddPost = useCallback(() => {
-    if (isEmailVerified) { dispatch(showPostEditor()); } else { setIsConfirming(true); }
-  }, [isEmailVerified]);
-
-  const handleConfirmation = useCallback(() => {
-    dispatch(sendAccountActivationEmail());
-  }, [sendAccountActivationEmail]);
+    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
+  }, [isEmailVerified, openEmailConfirmation]);
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
@@ -103,19 +86,12 @@ const PostActionsBar = () => {
           </div>
         </>
       )}
-      {!onlyVerifiedUsersCanPost && (
-      <Confirmation
-        isOpen={isConfirming}
-        title={intl.formatMessage(messages.confirmEmailTitle)}
-        description={intl.formatMessage(messages.confirmEmailDescription)}
-        onClose={() => setIsConfirming(false)}
-        confirmAction={handleConfirmation}
-        closeButtonVariant="tertiary"
-        confirmButtonText={intl.formatMessage(messages.confirmEmailButton)}
-      />
-      )}
     </div>
   );
 };
 
-export default PostActionsBar;
+PostActionsBar.propTypes = {
+  openEmailConfirmation: PropTypes.func.isRequired,
+};
+
+export default React.memo(withEmailConfirmation(PostActionsBar));
