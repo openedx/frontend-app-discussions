@@ -18,9 +18,7 @@ import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { ContentTypes } from '../../data/constants';
-import {
-  selectIsEmailVerified, selectOnlyVerifiedUsersCanPost, selectUserHasModerationPrivileges,
-} from '../../data/selectors';
+import { selectShouldShowEmailConfirmation, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
 import { truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
@@ -49,8 +47,7 @@ const Post = ({ handleAddResponseButton, openEmailConfirmation }) => {
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
-  const isEmailVerified = useSelector(selectIsEmailVerified);
-  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
+  const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
 
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
@@ -161,8 +158,7 @@ const Post = ({ handleAddResponseButton, openEmailConfirmation }) => {
         id={postId}
         contentType={ContentTypes.POST}
         actionHandlers={actionHandlers}
-        handleResponseCommentButton={!isEmailVerified && onlyVerifiedUsersCanPost ? openEmailConfirmation
-          : handleAddResponseButton}
+        handleResponseCommentButton={shouldShowEmailConfirmation ? openEmailConfirmation : handleAddResponseButton}
         addResponseCommentButtonMessage={intl.formatMessage(messages.addResponse)}
         onLike={handlePostLike}
         onFollow={handlePostFollow}
