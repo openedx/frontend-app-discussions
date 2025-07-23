@@ -10,6 +10,7 @@ import { useIsOnTablet } from '../data/hooks';
 import {
   selectAreThreadsFiltered,
   selectIsEmailVerified,
+  selectOnlyVerifiedUsersCanPost,
   selectPostThreadCount,
 } from '../data/selectors';
 import messages from '../messages';
@@ -24,10 +25,11 @@ const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
   const isEmailVerified = useSelector(selectIsEmailVerified);
+  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
 
   const addPost = useCallback(() => {
-    if (isEmailVerified) { dispatch(showPostEditor()); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (!isEmailVerified && onlyVerifiedUsersCanPost) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
+  }, [isEmailVerified, openEmailConfirmation, onlyVerifiedUsersCanPost]);
 
   let title = messages.noPostSelected;
   let subTitle = null;

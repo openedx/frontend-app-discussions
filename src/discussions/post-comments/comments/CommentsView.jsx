@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { ThreadType } from '../../../data/constants';
 import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectIsEmailVerified } from '../../data/selectors';
+import { selectIsEmailVerified, selectOnlyVerifiedUsersCanPost } from '../../data/selectors';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
@@ -22,6 +22,7 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   const { isClosed } = useContext(PostCommentsContext);
   const isEmailVerified = useSelector(selectIsEmailVerified);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
+  const onlyVerifiedUsersCanPost = useSelector(selectOnlyVerifiedUsersCanPost);
 
   const {
     endorsedCommentsIds,
@@ -32,8 +33,8 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    if (isEmailVerified) { setAddingResponse(true); } else { openEmailConfirmation(); }
-  }, [isEmailVerified, openEmailConfirmation]);
+    if (!isEmailVerified && onlyVerifiedUsersCanPost) { openEmailConfirmation(); } else { setAddingResponse(true); }
+  }, [isEmailVerified, openEmailConfirmation, onlyVerifiedUsersCanPost]);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);
