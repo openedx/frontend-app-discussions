@@ -14,6 +14,8 @@ import { initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getCourseMetadataApiUrl } from '../../../components/NavigationBar/data/api';
+import fetchTab from '../../../components/NavigationBar/data/thunks';
 import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import executeThunk from '../../../test-utils';
@@ -33,6 +35,7 @@ import '../../cohorts/data/__factories__';
 import '../../data/__factories__';
 import '../../topics/data/__factories__';
 import '../data/__factories__';
+import '../../../components/NavigationBar/data/__factories__';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 const topicsApiUrl = `${getApiBaseUrl()}/api/discussion/v1/course_topics/${courseId}`;
@@ -85,13 +88,14 @@ describe('PostEditor submit Form', () => {
       courseware_topics: cwtopics,
       non_courseware_topics: Factory.buildList('topic', 3, {}, { topicPrefix: 'ncw-' }),
     });
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
 
     store = initializeStore({
       config: {
         provider: 'legacy',
         allowAnonymous: true,
         allowAnonymousToPeers: true,
-        hasModerationPrivileges: true,
+        hasModerationPrivileges: false,
         settings: {
           dividedInlineDiscussions: ['category-1-topic-2'],
           dividedCourseWideDiscussions: ['ncw-topic-2'],
@@ -102,6 +106,7 @@ describe('PostEditor submit Form', () => {
         },
       },
     });
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
   });
@@ -230,6 +235,7 @@ describe('PostEditor', () => {
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+      await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     });
 
     test(`new post when anonymous posts are ${allowAnonymous ? '' : 'not'} allowed and anonymous posts to peers are ${
@@ -307,6 +313,7 @@ describe('PostEditor', () => {
     const dividedcw = ['category-1-topic-2', 'category-2-topic-1', 'category-2-topic-2'];
 
     beforeEach(async () => {
+      axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
       axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
     });
 
@@ -329,6 +336,7 @@ describe('PostEditor', () => {
         },
       });
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
+      await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     }
 
     test('renders the mocked ReCAPTCHA.', async () => {
@@ -337,6 +345,7 @@ describe('PostEditor', () => {
           enabled: true,
           siteKey: 'test-key',
         },
+        hasModerationPrivileges: false,
       });
       await renderComponent();
       expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
@@ -348,6 +357,7 @@ describe('PostEditor', () => {
           enabled: true,
           siteKey: 'test-key',
         },
+        hasModerationPrivileges: false,
       });
       await renderComponent();
       const solveButton = screen.getByText('Solve CAPTCHA');
@@ -361,6 +371,7 @@ describe('PostEditor', () => {
           enabled: true,
           siteKey: 'test-key',
         },
+        hasModerationPrivileges: false,
       });
       await renderComponent();
       fireEvent.click(screen.getByText('Expire CAPTCHA'));
@@ -373,6 +384,7 @@ describe('PostEditor', () => {
           enabled: true,
           siteKey: 'test-key',
         },
+        hasModerationPrivileges: false,
       });
       await renderComponent();
       fireEvent.click(screen.getByText('Error CAPTCHA'));

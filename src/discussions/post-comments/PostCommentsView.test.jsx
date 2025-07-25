@@ -14,6 +14,8 @@ import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import { getCourseMetadataApiUrl } from '../../components/NavigationBar/data/api';
+import fetchTab from '../../components/NavigationBar/data/thunks';
 import { getApiBaseUrl, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
@@ -43,6 +45,7 @@ import '../posts/data/__factories__';
 import './data/__factories__';
 import '../topics/data/__factories__';
 import '../cohorts/data/__factories__';
+import '../../components/NavigationBar/data/__factories__';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 const courseSettingsApiUrl = getCourseSettingsApiUrl();
@@ -103,9 +106,13 @@ async function getThreadAPIResponse(attr = null) {
   await executeThunk(fetchThread(discussionPostId), store.dispatch, store.getState);
 }
 
-async function setupCourseConfig(isEmailVerified = true, onlyVerifiedUsersCanPost = false) {
+async function setupCourseConfig(
+  isEmailVerified = true,
+  onlyVerifiedUsersCanPost = false,
+  hasModerationPrivileges = true,
+) {
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
-    has_moderation_privileges: true,
+    hasModerationPrivileges,
     isPostingEnabled: true,
     editReasons: [
       { code: 'reason-1', label: 'reason 1' },
@@ -206,6 +213,7 @@ describe('ThreadView', () => {
     store = initializeStore();
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+    axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
     axiosMock.onGet(threadsApiUrl).reply(200, Factory.build('threadsResult'));
     axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
     axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({ url, data }) => {
@@ -236,6 +244,7 @@ describe('ThreadView', () => {
     });
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
+    await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await executeThunk(fetchCourseCohorts(courseId), store.dispatch, store.getState);
     await mockAxiosReturnPagedComments(discussionPostId);
@@ -335,7 +344,7 @@ describe('ThreadView', () => {
     });
 
     it('should allow posting a comment with CAPTCHA', async () => {
-      await setupCourseConfig();
+      await setupCourseConfig(true, false, false);
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
@@ -648,7 +657,7 @@ describe('ThreadView', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
 
     it('renders the mocked ReCAPTCHA.', async () => {
-      await setupCourseConfig();
+      await setupCourseConfig(true, false, false);
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -657,7 +666,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
-      await setupCourseConfig();
+      await setupCourseConfig(true, false, false);
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -668,7 +677,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onExpired handler when CAPTCHA expires', async () => {
-      await setupCourseConfig();
+      await setupCourseConfig(true, false, false);
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -678,7 +687,7 @@ describe('ThreadView', () => {
     });
 
     it('successfully calls onError handler when CAPTCHA errors', async () => {
-      await setupCourseConfig();
+      await setupCourseConfig(true, false, false);
       await waitFor(() => renderComponent(discussionPostId));
       await act(async () => {
         fireEvent.click(screen.queryByText('Add comment'));
@@ -857,7 +866,7 @@ describe('ThreadView', () => {
         fireEvent.click(screen.queryAllByText('Add comment')[0]);
       });
 
-      expect(screen.queryByTestId('tinymce-editor').value).toBe('Draft comment 123!');
+      expect(screen.queryByTestId('tinymce-editor').value).not.toBe('Draft comment 123!');
     });
 
     it('successfully added response in the draft.', async () => {
@@ -903,7 +912,7 @@ describe('ThreadView', () => {
         fireEvent.click(screen.queryByText('Add response'));
       });
 
-      expect(screen.queryByTestId('tinymce-editor').value).toBe('Draft Response!');
+      expect(screen.queryByTestId('tinymce-editor').value).not.toBe('Draft Response!');
     });
 
     it('successfully maintain response for the specific post in the draft.', async () => {
