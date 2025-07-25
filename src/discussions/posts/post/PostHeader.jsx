@@ -126,7 +126,7 @@ const PostHeader = ({
             </div>
           ) : (
             <h5
-              className="mb-0 font-style text-primary-500"
+              className="mb-0 font-style"
               style={{ lineHeight: '21px' }}
               aria-level="1"
               tabIndex="-1"
