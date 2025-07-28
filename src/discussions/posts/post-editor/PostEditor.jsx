@@ -32,6 +32,7 @@ import {
   selectDivisionSettings,
   selectEnableInContext,
   selectIsNotifyAllLearnersEnabled,
+  selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
@@ -86,6 +87,7 @@ const PostEditor = ({
   const postEditorId = `post-editor-${editExisting ? postId : 'new'}`;
   const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
   const captchaSettings = useSelector(selectCaptchaSettings);
+  const isUserLearner = useSelector(selectIsUserLearner);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -96,7 +98,7 @@ const PostEditor = ({
     editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
   };
 
-  const shouldRequireCaptcha = !postId && captchaSettings.enabled;
+  const shouldRequireCaptcha = !postId && captchaSettings.enabled && isUserLearner;
   const captchaValidation = {
     recaptchaToken: Yup.string().required(intl.formatMessage(messages.captchaVerificationLabel)),
   };
