@@ -55,7 +55,11 @@ const AuthorLabel = ({
         placement={authorToolTip ? 'top' : 'right'}
         overlay={(
           <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-label-tooltip`}>
-            {authorToolTip ? author : authorLabel}
+            <>
+              {authorToolTip ? author : authorLabel}
+              <br />
+              {intl.formatMessage(messages.authorAdminDescription)}
+            </>
           </Tooltip>
         )}
         trigger={['hover', 'focus']}
@@ -97,18 +101,38 @@ const AuthorLabel = ({
     </>
   ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
+  const learnerPostsLink = (
+    <Link
+      data-testid="learner-posts-link"
+      id="learner-posts-link"
+      to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
+      className="text-decoration-none text-reset"
+      style={{ width: 'fit-content' }}
+    >
+      {!alert && authorName}
+    </Link>
+  );
+
   return showUserNameAsLink
     ? (
       <div className={`${className} flex-wrap`}>
-        <Link
-          data-testid="learner-posts-link"
-          id="learner-posts-link"
-          to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
-          className="text-decoration-none text-reset"
-          style={{ width: 'fit-content' }}
-        >
-          {!alert && authorName}
-        </Link>
+        {!authorLabel ? (
+          <OverlayTrigger
+            placement={authorToolTip ? 'top' : 'right'}
+            overlay={(
+              <Tooltip id={authorToolTip ? `endorsed-by-${author}-tooltip` : `${authorLabel}-label-tooltip`}>
+                <>
+                  {intl.formatMessage(messages.authorLearnerTitle)}
+                  <br />
+                  {intl.formatMessage(messages.authorLearnerDescription)}
+                </>
+              </Tooltip>
+        )}
+            trigger={['hover', 'focus']}
+          >
+            {learnerPostsLink}
+          </OverlayTrigger>
+        ) : learnerPostsLink }
         {labelContents}
       </div>
     )
