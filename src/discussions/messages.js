@@ -208,6 +208,21 @@ const messages = defineMessages({
     defaultMessage: 'Enroll',
     description: 'Action button on content page when the user has not logged into the MFE or not enrolled in the course.',
   },
+  authorAdminDescription: {
+    id: 'discussions.author.admin.description',
+    defaultMessage: 'Part of the team that runs this course',
+    description: 'tooltip for course admins',
+  },
+  authorLearnerTitle: {
+    id: 'discussions.author.learner.title',
+    defaultMessage: 'Learner',
+    description: 'tooltip for course learners title',
+  },
+  authorLearnerDescription: {
+    id: 'discussions.author.learner.description',
+    defaultMessage: 'Taking the course just like you',
+    description: 'tooltip for course learners',
+  },
 });
 
 export default messages;
