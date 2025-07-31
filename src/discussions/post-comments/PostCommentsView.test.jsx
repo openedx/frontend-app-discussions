@@ -1105,6 +1105,17 @@ describe('ThreadView', () => {
 
     expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
   });
+
+  it('should open the comment editor by clicking on add response button.', async () => {
+    await setupCourseConfig(true, true);
+    await waitFor(() => renderComponent(discussionPostId));
+
+    const addResponseButton = screen.getByTestId('add-response');
+
+    await act(async () => { fireEvent.click(addResponseButton); });
+
+    expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
+  });
 });
 
 describe('MockReCAPTCHA', () => {
