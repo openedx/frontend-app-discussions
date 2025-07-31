@@ -110,6 +110,7 @@ async function setupCourseConfig(
   isEmailVerified = true,
   onlyVerifiedUsersCanPost = false,
   hasModerationPrivileges = true,
+  contentCreationRateLimited = false,
 ) {
   axiosMock.onGet(`${courseConfigApiUrl}${courseId}/`).reply(200, {
     hasModerationPrivileges,
@@ -124,6 +125,7 @@ async function setupCourseConfig(
     ],
     isEmailVerified,
     onlyVerifiedUsersCanPost,
+    contentCreationRateLimited,
   });
   axiosMock.onGet(`${courseSettingsApiUrl}${courseId}/settings`).reply(200, {});
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
@@ -1115,6 +1117,17 @@ describe('ThreadView', () => {
     await act(async () => { fireEvent.click(addResponseButton); });
 
     expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
+  });
+
+  it('should open the dialogue Post limit reached by clicking on add response button.', async () => {
+    await setupCourseConfig(true, true, true, true);
+    await waitFor(() => renderComponent(discussionPostId));
+
+    const addResponseButton = screen.getByTestId('add-response');
+
+    await act(async () => { fireEvent.click(addResponseButton); });
+
+    expect(screen.queryByText('Post limit reached')).toBeInTheDocument();
   });
 });
 
