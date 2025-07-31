@@ -17,6 +17,7 @@ import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
 import {
   selectConfigLoadingStatus,
+  selectContentCreationRateLimited,
   selectEnableInContext,
   selectShouldShowEmailConfirmation,
 } from '../../data/selectors';
@@ -33,6 +34,7 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
   const loadingStatus = useSelector(selectConfigLoadingStatus);
   const enableInContext = useSelector(selectEnableInContext);
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const { enableInContextSidebar, page } = useContext(DiscussionContext);
 
@@ -41,8 +43,12 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
   }, []);
 
   const handleAddPost = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openEmailConfirmation();
+    } else {
+      dispatch(showPostEditor());
+    }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>

@@ -17,7 +17,7 @@ import HoverCard from '../../../common/HoverCard';
 import withEmailConfirmation from '../../../common/withEmailConfirmation';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
-import { selectShouldShowEmailConfirmation } from '../../../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../../../data/selectors';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
@@ -66,6 +66,7 @@ const Comment = ({
   const actions = useActions(ContentTypes.COMMENT, id);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -183,7 +184,8 @@ const Comment = ({
             id={id}
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={shouldShowEmailConfirmation ? openEmailConfirmation : handleAddCommentButton}
+            handleResponseCommentButton={shouldShowEmailConfirmation || contentCreationRateLimited
+              ? openEmailConfirmation : handleAddCommentButton}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -274,7 +276,8 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
-                  onClick={shouldShowEmailConfirmation ? openEmailConfirmation : handleAddCommentReply}
+                  onClick={shouldShowEmailConfirmation || shouldShowEmailConfirmation
+                    ? openEmailConfirmation : handleAddCommentReply}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>

@@ -71,6 +71,16 @@ const messages = defineMessages({
     defaultMessage: 'Close',
     description: 'Close button.',
   },
+  postLimitTitle: {
+    id: 'discussion.posts.limit.title',
+    defaultMessage: 'Post limit reached',
+    description: 'Confirm email title for unverified users.',
+  },
+  postLimitDescription: {
+    id: 'discussion.posts.limit.description',
+    defaultMessage: 'You’ve reached the current post limit. Please try again later.',
+    description: 'Confirm email description for unverified users.',
+  },
 });
 
 export default messages;

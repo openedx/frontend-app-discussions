@@ -1,11 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, {
+  useCallback, useMemo, useState,
+} from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { RequestStatus } from '../../data/constants';
-import { selectConfirmEmailStatus, selectShouldShowEmailConfirmation } from '../data/selectors';
+import { selectConfirmEmailStatus, selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../data/selectors';
 import { sendAccountActivationEmail } from '../posts/data/thunks';
 import postMessages from '../posts/post-actions-bar/messages';
 import { Confirmation } from '.';
@@ -16,6 +18,7 @@ const withEmailConfirmation = (WrappedComponent) => {
     const dispatch = useDispatch();
     const [isConfirming, setIsConfirming] = useState(false);
     const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+    const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
     const confirmEmailStatus = useSelector(selectConfirmEmailStatus);
 
     const openConfirmation = useCallback(() => {
@@ -57,6 +60,17 @@ const withEmailConfirmation = (WrappedComponent) => {
            confirmButtonVariant="danger"
          />
          )}
+        {contentCreationRateLimited
+          && (
+          <Confirmation
+            isOpen={isConfirming}
+            title={intl.formatMessage(postMessages.postLimitTitle)}
+            description={intl.formatMessage(postMessages.postLimitDescription)}
+            onClose={closeConfirmation}
+            closeButtonText={intl.formatMessage(postMessages.closeButton)}
+            closeButtonVariant="danger"
+          />
+          )}
       </>
     );
   };

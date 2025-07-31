@@ -39,6 +39,8 @@ export const selectCaptchaSettings = state => state.config.captchaSettings;
 
 export const selectIsEmailVerified = state => state.config.isEmailVerified;
 
+export const selectContentCreationRateLimited = state => state.config.contentCreationRateLimited;
+
 export const selectOnlyVerifiedUsersCanPost = state => state.config.onlyVerifiedUsersCanPost;
 
 export const selectConfirmEmailStatus = state => state.threads.confirmEmailStatus;

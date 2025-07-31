@@ -9,6 +9,7 @@ import withEmailConfirmation from '../common/withEmailConfirmation';
 import { useIsOnTablet } from '../data/hooks';
 import {
   selectAreThreadsFiltered,
+  selectContentCreationRateLimited,
   selectPostThreadCount,
   selectShouldShowEmailConfirmation,
 } from '../data/selectors';
@@ -24,10 +25,15 @@ const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
   const isFiltered = useSelector(selectAreThreadsFiltered);
   const totalThreads = useSelector(selectPostThreadCount);
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const addPost = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openEmailConfirmation();
+    } else {
+      dispatch(showPostEditor());
+    }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
 
   let title = messages.noPostSelected;
   let subTitle = null;

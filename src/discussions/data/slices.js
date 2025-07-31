@@ -31,6 +31,7 @@ const configSlice = createSlice({
     postCloseReasons: [],
     enableInContext: false,
     isEmailVerified: false,
+    contentCreationRateLimited: false,
   },
   reducers: {
     fetchConfigRequest: (state) => (
