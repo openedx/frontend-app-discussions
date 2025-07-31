@@ -39,6 +39,7 @@ import selectTours from '../tours/data/selectors';
 import { fetchDiscussionTours } from '../tours/data/thunks';
 import discussionTourFactory from '../tours/data/tours.factory';
 import { getCommentsApiUrl } from './data/api';
+import * as selectors from './data/selectors';
 import { fetchCommentResponses, removeComment } from './data/thunks';
 
 import '../posts/data/__factories__';
@@ -1128,6 +1129,20 @@ describe('ThreadView', () => {
     await act(async () => { fireEvent.click(addResponseButton); });
 
     expect(screen.queryByText('Post limit reached')).toBeInTheDocument();
+  });
+
+  it('should open the editor by clicking on add comment button.', async () => {
+    jest.spyOn(selectors, 'selectCommentResponses').mockImplementation(() => () => (
+      ['reply-1', 'reply-2', 'reply-3', 'reply-4', 'reply-5']
+    ));
+
+    await waitFor(() => renderComponent(discussionPostId));
+
+    const addCommentButton = screen.getByTestId('add-comment-2');
+
+    await act(async () => { fireEvent.click(addCommentButton); });
+
+    expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
   });
 });
 

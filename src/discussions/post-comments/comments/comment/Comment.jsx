@@ -276,6 +276,7 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
+                  data-testid="add-comment-2"
                   onClick={shouldShowEmailConfirmation || shouldShowEmailConfirmation
                     ? openEmailConfirmation : handleAddCommentReply}
                 >
