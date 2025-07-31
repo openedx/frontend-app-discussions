@@ -9,7 +9,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { ThreadType } from '../../../data/constants';
 import withEmailConfirmation from '../../common/withEmailConfirmation';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectShouldShowEmailConfirmation } from '../../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../../data/selectors';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
@@ -22,6 +22,7 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   const { isClosed } = useContext(PostCommentsContext);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const {
     endorsedCommentsIds,
@@ -32,8 +33,12 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { setAddingResponse(true); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openEmailConfirmation();
+    } else {
+      setAddingResponse(true);
+    }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);

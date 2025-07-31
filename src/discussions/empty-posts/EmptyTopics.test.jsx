@@ -13,7 +13,9 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { getApiBaseUrl, Routes as ROUTES } from '../../data/constants';
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
+import * as selectors from '../data/selectors';
 import messages from '../messages';
+import { showPostEditor } from '../posts/data';
 import fetchCourseTopics from '../topics/data/thunks';
 import EmptyTopics from './EmptyTopics';
 
@@ -84,5 +86,18 @@ describe('EmptyTopics', () => {
     await userEvent.click(addPostButton);
 
     expect(screen.queryByText('Send confirmation link')).toBeInTheDocument();
+  });
+
+  it('should dispatch showPostEditor when email confirmation is not required and user clicks "Add a post"', async () => {
+    jest.spyOn(selectors, 'selectShouldShowEmailConfirmation').mockReturnValue(false);
+
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
+
+    renderComponent(`/${courseId}/topics/ncwtopic-1/`);
+
+    const addPostButton = await screen.findByRole('button', { name: 'Add a post' });
+    await userEvent.click(addPostButton);
+
+    expect(dispatchSpy).toHaveBeenCalledWith(showPostEditor());
   });
 });

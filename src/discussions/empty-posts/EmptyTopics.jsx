@@ -8,7 +8,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import withEmailConfirmation from '../common/withEmailConfirmation';
 import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
-import { selectShouldShowEmailConfirmation, selectTopicThreadCount } from '../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation, selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
@@ -22,10 +22,15 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const addPost = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openEmailConfirmation();
+    } else {
+      dispatch(showPostEditor());
+    }
+  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;

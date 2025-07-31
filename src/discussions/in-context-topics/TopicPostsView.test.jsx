@@ -1,6 +1,7 @@
 import {
   fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
@@ -18,6 +19,7 @@ import { Routes as ROUTES } from '../../data/constants';
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
 import DiscussionContext from '../common/context';
+import * as selectors from '../data/selectors';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThreads } from '../posts/data/thunks';
 import { getCourseTopicsApiUrl } from './data/api';
@@ -301,5 +303,19 @@ describe('InContext Topic Posts View', () => {
       expect(within(container).queryByText('Clear results')).not.toBeInTheDocument();
       expect(container.querySelectorAll('.discussion-topic')).toHaveLength(3);
     });
+  });
+
+  it('should dispatch showPostEditor when email confirmation is not required and user clicks "Add a post"', async () => {
+    jest.spyOn(selectors, 'selectShouldShowEmailConfirmation').mockReturnValue(true);
+    jest.spyOn(selectors, 'selectConfigLoadingStatus').mockReturnValue('successful');
+
+    await setupTopicsMockResponse();
+    await renderComponent();
+
+    const addPostButton = await screen.findByText('Add a post');
+    await userEvent.click(addPostButton);
+
+    const confirmationText = await screen.findByText(/send confirmation link/i);
+    expect(confirmationText).toBeInTheDocument();
   });
 });
