@@ -45,6 +45,8 @@ export const selectOnlyVerifiedUsersCanPost = state => state.config.onlyVerified
 
 export const selectConfirmEmailStatus = state => state.threads.confirmEmailStatus;
 
+export const selectPostStatus = state => state.comments.postStatus;
+
 export const selectShouldShowEmailConfirmation = createSelector(
   [selectIsEmailVerified, selectOnlyVerifiedUsersCanPost],
   (isEmailVerified, onlyVerifiedUsersCanPost) => !isEmailVerified && onlyVerifiedUsersCanPost,

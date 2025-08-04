@@ -208,6 +208,7 @@ const commentsSlice = createSlice({
           [payload.id]: payload,
         },
         commentDraft: null,
+        postStatus: RequestStatus.SUCCESSFUL,
       }),
     deleteCommentRequest: (state) => (
       {

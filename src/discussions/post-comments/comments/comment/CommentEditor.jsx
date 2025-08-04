@@ -15,6 +15,7 @@ import { AppContext } from '@edx/frontend-platform/react';
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../../components/PostPreviewPanel';
+import { RequestStatus } from '../../../../data/constants';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
 import withPostingRestrictions from '../../../common/withPostingRestrictions';
@@ -23,6 +24,7 @@ import {
   selectContentCreationRateLimited,
   selectIsUserLearner,
   selectModerationSettings,
+  selectPostStatus,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
@@ -44,6 +46,7 @@ const CommentEditor = ({
     id, threadId, parentId, rawBody, author, lastEdit,
   } = comment;
   const intl = useIntl();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const formRef = useRef(null);
   const recaptchaRef = useRef(null);
@@ -59,6 +62,7 @@ const CommentEditor = ({
   const captchaSettings = useSelector(selectCaptchaSettings);
   const isUserLearner = useSelector(selectIsUserLearner);
   const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
+  const postStatus = useSelector(selectPostStatus);
 
   const shouldRequireCaptcha = !id && captchaSettings.enabled && isUserLearner;
 
@@ -109,7 +113,7 @@ const CommentEditor = ({
     if (recaptchaRef.current) {
       recaptchaRef.current.reset();
     }
-  }, [onCloseEditor, initialValues]);
+  }, [initialValues]);
 
   const deleteEditorContent = useCallback(async () => {
     const { updatedResponses, updatedComments } = removeDraftContent(parentId, id, threadId);
@@ -120,7 +124,14 @@ const CommentEditor = ({
     }
   }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
+  useEffect(() => {
+    if (postStatus === RequestStatus.SUCCESSFUL && isSubmitting) {
+      onCloseEditor();
+    }
+  }, [postStatus, isSubmitting]);
+
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
+    setIsSubmitting(true);
     if (id) {
       const payload = {
         ...values,
