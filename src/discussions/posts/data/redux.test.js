@@ -6,6 +6,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { initializeStore } from '../../../store';
 import executeThunk from '../../../test-utils';
+import { setContentCreationRateLimited } from '../../data/slices';
 import { getThreadsApiUrl } from './api';
 import {
   createNewThread, fetchThread, fetchThreads, removeThread, updateExistingThread,
@@ -150,6 +151,23 @@ describe('Threads/Posts data layer tests', () => {
 
     expect(store.getState().threads.threadsInTopic[topicId])
       .toEqual(['thread-1']);
+  });
+
+  test('successfully handles 429 rate limit error when creating a thread', async () => {
+    axiosMock.onPost(threadsApiUrl).reply(429);
+
+    const dispatch = jest.fn();
+    const thunk = createNewThread({
+      courseId,
+      topicId: 'test-topic',
+      type: 'discussion',
+      title: 'Rate Limited Thread',
+      content: 'This should trigger rate limit',
+    });
+
+    await thunk(dispatch);
+
+    expect(dispatch).toHaveBeenCalledWith(setContentCreationRateLimited());
   });
 
   test('successfully handles thread updates', async () => {
