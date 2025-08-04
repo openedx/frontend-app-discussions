@@ -4,6 +4,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import {
   PostsStatusFilter, ThreadType,
 } from '../../../data/constants';
+import { setContentCreationRateLimited } from '../../data/slices';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteThread, getThread, getThreads, postThread, sendEmailForAccountActivation, updateThread,
@@ -22,6 +23,7 @@ import {
   fetchThreadsRequest,
   fetchThreadsSuccess,
   fetchThreadSuccess,
+  hidePostEditor,
   postThreadDenied,
   postThreadFailed,
   postThreadRequest,
@@ -235,9 +237,12 @@ export function createNewThread({
         recaptchaToken,
       }, enableInContextSidebar);
       dispatch(postThreadSuccess(camelCaseObject(data)));
+      dispatch(hidePostEditor());
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(postThreadDenied());
+      } else if (getHttpErrorStatus(error) === 429) {
+        dispatch(setContentCreationRateLimited());
       } else {
         dispatch(postThreadFailed());
       }

@@ -1,6 +1,7 @@
 import React, {
   useCallback, useMemo, useState,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,12 +9,13 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { RequestStatus } from '../../data/constants';
 import { selectConfirmEmailStatus, selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../data/selectors';
+import { hidePostEditor } from '../posts/data';
 import { sendAccountActivationEmail } from '../posts/data/thunks';
 import postMessages from '../posts/post-actions-bar/messages';
 import { Confirmation } from '.';
 
-const withEmailConfirmation = (WrappedComponent) => {
-  const EnhancedComponent = (props) => {
+const withPostingRestrictions = (WrappedComponent) => {
+  const EnhancedComponent = ({ onCloseEditor, ...rest }) => {
     const intl = useIntl();
     const dispatch = useDispatch();
     const [isConfirming, setIsConfirming] = useState(false);
@@ -27,7 +29,9 @@ const withEmailConfirmation = (WrappedComponent) => {
 
     const closeConfirmation = useCallback(() => {
       setIsConfirming(false);
-    }, []);
+      dispatch(hidePostEditor());
+      onCloseEditor?.();
+    }, [onCloseEditor]);
 
     const handleConfirmation = useCallback(() => {
       dispatch(sendAccountActivationEmail());
@@ -42,8 +46,9 @@ const withEmailConfirmation = (WrappedComponent) => {
     return (
       <>
         <WrappedComponent
-          {...props}
-          openEmailConfirmation={openConfirmation}
+          {...rest}
+          onCloseEditor={onCloseEditor}
+          openRestrictionDialogue={openConfirmation}
         />
         {shouldShowEmailConfirmation
          && (
@@ -75,7 +80,11 @@ const withEmailConfirmation = (WrappedComponent) => {
     );
   };
 
+  EnhancedComponent.propTypes = {
+    onCloseEditor: PropTypes.func,
+  };
+
   return EnhancedComponent;
 };
 
-export default withEmailConfirmation;
+export default withPostingRestrictions;

@@ -13,7 +13,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';
 import DiscussionContext from '../../common/context';
-import withEmailConfirmation from '../../common/withEmailConfirmation';
+import withPostingRestrictions from '../../common/withPostingRestrictions';
 import { useUserPostingEnabled } from '../../data/hooks';
 import {
   selectConfigLoadingStatus,
@@ -28,7 +28,7 @@ import messages from './messages';
 
 import './actionBar.scss';
 
-const PostActionsBar = ({ openEmailConfirmation }) => {
+const PostActionsBar = ({ openRestrictionDialogue }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectConfigLoadingStatus);
@@ -44,11 +44,11 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
 
   const handleAddPost = useCallback(() => {
     if (shouldShowEmailConfirmation || contentCreationRateLimited) {
-      openEmailConfirmation();
+      openRestrictionDialogue();
     } else {
       dispatch(showPostEditor());
     }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
+  }, [shouldShowEmailConfirmation, openRestrictionDialogue, contentCreationRateLimited]);
 
   return (
     <div className={classNames('d-flex justify-content-end flex-grow-1', { 'py-1': !enableInContextSidebar })}>
@@ -97,7 +97,7 @@ const PostActionsBar = ({ openEmailConfirmation }) => {
 };
 
 PostActionsBar.propTypes = {
-  openEmailConfirmation: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
-export default React.memo(withEmailConfirmation(PostActionsBar));
+export default React.memo(withPostingRestrictions(PostActionsBar));

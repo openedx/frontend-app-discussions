@@ -14,7 +14,7 @@ import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
-import withEmailConfirmation from '../../../common/withEmailConfirmation';
+import withPostingRestrictions from '../../../common/withPostingRestrictions';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
 import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../../../data/selectors';
@@ -40,7 +40,7 @@ const Comment = ({
   commentId,
   marginBottom,
   showFullThread = true,
-  openEmailConfirmation,
+  openRestrictionDialogue,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
@@ -185,7 +185,7 @@ const Comment = ({
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
             handleResponseCommentButton={shouldShowEmailConfirmation || contentCreationRateLimited
-              ? openEmailConfirmation : handleAddCommentButton}
+              ? openRestrictionDialogue : handleAddCommentButton}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -277,8 +277,8 @@ const Comment = ({
                   variant="plain"
                   style={{ height: '36px' }}
                   data-testid="add-comment-2"
-                  onClick={shouldShowEmailConfirmation || shouldShowEmailConfirmation
-                    ? openEmailConfirmation : handleAddCommentReply}
+                  onClick={shouldShowEmailConfirmation || contentCreationRateLimited
+                    ? openRestrictionDialogue : handleAddCommentReply}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>
@@ -295,7 +295,7 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
-  openEmailConfirmation: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
 Comment.defaultProps = {
@@ -303,4 +303,4 @@ Comment.defaultProps = {
   showFullThread: true,
 };
 
-export default React.memo(withEmailConfirmation(Comment));
+export default React.memo(withPostingRestrictions(Comment));

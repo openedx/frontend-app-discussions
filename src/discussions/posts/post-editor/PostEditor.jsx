@@ -25,10 +25,12 @@ import useDispatchWithState from '../../../data/hooks';
 import selectCourseCohorts from '../../cohorts/data/selectors';
 import fetchCourseCohorts from '../../cohorts/data/thunks';
 import DiscussionContext from '../../common/context';
+import withPostingRestrictions from '../../common/withPostingRestrictions';
 import { useCurrentDiscussionTopic } from '../../data/hooks';
 import {
   selectAnonymousPostingConfig,
   selectCaptchaSettings,
+  selectContentCreationRateLimited,
   selectDivisionSettings,
   selectEnableInContext,
   selectIsNotifyAllLearnersEnabled,
@@ -57,7 +59,7 @@ import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
 const PostEditor = ({
-  editExisting,
+  editExisting, openRestrictionDialogue,
 }) => {
   const intl = useIntl();
   const navigate = useNavigate();
@@ -88,6 +90,7 @@ const PostEditor = ({
   const isNotifyAllLearnersEnabled = useSelector(selectIsNotifyAllLearnersEnabled);
   const captchaSettings = useSelector(selectCaptchaSettings);
   const isUserLearner = useSelector(selectIsUserLearner);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -171,8 +174,13 @@ const PostEditor = ({
       })(location);
       navigate({ ...newLocation });
     }
-    dispatch(hidePostEditor());
   }, [postId, topicId, post?.author, category, editExisting, commentsPagePath, location]);
+
+  useEffect(() => {
+    if (contentCreationRateLimited) {
+      openRestrictionDialogue();
+    }
+  }, [contentCreationRateLimited]);
 
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = useCallback(
@@ -543,7 +551,10 @@ const PostEditor = ({
         <div className="d-flex justify-content-end">
           <Button
             variant="outline-primary"
-            onClick={() => hideEditor(resetForm)}
+            onClick={() => {
+              dispatch(hidePostEditor());
+              hideEditor(resetForm);
+            }}
           >
             {intl.formatMessage(messages.cancel)}
           </Button>
@@ -566,10 +577,11 @@ const PostEditor = ({
 
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
 PostEditor.defaultProps = {
   editExisting: false,
 };
 
-export default React.memo(PostEditor);
+export default React.memo(withPostingRestrictions(PostEditor));

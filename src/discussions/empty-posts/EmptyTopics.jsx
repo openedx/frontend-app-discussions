@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import withEmailConfirmation from '../common/withEmailConfirmation';
+import withPostingRestrictions from '../common/withPostingRestrictions';
 import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
 import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation, selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
@@ -14,7 +14,7 @@ import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyTopics = ({ openEmailConfirmation }) => {
+const EmptyTopics = ({ openRestrictionDialogue }) => {
   const intl = useIntl();
   const { topicId } = useParams();
   const dispatch = useDispatch();
@@ -26,11 +26,11 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
 
   const addPost = useCallback(() => {
     if (shouldShowEmailConfirmation || contentCreationRateLimited) {
-      openEmailConfirmation();
+      openRestrictionDialogue();
     } else {
       dispatch(showPostEditor());
     }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
+  }, [shouldShowEmailConfirmation, openRestrictionDialogue, contentCreationRateLimited]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -72,7 +72,7 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
 };
 
 EmptyTopics.propTypes = {
-  openEmailConfirmation: propTypes.func.isRequired,
+  openRestrictionDialogue: propTypes.func.isRequired,
 };
 
-export default React.memo(withEmailConfirmation(EmptyTopics));
+export default React.memo(withPostingRestrictions(EmptyTopics));

@@ -57,6 +57,12 @@ const configSlice = createSlice({
         status: RequestStatus.DENIED,
       }
     ),
+    setContentCreationRateLimited: (state) => (
+      {
+        ...state,
+        contentCreationRateLimited: true,
+      }
+    ),
   },
 });
 
@@ -65,6 +71,7 @@ export const {
   fetchConfigFailed,
   fetchConfigRequest,
   fetchConfigSuccess,
+  setContentCreationRateLimited,
 } = configSlice.actions;
 
 export const configReducer = configSlice.reducer;

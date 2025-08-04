@@ -17,8 +17,10 @@ import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../../components/PostPreviewPanel';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
+import withPostingRestrictions from '../../../common/withPostingRestrictions';
 import {
   selectCaptchaSettings,
+  selectContentCreationRateLimited,
   selectIsUserLearner,
   selectModerationSettings,
   selectUserHasModerationPrivileges,
@@ -36,6 +38,7 @@ const CommentEditor = ({
   edit,
   formClasses,
   onCloseEditor,
+  openRestrictionDialogue,
 }) => {
   const {
     id, threadId, parentId, rawBody, author, lastEdit,
@@ -55,6 +58,7 @@ const CommentEditor = ({
   const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
   const captchaSettings = useSelector(selectCaptchaSettings);
   const isUserLearner = useSelector(selectIsUserLearner);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const shouldRequireCaptcha = !id && captchaSettings.enabled && isUserLearner;
 
@@ -85,6 +89,12 @@ const CommentEditor = ({
     recaptchaToken: '',
   };
 
+  useEffect(() => {
+    if (contentCreationRateLimited) {
+      openRestrictionDialogue();
+    }
+  }, [contentCreationRateLimited]);
+
   const handleCaptchaChange = useCallback((token, setFieldValue) => {
     setFieldValue('recaptchaToken', token || '');
   }, []);
@@ -99,7 +109,6 @@ const CommentEditor = ({
     if (recaptchaRef.current) {
       recaptchaRef.current.reset();
     }
-    onCloseEditor();
   }, [onCloseEditor, initialValues]);
 
   const deleteEditorContent = useCallback(async () => {
@@ -259,7 +268,10 @@ const CommentEditor = ({
           <div className="d-flex py-2 justify-content-end">
             <Button
               variant="outline-primary"
-              onClick={() => handleCloseEditor(resetForm)}
+              onClick={() => {
+                onCloseEditor();
+                handleCloseEditor(resetForm);
+              }}
             >
               {intl.formatMessage(messages.cancel)}
             </Button>
@@ -294,6 +306,7 @@ CommentEditor.propTypes = {
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
   onCloseEditor: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
 CommentEditor.defaultProps = {
@@ -308,4 +321,4 @@ CommentEditor.defaultProps = {
   formClasses: '',
 };
 
-export default React.memo(CommentEditor);
+export default React.memo(withPostingRestrictions(CommentEditor));

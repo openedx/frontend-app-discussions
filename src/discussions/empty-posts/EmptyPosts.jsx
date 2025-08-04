@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import withEmailConfirmation from '../common/withEmailConfirmation';
+import withPostingRestrictions from '../common/withPostingRestrictions';
 import { useIsOnTablet } from '../data/hooks';
 import {
   selectAreThreadsFiltered,
@@ -18,7 +18,7 @@ import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
+const EmptyPosts = ({ subTitleMessage, openRestrictionDialogue }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
   const isOnTabletorDesktop = useIsOnTablet();
@@ -29,11 +29,11 @@ const EmptyPosts = ({ subTitleMessage, openEmailConfirmation }) => {
 
   const addPost = useCallback(() => {
     if (shouldShowEmailConfirmation || contentCreationRateLimited) {
-      openEmailConfirmation();
+      openRestrictionDialogue();
     } else {
       dispatch(showPostEditor());
     }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation, contentCreationRateLimited]);
+  }, [shouldShowEmailConfirmation, openRestrictionDialogue, contentCreationRateLimited]);
 
   let title = messages.noPostSelected;
   let subTitle = null;
@@ -70,7 +70,7 @@ EmptyPosts.propTypes = {
     defaultMessage: propTypes.string,
     description: propTypes.string,
   }).isRequired,
-  openEmailConfirmation: propTypes.func.isRequired,
+  openRestrictionDialogue: propTypes.func.isRequired,
 };
 
-export default React.memo(withEmailConfirmation(EmptyPosts));
+export default React.memo(withPostingRestrictions(EmptyPosts));
