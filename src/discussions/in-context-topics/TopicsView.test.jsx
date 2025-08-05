@@ -19,6 +19,8 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
 import DiscussionContext from '../common/context';
+import * as selectors from '../data/selectors';
+import { showPostEditor } from '../posts';
 import EmptyTopics from './components/EmptyTopics';
 import { getCourseTopicsApiUrl } from './data/api';
 import { selectCoursewareTopics, selectNonCoursewareTopics } from './data/selectors';
@@ -269,5 +271,18 @@ describe('InContext Topics View', () => {
 
     const confirmationText = await screen.findByText(/send confirmation link/i);
     expect(confirmationText).toBeInTheDocument();
+  });
+
+  it('should dispatch showPostEditor when email confirmation is not required and user clicks "Add a post"', async () => {
+    jest.spyOn(selectors, 'selectShouldShowEmailConfirmation').mockReturnValue(false);
+
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
+
+    renderEmptyTopicComponent();
+
+    const addPostButton = await screen.findByRole('button', { name: 'Add a post' });
+    await userEvent.click(addPostButton);
+
+    expect(dispatchSpy).toHaveBeenCalledWith(showPostEditor());
   });
 });

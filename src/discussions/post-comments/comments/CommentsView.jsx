@@ -7,21 +7,22 @@ import { useSelector } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { ThreadType } from '../../../data/constants';
-import withEmailConfirmation from '../../common/withEmailConfirmation';
+import withPostingRestrictions from '../../common/withPostingRestrictions';
 import { useUserPostingEnabled } from '../../data/hooks';
-import { selectShouldShowEmailConfirmation } from '../../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../../data/selectors';
 import { isLastElementOfList } from '../../utils';
 import { usePostComments } from '../data/hooks';
 import messages from '../messages';
 import PostCommentsContext from '../postCommentsContext';
 import { Comment, ResponseEditor } from './comment';
 
-const CommentsView = ({ threadType, openEmailConfirmation }) => {
+const CommentsView = ({ threadType, openRestrictionDialogue }) => {
   const intl = useIntl();
   const [addingResponse, setAddingResponse] = useState(false);
   const { isClosed } = useContext(PostCommentsContext);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const {
     endorsedCommentsIds,
@@ -32,8 +33,12 @@ const CommentsView = ({ threadType, openEmailConfirmation }) => {
   } = usePostComments(threadType);
 
   const handleAddResponse = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { setAddingResponse(true); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openRestrictionDialogue();
+    } else {
+      setAddingResponse(true);
+    }
+  }, [shouldShowEmailConfirmation, openRestrictionDialogue, contentCreationRateLimited]);
 
   const handleCloseResponseEditor = useCallback(() => {
     setAddingResponse(false);
@@ -119,7 +124,7 @@ CommentsView.propTypes = {
   threadType: PropTypes.oneOf([
     ThreadType.DISCUSSION, ThreadType.QUESTION,
   ]).isRequired,
-  openEmailConfirmation: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
-export default React.memo(withEmailConfirmation(CommentsView));
+export default React.memo(withPostingRestrictions(CommentsView));

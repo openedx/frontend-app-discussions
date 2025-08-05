@@ -53,6 +53,7 @@ const Confirmation = ({
               <ModalDialog.CloseButton variant={closeButtonVariant}>
                 {closeButtonText || intl.formatMessage(messages.confirmationCancel)}
               </ModalDialog.CloseButton>
+              {confirmAction && (
               <StatefulButton
                 labels={{
                   default: confirmButtonText || intl.formatMessage(messages.confirmationConfirm),
@@ -63,6 +64,7 @@ const Confirmation = ({
                 variant={confirmButtonVariant}
                 onClick={confirmAction}
               />
+              )}
             </ActionRow>
           </ModalDialog.Footer>
         </>

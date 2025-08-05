@@ -1,6 +1,7 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 
+import { setContentCreationRateLimited } from '../../data/slices';
 import { getHttpErrorStatus } from '../../utils';
 import {
   deleteComment, getCommentResponses, getThreadComments, postComment, updateComment,
@@ -155,6 +156,8 @@ export function addComment(comment, threadId, parentId = null, enableInContextSi
     } catch (error) {
       if (getHttpErrorStatus(error) === 403) {
         dispatch(postCommentDenied());
+      } else if (getHttpErrorStatus(error) === 429) {
+        dispatch(setContentCreationRateLimited());
       } else {
         dispatch(postCommentFailed());
       }

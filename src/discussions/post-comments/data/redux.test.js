@@ -7,6 +7,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { ThreadType } from '../../../data/constants';
 import { initializeStore } from '../../../store';
 import executeThunk from '../../../test-utils';
+import { setContentCreationRateLimited } from '../../data/slices';
 import { getCommentsApiUrl } from './api';
 import {
   addComment, editComment, fetchCommentResponses, fetchThreadComments, removeComment,
@@ -153,6 +154,17 @@ describe('Comments/Responses data layer tests', () => {
       .toEqual(threadId);
     expect(store.getState().comments.commentsById['comment-4'].parentId)
       .toEqual(parentId);
+  });
+
+  test('successfully dispatches rate limit action on 429 error', async () => {
+    axiosMock.onPost(/comments/).reply(429);
+
+    const dispatch = jest.fn();
+    const thunk = addComment('Test comment', 'thread-123', null, false, 'recaptchaToken');
+
+    await thunk(dispatch);
+
+    expect(dispatch).toHaveBeenCalledWith(setContentCreationRateLimited());
   });
 
   test('successfully handles comment edits', async () => {

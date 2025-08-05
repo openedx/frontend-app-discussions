@@ -15,12 +15,16 @@ import { AppContext } from '@edx/frontend-platform/react';
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
 import PostPreviewPanel from '../../../../components/PostPreviewPanel';
+import { RequestStatus } from '../../../../data/constants';
 import useDispatchWithState from '../../../../data/hooks';
 import DiscussionContext from '../../../common/context';
+import withPostingRestrictions from '../../../common/withPostingRestrictions';
 import {
   selectCaptchaSettings,
+  selectContentCreationRateLimited,
   selectIsUserLearner,
   selectModerationSettings,
+  selectPostStatus,
   selectUserHasModerationPrivileges,
   selectUserIsGroupTa,
   selectUserIsStaff,
@@ -36,11 +40,13 @@ const CommentEditor = ({
   edit,
   formClasses,
   onCloseEditor,
+  openRestrictionDialogue,
 }) => {
   const {
     id, threadId, parentId, rawBody, author, lastEdit,
   } = comment;
   const intl = useIntl();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const formRef = useRef(null);
   const recaptchaRef = useRef(null);
@@ -55,6 +61,8 @@ const CommentEditor = ({
   const { addDraftContent, getDraftContent, removeDraftContent } = useDraftContent();
   const captchaSettings = useSelector(selectCaptchaSettings);
   const isUserLearner = useSelector(selectIsUserLearner);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
+  const postStatus = useSelector(selectPostStatus);
 
   const shouldRequireCaptcha = !id && captchaSettings.enabled && isUserLearner;
 
@@ -85,6 +93,12 @@ const CommentEditor = ({
     recaptchaToken: '',
   };
 
+  useEffect(() => {
+    if (contentCreationRateLimited) {
+      openRestrictionDialogue();
+    }
+  }, [contentCreationRateLimited]);
+
   const handleCaptchaChange = useCallback((token, setFieldValue) => {
     setFieldValue('recaptchaToken', token || '');
   }, []);
@@ -99,8 +113,7 @@ const CommentEditor = ({
     if (recaptchaRef.current) {
       recaptchaRef.current.reset();
     }
-    onCloseEditor();
-  }, [onCloseEditor, initialValues]);
+  }, [initialValues]);
 
   const deleteEditorContent = useCallback(async () => {
     const { updatedResponses, updatedComments } = removeDraftContent(parentId, id, threadId);
@@ -111,7 +124,14 @@ const CommentEditor = ({
     }
   }, [parentId, id, threadId, setDraftComments, setDraftResponses]);
 
+  useEffect(() => {
+    if (postStatus === RequestStatus.SUCCESSFUL && isSubmitting) {
+      onCloseEditor();
+    }
+  }, [postStatus, isSubmitting]);
+
   const saveUpdatedComment = useCallback(async (values, { resetForm }) => {
+    setIsSubmitting(true);
     if (id) {
       const payload = {
         ...values,
@@ -259,7 +279,10 @@ const CommentEditor = ({
           <div className="d-flex py-2 justify-content-end">
             <Button
               variant="outline-primary"
-              onClick={() => handleCloseEditor(resetForm)}
+              onClick={() => {
+                onCloseEditor();
+                handleCloseEditor(resetForm);
+              }}
             >
               {intl.formatMessage(messages.cancel)}
             </Button>
@@ -294,6 +317,7 @@ CommentEditor.propTypes = {
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
   onCloseEditor: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
 CommentEditor.defaultProps = {
@@ -308,4 +332,4 @@ CommentEditor.defaultProps = {
   formClasses: '',
 };
 
-export default React.memo(CommentEditor);
+export default React.memo(withPostingRestrictions(CommentEditor));

@@ -624,5 +624,28 @@ describe('PostEditor', () => {
         expect(container.querySelector('[data-testid="hide-help-button"]')).not.toBeInTheDocument();
       });
     });
+
+    it('should open the rate limit dialogue.', async () => {
+      axiosMock.onPost(threadsApiUrl).reply(429);
+
+      await renderComponent();
+
+      await act(async () => {
+        fireEvent.change(screen.getByTestId('topic-select'), {
+          target: { value: 'ncw-topic-1' },
+        });
+        const postTitle = await screen.findByTestId('post-title-input');
+        const tinymceEditor = await screen.findByTestId('tinymce-editor');
+
+        fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
+        fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
+      });
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+      });
+
+      expect(screen.queryByText('Post limit reached')).toBeInTheDocument();
+    });
   });
 });

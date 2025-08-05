@@ -6,15 +6,15 @@ import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
-import withEmailConfirmation from '../common/withEmailConfirmation';
+import withPostingRestrictions from '../common/withPostingRestrictions';
 import { useIsOnTablet, useTotalTopicThreadCount } from '../data/hooks';
-import { selectShouldShowEmailConfirmation, selectTopicThreadCount } from '../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation, selectTopicThreadCount } from '../data/selectors';
 import messages from '../messages';
 import { showPostEditor } from '../posts/data';
 import postMessages from '../posts/post-actions-bar/messages';
 import EmptyPage from './EmptyPage';
 
-const EmptyTopics = ({ openEmailConfirmation }) => {
+const EmptyTopics = ({ openRestrictionDialogue }) => {
   const intl = useIntl();
   const { topicId } = useParams();
   const dispatch = useDispatch();
@@ -22,10 +22,15 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
   const hasGlobalThreads = useTotalTopicThreadCount() > 0;
   const topicThreadCount = useSelector(selectTopicThreadCount(topicId));
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   const addPost = useCallback(() => {
-    if (shouldShowEmailConfirmation) { openEmailConfirmation(); } else { dispatch(showPostEditor()); }
-  }, [shouldShowEmailConfirmation, openEmailConfirmation]);
+    if (shouldShowEmailConfirmation || contentCreationRateLimited) {
+      openRestrictionDialogue();
+    } else {
+      dispatch(showPostEditor());
+    }
+  }, [shouldShowEmailConfirmation, openRestrictionDialogue, contentCreationRateLimited]);
 
   let title = messages.emptyTitle;
   let fullWidth = false;
@@ -67,7 +72,7 @@ const EmptyTopics = ({ openEmailConfirmation }) => {
 };
 
 EmptyTopics.propTypes = {
-  openEmailConfirmation: propTypes.func.isRequired,
+  openRestrictionDialogue: propTypes.func.isRequired,
 };
 
-export default React.memo(withEmailConfirmation(EmptyTopics));
+export default React.memo(withPostingRestrictions(EmptyTopics));

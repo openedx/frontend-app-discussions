@@ -14,10 +14,10 @@ import { ContentActions, EndorsementStatus } from '../../../../data/constants';
 import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
-import withEmailConfirmation from '../../../common/withEmailConfirmation';
+import withPostingRestrictions from '../../../common/withPostingRestrictions';
 import { ContentTypes } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../../data/hooks';
-import { selectShouldShowEmailConfirmation } from '../../../data/selectors';
+import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation } from '../../../data/selectors';
 import { fetchThread } from '../../../posts/data/thunks';
 import LikeButton from '../../../posts/post/LikeButton';
 import { useActions } from '../../../utils';
@@ -40,7 +40,7 @@ const Comment = ({
   commentId,
   marginBottom,
   showFullThread = true,
-  openEmailConfirmation,
+  openRestrictionDialogue,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
   const {
@@ -66,6 +66,7 @@ const Comment = ({
   const actions = useActions(ContentTypes.COMMENT, id);
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
+  const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
@@ -183,7 +184,8 @@ const Comment = ({
             id={id}
             contentType={ContentTypes.COMMENT}
             actionHandlers={actionHandlers}
-            handleResponseCommentButton={shouldShowEmailConfirmation ? openEmailConfirmation : handleAddCommentButton}
+            handleResponseCommentButton={shouldShowEmailConfirmation || contentCreationRateLimited
+              ? openRestrictionDialogue : handleAddCommentButton}
             addResponseCommentButtonMessage={intl.formatMessage(messages.addComment)}
             onLike={handleCommentLike}
             voted={voted}
@@ -274,7 +276,9 @@ const Comment = ({
                   className="d-flex flex-grow mt-2 font-style font-weight-500 text-primary-500 add-comment-btn rounded-0"
                   variant="plain"
                   style={{ height: '36px' }}
-                  onClick={shouldShowEmailConfirmation ? openEmailConfirmation : handleAddCommentReply}
+                  data-testid="add-comment-2"
+                  onClick={shouldShowEmailConfirmation || contentCreationRateLimited
+                    ? openRestrictionDialogue : handleAddCommentReply}
                 >
                   {intl.formatMessage(messages.addComment)}
                 </Button>
@@ -291,7 +295,7 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
-  openEmailConfirmation: PropTypes.func.isRequired,
+  openRestrictionDialogue: PropTypes.func.isRequired,
 };
 
 Comment.defaultProps = {
@@ -299,4 +303,4 @@ Comment.defaultProps = {
   showFullThread: true,
 };
 
-export default React.memo(withEmailConfirmation(Comment));
+export default React.memo(withPostingRestrictions(Comment));
