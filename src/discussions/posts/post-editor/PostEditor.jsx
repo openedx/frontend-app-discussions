@@ -177,10 +177,10 @@ const PostEditor = ({
   }, [postId, topicId, post?.author, category, editExisting, commentsPagePath, location]);
 
   useEffect(() => {
-    if (contentCreationRateLimited) {
+    if (contentCreationRateLimited && !postId) {
       openRestrictionDialogue();
     }
-  }, [contentCreationRateLimited]);
+  }, [contentCreationRateLimited, postId]);
 
   // null stands for no cohort restriction ("All learners" option)
   const selectedCohort = useCallback(

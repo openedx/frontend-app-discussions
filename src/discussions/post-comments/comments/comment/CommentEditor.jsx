@@ -94,10 +94,10 @@ const CommentEditor = ({
   };
 
   useEffect(() => {
-    if (contentCreationRateLimited) {
+    if (contentCreationRateLimited && !id) {
       openRestrictionDialogue();
     }
-  }, [contentCreationRateLimited]);
+  }, [contentCreationRateLimited, id]);
 
   const handleCaptchaChange = useCallback((token, setFieldValue) => {
     setFieldValue('recaptchaToken', token || '');
