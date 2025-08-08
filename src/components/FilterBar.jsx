@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -8,7 +8,7 @@ import { Tune } from '@openedx/paragon/icons';
 import { capitalize, toString } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import {
   PostsStatusFilter, RequestStatus,
@@ -19,12 +19,12 @@ import messages from '../discussions/posts/post-filter-bar/messages';
 import { ActionItem } from '../discussions/posts/post-filter-bar/PostFilterBar';
 
 const FilterBar = ({
-  intl,
   filters,
   selectedFilters,
   onFilterChange,
   showCohortsFilter,
 }) => {
+  const intl = useIntl();
   const [isOpen, setOpen] = useState(false);
   const cohorts = useSelector(selectCourseCohorts);
   const { status } = useSelector(state => state.cohorts);
@@ -192,7 +192,6 @@ const FilterBar = ({
 };
 
 FilterBar.propTypes = {
-  intl: intlShape.isRequired,
   filters: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     filters: PropTypes.arrayOf(PropTypes.string),
@@ -211,4 +210,4 @@ FilterBar.defaultProps = {
   showCohortsFilter: false,
 };
 
-export default injectIntl(FilterBar);
+export default FilterBar;
