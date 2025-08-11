@@ -39,7 +39,7 @@ const TopicStats = ({
           </Tooltip>
         )}
       >
-        <div className="d-flex align-items-center mr-3.5">
+        <div className="d-flex align-items-center mr-3.5" tabIndex={0}>
           <Icon src={PostOutline} className="icon-size mr-2" />
           {threadCounts?.discussion || 0}
         </div>
@@ -57,7 +57,7 @@ const TopicStats = ({
           </Tooltip>
         )}
       >
-        <div className="d-flex align-items-center mr-3.5">
+        <div className="d-flex align-items-center mr-3.5" tabIndex={0}>
           <Icon src={HelpOutline} className="icon-size mr-2" />
           {threadCounts?.question || 0}
         </div>

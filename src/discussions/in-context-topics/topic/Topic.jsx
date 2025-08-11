@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import classNames from 'classnames';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 
@@ -11,6 +11,7 @@ import { Routes } from '../../../data/constants';
 import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
+
 const Topic = ({
   topic,
   showDivider,
@@ -18,6 +19,7 @@ const Topic = ({
 }) => {
   const intl = useIntl();
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const isSelected = (id) => window.location.pathname.includes(id);
   const topicUrl = discussionsPath(Routes.TOPICS.TOPIC, {
     courseId,
@@ -26,16 +28,25 @@ const Topic = ({
 
   return (
     <>
-      <Link
-        className={classNames('discussion-topic p-0 text-decoration-none text-primary-500', {
-          'border-light-400 border-bottom': showDivider,
-        })}
+      <div
+        className={classNames('discussion-topic p-0 text-decoration-none text-primary-500', { 'border-light-400 border-bottom': showDivider })}
         data-topic-id={topic.id}
-        to={topicUrl()}
-        onClick={() => isSelected(topic.id)}
+        onClick={() => {
+          isSelected(topic.id);
+          navigate(topicUrl());
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            isSelected(topic.id);
+            navigate(topicUrl());
+          }
+        }}
         aria-current={isSelected(topic.id) ? 'page' : undefined}
+        aria-selected={isSelected(topic.id)}
         role="option"
         tabIndex={(isSelected(topic.id) || index === 0) ? 0 : -1}
+        style={{ cursor: 'pointer' }}
       >
         <div className="d-flex flex-row pt-2.5 pb-2 px-4">
           <div className="d-flex flex-column flex-fill" style={{ minWidth: 0 }}>
@@ -47,7 +58,7 @@ const Topic = ({
             <TopicStats threadCounts={topic?.threadCounts} />
           </div>
         </div>
-      </Link>
+      </div>
       {!showDivider && (
         <>
           <div className="divider border-top border-light-500" />
