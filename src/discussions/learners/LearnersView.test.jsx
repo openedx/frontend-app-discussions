@@ -118,7 +118,7 @@ describe('LearnersView', () => {
       renderComponent();
     });
 
-    expect(screen.queryByText('learner-1')).toBeInTheDocument();
+    expect(screen.queryByText('Learner-1')).toBeInTheDocument();
   });
 
   test('Most activity should be selected by default for the non-moderator role.', async () => {
@@ -176,7 +176,7 @@ describe('LearnersView', () => {
     const learners = await container.querySelectorAll('.discussion-post');
     const firstLearner = learners.item(0);
     const learnerAvatar = firstLearner.querySelector('[alt=learner-1]');
-    const learnerTitle = within(firstLearner).queryByText('learner-1');
+    const learnerTitle = within(firstLearner).queryByText('Learner-1');
     const stats = firstLearner.querySelectorAll('.icon-size');
 
     expect(learners).toHaveLength(3);
