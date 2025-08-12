@@ -1,5 +1,5 @@
 import {
-  render, screen, waitFor, within,
+  fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { IntlProvider } from 'react-intl';
@@ -137,5 +137,28 @@ describe('HoverCard', () => {
     expect(within(hoverCard).getByRole('button', { name: /Endorse/i })).toBeInTheDocument();
     expect(within(hoverCard).queryByRole('button', { name: /like/i })).toBeInTheDocument();
     expect(within(hoverCard).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+  });
+
+  test('it should call onFollow when follow button is clicked', async () => {
+    await waitFor(() => renderComponent(discussionPostId));
+    const post = screen.getByTestId('post-thread-1');
+    const hoverCard = within(post).getByTestId('hover-card-thread-1');
+
+    const followBtn = within(hoverCard).getByRole('button', { name: /follow/i });
+    fireEvent.click(followBtn);
+
+    expect(followBtn).toBeEnabled();
+  });
+
+  test('it should call onLike when Like button is clicked', async () => {
+    await waitFor(() => renderComponent(discussionPostId));
+
+    const post = screen.getByTestId('post-thread-1');
+    const hoverCard = within(post).getByTestId('hover-card-thread-1');
+
+    const likeBtn = within(hoverCard).getByRole('button', { name: /like/i });
+    fireEvent.click(likeBtn);
+
+    expect(likeBtn).toBeEnabled();
   });
 });

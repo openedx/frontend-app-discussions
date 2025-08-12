@@ -14,6 +14,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { ThreadType } from '../../data/constants';
 import { useHasLikePermission, useUserPostingEnabled } from '../data/hooks';
 import PostCommentsContext from '../post-comments/postCommentsContext';
+import messages from '../posts/post/messages';
 import ActionsDropdown from './ActionsDropdown';
 import DiscussionContext from './context';
 
@@ -82,32 +83,48 @@ const HoverCard = ({
         </div>
       )}
       <div className="hover-button">
-        <IconButton
-          src={voted ? ThumbUpFilled : ThumbUpOutline}
-          iconAs={Icon}
-          size="sm"
-          alt="Like"
-          disabled={!userHasLikePermission}
-          iconClassNames="like-icon-dimensions"
-          onClick={(e) => {
-            e.preventDefault();
-            onLike();
-          }}
-        />
+        <OverlayTrigger
+          overlay={(
+            <Tooltip>
+              {intl.formatMessage(voted ? messages.removeLike : messages.like)}
+            </Tooltip>
+        )}
+        >
+          <IconButton
+            src={voted ? ThumbUpFilled : ThumbUpOutline}
+            iconAs={Icon}
+            size="sm"
+            alt="Like"
+            disabled={!userHasLikePermission}
+            iconClassNames="like-icon-dimensions"
+            onClick={(e) => {
+              e.preventDefault();
+              onLike();
+            }}
+          />
+        </OverlayTrigger>
       </div>
       {following !== undefined && (
         <div className="hover-button">
-          <IconButton
-            src={following ? StarFilled : StarOutline}
-            iconAs={Icon}
-            size="sm"
-            alt="Follow"
-            iconClassNames="follow-icon-dimensions"
-            onClick={(e) => {
-              e.preventDefault();
-              onFollow();
-            }}
-          />
+          <OverlayTrigger
+            overlay={(
+              <Tooltip>
+                {intl.formatMessage(following ? messages.unFollow : messages.follow)}
+              </Tooltip>
+          )}
+          >
+            <IconButton
+              src={following ? StarFilled : StarOutline}
+              iconAs={Icon}
+              size="sm"
+              alt="Follow"
+              iconClassNames="follow-icon-dimensions"
+              onClick={(e) => {
+                e.preventDefault();
+                onFollow();
+              }}
+            />
+          </OverlayTrigger>
         </div>
       )}
       <div className="hover-button ml-auto">
