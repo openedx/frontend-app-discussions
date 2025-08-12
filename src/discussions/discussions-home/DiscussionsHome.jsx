@@ -36,6 +36,7 @@ const DiscussionsProductTour = lazy(() => import('../tours/DiscussionsProductTou
 const DiscussionsRestrictionBanner = lazy(() => import('./DiscussionsRestrictionBanner'));
 const DiscussionContent = lazy(() => import('./DiscussionContent'));
 const DiscussionSidebar = lazy(() => import('./DiscussionSidebar'));
+const DiscussionsConfirmEmailBanner = lazy(() => import('./DiscussionsConfirmEmailBanner'));
 
 const DiscussionsHome = () => {
   const location = useLocation();
@@ -81,7 +82,12 @@ const DiscussionsHome = () => {
   return (
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
-        {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
+        {!enableInContextSidebar && (
+        <>
+          <DiscussionsConfirmEmailBanner />
+          <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
+        </>
+        )}
         <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
           {(isEnrolled || !isUserLearner) && (
