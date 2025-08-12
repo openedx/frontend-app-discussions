@@ -31,6 +31,7 @@ const DiscussionsConfirmEmailBanner = () => {
   const openConfirmModalButtonClick = () => {
     dispatch(sendAccountActivationEmail());
     openConfirmModal();
+    closePageBanner();
   };
 
   const userConfirmEmailButtonClick = () => {

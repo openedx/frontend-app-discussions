@@ -66,17 +66,14 @@ describe('DiscussionsConfirmEmailBanner', () => {
         renderComponent();
       });
 
-      it('shows banner', async () => {
+      it('shows banner and confirm now button', async () => {
         const banner = await screen.findByRole('alert');
         expect(banner.textContent).toContain('Remember to confirm');
-      });
-
-      it('shows confirm now button', async () => {
         const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
         expect(confirmButton).toBeInTheDocument();
       });
 
-      it('shows modal when confirm now button is clicked', async () => {
+      it('opens modal, closes banner, and calls resend email API when confirm now button is clicked', async () => {
         const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
         await act(async () => {
           fireEvent.click(confirmButton);
@@ -84,10 +81,14 @@ describe('DiscussionsConfirmEmailBanner', () => {
         await waitFor(() => {
           const modal = screen.getByRole('dialog');
           expect(modal).toBeInTheDocument();
+          const banner = screen.queryByRole('alert');
+          expect(banner).not.toBeInTheDocument();
+          expect(axiosMock.history.post.length).toBe(1);
+          expect(axiosMock.history.post[0].url).toBe(resendEmailUrl);
         });
       });
 
-      it('shows modal header and body', async () => {
+      it('shows modal header, body, image, and confirm email button and closes modal and banner on click', async () => {
         const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
         await act(async () => {
           fireEvent.click(confirmButton);
@@ -97,38 +98,20 @@ describe('DiscussionsConfirmEmailBanner', () => {
           expect(modalHeader).toBeInTheDocument();
           const modalBody = screen.getByText(messages.confirmEmailModalBody.defaultMessage);
           expect(modalBody).toBeInTheDocument();
-        });
-      });
-
-      it('shows confirm image', async () => {
-        const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
-        await act(async () => {
-          fireEvent.click(confirmButton);
-        });
-        await waitFor(() => {
           const confirmImage = screen.getByRole('img', { name: messages.confirmEmailImageAlt.defaultMessage });
           expect(confirmImage).toBeInTheDocument();
-        });
-      });
-
-      it('shows confirm email button', async () => {
-        const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
-        await act(async () => {
-          fireEvent.click(confirmButton);
-        });
-        await waitFor(() => {
           const verifyButton = screen.getByRole('button', { name: messages.verifiedConfirmEmailButton.defaultMessage });
           expect(verifyButton).toBeInTheDocument();
+          act(() => {
+            fireEvent.click(verifyButton);
+          });
         });
-      });
-
-      it('calls resend email API when confirm now button is clicked', async () => {
-        const confirmButton = await screen.findByRole('button', { name: messages.confirmNowButton.defaultMessage });
-        await act(async () => {
-          fireEvent.click(confirmButton);
+        await waitFor(() => {
+          const modal = screen.queryByRole('dialog');
+          expect(modal).not.toBeInTheDocument();
+          const banner = screen.queryByRole('alert');
+          expect(banner).not.toBeInTheDocument();
         });
-        await waitFor(() => expect(axiosMock.history.post.length).toBe(1));
-        expect(axiosMock.history.post[0].url).toBe(resendEmailUrl);
       });
     });
   });
