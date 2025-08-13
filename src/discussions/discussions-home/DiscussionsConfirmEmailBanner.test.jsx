@@ -52,8 +52,7 @@ describe('DiscussionsConfirmEmailBanner', () => {
       axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, { isEmailVerified: true });
       await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
       renderComponent();
-      const banner = screen.queryByRole('alert');
-      expect(banner).toBeNull();
+      expect(screen.queryByRole('alert')).toBeNull();
     });
 
     describe('when email is unverified', () => {
@@ -79,11 +78,9 @@ describe('DiscussionsConfirmEmailBanner', () => {
           fireEvent.click(confirmButton);
         });
         await waitFor(() => {
-          const modal = screen.getByRole('dialog');
-          expect(modal).toBeInTheDocument();
-          const banner = screen.queryByRole('alert');
-          expect(banner).not.toBeInTheDocument();
-          expect(axiosMock.history.post.length).toBe(1);
+          expect(screen.getByRole('dialog')).toBeInTheDocument();
+          expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+          expect(axiosMock.history.post).toHaveLength(1);
           expect(axiosMock.history.post[0].url).toBe(resendEmailUrl);
         });
       });
@@ -94,12 +91,10 @@ describe('DiscussionsConfirmEmailBanner', () => {
           fireEvent.click(confirmButton);
         });
         await waitFor(() => {
-          const modalHeader = screen.getByText(messages.confirmEmailModalHeader.defaultMessage);
-          expect(modalHeader).toBeInTheDocument();
-          const modalBody = screen.getByText(messages.confirmEmailModalBody.defaultMessage);
-          expect(modalBody).toBeInTheDocument();
-          const confirmImage = screen.getByRole('img', { name: messages.confirmEmailImageAlt.defaultMessage });
-          expect(confirmImage).toBeInTheDocument();
+          expect(screen.getByText(messages.confirmEmailModalHeader.defaultMessage)).toBeInTheDocument();
+          expect(screen.getByText(messages.confirmEmailModalBody.defaultMessage)).toBeInTheDocument();
+          expect(screen.getByRole('img', { name: messages.confirmEmailImageAlt.defaultMessage })).toBeInTheDocument();
+
           const verifyButton = screen.getByRole('button', { name: messages.verifiedConfirmEmailButton.defaultMessage });
           expect(verifyButton).toBeInTheDocument();
           act(() => {
@@ -107,10 +102,8 @@ describe('DiscussionsConfirmEmailBanner', () => {
           });
         });
         await waitFor(() => {
-          const modal = screen.queryByRole('dialog');
-          expect(modal).not.toBeInTheDocument();
-          const banner = screen.queryByRole('alert');
-          expect(banner).not.toBeInTheDocument();
+          expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+          expect(screen.queryByRole('alert')).not.toBeInTheDocument();
         });
       });
     });

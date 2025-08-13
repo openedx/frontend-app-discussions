@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   Button,
@@ -22,22 +22,22 @@ const DiscussionsConfirmEmailBanner = () => {
   const isEmailVerified = useSelector(selectIsEmailVerified);
   const [showPageBanner, setShowPageBanner] = useState(!isEmailVerified);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const closePageBanner = () => setShowPageBanner(false);
-  const closeConfirmModal = () => setShowConfirmModal(false);
-  const openConfirmModal = () => setShowConfirmModal(true);
+  const closePageBanner = useCallback(() => setShowPageBanner(false), [setShowPageBanner]);
+  const closeConfirmModal = useCallback(() => setShowConfirmModal(false), [setShowConfirmModal]);
+  const openConfirmModal = useCallback(() => setShowConfirmModal(true), [setShowConfirmModal]);
 
-  if (isEmailVerified) { return null; }
-
-  const openConfirmModalButtonClick = () => {
+  const handleConfirmNowClick = useCallback(() => {
     dispatch(sendAccountActivationEmail());
     openConfirmModal();
     closePageBanner();
-  };
+  }, [dispatch, openConfirmModal, closePageBanner]);
 
-  const userConfirmEmailButtonClick = () => {
+  const handleVerifiedClick = useCallback(() => {
     closeConfirmModal();
     closePageBanner();
-  };
+  }, [closeConfirmModal, closePageBanner]);
+
+  if (isEmailVerified) { return null; }
 
   return (
     <>
@@ -48,7 +48,7 @@ const DiscussionsConfirmEmailBanner = () => {
               className="confirm-email-now-button"
               variant="link"
               size="inline"
-              onClick={openConfirmModalButtonClick}
+              onClick={handleConfirmNowClick}
             >
               {intl.formatMessage(messages.confirmNowButton)}
             </Button>
@@ -70,7 +70,7 @@ const DiscussionsConfirmEmailBanner = () => {
           </ModalDialog.Hero>
         )}
         footerNode={(
-          <Button className="mx-auto my-3" variant="danger" onClick={userConfirmEmailButtonClick}>
+          <Button className="mx-auto my-3" variant="danger" onClick={handleVerifiedClick}>
             {intl.formatMessage(messages.verifiedConfirmEmailButton)}
           </Button>
         )}
@@ -81,7 +81,5 @@ const DiscussionsConfirmEmailBanner = () => {
     </>
   );
 };
-
-DiscussionsConfirmEmailBanner.propTypes = {};
 
 export default DiscussionsConfirmEmailBanner;
