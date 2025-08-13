@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 
+import capitalize from 'lodash/capitalize';
 import { Link } from 'react-router-dom';
 
 import { Routes } from '../../../data/constants';
@@ -39,7 +40,7 @@ const LearnerCard = ({ learner }) => {
               <div
                 className="text-truncate font-weight-500 text-primary-500 font-style"
               >
-                {username}
+                {capitalize(username)}
               </div>
             </div>
             {threads !== null && (
