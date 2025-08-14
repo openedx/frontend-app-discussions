@@ -1,14 +1,13 @@
-import React from 'react';
-
 import { SearchField } from '@openedx/paragon';
 import { useDispatch } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import { setFilter } from '../data';
 import messages from '../messages';
 
-const TopicSearchResultBar = ({ intl }) => {
+const TopicSearchResultBar = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
 
   return (
@@ -23,8 +22,4 @@ const TopicSearchResultBar = ({ intl }) => {
   );
 };
 
-TopicSearchResultBar.propTypes = {
-  intl: intlShape.isRequired,
-};
-
-export default injectIntl(TopicSearchResultBar);
+export default TopicSearchResultBar;
