@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { camelCaseObject, getAuthenticatedHttpClient } from '@openedx/frontend-base';
 
 import { getApiBaseUrl } from '../../../data/constants';
 

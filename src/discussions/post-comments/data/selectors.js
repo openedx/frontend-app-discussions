@@ -10,39 +10,39 @@ export const selectCommentOrResponseById = commentOrResponseId => createSelector
 
 export const selectThreadComments = (threadId) => createSelector(
   [
-    state => state.comments.commentsInThreads[threadId] || [],
+    state => state.comments.commentsInThreads[threadId] ?? [],
     selectCommentsById,
   ],
   mapIdToComment,
 );
 
-export const selectCommentResponsesIds = commentId => (
-  state => state.comments.commentsInComments[commentId] || []
-);
+export const selectCommentResponsesIds = commentId =>
+  state => state.comments.commentsInComments[commentId] ?? []
+  ;
 
 export const selectCommentResponses = commentId => createSelector(
   [
-    state => state.comments.commentsInComments[commentId] || [],
+    state => state.comments.commentsInComments[commentId] ?? [],
     selectCommentsById,
   ],
   mapIdToComment,
 );
 
-export const selectThreadHasMorePages = (threadId) => (
-  state => state.comments.pagination[threadId]?.hasMorePages || false
-);
+export const selectThreadHasMorePages = (threadId) =>
+  state => state.comments.pagination[threadId]?.hasMorePages ?? false
+  ;
 
-export const selectThreadCurrentPage = (threadId) => (
-  state => state.comments.pagination[threadId]?.currentPage || null
-);
+export const selectThreadCurrentPage = (threadId) =>
+  state => state.comments.pagination[threadId]?.currentPage ?? null
+  ;
 
-export const selectCommentHasMorePages = commentId => (
-  state => state.comments.responsesPagination[commentId]?.hasMorePages || false
-);
+export const selectCommentHasMorePages = commentId =>
+  state => state.comments.responsesPagination[commentId]?.hasMorePages ?? false
+  ;
 
-export const selectCommentCurrentPage = commentId => (
-  state => state.comments.responsesPagination[commentId]?.currentPage || null
-);
+export const selectCommentCurrentPage = commentId =>
+  state => state.comments.responsesPagination[commentId]?.currentPage ?? null
+  ;
 
 export const selectCommentsStatus = state => state.comments.status;
 

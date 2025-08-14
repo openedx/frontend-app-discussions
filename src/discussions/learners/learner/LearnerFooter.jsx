@@ -7,7 +7,7 @@ import {
 } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';
 import messages from '../messages';
@@ -63,16 +63,16 @@ const LearnerFooter = ({
               <div className="d-flex flex-column align-items-start">
                 {Boolean(activeFlags)
                   && (
-                  <span>
-                    {intl.formatMessage(messages.reported, { reported: activeFlags })}
-                  </span>
+                    <span>
+                      {intl.formatMessage(messages.reported, { reported: activeFlags })}
+                    </span>
                   )}
                 {Boolean(inactiveFlags)
-                      && (
-                        <span>
-                          {intl.formatMessage(messages.previouslyReported, { previouslyReported: inactiveFlags })}
-                        </span>
-                      )}
+                  && (
+                    <span>
+                      {intl.formatMessage(messages.previouslyReported, { previouslyReported: inactiveFlags })}
+                    </span>
+                  )}
               </div>
             </Tooltip>
           )}

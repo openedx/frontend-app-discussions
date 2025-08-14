@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { getSiteConfig } from '@openedx/frontend-base';
+import { logError } from '@openedx/frontend-base';
 
 import { RequestStatus } from '../../data/constants';
 import {
@@ -23,9 +23,9 @@ export default function useFeedbackWrapper() {
 
   useEffect(() => {
     if (configStatus === RequestStatus.SUCCESSFUL) {
-      let url = getConfig().LEARNER_FEEDBACK_URL;
+      let url = getSiteConfig().LEARNER_FEEDBACK_URL;
       if (isStaff || isUserGroupTA || isCourseAdmin || isCourseStaff) {
-        url = getConfig().STAFF_FEEDBACK_URL;
+        url = getSiteConfig().STAFF_FEEDBACK_URL;
       }
       try {
         // eslint-disable-next-line no-undef

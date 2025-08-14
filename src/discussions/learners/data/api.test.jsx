@@ -1,8 +1,8 @@
 import MockAdapter from 'axios-mock-adapter';
 import { Factory } from 'rosie';
 
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { initializeMockApp } from '@edx/frontend-platform/testing';
+import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
+import { initializeMockApp } from '@openedx/frontend-base';
 
 import { setupLearnerMockResponse, setupPostsMockResponse } from '../test-utils';
 

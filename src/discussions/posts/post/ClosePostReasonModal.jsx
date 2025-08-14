@@ -11,7 +11,7 @@ import {
 } from '@openedx/paragon';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { selectModerationSettings } from '../../data/selectors';
 import messages from './messages';

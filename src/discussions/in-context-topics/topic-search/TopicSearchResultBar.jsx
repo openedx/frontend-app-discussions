@@ -3,7 +3,7 @@ import React from 'react';
 import { SearchField } from '@openedx/paragon';
 import { useDispatch } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@openedx/frontend-base';
 
 import { setFilter } from '../data';
 import messages from '../messages';

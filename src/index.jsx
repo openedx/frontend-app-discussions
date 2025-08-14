@@ -7,10 +7,11 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
-  APP_INIT_ERROR, APP_READY, initialize, mergeConfig,
+  APP_INIT_ERROR, APP_READY,
+  SiteProvider, ErrorPage,
+  initialize, mergeConfig,
   subscribe,
-} from '@edx/frontend-platform';
-import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+} from '@openedx/frontend-base';
 
 import Head from './components/Head/Head';
 import { DiscussionsHome } from './discussions';
@@ -23,10 +24,10 @@ const rootNode = createRoot(document.getElementById('root'));
 subscribe(APP_READY, () => {
   rootNode.render(
     <StrictMode>
-      <AppProvider store={store}>
+      <SiteProvider store={store}>
         <Head />
         <DiscussionsHome />
-      </AppProvider>
+      </SiteProvider>
     </StrictMode>,
   );
 });

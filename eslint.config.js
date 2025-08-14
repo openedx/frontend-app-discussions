@@ -4,6 +4,11 @@ const { createLintConfig } = require('@openedx/frontend-base/config');
 
 module.exports = createLintConfig(
   {
+    rules: {
+      'no-duplicate-imports': 'warn',
+    },
+  },
+  {
     files: [
       'src/**/*',
       'site.config.*',

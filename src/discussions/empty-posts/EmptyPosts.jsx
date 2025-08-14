@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { useIsOnTablet } from '../data/hooks';
 import { selectAreThreadsFiltered, selectPostThreadCount } from '../data/selectors';

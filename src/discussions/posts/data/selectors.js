@@ -8,14 +8,14 @@ export const selectPostEditorVisible = state => state.threads.postEditorVisible;
 
 export const selectTopicThreads = topicIds => createSelector(
   [
-    state => (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || []),
+    state => (topicIds ?? []).flatMap(topicId => state.threads.threadsInTopic[topicId] ?? []),
     selectThreads,
   ],
   mapIdsToThreads,
 );
 
 export const selectTopicThreadsIds = topicIds => state => (
-  (topicIds || []).flatMap(topicId => state.threads.threadsInTopic[topicId] || [])
+  (topicIds ?? []).flatMap(topicId => state.threads.threadsInTopic[topicId] ?? [])
 );
 
 export const selectThreadsByIds = ids => createSelector(
@@ -30,7 +30,7 @@ export const selectThread = threadId => createSelector(
 
 export const selectAllThreadsOnPage = (page) => createSelector(
   [
-    state => state.threads.pages[page] || [],
+    state => state.threads.pages[page] ?? [],
     selectThreads,
   ],
   mapIdsToThreads,

@@ -38,7 +38,7 @@ const learnersSlice = createSlice({
         ],
         learnerProfiles: {
           ...state.learnerProfiles,
-          ...(payload.learnerProfiles || {}),
+          ...(payload.learnerProfiles ?? {}),
         },
         nextPage: payload.page < payload.pagination.numPages ? payload.page + 1 : null,
         totalPages: payload.pagination.numPages,

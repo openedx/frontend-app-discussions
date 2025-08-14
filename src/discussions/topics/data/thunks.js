@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError } from '@openedx/frontend-base';
 
 import { getHttpErrorStatus } from '../../utils';
 import { getCourseTopics } from './api';

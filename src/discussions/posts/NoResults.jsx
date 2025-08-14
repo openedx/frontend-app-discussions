@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { selectAreThreadsFiltered } from '../data/selectors';
 import { selectTopicFilter } from '../in-context-topics/data/selectors';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, DropdownButton } from '@openedx/paragon';
 import { Link } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from './messages';
 
@@ -35,14 +35,14 @@ const BreadcrumbDropdown = ({
       </Dropdown.Item>
       {items && items?.map(item => (
         (itemFilterFunc === null || itemFilterFunc(item)) && (
-        <Dropdown.Item
-          key={itemLabelFunc(item)}
-          active={itemActiveFunc(item)}
-          as={Link}
-          to={itemPathFunc(item)()}
-        >
-          {itemLabelFunc(item)}
-        </Dropdown.Item>
+          <Dropdown.Item
+            key={itemLabelFunc(item)}
+            active={itemActiveFunc(item)}
+            as={Link}
+            to={itemPathFunc(item)()}
+          >
+            {itemLabelFunc(item)}
+          </Dropdown.Item>
         )
       ))}
     </DropdownButton>

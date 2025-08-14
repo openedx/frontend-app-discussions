@@ -11,7 +11,7 @@ import {
 import { useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';

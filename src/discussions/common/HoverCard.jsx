@@ -9,7 +9,7 @@ import {
 } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../data/constants';
 import { useHasLikePermission, useUserPostingEnabled } from '../data/hooks';

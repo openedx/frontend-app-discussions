@@ -5,7 +5,7 @@ import { Alert, Icon } from '@openedx/paragon';
 import { CheckCircle, Verified } from '@openedx/paragon/icons';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../data/constants';
 import messages from '../post-comments/messages';

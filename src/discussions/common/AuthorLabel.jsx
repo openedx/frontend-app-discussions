@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
@@ -34,7 +34,7 @@ const AuthorLabel = ({
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
   const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous)
-                             && !enableInContextSidebar;
+    && !enableInContextSidebar;
 
   const authorName = useMemo(() => (
     <span

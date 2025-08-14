@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import TopicStats from '../../../components/TopicStats';
 import { Routes } from '../../../data/constants';

@@ -1,5 +1,4 @@
-import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { ensureConfig, getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../../data/constants';
 
@@ -7,7 +6,7 @@ ensureConfig([
   'LMS_BASE_URL',
 ], 'Comments API service');
 
-export const getCommentsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/comments/`;
+export const getCommentsApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/comments/`;
 
 /**
  * Returns all the comments for the specified thread.

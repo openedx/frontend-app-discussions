@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError } from '@openedx/frontend-base';
 
 import {
   PostsStatusFilter, ThreadType,
@@ -69,9 +68,7 @@ export function normaliseThreads(data, topicIds = null) {
     thread => {
       const { topicId, id } = thread;
       ids.push(id);
-      if (!threadsInTopic[topicId]) {
-        threadsInTopic[topicId] = [];
-      }
+      threadsInTopic[topicId] ??= [];
       if (!threadsInTopic[topicId].includes(id)) {
         threadsInTopic[topicId].push(id);
       }

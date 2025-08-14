@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../../../data/constants';
 import DiscussionContext from '../../../common/context';
@@ -67,7 +67,7 @@ const Topic = ({ topicId, showDivider, index }) => {
                     })}
                   </div>
                 </Tooltip>
-                )}
+              )}
             >
               <div className="d-flex align-items-center mr-3.5">
                 <Icon src={PostOutline} className="icon-size mr-2" />

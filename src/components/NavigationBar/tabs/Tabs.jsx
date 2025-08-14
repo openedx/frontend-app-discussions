@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Dropdown } from '@openedx/paragon';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+import { FormattedMessage } from '@openedx/frontend-base';
 
 import useIndexOfLastVisibleChild from './useIndexOfLastVisibleChild';
 
@@ -34,24 +34,24 @@ const Tabs = ({ children, className, ...attrs }) => {
     wrappedChildren.splice(
       indexOfOverflowStart,
       0, (
-        <div
-          className="nav-item flex-shrink-0"
-          style={indexOfOverflowStart >= React.Children.count(children) ? invisibleStyle : null}
-          ref={overflowElementRef}
-          key="overflow"
-        >
-          <Dropdown className="h-100">
-            <Dropdown.Toggle variant="link" className="nav-link h-100" id="learn.course.tabs.navigation.overflow.menu">
-              <FormattedMessage
-                id="learn.course.tabs.navigation.overflow.menu"
-                description="The title of the overflow menu for course tabs"
-                defaultMessage="More..."
-              />
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="dropdown-menu-right">{overflowChildren}</Dropdown.Menu>
-          </Dropdown>
-        </div>
-      ),
+      <div
+        className="nav-item flex-shrink-0"
+        style={indexOfOverflowStart >= React.Children.count(children) ? invisibleStyle : null}
+        ref={overflowElementRef}
+        key="overflow"
+      >
+        <Dropdown className="h-100">
+          <Dropdown.Toggle variant="link" className="nav-link h-100" id="learn.course.tabs.navigation.overflow.menu">
+            <FormattedMessage
+              id="learn.course.tabs.navigation.overflow.menu"
+              description="The title of the overflow menu for course tabs"
+              defaultMessage="More..."
+            />
+          </Dropdown.Toggle>
+          <Dropdown.Menu className="dropdown-menu-right">{overflowChildren}</Dropdown.Menu>
+        </Dropdown>
+      </div>
+    ),
     );
     return wrappedChildren;
   }, [children, indexOfLastVisibleChild]);

@@ -6,8 +6,8 @@ import { Check, Tune } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { sendTrackEvent } from '@openedx/frontend-base';
+import { useIntl } from '@openedx/frontend-base';
 
 import { LearnersOrdering } from '../../../data/constants';
 import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../data/selectors';

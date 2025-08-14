@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
@@ -59,10 +59,10 @@ const PostLink = ({
   return (
     <Link
       className={
-          classNames('discussion-post p-0 text-decoration-none text-gray-900', {
-            'border-bottom border-light-400': showDivider,
-          })
-        }
+        classNames('discussion-post p-0 text-decoration-none text-gray-900', {
+          'border-bottom border-light-400': showDivider,
+        })
+      }
       to={`${pathname}${enableInContextSidebar ? search : ''}`}
       aria-current={checkIsSelected ? 'page' : undefined}
       role="option"
@@ -70,12 +70,12 @@ const PostLink = ({
     >
       <div
         className={
-            classNames(
-              'd-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
-              { 'bg-light-300': isPostRead },
-              { 'post-summary-card-selected': id === selectedPostId },
-            )
-          }
+          classNames(
+            'd-flex flex-row pt-2 pb-2 px-4 border-primary-500 position-relative',
+            { 'bg-light-300': isPostRead },
+            { 'post-summary-card-selected': id === selectedPostId },
+          )
+        }
       >
         <PostAvatar
           postType={type}

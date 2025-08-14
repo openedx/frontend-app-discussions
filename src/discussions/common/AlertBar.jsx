@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Alert } from '@openedx/paragon';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';

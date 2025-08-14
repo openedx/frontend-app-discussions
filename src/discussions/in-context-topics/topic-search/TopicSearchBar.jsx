@@ -4,7 +4,7 @@ import { Icon, SearchField } from '@openedx/paragon';
 import { Search as SearchIcon } from '@openedx/paragon/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import DiscussionContext from '../../common/context';
 import postsMessages from '../../posts/post-actions-bar/messages';

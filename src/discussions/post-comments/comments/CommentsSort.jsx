@@ -6,7 +6,7 @@ import {
 import { ExpandLess, ExpandMore } from '@openedx/paragon/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { updateUserDiscussionsTourByName } from '../../tours/data';
 import { selectCommentSortOrder } from '../data/selectors';

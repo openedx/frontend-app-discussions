@@ -5,7 +5,7 @@ import {
 } from '@openedx/paragon';
 import { Close, HelpOutline } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../discussions/posts/post-editor/messages';
 

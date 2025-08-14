@@ -7,7 +7,7 @@ import { Button, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';

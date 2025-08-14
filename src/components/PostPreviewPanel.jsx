@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Icon, IconButton } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';

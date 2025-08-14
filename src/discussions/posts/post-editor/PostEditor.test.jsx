@@ -10,9 +10,9 @@ import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Factory } from 'rosie';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { getApiBaseUrl, Routes as ROUTES } from '../../../data/constants';
 import { initializeStore } from '../../../store';
@@ -112,8 +112,7 @@ describe('PostEditor', () => {
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
     });
 
-    test(`new post when anonymous posts are ${allowAnonymous ? '' : 'not'} allowed and anonymous posts to peers are ${
-      allowAnonymousToPeers ? '' : 'not'} allowed`, async () => {
+    test(`new post when anonymous posts are ${allowAnonymous ? '' : 'not'} allowed and anonymous posts to peers are ${allowAnonymousToPeers ? '' : 'not'} allowed`, async () => {
       await renderComponent();
 
       expect(screen.queryByRole('heading')).toHaveTextContent('Add a post');

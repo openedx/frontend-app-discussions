@@ -9,7 +9,7 @@ import {
 } from '@openedx/paragon/icons';
 import { useDispatch } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { updateExistingThread } from '../data/thunks';
 import LikeButton from './LikeButton';

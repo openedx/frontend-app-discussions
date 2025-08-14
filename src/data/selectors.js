@@ -38,7 +38,7 @@ export const selectTopicsUnderCategory = createSelector(
 
 export const selectArchivedTopics = createSelector(
   state => state.topics.topics,
-  state => state.topics.archivedIds || [],
+  state => state.topics.archivedIds ?? [],
   (topics, ids) => ids.map(id => topics[id]),
 );
 

@@ -17,13 +17,13 @@ export default function countFilteredTopics(topicsSelector, provider) {
     const filteredTopics = categories?.map(categoryId => {
       const topics = topicsSelector.topicsInCategory[categoryId]?.map(
         id => topicsSelector.topics[id],
-      ) || [];
+      ) ?? [];
       const matchesFilter = query ? categoryId?.toLowerCase().includes(query) : true;
       return topics.filter(
         topic => (
           query
             ? (topic.name.toLowerCase()
-              .includes(query) || matchesFilter)
+                .includes(query) ?? matchesFilter)
             : true
         ),
       );

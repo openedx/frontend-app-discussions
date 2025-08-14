@@ -9,8 +9,8 @@ import {
 import { MoreHoriz } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { logError } from '@edx/frontend-platform/logging';
+import { useIntl } from '@openedx/frontend-base';
+import { logError } from '@openedx/frontend-base';
 
 import { ContentActions } from '../../data/constants';
 import { selectIsPostingEnabled } from '../data/selectors';

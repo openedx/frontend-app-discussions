@@ -5,7 +5,7 @@ import { Avatar, Badge, Icon } from '@openedx/paragon';
 import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
@@ -111,7 +111,7 @@ const PostHeader = ({
                 {title}
               </div>
               {showAnsweredBadge
-                  && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
+                && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
             </div>
           ) : (
             <h5

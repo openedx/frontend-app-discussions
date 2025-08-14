@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { initializeStore } from '../../store';
 import DiscussionContext from '../common/context';
@@ -20,7 +20,7 @@ activeEndDate.setDate(activeEndDate.getDate() + 2);
 activeStartDate = activeStartDate.toISOString();
 activeEndDate = activeEndDate.toISOString();
 
-const getConfigData = (isPostingEnabled) => ({
+const getSiteConfigData = (isPostingEnabled) => ({
   id: 'course-v1:edX+DemoX+Demo_Course',
   userRoles: ['Admin', 'Student'],
   hasModerationPrivileges: false,
@@ -60,7 +60,7 @@ describe('Discussions Restriction Banner', () => {
     { isPostingEnabled: true, visibility: false },
   ])('Test Discussions Restriction is visible on app load if posting is disabled', async ({ isPostingEnabled, visibility }) => {
     store = initializeStore();
-    await store.dispatch(fetchConfigSuccess(getConfigData(isPostingEnabled)));
+    await store.dispatch(fetchConfigSuccess(getSiteConfigData(isPostingEnabled)));
     renderComponent();
     if (visibility) {
       const element = await screen.findByRole('alert');

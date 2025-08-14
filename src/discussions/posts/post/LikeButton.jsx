@@ -6,7 +6,7 @@ import {
 } from '@openedx/paragon';
 import { ThumbUpFilled, ThumbUpOutline } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from './messages';
 

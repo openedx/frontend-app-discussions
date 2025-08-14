@@ -4,7 +4,7 @@ import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
@@ -66,7 +66,7 @@ const LearnersView = () => {
 
   return (
     <div className="d-flex flex-column border-right border-light-400">
-      {!usernameSearch && <LearnerFilterBar /> }
+      {!usernameSearch && <LearnerFilterBar />}
       <div className="border-bottom border-light-400" />
       {usernameSearch && (
         <SearchInfo
@@ -89,7 +89,7 @@ const LearnersView = () => {
             </Button>
           )
         )}
-        { usernameSearch !== '' && learners.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
+        {usernameSearch !== '' && learners.length === 0 && loadingStatus === RequestStatus.SUCCESSFUL && <NoResults />}
       </div>
     </div>
   );

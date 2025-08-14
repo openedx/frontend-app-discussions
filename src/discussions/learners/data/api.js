@@ -1,14 +1,13 @@
 import snakeCase from 'lodash/snakeCase';
 
-import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { ensureConfig, getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
 ensureConfig([
   'LMS_BASE_URL',
 ], 'Posts API service');
 
-export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
-export const getUserProfileApiUrl = () => `${getConfig().LMS_BASE_URL}/api/user/v1/accounts`;
+export const getCoursesApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
+export const getUserProfileApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/user/v1/accounts`;
 export const learnerPostsApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/learner/`;
 export const learnersApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/activity_stats/`;
 

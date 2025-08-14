@@ -5,7 +5,7 @@ import { Icon, IconButton, Spinner } from '@openedx/paragon';
 import { ArrowBack } from '@openedx/paragon/icons';
 import { useNavigate } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@openedx/frontend-base';
 
 import messages from '../messages';
 

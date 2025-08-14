@@ -5,8 +5,8 @@ import { Alert } from '@openedx/paragon';
 import { Report } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getAuthenticatedUser } from '@openedx/frontend-base';
+import { useIntl } from '@openedx/frontend-base';
 
 import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
@@ -44,7 +44,7 @@ const AlertBanner = ({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      { canSeeLastEditOrClosedAlert && (
+      {canSeeLastEditOrClosedAlert && (
         <>
           {lastEdit?.reason && (
             <AlertBar

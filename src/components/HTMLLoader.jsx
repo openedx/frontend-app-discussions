@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import DOMPurify from 'dompurify';
 
-import { logError } from '@edx/frontend-platform/logging';
+import { logError } from '@openedx/frontend-base';
 
 import { useDebounce } from '../discussions/data/hooks';
 

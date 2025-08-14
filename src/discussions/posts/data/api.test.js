@@ -1,7 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { initializeMockApp } from '@edx/frontend-platform/testing';
+import { getAuthenticatedHttpClient, initializeMockApp } from '@openedx/frontend-base';
 
 import { getCoursesApiUrl, uploadFile } from './api';
 

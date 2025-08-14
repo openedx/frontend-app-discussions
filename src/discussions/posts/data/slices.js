@@ -13,11 +13,13 @@ const mergeThreadsInTopics = (dataFromState, dataFromPayload) => {
     const keys = Object.keys(obj);
     const values = Object.values(obj);
     keys.forEach((key, index) => {
-      if (!acc[key]) { acc[key] = []; }
+      acc[key] ??= [];
       if (Array.isArray(acc[key])) {
         const uniqueValues = [...new Set(acc[key].concat(values[index]))];
         acc[key] = uniqueValues;
-      } else { acc[key].push(values[index]); }
+      } else {
+        acc[key].push(values[index]);
+      }
       return acc;
     });
     return acc;
@@ -179,15 +181,15 @@ const threadsSlice = createSlice({
         threadsInTopic: {
           ...state.threadsInTopic,
           [payload.topicId]: [
-            ...(state.threadsInTopic[payload.topicId] || []),
+            ...(state.threadsInTopic[payload.topicId] ?? []),
             payload.id,
           ],
         },
         pages: !payload.anonymousToPeers
           ? [
-            ...(state.pages[0] ? [payload.id].concat(state.pages[0]) : []),
-            ...state.pages.slice(1),
-          ]
+              ...(state.pages[0] ? [payload.id].concat(state.pages[0]) : []),
+              ...state.pages.slice(1),
+            ]
           : [...state.pages],
         avatars: { ...state.avatars, ...payload.avatars },
         redirectToThread: { topicId: payload.topicId, threadId: payload.id },
@@ -234,7 +236,7 @@ const threadsSlice = createSlice({
           [payload.id]: {
             ...state.threadsById[payload.id],
             ...payload,
-            abuseFlaggedCount: state.threadsById[payload.id].abuseFlaggedCount || false,
+            abuseFlaggedCount: state.threadsById[payload.id].abuseFlaggedCount ?? false,
           },
         },
         avatars: { ...state.avatars, ...payload.avatars },

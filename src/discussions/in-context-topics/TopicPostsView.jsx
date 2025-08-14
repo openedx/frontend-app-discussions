@@ -6,7 +6,7 @@ import { Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { RequestStatus, Routes } from '../../data/constants';
 import DiscussionContext from '../common/context';
