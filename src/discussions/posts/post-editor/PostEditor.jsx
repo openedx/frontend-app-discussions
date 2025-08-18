@@ -469,6 +469,7 @@ const PostEditor = ({
             value={values.comment}
             onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
             onBlur={formikCompatibleHandler(handleBlur, 'comment')}
+            placeholder={intl.formatMessage(messages.postContent)}
           />
           <PostHelpPanel />
           <FormikErrorFeedback name="comment" />
