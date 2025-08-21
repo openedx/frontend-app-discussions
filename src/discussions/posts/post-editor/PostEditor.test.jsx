@@ -6,6 +6,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Factory } from 'rosie';
@@ -26,9 +27,6 @@ import fetchCourseConfig from '../../data/thunks';
 import fetchCourseTopics from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
 import { fetchThread } from '../data/thunks';
-import MockReCAPTCHA, {
-  mockOnChange, mockOnError, mockOnExpired,
-} from './mocksData/react-google-recaptcha';
 import PostEditor from './PostEditor';
 
 import '../../cohorts/data/__factories__';
@@ -45,7 +43,11 @@ let store;
 let axiosMock;
 let container;
 
-jest.mock('react-google-recaptcha', () => MockReCAPTCHA);
+jest.mock('react-google-recaptcha-v3', () => ({
+  useGoogleReCaptcha: jest.fn(),
+  // eslint-disable-next-line react/prop-types
+  GoogleReCaptchaProvider: ({ children }) => <div>{children}</div>,
+}));
 
 async function renderComponent(editExisting = false, location = `/${courseId}/posts/`) {
   const paths = editExisting ? ROUTES.POSTS.EDIT_POST : [ROUTES.POSTS.NEW_POST];
@@ -112,6 +114,8 @@ describe('PostEditor submit Form', () => {
   });
 
   test('successfully submits a new post with CAPTCHA', async () => {
+    const mockExecuteRecaptcha = jest.fn(() => Promise.resolve('mock-token'));
+    useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
     const newThread = Factory.build('thread', { id: 'new-thread-1' });
     axiosMock.onPost(threadsApiUrl).reply(200, newThread);
 
@@ -123,11 +127,9 @@ describe('PostEditor submit Form', () => {
       });
       const postTitle = await screen.findByTestId('post-title-input');
       const tinymceEditor = await screen.findByTestId('tinymce-editor');
-      const solveButton = screen.getByText('Solve CAPTCHA');
 
       fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
       fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
-      fireEvent.click(solveButton);
     });
 
     await act(async () => {
@@ -152,7 +154,9 @@ describe('PostEditor submit Form', () => {
     });
   });
 
-  test('fails to submit a new post with CAPTCHA if token is missing', async () => {
+  test('successfully show captcha error if executeRecaptcha returns null token', async () => {
+    const mockExecuteRecaptcha = jest.fn().mockResolvedValue(null);
+    useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
     const newThread = Factory.build('thread', { id: 'new-thread-1' });
     axiosMock.onPost(threadsApiUrl).reply(200, newThread);
 
@@ -173,9 +177,33 @@ describe('PostEditor submit Form', () => {
       fireEvent.click(screen.getByRole('button', { name: /submit/i }));
     });
 
-    await waitFor(() => {
-      expect(screen.getByText('Please complete the CAPTCHA verification')).toBeInTheDocument();
+    expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument();
+  });
+
+  test('successfully show captcha error if executeRecaptcha throws', async () => {
+    const mockExecuteRecaptcha = jest.fn().mockRejectedValue(new Error('recaptcha failed'));
+    useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+    const newThread = Factory.build('thread', { id: 'new-thread-1' });
+    axiosMock.onPost(threadsApiUrl).reply(200, newThread);
+
+    await renderComponent();
+
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('topic-select'), {
+        target: { value: 'ncw-topic-1' },
+      });
+      const postTitle = await screen.findByTestId('post-title-input');
+      const tinymceEditor = await screen.findByTestId('tinymce-editor');
+
+      fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
+      fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
     });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+    });
+
+    expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument();
   });
 });
 
@@ -338,58 +366,6 @@ describe('PostEditor', () => {
       await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
       await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     }
-
-    test('renders the mocked ReCAPTCHA.', async () => {
-      await setupData({
-        captchaSettings: {
-          enabled: true,
-          siteKey: 'test-key',
-        },
-        hasModerationPrivileges: false,
-      });
-      await renderComponent();
-      expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
-    });
-
-    test('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
-      await setupData({
-        captchaSettings: {
-          enabled: true,
-          siteKey: 'test-key',
-        },
-        hasModerationPrivileges: false,
-      });
-      await renderComponent();
-      const solveButton = screen.getByText('Solve CAPTCHA');
-      fireEvent.click(solveButton);
-      expect(mockOnChange).toHaveBeenCalled();
-    });
-
-    test('successfully calls onExpired handler when CAPTCHA expires', async () => {
-      await setupData({
-        captchaSettings: {
-          enabled: true,
-          siteKey: 'test-key',
-        },
-        hasModerationPrivileges: false,
-      });
-      await renderComponent();
-      fireEvent.click(screen.getByText('Expire CAPTCHA'));
-      expect(mockOnExpired).toHaveBeenCalled();
-    });
-
-    test('successfully calls onError handler when CAPTCHA errors', async () => {
-      await setupData({
-        captchaSettings: {
-          enabled: true,
-          siteKey: 'test-key',
-        },
-        hasModerationPrivileges: false,
-      });
-      await renderComponent();
-      fireEvent.click(screen.getByText('Error CAPTCHA'));
-      expect(mockOnError).toHaveBeenCalled();
-    });
 
     test('test privileged user', async () => {
       await setupData();
