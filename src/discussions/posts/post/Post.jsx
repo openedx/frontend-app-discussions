@@ -189,7 +189,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
         title={title}
         postUsers={postUsers}
       />
-      <div className="d-flex mt-14px text-break font-style">
+      <div className="d-flex mt-14px text-break font-style text-gray-700">
         <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader w-100" testId={postId} />
       </div>
       {(topicContext || topic) && (
