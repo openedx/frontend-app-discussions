@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ import {
 import { Help, Post } from '@openedx/paragon/icons';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
-import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -58,7 +58,7 @@ import { createNewThread, fetchThread, updateExistingThread } from '../data/thun
 import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
-const PostEditorForm = ({
+const PostEditor = ({
   editExisting, openRestrictionDialogue,
 }) => {
   const intl = useIntl();
@@ -73,6 +73,7 @@ const PostEditorForm = ({
   const topicId = useCurrentDiscussionTopic();
   const commentsPagePath = useCommentsPagePath();
   const [submitting, dispatchSubmit] = useDispatchWithState();
+  const [captchaError, setCaptchaError] = useState('');
   const enableInContext = useSelector(selectEnableInContext);
   const nonCoursewareTopics = useSelector(enableInContext ? inContextNonCourseware : selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
@@ -172,72 +173,56 @@ const PostEditorForm = ({
     [],
   );
 
-  const submitForm = useCallback(async (values, { resetForm, setFieldError }) => {
-    try {
-      let recaptchaToken;
-
-      // // Execute reCAPTCHA v3 for new posts
-      // let executeRecaptchaaa = executeRecaptcha
-      // debugger
-      if (shouldRequireCaptcha && executeRecaptcha) {
-        try {
-          recaptchaToken = await executeRecaptcha('submit_post');
-          if (!recaptchaToken) {
-            throw new Error('Failed to get reCAPTCHA token');
-          }
-        } catch (error) {
-          console.error('reCAPTCHA execution failed:', error);
-          setFieldError('captcha', intl.formatMessage(messages.captchaError || {
-            id: 'discussions.post.captcha.error',
-            defaultMessage: 'reCAPTCHA verification failed. Please try again.',
-          }));
+  const submitForm = useCallback(async (values, { resetForm }) => {
+    let recaptchaToken;
+    if (shouldRequireCaptcha && executeRecaptcha) {
+      try {
+        recaptchaToken = await executeRecaptcha('submit_post');
+        if (!recaptchaToken) {
+          setCaptchaError(intl.formatMessage(messages.captchaVerificationLabel));
           return;
         }
+      } catch (error) {
+        setCaptchaError(intl.formatMessage(messages.captchaVerificationLabel));
+        return;
       }
-
-      if (editExisting) {
-        await dispatchSubmit(updateExistingThread(postId, {
-          topicId: values.topic,
-          type: values.postType,
-          title: values.title,
-          content: values.comment,
-          editReasonCode: values.editReasonCode || undefined,
-        }));
-      } else {
-        const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
-
-        await dispatchSubmit(createNewThread({
-          courseId,
-          topicId: values.topic,
-          type: values.postType,
-          title: values.title,
-          content: values.comment,
-          following: values.follow,
-          anonymous: allowAnonymous ? values.anonymous : undefined,
-          anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
-          cohort,
-          enableInContextSidebar,
-          notifyAllLearners: values.notifyAllLearners,
-          ...(shouldRequireCaptcha && recaptchaToken ? { recaptchaToken } : {}),
-        }));
-      }
-
-      if (editorRef.current) {
-        editorRef.current.plugins.autosave.removeDraft();
-      }
-      hideEditor(resetForm);
-    } catch (error) {
-      console.error('Form submission failed:', error);
-      if (error.message && error.message.toLowerCase().includes('captcha')) {
-        setFieldError('captcha', intl.formatMessage(messages.captchaError || {
-          id: 'discussions.post.captcha.error',
-          defaultMessage: 'reCAPTCHA verification failed. Please try again.',
-        }));
-      }
+      setCaptchaError('');
     }
+
+    if (editExisting) {
+      await dispatchSubmit(updateExistingThread(postId, {
+        topicId: values.topic,
+        type: values.postType,
+        title: values.title,
+        content: values.comment,
+        editReasonCode: values.editReasonCode || undefined,
+      }));
+    } else {
+      const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
+
+      await dispatchSubmit(createNewThread({
+        courseId,
+        topicId: values.topic,
+        type: values.postType,
+        title: values.title,
+        content: values.comment,
+        following: values.follow,
+        anonymous: allowAnonymous ? values.anonymous : undefined,
+        anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
+        cohort,
+        enableInContextSidebar,
+        notifyAllLearners: values.notifyAllLearners,
+        ...(shouldRequireCaptcha && recaptchaToken ? { recaptchaToken } : {}),
+      }));
+    }
+
+    if (editorRef.current) {
+      editorRef.current.plugins.autosave.removeDraft();
+    }
+    hideEditor(resetForm);
   }, [
     allowAnonymous, allowAnonymousToPeers, canSelectCohort, editExisting,
-    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha,executeRecaptcha
+    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha, executeRecaptcha,
   ]);
 
   useEffect(() => {
@@ -534,7 +519,11 @@ const PostEditorForm = ({
           </>
           )}
         </div>
-
+        { shouldRequireCaptcha && captchaSettings.siteKey && captchaError && (
+        <div className="mb-3 pgn__form-text-invalid pgn__form-text">
+          {captchaError}
+        </div>
+        )}
         <div className="d-flex justify-content-end">
           <Button
             variant="outline-primary"
@@ -560,34 +549,6 @@ const PostEditorForm = ({
     )}
     </Formik>
   );
-};
-
-PostEditorForm.propTypes = {
-  editExisting: PropTypes.bool,
-  openRestrictionDialogue: PropTypes.func.isRequired,
-};
-
-PostEditorForm.defaultProps = {
-  editExisting: false,
-};
-
-const PostEditor = (props) => {
-  const captchaSettings = useSelector(selectCaptchaSettings);
-  const isUserLearner = useSelector(selectIsUserLearner);
-  const shouldRequireCaptcha = !props.editExisting && captchaSettings.enabled && isUserLearner;
-
-  if (shouldRequireCaptcha && captchaSettings.siteKey) {
-    return (
-      <GoogleReCaptchaProvider
-        reCaptchaKey={captchaSettings.siteKey}
-          useEnterprise={true}
-      >
-        <PostEditorForm {...props} />
-      </GoogleReCaptchaProvider>
-    );
-  }
-
-  return <PostEditorForm {...props} />;
 };
 
 PostEditor.propTypes = {
