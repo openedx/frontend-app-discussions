@@ -354,7 +354,10 @@ describe('ThreadView', () => {
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+
       await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+
+      await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
       await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'New comment with CAPTCHA' } }); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
