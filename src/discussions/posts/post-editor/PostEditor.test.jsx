@@ -26,6 +26,7 @@ import { getCourseConfigApiUrl } from '../../data/api';
 import fetchCourseConfig from '../../data/thunks';
 import fetchCourseTopics from '../../topics/data/thunks';
 import { getThreadsApiUrl } from '../data/api';
+import * as selectors from '../data/selectors';
 import { fetchThread } from '../data/thunks';
 import PostEditor from './PostEditor';
 
@@ -151,6 +152,49 @@ describe('PostEditor submit Form', () => {
         notify_all_learners: false,
         captcha_token: 'mock-token',
       });
+    });
+  });
+
+  test('successfully updated a post', async () => {
+    const mockThread = {
+      course_id: 'course-v1:edX+DemoX+Demo_Course',
+      topic_id: 'ncw-topic-1',
+      type: 'discussion',
+      title: 'Test Post Title',
+      raw_body: 'Test Post Content',
+      following: true,
+      anonymous: false,
+      anonymous_to_peers: false,
+      enable_in_context_sidebar: false,
+      notify_all_learners: false,
+      captcha_token: 'mock-token',
+    };
+    jest
+      .spyOn(selectors, 'selectThread')
+      .mockImplementation(() => jest.fn(() => mockThread));
+
+    const newThread = Factory.build('thread', { id: 'new-thread-1' });
+    axiosMock.onPatch(threadsApiUrl).reply(200, newThread);
+
+    await renderComponent(true, `/${courseId}/posts/post1/edit`);
+
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('topic-select'), {
+        target: { value: 'ncw-topic-1' },
+      });
+      const postTitle = await screen.findByTestId('post-title-input');
+      const tinymceEditor = await screen.findByTestId('tinymce-editor');
+
+      fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
+      fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+    });
+
+    await act(async () => {
+      expect(axiosMock.history.patch).toHaveLength(1);
     });
   });
 
