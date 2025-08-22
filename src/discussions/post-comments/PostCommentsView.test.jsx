@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
-
 import {
   act, fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { IntlProvider } from 'react-intl';
 import {
   MemoryRouter, Route, Routes, useLocation,
@@ -27,12 +26,6 @@ import fetchCourseConfig from '../data/thunks';
 import DiscussionContent from '../discussions-home/DiscussionContent';
 import { getThreadsApiUrl } from '../posts/data/api';
 import { fetchThread, fetchThreads } from '../posts/data/thunks';
-import MockReCAPTCHA, {
-  mockOnChange,
-  mockOnError,
-  mockOnExpired,
-  mockReset,
-} from '../posts/post-editor/mocksData/react-google-recaptcha';
 import fetchCourseTopics from '../topics/data/thunks';
 import { getDiscussionTourUrl } from '../tours/data/api';
 import selectTours from '../tours/data/selectors';
@@ -63,7 +56,11 @@ let testLocation;
 let container;
 let unmount;
 
-jest.mock('react-google-recaptcha', () => MockReCAPTCHA);
+jest.mock('react-google-recaptcha-v3', () => ({
+  useGoogleReCaptcha: jest.fn(),
+  // eslint-disable-next-line react/prop-types
+  GoogleReCaptchaProvider: ({ children }) => <div>{children}</div>,
+}));
 
 async function mockAxiosReturnPagedComments(threadId, threadType = ThreadType.DISCUSSION, page = 1, count = 2) {
   axiosMock.onGet(commentsApiUrl).reply(200, Factory.build('commentsResult', { can_delete: true }, {
@@ -310,6 +307,8 @@ describe('ThreadView', () => {
 
     it('should show and hide the editor', async () => {
       await setupCourseConfig();
+      const mockExecuteRecaptchaNew = jest.fn(() => Promise.resolve('mock-token'));
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptchaNew });
       await waitFor(() => renderComponent(discussionPostId));
 
       const post = screen.getByTestId('post-thread-1');
@@ -348,13 +347,18 @@ describe('ThreadView', () => {
 
     it('should allow posting a comment with CAPTCHA', async () => {
       await setupCourseConfig(true, false, false);
+      const mockExecuteRecaptcha = jest.fn(() => Promise.resolve('mock-token'));
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+
       await waitFor(() => renderComponent(discussionPostId));
 
       const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
       const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+
       await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+
+      await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
       await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'New comment with CAPTCHA' } }); });
-      await act(async () => { fireEvent.click(screen.getByText('Solve CAPTCHA')); });
       await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
 
       await waitFor(() => {
@@ -366,8 +370,41 @@ describe('ThreadView', () => {
           raw_body: 'New comment with CAPTCHA',
           thread_id: 'thread-1',
         });
-        expect(mockOnChange).toHaveBeenCalled();
       });
+    });
+
+    it('should show captcha error if executeRecaptcha returns null token', async () => {
+      await setupCourseConfig(true, false, false);
+
+      const mockExecuteRecaptcha = jest.fn().mockResolvedValue(null);
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+      await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'New comment with CAPTCHA' } }); });
+      await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
+
+      expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument();
+    });
+
+    it('should show captcha error if executeRecaptcha throws', async () => {
+      await setupCourseConfig(true, false, false);
+
+      const mockExecuteRecaptcha = jest.fn().mockRejectedValue(new Error('recaptcha failed'));
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+      const hoverCard = within(comment).getByTestId('hover-card-comment-1');
+      await act(async () => { fireEvent.click(within(hoverCard).getByRole('button', { name: /Add comment/i })); });
+      await act(async () => { fireEvent.change(screen.getByTestId('tinymce-editor'), { target: { value: 'New comment with CAPTCHA' } }); });
+      await act(async () => { fireEvent.click(screen.getByText(/submit/i)); });
+
+      expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument();
     });
 
     it('should allow posting a comment', async () => {
@@ -658,46 +695,6 @@ describe('ThreadView', () => {
 
   describe('for discussion thread', () => {
     const findLoadMoreCommentsButton = () => screen.findByTestId('load-more-comments');
-
-    it('renders the mocked ReCAPTCHA.', async () => {
-      await setupCourseConfig(true, false, false);
-      await waitFor(() => renderComponent(discussionPostId));
-      await act(async () => {
-        fireEvent.click(screen.queryByText('Add comment'));
-      });
-      expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
-    });
-
-    it('successfully calls onTokenChange when Solve CAPTCHA button is clicked', async () => {
-      await setupCourseConfig(true, false, false);
-      await waitFor(() => renderComponent(discussionPostId));
-      await act(async () => {
-        fireEvent.click(screen.queryByText('Add comment'));
-      });
-      const solveButton = screen.getByText('Solve CAPTCHA');
-      fireEvent.click(solveButton);
-      expect(mockOnChange).toHaveBeenCalled();
-    });
-
-    it('successfully calls onExpired handler when CAPTCHA expires', async () => {
-      await setupCourseConfig(true, false, false);
-      await waitFor(() => renderComponent(discussionPostId));
-      await act(async () => {
-        fireEvent.click(screen.queryByText('Add comment'));
-      });
-      fireEvent.click(screen.getByText('Expire CAPTCHA'));
-      expect(mockOnExpired).toHaveBeenCalled();
-    });
-
-    it('successfully calls onError handler when CAPTCHA errors', async () => {
-      await setupCourseConfig(true, false, false);
-      await waitFor(() => renderComponent(discussionPostId));
-      await act(async () => {
-        fireEvent.click(screen.queryByText('Add comment'));
-      });
-      fireEvent.click(screen.getByText('Error CAPTCHA'));
-      expect(mockOnError).toHaveBeenCalled();
-    });
 
     it('shown post not found when post id does not belong to course', async () => {
       await waitFor(() => renderComponent('unloaded-id'));
@@ -1159,63 +1156,5 @@ describe('ThreadView', () => {
     await act(async () => { fireEvent.click(addCommentButton); });
 
     expect(screen.queryByTestId('tinymce-editor')).toBeInTheDocument();
-  });
-});
-
-describe('MockReCAPTCHA', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('uses defaultProps when props are not provided', () => {
-    render(<MockReCAPTCHA />);
-
-    expect(screen.getByTestId('mocked-recaptcha')).toBeInTheDocument();
-
-    fireEvent.click(screen.getByText('Solve CAPTCHA'));
-    fireEvent.click(screen.getByText('Expire CAPTCHA'));
-    fireEvent.click(screen.getByText('Error CAPTCHA'));
-
-    expect(mockOnChange).toHaveBeenCalled();
-    expect(mockOnExpired).toHaveBeenCalled();
-    expect(mockOnError).toHaveBeenCalled();
-  });
-
-  it('triggers all callbacks and exposes reset via ref', () => {
-    const onChange = jest.fn();
-    const onExpired = jest.fn();
-    const onError = jest.fn();
-
-    const Wrapper = () => {
-      const recaptchaRef = useRef(null);
-      return (
-        <div>
-          <MockReCAPTCHA
-            ref={recaptchaRef}
-            onChange={onChange}
-            onExpired={onExpired}
-            onError={onError}
-          />
-          <button onClick={() => recaptchaRef.current.reset()} data-testid="reset-btn" type="button">Reset</button>
-        </div>
-      );
-    };
-
-    const { getByText, getByTestId } = render(<Wrapper />);
-
-    fireEvent.click(getByText('Solve CAPTCHA'));
-    fireEvent.click(getByText('Expire CAPTCHA'));
-    fireEvent.click(getByText('Error CAPTCHA'));
-
-    fireEvent.click(getByTestId('reset-btn'));
-
-    expect(mockOnChange).toHaveBeenCalled();
-    expect(mockOnExpired).toHaveBeenCalled();
-    expect(mockOnError).toHaveBeenCalled();
-
-    expect(onChange).toHaveBeenCalledWith('mock-token');
-    expect(onExpired).toHaveBeenCalled();
-    expect(onError).toHaveBeenCalled();
-    expect(mockReset).toHaveBeenCalled();
   });
 });

@@ -221,15 +221,10 @@ const messages = defineMessages({
     }`,
     description: 'sort message showing current sorting',
   },
-  verifyHumanLabel: {
-    id: 'discussions.verify.human.label',
-    defaultMessage: 'Verify you are human',
-    description: 'Verify you are human description.',
-  },
   captchaVerificationLabel: {
     id: 'discussions.captcha.verification.label',
-    defaultMessage: 'Please complete the CAPTCHA verification',
-    description: 'Please complete the CAPTCHA to continue.',
+    defaultMessage: 'CAPTCHA verification failed.',
+    description: 'CAPTCHA verification failed',
   },
 });
 

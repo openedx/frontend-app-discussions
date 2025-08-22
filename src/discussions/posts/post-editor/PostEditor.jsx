@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useContext, useEffect, useRef,
+  useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ import {
 import { Help, Post } from '@openedx/paragon/icons';
 import { Formik } from 'formik';
 import { isEmpty } from 'lodash';
-import ReCAPTCHA from 'react-google-recaptcha';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -66,13 +66,14 @@ const PostEditor = ({
   const location = useLocation();
   const dispatch = useDispatch();
   const editorRef = useRef(null);
-  const recaptchaRef = useRef(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const { courseId, postId } = useParams();
   const { authenticatedUser } = useContext(AppContext);
   const { category, enableInContextSidebar } = useContext(DiscussionContext);
   const topicId = useCurrentDiscussionTopic();
   const commentsPagePath = useCommentsPagePath();
   const [submitting, dispatchSubmit] = useDispatchWithState();
+  const [captchaError, setCaptchaError] = useState('');
   const enableInContext = useSelector(selectEnableInContext);
   const nonCoursewareTopics = useSelector(enableInContext ? inContextNonCourseware : selectNonCoursewareTopics);
   const nonCoursewareIds = useSelector(enableInContext ? inContextCoursewareIds : selectNonCoursewareIds);
@@ -91,6 +92,7 @@ const PostEditor = ({
   const captchaSettings = useSelector(selectCaptchaSettings);
   const isUserLearner = useSelector(selectIsUserLearner);
   const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
+  const shouldRequireCaptcha = !postId && captchaSettings.enabled && isUserLearner;
 
   const canDisplayEditReason = (editExisting
     && (userHasModerationPrivileges || userIsGroupTa || userIsStaff)
@@ -99,11 +101,6 @@ const PostEditor = ({
 
   const editReasonCodeValidation = canDisplayEditReason && {
     editReasonCode: Yup.string().required(intl.formatMessage(messages.editReasonCodeError)),
-  };
-
-  const shouldRequireCaptcha = !postId && captchaSettings.enabled && isUserLearner;
-  const captchaValidation = {
-    recaptchaToken: Yup.string().required(intl.formatMessage(messages.captchaVerificationLabel)),
   };
 
   const enableNotifyAllLearnersTour = useCallback((enabled) => {
@@ -119,15 +116,7 @@ const PostEditor = ({
     return () => {
       enableNotifyAllLearnersTour(false);
     };
-  }, []);
-
-  const handleCaptchaChange = useCallback((token, setFieldValue) => {
-    setFieldValue('recaptchaToken', token || '');
-  }, []);
-
-  const handleCaptchaExpired = useCallback((setFieldValue) => {
-    setFieldValue('recaptchaToken', '');
-  }, []);
+  }, [enableNotifyAllLearnersTour]);
 
   const canSelectCohort = useCallback((tId) => {
     // If the user isn't privileged, they can't edit the cohort.
@@ -155,15 +144,10 @@ const PostEditor = ({
     editReasonCode: post?.lastEdit?.reasonCode || (
       userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined
     ),
-    recaptchaToken: '',
   };
 
   const hideEditor = useCallback((resetForm) => {
     resetForm({ values: initialValues });
-    // Reset CAPTCHA when hiding editor
-    if (recaptchaRef.current) {
-      recaptchaRef.current.reset();
-    }
     if (editExisting) {
       const newLocation = discussionsPath(commentsPagePath, {
         courseId,
@@ -190,6 +174,21 @@ const PostEditor = ({
   );
 
   const submitForm = useCallback(async (values, { resetForm }) => {
+    let recaptchaToken;
+    if (shouldRequireCaptcha && executeRecaptcha) {
+      try {
+        recaptchaToken = await executeRecaptcha('submit_post');
+        if (!recaptchaToken) {
+          setCaptchaError(intl.formatMessage(messages.captchaVerificationLabel));
+          return;
+        }
+      } catch (error) {
+        setCaptchaError(intl.formatMessage(messages.captchaVerificationLabel));
+        return;
+      }
+      setCaptchaError('');
+    }
+
     if (editExisting) {
       await dispatchSubmit(updateExistingThread(postId, {
         topicId: values.topic,
@@ -200,7 +199,7 @@ const PostEditor = ({
       }));
     } else {
       const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
-      // Include CAPTCHA token in the request for new posts
+
       await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
@@ -213,7 +212,7 @@ const PostEditor = ({
         cohort,
         enableInContextSidebar,
         notifyAllLearners: values.notifyAllLearners,
-        ...(shouldRequireCaptcha ? { recaptchaToken: values.recaptchaToken } : {}),
+        ...(shouldRequireCaptcha && recaptchaToken ? { recaptchaToken } : {}),
       }));
     }
 
@@ -223,7 +222,7 @@ const PostEditor = ({
     hideEditor(resetForm);
   }, [
     allowAnonymous, allowAnonymousToPeers, canSelectCohort, editExisting,
-    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha,
+    enableInContextSidebar, hideEditor, postId, selectedCohort, topicId, shouldRequireCaptcha, executeRecaptcha,
   ]);
 
   useEffect(() => {
@@ -274,9 +273,7 @@ const PostEditor = ({
     cohort: Yup.string()
       .nullable()
       .default(null),
-    ...(shouldRequireCaptcha ? { recaptchaToken: Yup.string().required() } : { }),
     ...editReasonCodeValidation,
-    ...(shouldRequireCaptcha ? captchaValidation : {}),
   });
 
   const handleInContextSelectLabel = (section, subsection) => (
@@ -297,7 +294,6 @@ const PostEditor = ({
       handleBlur,
       handleChange,
       resetForm,
-      setFieldValue,
     }) => (
       <Form className="m-4 card p-4 post-form" onSubmit={handleSubmit}>
         <h4 className="mb-4 font-style" style={{ lineHeight: '16px' }}>
@@ -523,29 +519,9 @@ const PostEditor = ({
           </>
           )}
         </div>
-        {/* CAPTCHA Section - Only show for new posts for non-staff users */}
-        {shouldRequireCaptcha && captchaSettings.siteKey && (
-        <div className="mb-3">
-          <Form.Group
-            isInvalid={isFormikFieldInvalid('recaptchaToken', {
-              errors,
-              touched,
-            })}
-          >
-            <Form.Label className="h6">
-              {intl.formatMessage(messages.verifyHumanLabel)}
-            </Form.Label>
-            <div className="d-flex justify-content-start">
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={captchaSettings.siteKey}
-                onChange={(token) => handleCaptchaChange(token, setFieldValue)}
-                onExpired={() => handleCaptchaExpired(setFieldValue)}
-                onError={() => handleCaptchaExpired(setFieldValue)}
-              />
-            </div>
-            <FormikErrorFeedback name="recaptchaToken" />
-          </Form.Group>
+        { shouldRequireCaptcha && captchaSettings.siteKey && captchaError && (
+        <div className="mb-3 pgn__form-text-invalid pgn__form-text">
+          {captchaError}
         </div>
         )}
         <div className="d-flex justify-content-end">
