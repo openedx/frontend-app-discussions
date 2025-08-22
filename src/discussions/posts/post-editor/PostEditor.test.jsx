@@ -157,17 +157,17 @@ describe('PostEditor submit Form', () => {
 
   test('successfully updated a post', async () => {
     const mockThread = {
-      course_id: 'course-v1:edX+DemoX+Demo_Course',
-      topic_id: 'ncw-topic-1',
+      courseId: 'course-v1:edX+DemoX+Demo_Course',
+      topicId: 'ncw-topic-1',
       type: 'discussion',
       title: 'Test Post Title',
-      raw_body: 'Test Post Content',
+      rawBody: 'Test Post Content',
       following: true,
       anonymous: false,
-      anonymous_to_peers: false,
-      enable_in_context_sidebar: false,
-      notify_all_learners: false,
-      captcha_token: 'mock-token',
+      anonymousToPeers: false,
+      enableInContextSidebar: false,
+      notifyAllLearners: false,
+      captchaToken: 'mock-token',
     };
     jest
       .spyOn(selectors, 'selectThread')
@@ -187,6 +187,10 @@ describe('PostEditor submit Form', () => {
 
       fireEvent.change(postTitle, { target: { value: 'Test Post Title' } });
       fireEvent.change(tinymceEditor, { target: { value: 'Test Post Content' } });
+    });
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('[data-testid="show-preview-button"]'));
     });
 
     await act(async () => {
