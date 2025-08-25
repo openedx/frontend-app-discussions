@@ -13,7 +13,7 @@ const siteConfig: SiteConfig = {
   logoutUrl: 'http://local.openedx.io:8000/logout',
 
   environment: EnvironmentTypes.DEVELOPMENT,
-  basename: '/gradebook',
+  basename: '/discussions',
   apps: [
     shellApp,
     headerApp,

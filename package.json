@@ -18,7 +18,7 @@
     "extends @edx/browserslist-config"
   ],
   "scripts": {
-    "dev": "PORT=2002 PUBLIC_PATH=/gradebook openedx dev",
+    "dev": "PORT=2002 PUBLIC_PATH=/discussions openedx dev",
     "i18n_extract": "openedx formatjs extract",
     "lint": "openedx lint .",
     "lint:fix": "openedx lint --fix .",
