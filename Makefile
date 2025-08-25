@@ -52,18 +52,6 @@ pull_translations:
 
 	$(intl_imports) frontend-base paragon frontend-app-discussions
 
-pull_translations:
-	rm -rf src/i18n/messages
-	mkdir src/i18n/messages
-	cd src/i18n/messages \
-	  && atlas pull $(ATLAS_OPTIONS) \
-	           translations/frontend-component-header/src/i18n/messages:frontend-component-header  \
-	           translations/frontend-component-footer/src/i18n/messages:frontend-component-footer \
-	           translations/frontend-platform/src/i18n/messages:frontend-platform \
-	           translations/paragon/src/i18n/messages:paragon \
-	           translations/frontend-app-discussions/src/i18n/messages:frontend-app-discussions
-
-	$(intl_imports) frontend-component-header frontend-component-footer frontend-platform paragon frontend-app-discussions
 # endif
 
 # This target is used by Travis.
