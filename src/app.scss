@@ -1,13 +1,13 @@
-@import "~@edx/brand/paragon/fonts.scss";
-@import "~@edx/brand/paragon/variables.scss";
-@import "~@openedx/paragon/scss/core/core.scss";
-@import "~@edx/brand/paragon/overrides.scss";
+@use "~@edx/brand/paragon/fonts.scss";
+@use "~@edx/brand/paragon/variables.scss";
+@use "~@openedx/paragon/scss/core/core.scss";
+@use "~@edx/brand/paragon/overrides.scss";
 
-@import "~@edx/frontend-component-footer/dist/footer";
-@import "~@edx/frontend-component-header/dist/index";
+@use "~@edx/frontend-component-footer/dist/footer";
+@use "~@edx/frontend-component-header/dist/index";
 
 $fa-font-path: "~font-awesome/fonts";
-@import "~font-awesome/scss/font-awesome";
+@use "~font-awesome/scss/font-awesome";
 
 body,
 #main
