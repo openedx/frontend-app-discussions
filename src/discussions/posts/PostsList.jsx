@@ -1,13 +1,12 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@openedx/frontend-base';
-import { AppContext } from '@openedx/frontend-base';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { RequestStatus } from '../../data/constants';
 import DiscussionContext from '../common/context';
@@ -27,7 +26,7 @@ const PostsList = ({
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { courseId, page } = useContext(DiscussionContext);
   const loadingStatus = useSelector(threadsLoadingStatus());
   const orderBy = useSelector(selectThreadSorting());

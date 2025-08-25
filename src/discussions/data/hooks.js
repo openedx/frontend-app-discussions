@@ -9,7 +9,7 @@ import {
   matchPath, useLocation, useMatch, useNavigate,
 } from 'react-router-dom';
 
-import { AppContext, getAuthenticatedUser, useIntl } from '@openedx/frontend-base';
+import { SiteContext, getAuthenticatedUser, useIntl } from '@openedx/frontend-base';
 
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { LOADED } from '../../components/NavigationBar/data/slice';
@@ -87,7 +87,7 @@ export function useCourseDiscussionData(courseId) {
 
 export function useCourseBlockData(courseId) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { isEnrolled, courseStatus } = useSelector(selectCourseTabs);
   const isUserLearner = useSelector(selectIsUserLearner);
 

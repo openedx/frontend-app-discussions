@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useRef,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   Button, Form, Spinner, StatefulButton,
@@ -13,8 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import { useIntl } from '@openedx/frontend-base';
-import { AppContext } from '@openedx/frontend-base';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
@@ -36,10 +35,10 @@ import {
 } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import {
-  selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,
   selectNonCoursewareIds as inContextCoursewareIds,
   selectNonCoursewareTopics as inContextNonCourseware,
+  selectArchivedTopics,
 } from '../../in-context-topics/data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
@@ -60,7 +59,7 @@ const PostEditor = ({
   const dispatch = useDispatch();
   const editorRef = useRef(null);
   const { courseId, postId } = useParams();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { category, enableInContextSidebar } = useContext(DiscussionContext);
   const topicId = useCurrentDiscussionTopic();
   const commentsPagePath = useCommentsPagePath();

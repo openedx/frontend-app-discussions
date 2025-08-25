@@ -1,15 +1,14 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Form, StatefulButton } from '@openedx/paragon';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { useIntl } from '@openedx/frontend-base';
-import { AppContext } from '@openedx/frontend-base';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
@@ -40,7 +39,7 @@ const CommentEditor = ({
   const intl = useIntl();
   const editorRef = useRef(null);
   const formRef = useRef(null);
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
