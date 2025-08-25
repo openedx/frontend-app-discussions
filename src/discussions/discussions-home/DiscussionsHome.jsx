@@ -8,7 +8,7 @@ import {
   matchPath, Route, Routes, useLocation, useMatch,
 } from 'react-router-dom';
 
-import { LearningHeader as Header } from '@edx/frontend-component-header';
+// import { LearningHeader as Header } from '@edx/frontend-component-header';
 
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
@@ -27,7 +27,7 @@ import { selectPostEditorVisible } from '../posts/data/selectors';
 import { isCourseStatusValid } from '../utils';
 import useFeedbackWrapper from './FeedbackWrapper';
 
-const FooterSlot = lazy(() => import('@edx/frontend-component-footer').then(module => ({ default: module.FooterSlot })));
+// const FooterSlot = lazy(() => import('@edx/frontend-component-footer').then(module => ({ default: module.FooterSlot })));
 const PostActionsBar = lazy(() => import('../posts/post-actions-bar/PostActionsBar'));
 const CourseTabsNavigation = lazy(() => import('../../components/NavigationBar/CourseTabsNavigation'));
 const LegacyBreadcrumbMenu = lazy(() => import('../navigation/breadcrumb-menu/LegacyBreadcrumbMenu'));
@@ -81,7 +81,8 @@ const DiscussionsHome = () => {
   return (
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
-        {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)}
+        {/* TODO verify if we can dynamically hide the Header on the new structure */}
+        {/* {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)} */}
         <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
           {(isEnrolled || !isUserLearner) && (
@@ -101,6 +102,7 @@ const DiscussionsHome = () => {
               <DiscussionsRestrictionBanner />
             </div>
           )}
+          {/* TODO: it seems the routes are being used to output stuff in specific parts of the layout */}
           {provider === DiscussionProvider.LEGACY && (
             <Suspense fallback={(<Spinner />)}>
               <Routes>
@@ -121,6 +123,8 @@ const DiscussionsHome = () => {
               </Routes>
             </Suspense>
           )}
+          {/* Valid course, not enrolled, user is a learner */}
+          {/* Show unavailable message */}
           {isCourseStatusValid(courseStatus) && (
             !isEnrolled && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
@@ -135,6 +139,7 @@ const DiscussionsHome = () => {
                 </Routes>
               </Suspense>
             ) : (
+              // everything valid, show real app content
               <div className="d-flex flex-row position-relative">
                 <Suspense fallback={(<Spinner />)}>
                   <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
@@ -175,7 +180,7 @@ const DiscussionsHome = () => {
           )}
           {!enableInContextSidebar && isEnrolled && (<DiscussionsProductTour />)}
         </main>
-        {!enableInContextSidebar && <FooterSlot />}
+        {/* {!enableInContextSidebar && <FooterSlot />} */}
       </DiscussionContext.Provider>
     </Suspense>
   );

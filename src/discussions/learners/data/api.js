@@ -1,10 +1,6 @@
 import snakeCase from 'lodash/snakeCase';
 
-import { ensureConfig, getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
-
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Posts API service');
+import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
 export const getCoursesApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
 export const getUserProfileApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/user/v1/accounts`;

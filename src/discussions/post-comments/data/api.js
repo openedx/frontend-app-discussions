@@ -1,10 +1,6 @@
-import { ensureConfig, getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../../data/constants';
-
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Comments API service');
 
 export const getCommentsApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/comments/`;
 

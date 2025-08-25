@@ -1,8 +1,4 @@
-import { ensureConfig, getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
-
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Comments API service');
+import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
 export const getCohortsApiUrl = courseId => `${getSiteConfig().LMS_BASE_URL}/api/cohorts/v1/courses/${courseId}/cohorts/`;
 

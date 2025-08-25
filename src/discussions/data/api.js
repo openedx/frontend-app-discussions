@@ -1,9 +1,4 @@
-import { ensureConfig, getSiteConfig } from '@openedx/frontend-base';
-import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
-
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Posts API service');
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
 export const getCourseConfigApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v2/courses/`;
 export const getCourseSettingsApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
