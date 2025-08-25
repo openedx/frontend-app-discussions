@@ -3,9 +3,9 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { CurrentAppProvider } from '@openedx/frontend-base';
 import { appId } from './constants';
 import store from './store';
+import { DiscussionsHome } from './discussions';
 
 import './app.scss';
-import { DiscussionsHome } from './discussions';
 
 const App = () => (
   <CurrentAppProvider appId={appId}>
