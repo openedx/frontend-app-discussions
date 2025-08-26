@@ -15,9 +15,9 @@ import timeLocale from './time-locale';
 
 const EndorsedAlertBanner = ({
   endorsed,
-  endorsedAt,
-  endorsedBy,
-  endorsedByLabel,
+  endorsedAt = null,
+  endorsedBy = null,
+  endorsedByLabel = null,
 }) => {
   timeago.register('time-locale', timeLocale);
 
@@ -69,12 +69,6 @@ EndorsedAlertBanner.propTypes = {
   endorsedAt: PropTypes.string,
   endorsedBy: PropTypes.string,
   endorsedByLabel: PropTypes.string,
-};
-
-EndorsedAlertBanner.defaultProps = {
-  endorsedAt: null,
-  endorsedBy: null,
-  endorsedByLabel: null,
 };
 
 export default React.memo(EndorsedAlertBanner);

@@ -9,13 +9,13 @@ import { useIntl } from '@openedx/frontend-base';
 import messages from './messages';
 
 const BreadcrumbDropdown = ({
-  currentItem,
+  currentItem = null,
   showAllPath,
   items,
   itemPathFunc,
   itemLabelFunc,
   itemActiveFunc,
-  itemFilterFunc,
+  itemFilterFunc = null,
 }) => {
   const intl = useIntl();
   const showAllMsg = intl.formatMessage(messages.showAll);
@@ -69,11 +69,6 @@ BreadcrumbDropdown.propTypes = {
   itemLabelFunc: PropTypes.func.isRequired,
   itemActiveFunc: PropTypes.func.isRequired,
   itemFilterFunc: PropTypes.func,
-};
-
-BreadcrumbDropdown.defaultProps = {
-  currentItem: null,
-  itemFilterFunc: null,
 };
 
 export default React.memo(BreadcrumbDropdown);

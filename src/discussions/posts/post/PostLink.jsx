@@ -19,9 +19,9 @@ import { PostAvatar } from './PostHeader';
 import PostSummaryFooter from './PostSummaryFooter';
 
 const PostLink = ({
-  idx,
+  idx = -1,
   postId,
-  showDivider,
+  showDivider = true,
 }) => {
   const intl = useIntl();
   const { search } = useLocation();
@@ -158,11 +158,6 @@ PostLink.propTypes = {
   idx: PropTypes.number,
   postId: PropTypes.string.isRequired,
   showDivider: PropTypes.bool,
-};
-
-PostLink.defaultProps = {
-  idx: -1,
-  showDivider: true,
 };
 
 export default React.memo(PostLink);

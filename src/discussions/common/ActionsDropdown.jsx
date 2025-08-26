@@ -20,9 +20,9 @@ import { useActions } from '../utils';
 const ActionsDropdown = ({
   actionHandlers,
   contentType,
-  disabled,
-  dropDownIconSize,
-  iconSize,
+  disabled = false,
+  dropDownIconSize = false,
+  iconSize = 'sm',
   id,
 }) => {
   const buttonRef = useRef();
@@ -120,12 +120,6 @@ ActionsDropdown.propTypes = {
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
   contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
-};
-
-ActionsDropdown.defaultProps = {
-  disabled: false,
-  iconSize: 'sm',
-  dropDownIconSize: false,
 };
 
 export default ActionsDropdown;

@@ -7,7 +7,7 @@ import DiscussionContext from '../../../common/context';
 import CommentEditor from './CommentEditor';
 
 const ResponseEditor = ({
-  addWrappingDiv,
+  addWrappingDiv = false,
   handleCloseEditor,
   addingResponse,
 }) => {
@@ -32,10 +32,6 @@ ResponseEditor.propTypes = {
   addWrappingDiv: PropTypes.bool,
   handleCloseEditor: PropTypes.func.isRequired,
   addingResponse: PropTypes.bool.isRequired,
-};
-
-ResponseEditor.defaultProps = {
-  addWrappingDiv: false,
 };
 
 export default React.memo(ResponseEditor);

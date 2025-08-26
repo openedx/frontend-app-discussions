@@ -16,13 +16,13 @@ import timeLocale from './time-locale';
 
 const AuthorLabel = ({
   author,
-  authorLabel,
-  linkToProfile,
-  labelColor,
-  alert,
-  postCreatedAt,
-  authorToolTip,
-  postOrComment,
+  authorLabel = null,
+  linkToProfile = false,
+  labelColor = '',
+  alert = false,
+  postCreatedAt = null,
+  authorToolTip = false,
+  postOrComment = false,
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
@@ -124,16 +124,6 @@ AuthorLabel.propTypes = {
   postCreatedAt: PropTypes.string,
   authorToolTip: PropTypes.bool,
   postOrComment: PropTypes.bool,
-};
-
-AuthorLabel.defaultProps = {
-  linkToProfile: false,
-  authorLabel: null,
-  labelColor: '',
-  alert: false,
-  postCreatedAt: null,
-  authorToolTip: false,
-  postOrComment: false,
 };
 
 export default React.memo(AuthorLabel);

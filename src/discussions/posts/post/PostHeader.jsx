@@ -13,7 +13,7 @@ import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
-  author, postType, authorLabel, fromPostLink, read,
+  author, postType, authorLabel = null, fromPostLink = false, read = false,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
@@ -73,23 +73,17 @@ PostAvatar.propTypes = {
   read: PropTypes.bool,
 };
 
-PostAvatar.defaultProps = {
-  authorLabel: null,
-  fromPostLink: false,
-  read: false,
-};
-
 const PostHeader = ({
-  abuseFlagged,
+  abuseFlagged = false,
   author,
-  authorLabel,
-  closed,
+  authorLabel = null,
+  closed = false,
   createdAt,
   hasEndorsed,
-  lastEdit,
+  lastEdit = {},
   title,
   postType,
-  preview,
+  preview = false,
 }) => {
   const intl = useIntl();
   const showAnsweredBadge = preview && hasEndorsed && postType === ThreadType.QUESTION;
@@ -151,14 +145,6 @@ PostHeader.propTypes = {
     reason: PropTypes.string,
   }),
   closed: PropTypes.bool,
-};
-
-PostHeader.defaultProps = {
-  authorLabel: null,
-  preview: false,
-  abuseFlagged: false,
-  lastEdit: {},
-  closed: false,
 };
 
 export default React.memo(PostHeader);

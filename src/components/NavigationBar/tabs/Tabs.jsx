@@ -8,7 +8,7 @@ import { FormattedMessage } from '@openedx/frontend-base';
 
 import useIndexOfLastVisibleChild from './useIndexOfLastVisibleChild';
 
-const Tabs = ({ children, className, ...attrs }) => {
+const Tabs = ({ children = null, className = undefined, ...attrs }) => {
   const [
     indexOfLastVisibleChild,
     containerElementRef,
@@ -70,11 +70,6 @@ const Tabs = ({ children, className, ...attrs }) => {
 Tabs.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-};
-
-Tabs.defaultProps = {
-  children: null,
-  className: undefined,
 };
 
 export default Tabs;

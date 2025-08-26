@@ -12,9 +12,9 @@ import { discussionsPath } from '../../utils';
 import messages from '../messages';
 
 const Topic = ({
-  topic,
-  showDivider,
-  index,
+  topic = { usage_key: '' },
+  showDivider = true,
+  index = -1,
 }) => {
   const intl = useIntl();
   const { courseId } = useParams();
@@ -75,14 +75,6 @@ Topic.propTypes = {
   topic: topicShape,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
-};
-
-Topic.defaultProps = {
-  showDivider: true,
-  index: -1,
-  topic: {
-    usage_key: '',
-  },
 };
 
 export default React.memo(Topic);

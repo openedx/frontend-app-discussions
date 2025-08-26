@@ -28,9 +28,15 @@ import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
 const CommentEditor = ({
-  comment,
-  edit,
-  formClasses,
+  comment = {
+    author: null,
+    id: null,
+    lastEdit: null,
+    parentId: null,
+    rawBody: '',
+  },
+  edit = true,
+  formClasses = '',
   onCloseEditor,
 }) => {
   const {
@@ -239,18 +245,6 @@ CommentEditor.propTypes = {
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
   onCloseEditor: PropTypes.func.isRequired,
-};
-
-CommentEditor.defaultProps = {
-  edit: true,
-  comment: {
-    author: null,
-    id: null,
-    lastEdit: null,
-    parentId: null,
-    rawBody: '',
-  },
-  formClasses: '',
 };
 
 export default React.memo(CommentEditor);

@@ -17,8 +17,8 @@ import AlertBar from './AlertBar';
 
 const AlertBanner = ({
   author,
-  abuseFlagged,
-  lastEdit,
+  abuseFlagged = false,
+  lastEdit = {},
   closed,
   closedBy,
   closeReason,
@@ -82,16 +82,6 @@ AlertBanner.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-};
-
-AlertBanner.defaultProps = {
-  abuseFlagged: false,
-  closed: undefined,
-  closedBy: undefined,
-  closedByLabel: undefined,
-  closeReason: undefined,
-  editByLabel: undefined,
-  lastEdit: {},
 };
 
 export default React.memo(AlertBanner);

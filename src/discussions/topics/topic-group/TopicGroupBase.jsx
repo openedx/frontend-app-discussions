@@ -16,7 +16,7 @@ import Topic from './topic/Topic';
 const TopicGroupBase = ({
   groupId,
   groupTitle,
-  linkToGroup,
+  linkToGroup = true,
   topicsIds,
 }) => {
   const intl = useIntl();
@@ -91,10 +91,6 @@ TopicGroupBase.propTypes = {
   groupTitle: PropTypes.string.isRequired,
   topicsIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   linkToGroup: PropTypes.bool,
-};
-
-TopicGroupBase.defaultProps = {
-  linkToGroup: true,
 };
 
 export default React.memo(TopicGroupBase);

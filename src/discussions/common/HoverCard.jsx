@@ -24,10 +24,10 @@ const HoverCard = ({
   handleResponseCommentButton,
   addResponseCommentButtonMessage,
   onLike,
-  onFollow,
+  onFollow = () => null,
   voted,
   following,
-  endorseIcons,
+  endorseIcons = null,
 }) => {
   const intl = useIntl();
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -148,12 +148,6 @@ HoverCard.propTypes = {
   )),
   onFollow: PropTypes.func,
   following: PropTypes.bool,
-};
-
-HoverCard.defaultProps = {
-  onFollow: () => null,
-  endorseIcons: null,
-  following: undefined,
 };
 
 export default React.memo(HoverCard);

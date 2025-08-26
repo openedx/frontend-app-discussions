@@ -10,7 +10,7 @@ import { injectIntl, intlShape } from '@openedx/frontend-base';
 import messages from '../messages';
 
 const BackButton = ({
-  intl, path, title, loading,
+  intl, path, title, loading = false,
 }) => {
   const navigate = useNavigate();
 
@@ -39,10 +39,6 @@ BackButton.propTypes = {
   path: PropTypes.shape({}).isRequired,
   title: PropTypes.string.isRequired,
   loading: PropTypes.bool,
-};
-
-BackButton.defaultProps = {
-  loading: false,
 };
 
 export default injectIntl(BackButton);

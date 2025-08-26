@@ -18,8 +18,8 @@ import messages from './messages';
 const PostFooter = ({
   closed,
   following,
-  groupId,
-  groupName,
+  groupId = null,
+  groupName = null,
   id,
   userHasModerationPrivileges,
   voted,
@@ -114,11 +114,6 @@ PostFooter.propTypes = {
   groupName: PropTypes.string,
   closed: PropTypes.bool.isRequired,
   userHasModerationPrivileges: PropTypes.bool.isRequired,
-};
-
-PostFooter.defaultProps = {
-  groupId: null,
-  groupName: null,
 };
 
 export default React.memo(PostFooter);

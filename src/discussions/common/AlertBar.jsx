@@ -9,11 +9,11 @@ import messages from '../post-comments/messages';
 import AuthorLabel from './AuthorLabel';
 
 const AlertBar = ({
-  message,
-  author,
-  authorLabel,
-  labelColor,
-  reason,
+  message = '',
+  author = '',
+  authorLabel = '',
+  labelColor = '',
+  reason = '',
 }) => {
   const intl = useIntl();
 
@@ -48,14 +48,6 @@ AlertBar.propTypes = {
   authorLabel: PropTypes.string,
   labelColor: PropTypes.string,
   reason: PropTypes.string,
-};
-
-AlertBar.defaultProps = {
-  message: '',
-  author: '',
-  authorLabel: '',
-  labelColor: '',
-  reason: '',
 };
 
 export default React.memo(AlertBar);

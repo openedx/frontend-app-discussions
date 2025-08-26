@@ -16,7 +16,7 @@ import { discussionsPath } from '../../../utils';
 import { selectTopic } from '../../data/selectors';
 import messages from '../../messages';
 
-const Topic = ({ topicId, showDivider, index }) => {
+const Topic = ({ topicId, showDivider = true, index = -1 }) => {
   const intl = useIntl();
   const { search } = useLocation();
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -139,11 +139,6 @@ Topic.propTypes = {
   topicId: PropTypes.string.isRequired,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
-};
-
-Topic.defaultProps = {
-  showDivider: true,
-  index: -1,
 };
 
 export default React.memo(Topic);

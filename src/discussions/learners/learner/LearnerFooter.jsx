@@ -13,7 +13,12 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import messages from '../messages';
 
 const LearnerFooter = ({
-  inactiveFlags, activeFlags, threads, responses, replies, username,
+  inactiveFlags = 0, 
+  activeFlags = 0, 
+  threads = 0, 
+  responses = 0, 
+  replies = 0, 
+  username = '',
 }) => {
   const intl = useIntl();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -94,15 +99,6 @@ LearnerFooter.propTypes = {
   responses: PropTypes.number,
   replies: PropTypes.number,
   username: PropTypes.string,
-};
-
-LearnerFooter.defaultProps = {
-  inactiveFlags: 0,
-  activeFlags: 0,
-  threads: 0,
-  responses: 0,
-  replies: 0,
-  username: '',
 };
 
 export default React.memo(LearnerFooter);

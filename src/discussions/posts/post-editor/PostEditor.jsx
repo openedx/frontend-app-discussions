@@ -51,7 +51,7 @@ import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
 const PostEditor = ({
-  editExisting,
+  editExisting = false,
 }) => {
   const intl = useIntl();
   const navigate = useNavigate();
@@ -472,10 +472,6 @@ const PostEditor = ({
 
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,
-};
-
-PostEditor.defaultProps = {
-  editExisting: false,
 };
 
 export default React.memo(PostEditor);

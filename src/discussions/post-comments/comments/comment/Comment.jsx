@@ -36,7 +36,7 @@ import Reply from './Reply';
 
 const Comment = ({
   commentId,
-  marginBottom,
+  marginBottom = false,
   showFullThread = true,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
@@ -287,11 +287,6 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
-};
-
-Comment.defaultProps = {
-  marginBottom: false,
-  showFullThread: true,
 };
 
 export default React.memo(Comment);

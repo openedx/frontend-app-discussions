@@ -13,8 +13,8 @@ const SearchInfo = ({
   count,
   text,
   loadingStatus,
-  onClear,
-  textSearchRewrite,
+  onClear = () => { },
+  textSearchRewrite = null,
 }) => {
   const intl = useIntl();
 
@@ -48,11 +48,6 @@ SearchInfo.propTypes = {
   loadingStatus: PropTypes.string.isRequired,
   textSearchRewrite: PropTypes.string,
   onClear: PropTypes.func,
-};
-
-SearchInfo.defaultProps = {
-  onClear: () => { },
-  textSearchRewrite: null,
 };
 
 export default React.memo(SearchInfo);

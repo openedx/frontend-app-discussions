@@ -22,7 +22,10 @@ import NoResults from './NoResults';
 import { PostLink } from './post';
 
 const PostsList = ({
-  postsIds, topicsIds, isTopicTab, parentIsLoading,
+  postsIds = [], 
+  topicsIds, 
+  isTopicTab = false, 
+  parentIsLoading,
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -103,13 +106,6 @@ PostsList.propTypes = {
   topicsIds: PropTypes.arrayOf(PropTypes.string),
   isTopicTab: PropTypes.bool,
   parentIsLoading: PropTypes.bool,
-};
-
-PostsList.defaultProps = {
-  postsIds: [],
-  topicsIds: undefined,
-  isTopicTab: false,
-  parentIsLoading: undefined,
 };
 
 export default React.memo(PostsList);

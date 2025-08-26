@@ -8,7 +8,7 @@ import Topic, { topicShape } from './Topic';
 
 const ArchivedBaseGroup = ({
   archivedTopics,
-  showDivider,
+  showDivider = false,
 }) => {
   const intl = useIntl();
 
@@ -46,7 +46,4 @@ ArchivedBaseGroup.propTypes = {
   showDivider: PropTypes.bool,
 };
 
-ArchivedBaseGroup.defaultProps = {
-  showDivider: false,
-};
 export default React.memo(ArchivedBaseGroup);

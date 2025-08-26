@@ -42,11 +42,4 @@ EmptyPage.propTypes = {
   fullWidth: propTypes.bool,
 };
 
-EmptyPage.defaultProps = {
-  subTitle: null,
-  action: null,
-  fullWidth: false,
-  actionText: null,
-};
-
 export default React.memo(EmptyPage);

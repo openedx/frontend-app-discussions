@@ -13,9 +13,9 @@ const Confirmation = ({
   description,
   onClose,
   confirmAction,
-  closeButtonVariant,
-  confirmButtonVariant,
-  confirmButtonText,
+  closeButtonVariant = 'default',
+  confirmButtonVariant = 'primary',
+  confirmButtonText = '',
 }) => {
   const intl = useIntl();
 
@@ -52,12 +52,6 @@ Confirmation.propTypes = {
   closeButtonVariant: PropTypes.string,
   confirmButtonVariant: PropTypes.string,
   confirmButtonText: PropTypes.string,
-};
-
-Confirmation.defaultProps = {
-  closeButtonVariant: 'default',
-  confirmButtonVariant: 'primary',
-  confirmButtonText: '',
 };
 
 export default React.memo(Confirmation);
