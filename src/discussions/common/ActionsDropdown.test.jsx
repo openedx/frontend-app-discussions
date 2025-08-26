@@ -242,6 +242,25 @@ describe('ActionsDropdown', () => {
     await waitFor(() => expect(screen.queryByText('Copy link')).not.toBeInTheDocument());
   });
 
+  it('should close the dropdown when pressing escape', async () => {
+    const discussionObject = buildTestContent({ editable_fields: ['copy_link'] }).discussion;
+    await mockThreadAndComment(discussionObject);
+    renderComponent({ ...camelCaseObject(discussionObject) });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument());
+
+    await act(async () => {
+      fireEvent.keyDown(document.body, { key: 'Escape', code: 'Escape' });
+    });
+
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Copy link' })).toBeNull());
+  });
+
   describe.each(canPerformActionTestData)('Actions', ({
     testFor, action, label, ...commentOrPost
   }) => {

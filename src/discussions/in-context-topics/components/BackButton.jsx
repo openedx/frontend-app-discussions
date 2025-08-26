@@ -1,17 +1,19 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Icon, IconButton, Spinner } from '@openedx/paragon';
 import { ArrowBack } from '@openedx/paragon/icons';
 import { useNavigate } from 'react-router-dom';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 
 import messages from '../messages';
 
 const BackButton = ({
-  intl, path, title, loading,
+  path,
+  title,
+  loading,
 }) => {
+  const intl = useIntl();
   const navigate = useNavigate();
 
   return (
@@ -35,7 +37,6 @@ const BackButton = ({
 };
 
 BackButton.propTypes = {
-  intl: intlShape.isRequired,
   path: PropTypes.shape({}).isRequired,
   title: PropTypes.string.isRequired,
   loading: PropTypes.bool,
@@ -45,4 +46,4 @@ BackButton.defaultProps = {
   loading: false,
 };
 
-export default injectIntl(BackButton);
+export default BackButton;
