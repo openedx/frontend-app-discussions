@@ -2,7 +2,7 @@ import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@ope
 
 import { ThreadType } from '../../../data/constants';
 
-export const getCommentsApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/comments/`;
+export const getCommentsApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v1/comments/`;
 
 /**
  * Returns all the comments for the specified thread.

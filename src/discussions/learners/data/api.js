@@ -2,8 +2,8 @@ import snakeCase from 'lodash/snakeCase';
 
 import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
-export const getCoursesApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
-export const getUserProfileApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/user/v1/accounts`;
+export const getCoursesApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v1/courses/`;
+export const getUserProfileApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/user/v1/accounts`;
 export const learnerPostsApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/learner/`;
 export const learnersApiUrl = (courseId) => `${getCoursesApiUrl()}${courseId}/activity_stats/`;
 

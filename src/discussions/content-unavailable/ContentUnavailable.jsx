@@ -20,7 +20,7 @@ const ContentUnavailable = ({ subTitleMessage }) => {
   const { courseId } = useSelector(selectCourseTabs);
 
   const redirectToDashboard = useCallback(() => {
-    window.location.replace(`${getSiteConfig().LMS_BASE_URL}/courses/${courseId}/about`);
+    window.location.replace(`${getSiteConfig().lmsBaseUrl}/courses/${courseId}/about`);
   }, [courseId]);
 
   return (

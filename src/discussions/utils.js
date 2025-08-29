@@ -236,7 +236,7 @@ export function postMessageToParent(type, payload = {}) {
   if (window.parent !== window) {
     const messageTargets = [
       getSiteConfig().LEARNING_BASE_URL,
-      getSiteConfig().LMS_BASE_URL,
+      getSiteConfig().lmsBaseUrl,
     ];
     messageTargets.forEach(target => {
       window.parent.postMessage(

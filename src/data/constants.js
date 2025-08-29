@@ -1,6 +1,6 @@
 import { getSiteConfig } from '@openedx/frontend-base';
 
-export const getApiBaseUrl = () => getSiteConfig().LMS_BASE_URL;
+export const getApiBaseUrl = () => getSiteConfig().lmsBaseUrl;
 export const getFullUrl = (path) => (
   new URL(`${getSiteConfig().PUBLIC_PATH.replace(/\/$/, '')}/${path}`, window.location.origin).href
 );

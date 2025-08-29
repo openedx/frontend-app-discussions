@@ -199,7 +199,7 @@ const Post = ({ handleAddResponseButton }) => {
             destination={topicContext ? (
               topicContext.unitLink
             ) : (
-              `${getSiteConfig().BASE_URL}/${courseId}/topics/${topicId}`
+              `${getSiteConfig().baseUrl}/${courseId}/topics/${topicId}`
             )}
           >
             {(topicContext && !topic) ? (

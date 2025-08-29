@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
 // create constant for the API URL
-export const getDiscussionTourUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/user_tours/discussion_tours/`;
+export const getDiscussionTourUrl = () => `${getSiteConfig().lmsBaseUrl}/api/user_tours/discussion_tours/`;
 
 /**
  * getDiscussionTours

@@ -1,7 +1,7 @@
 import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
-export const getCourseConfigApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v2/courses/`;
-export const getCourseSettingsApiUrl = () => `${getSiteConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
+export const getCourseConfigApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v2/courses/`;
+export const getCourseSettingsApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v1/courses/`;
 export const getDiscussionsConfigUrl = (courseId) => `${getCourseConfigApiUrl()}${courseId}/`;
 export const getDiscussionsSettingsUrl = (courseId) => `${getCourseSettingsApiUrl()}${courseId}/settings`;
 /**
