@@ -75,7 +75,7 @@ const HoverCard = ({
                 const actionFunction = actionHandlers[endorseIcons.action];
                 actionFunction();
               }}
-              className={['endorse', 'unendorse'].includes(endorseIcons.id) ? 'text-dark-500' : 'text-success-500'}
+              className="text-primary"
               size="sm"
               alt="Endorse"
             />
