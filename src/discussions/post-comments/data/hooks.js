@@ -152,6 +152,7 @@ export const useDraftContent = () => {
   };
 
   const removeItem = (draftData, objId) => {
+    /* eslint-disable-next-line @typescript-eslint/naming-convention */
     const { [objId]: _, ...newDraftData } = draftData;
     return newDraftData;
   };
