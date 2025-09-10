@@ -1,9 +1,7 @@
 import React, {
   useCallback, useMemo, useRef, useState,
 } from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
 
 import {
   Button, Dropdown, Icon, IconButton, ModalPopup, useToggle,
@@ -29,28 +27,29 @@ const ActionsDropdown = ({
 }) => {
   const buttonRef = useRef();
   const intl = useIntl();
-  const location = useLocation();
   const [isOpen, open, close] = useToggle(false);
   const [target, setTarget] = useState(null);
   const isPostingEnabled = useSelector(selectIsPostingEnabled);
   const actions = useActions(contentType, id);
-  
+
   // Check if we're in in-context sidebar mode
-  const enableInContextSidebar = Boolean(new URLSearchParams(location.search).get('inContextSidebar') !== null);
+  const isInContextSidebar = useMemo(() => (
+    typeof window !== 'undefined' && window.location.search.includes('inContextSidebar')
+  ), []);
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
-    if (actionFunction) {
-      actionFunction();
-    } else {
-      logError(`Unknown or unimplemented action ${action}`);
-    }
+    // eslint-disable-next-line no-unused-expressions
+    actionFunction ? actionFunction() : logError(`Unknown or unimplemented action ${action}`);
   }, [actionHandlers]);
 
   // Find and remove edit action if in Posting is disabled.
   useMemo(() => {
     if (!isPostingEnabled) {
-      actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
+      const editIndex = actions.findIndex(action => action.id === 'edit');
+      if (editIndex !== -1) {
+        actions.splice(editIndex, 1);
+      }
     }
   }, [actions, isPostingEnabled]);
 
@@ -65,7 +64,6 @@ const ActionsDropdown = ({
     setTarget(null);
   }, [close]);
 
-  // Common dropdown content
   const dropdownContent = (
     <div
       className="bg-white shadow d-flex flex-column mt-1"
@@ -110,35 +108,16 @@ const ActionsDropdown = ({
         ref={buttonRef}
         iconClassNames={dropDownIconSize ? 'dropdown-icon-dimensions' : ''}
       />
-      {enableInContextSidebar && isOpen && target ? (
-        ReactDOM.createPortal(
-          <div style={{ position: 'fixed', inset: 0, zIndex: 9998 }} onClick={onCloseModal}>
-            <div style={{
-              position: 'fixed',
-              top: target.getBoundingClientRect().bottom + 4,
-              left: target.getBoundingClientRect().left - 150,
-              zIndex: 9999,
-              minWidth: '195px',
-              borderRadius: '4px',
-              border: '1px solid #e9e6e4',
-            }}>
-              {dropdownContent}
-            </div>
-          </div>,
-          document.body
-        )
-      ) : (
-        <div className="actions-dropdown">
-          <ModalPopup
-            onClose={onCloseModal}
-            positionRef={target}
-            isOpen={isOpen}
-            placement="bottom-end"
-          >
-            {dropdownContent}
-          </ModalPopup>
-        </div>
-      )}
+      <div className={`actions-dropdown ${isInContextSidebar ? 'in-context-sidebar' : ''}`}>
+        <ModalPopup
+          onClose={onCloseModal}
+          positionRef={target}
+          isOpen={isOpen}
+          placement="bottom-end"
+        >
+          {dropdownContent}
+        </ModalPopup>
+      </div>
     </>
   );
 };
