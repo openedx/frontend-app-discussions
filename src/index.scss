@@ -366,6 +366,11 @@ header {
   z-index: 1;
 }
 
+.actions-dropdown.in-context-sidebar {
+  position: fixed !important;
+  z-index: 10 !important;
+}
+
 .discussion-topic-group:last-of-type .divider {
   display: none;
 }
