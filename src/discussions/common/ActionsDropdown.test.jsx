@@ -28,7 +28,6 @@ import ActionsDropdown from './ActionsDropdown';
 import '../post-comments/data/__factories__';
 import '../posts/data/__factories__';
 
-// Mock the logError function but keep the rest of the logging module
 jest.mock('@edx/frontend-platform/logging', () => ({
   ...jest.requireActual('@edx/frontend-platform/logging'),
   logError: jest.fn(),
@@ -312,7 +311,6 @@ describe('ActionsDropdown', () => {
   });
 
   it('applies in-context-sidebar class when inContextSidebar is in URL', async () => {
-    // Mock window.location.search to include inContextSidebar
     const originalLocation = window.location;
     delete window.location;
     window.location = { ...originalLocation, search: '?inContextSidebar=true' };
@@ -327,16 +325,13 @@ describe('ActionsDropdown', () => {
       fireEvent.click(openButton);
     });
 
-    // Check that the dropdown has the in-context-sidebar class
     const dropdown = screen.getByTestId('actions-dropdown-modal-popup').closest('.actions-dropdown');
     expect(dropdown).toHaveClass('in-context-sidebar');
 
-    // Restore window.location
     window.location = originalLocation;
   });
 
   it('does not apply in-context-sidebar class when inContextSidebar is not in URL', async () => {
-    // Ensure window.location.search does not include inContextSidebar
     const originalLocation = window.location;
     delete window.location;
     window.location = { ...originalLocation, search: '' };
@@ -351,49 +346,33 @@ describe('ActionsDropdown', () => {
       fireEvent.click(openButton);
     });
 
-    // Check that the dropdown does not have the in-context-sidebar class
     const dropdown = screen.getByTestId('actions-dropdown-modal-popup').closest('.actions-dropdown');
     expect(dropdown).not.toHaveClass('in-context-sidebar');
 
-    // Restore window.location
     window.location = originalLocation;
   });
 
   it('handles SSR environment when window is undefined', () => {
-    // This is a comprehensive test that covers the SSR case
-    // Since we can't actually delete window in jsdom, we'll test the equivalent logic directly
-
-    // The problematic line 40 is: return false;
-    // This is inside a useMemo that checks: if (typeof window !== 'undefined')
-    // When window is undefined (SSR), it should return false
-
     const testSSRLogic = () => {
-      // This simulates the exact logic in the component
       if (typeof window !== 'undefined') {
         return window.location.search.includes('inContextSidebar');
       }
-      return false; // This is the line we need to cover
+      return false;
     };
 
-    // Store original window reference
     const originalWindow = global.window;
     const originalProcess = global.process;
 
     try {
-      // Temporarily redefine how typeof operates for window by removing window
-      // from global scope in a way that typeof will see it as undefined
       delete global.window;
 
-      // Verify that typeof window is now undefined
       const result = testSSRLogic();
       expect(result).toBe(false);
 
-      // Also test that when window exists, it works normally
       global.window = originalWindow;
       const resultWithWindow = testSSRLogic();
-      expect(resultWithWindow).toBe(false); // false because search doesn't have inContextSidebar
+      expect(resultWithWindow).toBe(false);
     } finally {
-      // Always restore
       global.window = originalWindow;
       global.process = originalProcess;
     }
@@ -403,13 +382,11 @@ describe('ActionsDropdown', () => {
     const discussionObject = buildTestContent().discussion;
     await mockThreadAndComment(discussionObject);
 
-    // Clear any previous calls to logError
     logError.mockClear();
 
     renderComponent({
       ...discussionObject,
       actionHandlers: {
-        // Include some handlers but not COPY_LINK to trigger the logError path
         [ContentActions.EDIT_CONTENT]: jest.fn(),
       },
     });
@@ -419,30 +396,25 @@ describe('ActionsDropdown', () => {
       fireEvent.click(openButton);
     });
 
-    // Click on the copy link action which doesn't have a handler to trigger the unknown handler path
     const copyLinkButton = await screen.findByText('Copy link');
     await act(async () => {
       fireEvent.click(copyLinkButton);
     });
 
-    // The logError should have been called with the expected message
     expect(logError).toHaveBeenCalledWith('Unknown or unimplemented action copy_link');
   });
 
   describe('posting restrictions', () => {
     it('removes edit action when posting is disabled', async () => {
-      // Create a discussion with edit action available
       const discussionObject = buildTestContent({
         editable_fields: ['raw_body'],
       }).discussion;
 
       await mockThreadAndComment(discussionObject);
 
-      // Mock course config with posting disabled
       axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
         .reply(200, { isPostingEnabled: false });
 
-      // Refresh the course config in the store
       await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 
       renderComponent({ ...discussionObject });
@@ -452,25 +424,21 @@ describe('ActionsDropdown', () => {
         fireEvent.click(openButton);
       });
 
-      // Verify that the edit action is NOT present in the dropdown
       await waitFor(() => {
         expect(screen.queryByText('Edit')).not.toBeInTheDocument();
       });
     });
 
     it('keeps edit action when posting is enabled', async () => {
-      // Create a discussion with edit action available
       const discussionObject = buildTestContent({
         editable_fields: ['raw_body'],
       }).discussion;
 
       await mockThreadAndComment(discussionObject);
 
-      // Mock course config with posting enabled (this is the default, but let's be explicit)
       axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
         .reply(200, { isPostingEnabled: true });
 
-      // Refresh the course config in the store
       await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
 
       renderComponent({ ...discussionObject });
@@ -480,7 +448,6 @@ describe('ActionsDropdown', () => {
         fireEvent.click(openButton);
       });
 
-      // Verify that the edit action IS present in the dropdown
       await waitFor(() => {
         expect(screen.queryByText('Edit')).toBeInTheDocument();
       });
