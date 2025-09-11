@@ -39,17 +39,17 @@ const ActionsDropdown = ({
 
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
-    // eslint-disable-next-line no-unused-expressions
-    actionFunction ? actionFunction() : logError(`Unknown or unimplemented action ${action}`);
+    if (actionFunction) {
+      actionFunction();
+    } else {
+      logError(`Unknown or unimplemented action ${action}`);
+    }
   }, [actionHandlers]);
 
   // Find and remove edit action if in Posting is disabled.
   useMemo(() => {
     if (!isPostingEnabled) {
-      const editIndex = actions.findIndex(action => action.id === 'edit');
-      if (editIndex !== -1) {
-        actions.splice(editIndex, 1);
-      }
+      actions.splice(actions.findIndex(action => action.id === 'edit'), 1);
     }
   }, [actions, isPostingEnabled]);
 
