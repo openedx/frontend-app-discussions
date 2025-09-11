@@ -32,6 +32,18 @@ import '../in-context-topics/data/__factories__/inContextTopics.factory';
 import '../topics/data/__factories__/topics.factory';
 import '../../components/NavigationBar/data/__factories__/navigationBar.factory';
 
+jest.mock('@edx/frontend-component-header', () => {
+  // eslint-disable-next-line global-require
+  const React = require('react');
+
+  return {
+    __esModule: true,
+    StudioHeader: () => React.createElement('header', { role: 'banner', 'data-testid': 'mock-studio-header' }),
+    LearningHeader: () => React.createElement('header', { role: 'banner', 'data-testid': 'mock-learning-header' }),
+    default: () => null,
+  };
+});
+
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
 let store;
