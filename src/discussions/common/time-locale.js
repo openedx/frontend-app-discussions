@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 export default function timeLocale(number, index, totalSec) {
   return [
     ['just now', 'right now'],
