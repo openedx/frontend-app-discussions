@@ -152,7 +152,7 @@ export const useDraftContent = () => {
   };
 
   const removeItem = (draftData, objId) => {
-    const { [objId]: _, ...newDraftData } = draftData;
+    const { [objId]: omit, ...newDraftData } = draftData;
     return newDraftData;
   };
 
