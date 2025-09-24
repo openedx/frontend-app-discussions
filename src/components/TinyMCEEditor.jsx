@@ -4,7 +4,7 @@ import { ActionRow, AlertModal, Button } from '@openedx/paragon';
 import { Editor } from '@tinymce/tinymce-react';
 import { useLocation, useParams } from 'react-router-dom';
 // TinyMCE so the global var exists
-// eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars, import/no-extraneous-dependencies */
 import tinymce from 'tinymce/tinymce';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
