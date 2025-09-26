@@ -13,11 +13,11 @@ import { selectUserHasModerationPrivileges, selectUserIsGroupTa } from '../../da
 import messages from '../messages';
 
 const LearnerFooter = ({
-  inactiveFlags = 0, 
-  activeFlags = 0, 
-  threads = 0, 
-  responses = 0, 
-  replies = 0, 
+  inactiveFlags = 0,
+  activeFlags = 0,
+  threads = 0,
+  responses = 0,
+  replies = 0,
   username = '',
 }) => {
   const intl = useIntl();

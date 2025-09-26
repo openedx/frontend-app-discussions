@@ -22,9 +22,9 @@ import NoResults from './NoResults';
 import { PostLink } from './post';
 
 const PostsList = ({
-  postsIds = [], 
-  topicsIds, 
-  isTopicTab = false, 
+  postsIds = [],
+  topicsIds,
+  isTopicTab = false,
   parentIsLoading,
 }) => {
   const intl = useIntl();
