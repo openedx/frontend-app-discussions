@@ -1,7 +1,7 @@
-@use "~@edx/brand/paragon/fonts.scss";
-@use "~@edx/brand/paragon/variables.scss";
-@use "~@openedx/paragon/scss/core/core.scss" as paragon;
-@use "~@edx/brand/paragon/overrides.scss";
+@use "~@edx/brand/paragon/fonts";
+@use "~@edx/brand/paragon/variables";
+@use "~@openedx/paragon/scss/core/core" as paragon;
+@use "~@edx/brand/paragon/overrides";
 
 $fa-font-path: "~font-awesome/fonts";
 @use "~font-awesome/scss/font-awesome";
