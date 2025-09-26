@@ -32,6 +32,11 @@ const ActionsDropdown = ({
   const isPostingEnabled = useSelector(selectIsPostingEnabled);
   const actions = useActions(contentType, id);
 
+  // Check if we're in in-context sidebar mode
+  const isInContextSidebar = useMemo(() => (
+    typeof window !== 'undefined' && window.location.search.includes('inContextSidebar')
+  ), []);
+
   const handleActions = useCallback((action) => {
     const actionFunction = actionHandlers[action];
     if (actionFunction) {
@@ -59,6 +64,38 @@ const ActionsDropdown = ({
     setTarget(null);
   }, [close]);
 
+  const dropdownContent = (
+    <div
+      className="bg-white shadow d-flex flex-column mt-1"
+      data-testid="actions-dropdown-modal-popup"
+    >
+      {actions.map(action => (
+        <React.Fragment key={action.id}>
+          {(action.action === ContentActions.DELETE) && <Dropdown.Divider />}
+          <Dropdown.Item
+            as={Button}
+            variant="tertiary"
+            size="inline"
+            onClick={() => {
+              close();
+              handleActions(action.action);
+            }}
+            className="d-flex justify-content-start actions-dropdown-item"
+            data-testId={action.id}
+          >
+            <Icon
+              src={action.icon}
+              className="icon-size-24"
+            />
+            <span className="font-weight-normal ml-2">
+              {intl.formatMessage(action.label)}
+            </span>
+          </Dropdown.Item>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <IconButton
@@ -71,42 +108,14 @@ const ActionsDropdown = ({
         ref={buttonRef}
         iconClassNames={dropDownIconSize ? 'dropdown-icon-dimensions' : ''}
       />
-      <div className="actions-dropdown">
+      <div className={`actions-dropdown ${isInContextSidebar ? 'in-context-sidebar' : ''}`}>
         <ModalPopup
           onClose={onCloseModal}
           positionRef={target}
           isOpen={isOpen}
           placement="bottom-end"
         >
-          <div
-            className="bg-white shadow d-flex flex-column mt-1"
-            data-testid="actions-dropdown-modal-popup"
-          >
-            {actions.map(action => (
-              <React.Fragment key={action.id}>
-                {(action.action === ContentActions.DELETE) && <Dropdown.Divider />}
-                <Dropdown.Item
-                  as={Button}
-                  variant="tertiary"
-                  size="inline"
-                  onClick={() => {
-                    close();
-                    handleActions(action.action);
-                  }}
-                  className="d-flex justify-content-start actions-dropdown-item"
-                  data-testId={action.id}
-                >
-                  <Icon
-                    src={action.icon}
-                    className="icon-size-24"
-                  />
-                  <span className="font-weight-normal ml-2">
-                    {intl.formatMessage(action.label)}
-                  </span>
-                </Dropdown.Item>
-              </React.Fragment>
-            ))}
-          </div>
+          {dropdownContent}
         </ModalPopup>
       </div>
     </>
