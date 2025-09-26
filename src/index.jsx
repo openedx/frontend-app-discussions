@@ -44,6 +44,7 @@ initialize({
         LEARNING_BASE_URL: process.env.LEARNING_BASE_URL,
         LEARNER_FEEDBACK_URL: process.env.LEARNER_FEEDBACK_URL,
         STAFF_FEEDBACK_URL: process.env.STAFF_FEEDBACK_URL,
+        ENABLE_PROFILE_IMAGE: process.env.ENABLE_PROFILE_IMAGE,
       }, 'DiscussionsConfig');
     },
   },
