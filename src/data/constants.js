@@ -58,8 +58,6 @@ export const ContentActions = {
   CHANGE_TOPIC: 'topic_id',
   CHANGE_TYPE: 'type',
   VOTE: 'voted',
-  DELETE_COURSE_POSTS: 'delete-course-posts',
-  DELETE_ORG_POSTS: 'delete-org-posts',
 };
 
 /**
