@@ -11,7 +11,6 @@ const configSlice = createSlice({
     userRoles: [],
     groupAtSubsection: false,
     hasModerationPrivileges: false,
-    hasBulkDeletePrivileges: false,
     isGroupTa: false,
     isCourseAdmin: false,
     isCourseStaff: false,
