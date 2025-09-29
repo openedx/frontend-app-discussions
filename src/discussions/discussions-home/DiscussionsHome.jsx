@@ -8,8 +8,6 @@ import {
   matchPath, Route, Routes, useLocation, useMatch,
 } from 'react-router-dom';
 
-// import { LearningHeader as Header } from '@edx/frontend-component-header';
-
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
@@ -81,7 +79,7 @@ const DiscussionsHome = () => {
   return (
     <Suspense fallback={(<Spinner />)}>
       <DiscussionContext.Provider value={discussionContextValue}>
-        {/* TODO verify if we can dynamically hide the Header on the new structure */}
+        {/* TODO: verify if we can dynamically hide the Header on the new structure */}
         {/* {!enableInContextSidebar && (<Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />)} */}
         <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
@@ -102,7 +100,6 @@ const DiscussionsHome = () => {
               <DiscussionsRestrictionBanner />
             </div>
           )}
-          {/* TODO: it seems the routes are being used to output stuff in specific parts of the layout */}
           {provider === DiscussionProvider.LEGACY && (
             <Suspense fallback={(<Spinner />)}>
               <Routes>
@@ -123,8 +120,6 @@ const DiscussionsHome = () => {
               </Routes>
             </Suspense>
           )}
-          {/* Valid course, not enrolled, user is a learner */}
-          {/* Show unavailable message */}
           {isCourseStatusValid(courseStatus) && (
             !isEnrolled && isUserLearner ? (
               <Suspense fallback={(<Spinner />)}>
@@ -139,7 +134,6 @@ const DiscussionsHome = () => {
                 </Routes>
               </Suspense>
             ) : (
-              // everything valid, show real app content
               <div className="d-flex flex-row position-relative">
                 <Suspense fallback={(<Spinner />)}>
                   <DiscussionSidebar displaySidebar={displaySidebar} postActionBarRef={postActionBarRef} />
@@ -180,6 +174,7 @@ const DiscussionsHome = () => {
           )}
           {!enableInContextSidebar && isEnrolled && (<DiscussionsProductTour />)}
         </main>
+        {/* TODO: verify if we can dynamically hide the Header on the new structure */}
         {/* {!enableInContextSidebar && <FooterSlot />} */}
       </DiscussionContext.Provider>
     </Suspense>
