@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { sendTrackEvent } from '@openedx/frontend-base';
 
 import FilterBar from '../../../components/FilterBar';
 import { PostsStatusFilter, ThreadType } from '../../../data/constants';
@@ -60,8 +60,8 @@ const LearnerPostFilterBar = () => {
     } else if (name === 'status') {
       if (postFilter.status !== value) {
         const postType = (value === PostsStatusFilter.UNANSWERED && ThreadType.QUESTION)
-        || (value === PostsStatusFilter.UNRESPONDED && ThreadType.DISCUSSION)
-        || postFilter.postType;
+          || (value === PostsStatusFilter.UNRESPONDED && ThreadType.DISCUSSION)
+          || postFilter.postType;
 
         dispatch(setPostFilter({
           ...postFilter,

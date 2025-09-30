@@ -5,8 +5,8 @@ import {
 } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { RequestStatus } from '../../../data/constants';
 import { initializeStore } from '../../../store';

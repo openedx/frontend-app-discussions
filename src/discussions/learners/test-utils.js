@@ -1,7 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 import { Factory } from 'rosie';
 
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
 
 import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';

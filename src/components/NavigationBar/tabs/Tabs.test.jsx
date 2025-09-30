@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
-import { initializeMockApp } from '@edx/frontend-platform';
+import { initializeMockApp } from '@openedx/frontend-base';
 
 import Tabs from './Tabs';
 import useIndexOfLastVisibleChild from './useIndexOfLastVisibleChild';

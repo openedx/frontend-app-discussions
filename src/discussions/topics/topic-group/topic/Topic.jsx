@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../../../data/constants';
 import DiscussionContext from '../../../common/context';
@@ -16,7 +16,7 @@ import { discussionsPath } from '../../../utils';
 import { selectTopic } from '../../data/selectors';
 import messages from '../../messages';
 
-const Topic = ({ topicId, showDivider, index }) => {
+const Topic = ({ topicId, showDivider = true, index = -1 }) => {
   const intl = useIntl();
   const { search } = useLocation();
   const { enableInContextSidebar } = useContext(DiscussionContext);
@@ -67,7 +67,7 @@ const Topic = ({ topicId, showDivider, index }) => {
                     })}
                   </div>
                 </Tooltip>
-                )}
+              )}
             >
               <div className="d-flex align-items-center mr-3.5">
                 <Icon src={PostOutline} className="icon-size mr-2" />
@@ -139,11 +139,6 @@ Topic.propTypes = {
   topicId: PropTypes.string.isRequired,
   showDivider: PropTypes.bool,
   index: PropTypes.number,
-};
-
-Topic.defaultProps = {
-  showDivider: true,
-  index: -1,
 };
 
 export default React.memo(Topic);

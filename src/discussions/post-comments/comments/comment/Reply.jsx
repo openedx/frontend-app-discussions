@@ -5,7 +5,7 @@ import { Avatar, useToggle } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { AvatarOutlineAndLabelColors, ContentActions } from '../../../../data/constants';

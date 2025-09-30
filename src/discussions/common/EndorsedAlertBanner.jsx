@@ -5,7 +5,7 @@ import { Alert, Icon } from '@openedx/paragon';
 import { CheckCircle, Verified } from '@openedx/paragon/icons';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../data/constants';
 import messages from '../post-comments/messages';
@@ -15,9 +15,9 @@ import timeLocale from './time-locale';
 
 const EndorsedAlertBanner = ({
   endorsed,
-  endorsedAt,
-  endorsedBy,
-  endorsedByLabel,
+  endorsedAt = null,
+  endorsedBy = null,
+  endorsedByLabel = null,
 }) => {
   timeago.register('time-locale', timeLocale);
 
@@ -69,12 +69,6 @@ EndorsedAlertBanner.propTypes = {
   endorsedAt: PropTypes.string,
   endorsedBy: PropTypes.string,
   endorsedByLabel: PropTypes.string,
-};
-
-EndorsedAlertBanner.defaultProps = {
-  endorsedAt: null,
-  endorsedBy: null,
-  endorsedByLabel: null,
 };
 
 export default React.memo(EndorsedAlertBanner);

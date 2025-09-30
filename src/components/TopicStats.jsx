@@ -6,7 +6,7 @@ import { Icon, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import { HelpOutline, PostOutline, Report } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import {
   selectUserHasModerationPrivileges,
@@ -15,9 +15,12 @@ import {
 import messages from '../discussions/in-context-topics/messages';
 
 const TopicStats = ({
-  threadCounts,
-  activeFlags,
-  inactiveFlags,
+  threadCounts = {
+    discussions: 0,
+    questions: 0,
+  },
+  activeFlags = null,
+  inactiveFlags = null,
 }) => {
   const intl = useIntl();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -100,15 +103,6 @@ TopicStats.propTypes = {
   }),
   activeFlags: PropTypes.number,
   inactiveFlags: PropTypes.number,
-};
-
-TopicStats.defaultProps = {
-  threadCounts: {
-    discussions: 0,
-    questions: 0,
-  },
-  activeFlags: null,
-  inactiveFlags: null,
 };
 
 export default React.memo(TopicStats);

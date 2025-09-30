@@ -1,15 +1,14 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useRef, useState,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Form, StatefulButton } from '@openedx/paragon';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { TinyMCEEditor } from '../../../../components';
 import FormikErrorFeedback from '../../../../components/FormikErrorFeedback';
@@ -29,9 +28,15 @@ import { addComment, editComment } from '../../data/thunks';
 import messages from '../../messages';
 
 const CommentEditor = ({
-  comment,
-  edit,
-  formClasses,
+  comment = {
+    author: null,
+    id: null,
+    lastEdit: null,
+    parentId: null,
+    rawBody: '',
+  },
+  edit = true,
+  formClasses = '',
   onCloseEditor,
 }) => {
   const {
@@ -40,7 +45,7 @@ const CommentEditor = ({
   const intl = useIntl();
   const editorRef = useRef(null);
   const formRef = useRef(null);
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { enableInContextSidebar } = useContext(DiscussionContext);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
@@ -240,18 +245,6 @@ CommentEditor.propTypes = {
   edit: PropTypes.bool,
   formClasses: PropTypes.string,
   onCloseEditor: PropTypes.func.isRequired,
-};
-
-CommentEditor.defaultProps = {
-  edit: true,
-  comment: {
-    author: null,
-    id: null,
-    lastEdit: null,
-    parentId: null,
-    rawBody: '',
-  },
-  formClasses: '',
 };
 
 export default React.memo(CommentEditor);

@@ -9,9 +9,7 @@ import {
   matchPath, useLocation, useMatch, useNavigate,
 } from 'react-router-dom';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
+import { SiteContext, getAuthenticatedUser, useIntl } from '@openedx/frontend-base';
 
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { LOADED } from '../../components/NavigationBar/data/slice';
@@ -65,7 +63,7 @@ export const useSidebarVisible = () => {
   const isThreadsEmpty = Boolean(useSelector(threadsLoadingStatus()) === RequestStatus.SUCCESSFUL && !totalThreads);
   const matchInContextTopicView = Routes.TOPICS.PATH.find((route) => matchPath({ path: `${route}/*` }, location.pathname));
   const isInContextTopicsView = Boolean(matchInContextTopicView && enableInContext);
-  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics || isViewingLearners));
+  const hideSidebar = Boolean(isThreadsEmpty && !isFiltered && !(isViewingTopics ?? isViewingLearners));
 
   if (isInContextTopicsView) {
     return true;
@@ -89,7 +87,7 @@ export function useCourseDiscussionData(courseId) {
 
 export function useCourseBlockData(courseId) {
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { isEnrolled, courseStatus } = useSelector(selectCourseTabs);
   const isUserLearner = useSelector(selectIsUserLearner);
 
@@ -186,11 +184,11 @@ export const useAlertBannerVisible = (
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsGroupTa = useSelector(selectUserIsGroupTa);
   const userIsContentAuthor = getAuthenticatedUser().username === author;
-  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsContentAuthor || userIsGroupTa);
+  const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges ?? userIsContentAuthor ?? userIsGroupTa);
   const canSeeReportedBanner = abuseFlagged;
 
   return (
-    (canSeeLastEditOrClosedAlert && (lastEdit?.reason || closed)) || (canSeeReportedBanner)
+    (canSeeLastEditOrClosedAlert && (lastEdit?.reason ?? closed)) ?? (canSeeReportedBanner)
   );
 };
 
@@ -219,9 +217,9 @@ export const useUserPostingEnabled = () => {
   const isPostingEnabled = useSelector(selectIsPostingEnabled);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const isUserGroupTA = useSelector(selectUserIsGroupTa);
-  const isPrivileged = userHasModerationPrivileges || isUserGroupTA;
+  const isPrivileged = userHasModerationPrivileges ?? isUserGroupTA;
 
-  return (isPostingEnabled || isPrivileged);
+  return (isPostingEnabled ?? isPrivileged);
 };
 
 function camelToConstant(string) {

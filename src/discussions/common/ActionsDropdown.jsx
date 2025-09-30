@@ -9,8 +9,8 @@ import {
 import { MoreHoriz } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { logError } from '@edx/frontend-platform/logging';
+import { useIntl } from '@openedx/frontend-base';
+import { logError } from '@openedx/frontend-base';
 
 import { ContentActions } from '../../data/constants';
 import { selectIsPostingEnabled } from '../data/selectors';
@@ -20,9 +20,9 @@ import { useActions } from '../utils';
 const ActionsDropdown = ({
   actionHandlers,
   contentType,
-  disabled,
-  dropDownIconSize,
-  iconSize,
+  disabled = false,
+  dropDownIconSize = false,
+  iconSize = 'sm',
   id,
 }) => {
   const buttonRef = useRef();
@@ -120,12 +120,6 @@ ActionsDropdown.propTypes = {
   iconSize: PropTypes.string,
   dropDownIconSize: PropTypes.bool,
   contentType: PropTypes.oneOf(['POST', 'COMMENT']).isRequired,
-};
-
-ActionsDropdown.defaultProps = {
-  disabled: false,
-  iconSize: 'sm',
-  dropDownIconSize: false,
 };
 
 export default ActionsDropdown;

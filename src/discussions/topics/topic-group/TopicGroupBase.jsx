@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../../data/constants';
 import DiscussionContext from '../../common/context';
@@ -16,7 +16,7 @@ import Topic from './topic/Topic';
 const TopicGroupBase = ({
   groupId,
   groupTitle,
-  linkToGroup,
+  linkToGroup = true,
   topicsIds,
 }) => {
   const intl = useIntl();
@@ -91,10 +91,6 @@ TopicGroupBase.propTypes = {
   groupTitle: PropTypes.string.isRequired,
   topicsIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   linkToGroup: PropTypes.bool,
-};
-
-TopicGroupBase.defaultProps = {
-  linkToGroup: true,
 };
 
 export default React.memo(TopicGroupBase);

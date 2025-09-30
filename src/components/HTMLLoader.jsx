@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import DOMPurify from 'dompurify';
 
-import { logError } from '@edx/frontend-platform/logging';
+import { logError } from '@openedx/frontend-base';
 
 import { useDebounce } from '../discussions/data/hooks';
 
@@ -13,7 +13,11 @@ const defaultSanitizeOptions = {
 };
 
 const HTMLLoader = ({
-  htmlNode, componentId, cssClassName, testId, delay,
+  htmlNode = '',
+  componentId = null,
+  cssClassName = '',
+  testId = '',
+  delay = 0,
 }) => {
   const sanitizedMath = DOMPurify.sanitize(htmlNode, { ...defaultSanitizeOptions });
   const previewRef = useRef(null);
@@ -53,14 +57,6 @@ HTMLLoader.propTypes = {
   cssClassName: PropTypes.string,
   testId: PropTypes.string,
   delay: PropTypes.number,
-};
-
-HTMLLoader.defaultProps = {
-  htmlNode: '',
-  componentId: null,
-  cssClassName: '',
-  testId: '',
-  delay: 0,
 };
 
 export default React.memo(HTMLLoader);

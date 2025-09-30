@@ -1,5 +1,4 @@
-import { camelCaseObject, snakeCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError, snakeCaseObject } from '@openedx/frontend-base';
 
 import {
   PostsStatusFilter, ThreadType,

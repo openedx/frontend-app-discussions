@@ -5,7 +5,7 @@ import { Avatar, Badge, Icon } from '@openedx/paragon';
 import { Question } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { AvatarOutlineAndLabelColors, ThreadType } from '../../../data/constants';
 import { AuthorLabel } from '../../common';
@@ -13,7 +13,7 @@ import { useAlertBannerVisible } from '../../data/hooks';
 import messages from './messages';
 
 export const PostAvatar = React.memo(({
-  author, postType, authorLabel, fromPostLink, read,
+  author, postType, authorLabel = null, fromPostLink = false, read = false,
 }) => {
   const outlineColor = AvatarOutlineAndLabelColors[authorLabel];
 
@@ -73,23 +73,17 @@ PostAvatar.propTypes = {
   read: PropTypes.bool,
 };
 
-PostAvatar.defaultProps = {
-  authorLabel: null,
-  fromPostLink: false,
-  read: false,
-};
-
 const PostHeader = ({
-  abuseFlagged,
+  abuseFlagged = false,
   author,
-  authorLabel,
-  closed,
+  authorLabel = null,
+  closed = false,
   createdAt,
   hasEndorsed,
-  lastEdit,
+  lastEdit = {},
   title,
   postType,
-  preview,
+  preview = false,
 }) => {
   const intl = useIntl();
   const showAnsweredBadge = preview && hasEndorsed && postType === ThreadType.QUESTION;
@@ -111,7 +105,7 @@ const PostHeader = ({
                 {title}
               </div>
               {showAnsweredBadge
-                  && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
+                && <Badge variant="success">{intl.formatMessage(messages.answered)}</Badge>}
             </div>
           ) : (
             <h5
@@ -151,14 +145,6 @@ PostHeader.propTypes = {
     reason: PropTypes.string,
   }),
   closed: PropTypes.bool,
-};
-
-PostHeader.defaultProps = {
-  authorLabel: null,
-  preview: false,
-  abuseFlagged: false,
-  lastEdit: {},
-  closed: false,
 };
 
 export default React.memo(PostHeader);

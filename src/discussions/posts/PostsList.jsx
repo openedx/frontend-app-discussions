@@ -1,13 +1,12 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { RequestStatus } from '../../data/constants';
 import DiscussionContext from '../common/context';
@@ -23,11 +22,14 @@ import NoResults from './NoResults';
 import { PostLink } from './post';
 
 const PostsList = ({
-  postsIds, topicsIds, isTopicTab, parentIsLoading,
+  postsIds = [],
+  topicsIds,
+  isTopicTab = false,
+  parentIsLoading,
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { courseId, page } = useContext(DiscussionContext);
   const loadingStatus = useSelector(threadsLoadingStatus());
   const orderBy = useSelector(selectThreadSorting());
@@ -104,13 +106,6 @@ PostsList.propTypes = {
   topicsIds: PropTypes.arrayOf(PropTypes.string),
   isTopicTab: PropTypes.bool,
   parentIsLoading: PropTypes.bool,
-};
-
-PostsList.defaultProps = {
-  postsIds: [],
-  topicsIds: undefined,
-  isTopicTab: false,
-  parentIsLoading: undefined,
 };
 
 export default React.memo(PostsList);

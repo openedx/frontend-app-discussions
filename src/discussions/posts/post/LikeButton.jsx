@@ -6,11 +6,11 @@ import {
 } from '@openedx/paragon';
 import { ThumbUpFilled, ThumbUpOutline } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from './messages';
 
-const LikeButton = ({ count, onClick, voted }) => {
+const LikeButton = ({ count, onClick, voted = false }) => {
   const intl = useIntl();
 
   const handleClick = useCallback((e) => {
@@ -50,11 +50,6 @@ LikeButton.propTypes = {
   count: PropTypes.number.isRequired,
   onClick: PropTypes.func,
   voted: PropTypes.bool,
-};
-
-LikeButton.defaultProps = {
-  voted: false,
-  onClick: undefined,
 };
 
 export default React.memo(LikeButton);

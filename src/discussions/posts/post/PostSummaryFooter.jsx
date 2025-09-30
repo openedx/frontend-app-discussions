@@ -11,7 +11,7 @@ import {
 import { useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import timeLocale from '../../common/time-locale';
 import { selectUserHasModerationPrivileges } from '../../data/selectors';
@@ -24,11 +24,11 @@ const PostSummaryFooter = ({
   following,
   commentCount,
   unreadCommentCount,
-  groupId,
-  groupName,
+  groupId = null,
+  groupName = null,
   createdAt,
-  preview,
-  showNewCountLabel,
+  preview = false,
+  showNewCountLabel = false,
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
@@ -126,13 +126,6 @@ PostSummaryFooter.propTypes = {
   createdAt: PropTypes.string.isRequired,
   preview: PropTypes.bool,
   showNewCountLabel: PropTypes.bool,
-};
-
-PostSummaryFooter.defaultProps = {
-  preview: false,
-  showNewCountLabel: false,
-  groupId: null,
-  groupName: null,
 };
 
 export default React.memo(PostSummaryFooter);

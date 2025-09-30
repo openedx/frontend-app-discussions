@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Button, Spinner } from '@openedx/paragon';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../../data/constants';
 import { useUserPostingEnabled } from '../../data/hooks';
@@ -59,54 +59,54 @@ const CommentsView = ({ threadType }) => {
 
   return (
     ((hasMorePages && isLoading) || !isLoading) && (
-    <>
-      {endorsedCommentsIds.length > 0 && (
       <>
-        {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
-        {handleComments(endorsedCommentsIds)}
-      </>
-      )}
-      {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
-      {unEndorsedCommentsIds.length > 0 && handleComments(unEndorsedCommentsIds)}
-      {hasMorePages && !isLoading && (!!unEndorsedCommentsIds.length || !!endorsedCommentsIds.length) && (
-      <Button
-        onClick={handleLoadMoreResponses}
-        variant="link"
-        block="true"
-        className="px-4 mt-3 border-0 line-height-24 py-0 mb-2 font-style font-weight-500"
-        data-testid="load-more-comments"
-      >
-        {intl.formatMessage(messages.loadMoreResponses)}
-      </Button>
-      )}
-      {isLoading && (
-      <div className="mb-2 mt-3 d-flex justify-content-center">
-        <Spinner animation="border" variant="primary" className="spinner-dimensions" />
-      </div>
-      )}
-      {(isUserPrivilegedInPostingRestriction && (!!unEndorsedCommentsIds.length || !!endorsedCommentsIds.length)
-         && !isClosed) && (
-         <div className="mx-4">
-           {!addingResponse && (
-           <Button
-             variant="plain"
-             block="true"
-             className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
+        {endorsedCommentsIds.length > 0 && (
+          <>
+            {handleDefinition(messages.endorsedResponseCount, endorsedCommentsIds.length)}
+            {handleComments(endorsedCommentsIds)}
+          </>
+        )}
+        {handleDefinition(messages.responseCount, unEndorsedCommentsIds.length)}
+        {unEndorsedCommentsIds.length > 0 && handleComments(unEndorsedCommentsIds)}
+        {hasMorePages && !isLoading && (!!unEndorsedCommentsIds.length || !!endorsedCommentsIds.length) && (
+          <Button
+            onClick={handleLoadMoreResponses}
+            variant="link"
+            block="true"
+            className="px-4 mt-3 border-0 line-height-24 py-0 mb-2 font-style font-weight-500"
+            data-testid="load-more-comments"
+          >
+            {intl.formatMessage(messages.loadMoreResponses)}
+          </Button>
+        )}
+        {isLoading && (
+          <div className="mb-2 mt-3 d-flex justify-content-center">
+            <Spinner animation="border" variant="primary" className="spinner-dimensions" />
+          </div>
+        )}
+        {(isUserPrivilegedInPostingRestriction && (!!unEndorsedCommentsIds.length || !!endorsedCommentsIds.length)
+          && !isClosed) && (
+            <div className="mx-4">
+              {!addingResponse && (
+                <Button
+                  variant="plain"
+                  block="true"
+                  className="card mb-4 px-0 border-0 py-10px mt-2 font-style font-weight-500
                     line-height-24 text-primary-500"
-             onClick={handleAddResponse}
-             data-testid="add-response"
-           >
-             {intl.formatMessage(messages.addResponse)}
-           </Button>
-           )}
-           <ResponseEditor
-             addWrappingDiv
-             addingResponse={addingResponse}
-             handleCloseEditor={handleCloseResponseEditor}
-           />
-         </div>
-      )}
-    </>
+                  onClick={handleAddResponse}
+                  data-testid="add-response"
+                >
+                  {intl.formatMessage(messages.addResponse)}
+                </Button>
+              )}
+              <ResponseEditor
+                addWrappingDiv
+                addingResponse={addingResponse}
+                handleCloseEditor={handleCloseResponseEditor}
+              />
+            </div>
+          )}
+      </>
     )
   );
 };

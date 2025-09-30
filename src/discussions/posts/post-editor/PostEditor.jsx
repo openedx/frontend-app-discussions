@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import React, {
   useCallback, useContext, useEffect, useRef,
 } from 'react';
-import PropTypes from 'prop-types';
 
 import {
   Button, Form, Spinner, StatefulButton,
@@ -13,8 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
-import { AppContext } from '@edx/frontend-platform/react';
+import { SiteContext, useIntl } from '@openedx/frontend-base';
 
 import { TinyMCEEditor } from '../../../components';
 import FormikErrorFeedback from '../../../components/FormikErrorFeedback';
@@ -36,10 +35,10 @@ import {
 } from '../../data/selectors';
 import EmptyPage from '../../empty-posts/EmptyPage';
 import {
-  selectArchivedTopics,
   selectCoursewareTopics as inContextCourseware,
   selectNonCoursewareIds as inContextCoursewareIds,
   selectNonCoursewareTopics as inContextNonCourseware,
+  selectArchivedTopics,
 } from '../../in-context-topics/data/selectors';
 import { selectCoursewareTopics, selectNonCoursewareIds, selectNonCoursewareTopics } from '../../topics/data/selectors';
 import {
@@ -52,7 +51,7 @@ import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
 const PostEditor = ({
-  editExisting,
+  editExisting = false,
 }) => {
   const intl = useIntl();
   const navigate = useNavigate();
@@ -60,7 +59,7 @@ const PostEditor = ({
   const dispatch = useDispatch();
   const editorRef = useRef(null);
   const { courseId, postId } = useParams();
-  const { authenticatedUser } = useContext(AppContext);
+  const { authenticatedUser } = useContext(SiteContext);
   const { category, enableInContextSidebar } = useContext(DiscussionContext);
   const topicId = useCurrentDiscussionTopic();
   const commentsPagePath = useCommentsPagePath();
@@ -305,13 +304,13 @@ const PostEditor = ({
                     ))
                   ))}
                   {(userIsStaff || userIsGroupTa || userHasModerationPrivileges) && (
-                  <optgroup label={intl.formatMessage(messages.archivedTopics)}>
-                    {archivedTopics.map(topic => (
-                      <option key={topic.id} value={topic.id}>
-                        {topic.name || intl.formatMessage(messages.unnamedSubTopics)}
-                      </option>
-                    ))}
-                  </optgroup>
+                    <optgroup label={intl.formatMessage(messages.archivedTopics)}>
+                      {archivedTopics.map(topic => (
+                        <option key={topic.id} value={topic.id}>
+                          {topic.name || intl.formatMessage(messages.unnamedSubTopics)}
+                        </option>
+                      ))}
+                    </optgroup>
                   )}
                 </>
               ) : (
@@ -331,23 +330,23 @@ const PostEditor = ({
             </Form.Control>
           </Form.Group>
           {canSelectCohort(values.topic) && (
-          <Form.Group className="w-100 ml-3 mb-0">
-            <Form.Control
-              className="m-0"
-              name="cohort"
-              as="select"
-              value={values.cohort}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              aria-describedby="cohortAreaInput"
-              floatingLabel={intl.formatMessage(messages.cohortVisibility)}
-            >
-              <option value="default">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
-              {cohorts.map(cohort => (
-                <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
-              ))}
-            </Form.Control>
-          </Form.Group>
+            <Form.Group className="w-100 ml-3 mb-0">
+              <Form.Control
+                className="m-0"
+                name="cohort"
+                as="select"
+                value={values.cohort}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="cohortAreaInput"
+                floatingLabel={intl.formatMessage(messages.cohortVisibility)}
+              >
+                <option value="default">{intl.formatMessage(messages.cohortVisibilityAllLearners)}</option>
+                {cohorts.map(cohort => (
+                  <option key={cohort.id} value={cohort.id}>{cohort.name}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
           )}
         </div>
         <div className="d-flex flex-row mb-4.5 justify-content-between">
@@ -371,40 +370,40 @@ const PostEditor = ({
             <FormikErrorFeedback name="title" />
           </Form.Group>
           {canDisplayEditReason && (
-          <Form.Group
-            className="w-100 ml-4 mb-0"
-            isInvalid={isFormikFieldInvalid('editReasonCode', {
-              errors,
-              touched,
-            })}
-          >
-            <Form.Control
-              name="editReasonCode"
-              className="m-0"
-              as="select"
-              value={values.editReasonCode}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              aria-describedby="editReasonCodeInput"
-              floatingLabel={intl.formatMessage(messages.editReasonCode)}
+            <Form.Group
+              className="w-100 ml-4 mb-0"
+              isInvalid={isFormikFieldInvalid('editReasonCode', {
+                errors,
+                touched,
+              })}
             >
-              <option key="empty" value="">---</option>
-              {editReasons.map(({ code, label }) => (
-                <option key={code} value={code}>{label}</option>
-              ))}
-            </Form.Control>
-            <FormikErrorFeedback name="editReasonCode" />
-          </Form.Group>
+              <Form.Control
+                name="editReasonCode"
+                className="m-0"
+                as="select"
+                value={values.editReasonCode}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                aria-describedby="editReasonCodeInput"
+                floatingLabel={intl.formatMessage(messages.editReasonCode)}
+              >
+                <option key="empty" value="">---</option>
+                {editReasons.map(({ code, label }) => (
+                  <option key={code} value={code}>{label}</option>
+                ))}
+              </Form.Control>
+              <FormikErrorFeedback name="editReasonCode" />
+            </Form.Group>
           )}
         </div>
         <div className="mb-3">
           <TinyMCEEditor
             onInit={
-                /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
-                (_, editor) => {
-                  editorRef.current = editor;
-                }
+              /* istanbul ignore next: TinyMCE is mocked so this cannot be easily tested */
+              (_, editor) => {
+                editorRef.current = editor;
               }
+            }
             id={postEditorId}
             value={values.comment}
             onEditorChange={formikCompatibleHandler(handleChange, 'comment')}
@@ -416,35 +415,35 @@ const PostEditor = ({
         <PostPreviewPanel htmlNode={values.comment} isPost editExisting={editExisting} />
         <div className="d-flex flex-row mt-n4 w-75 text-primary font-style">
           {!editExisting && (
-          <>
-            <Form.Group>
-              <Form.Checkbox
-                name="follow"
-                checked={values.follow}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="mr-4.5"
-              >
-                <span>
-                  {intl.formatMessage(messages.followPost)}
-                </span>
-              </Form.Checkbox>
-            </Form.Group>
-            {allowAnonymousToPeers && (
-            <Form.Group>
-              <Form.Checkbox
-                name="anonymousToPeers"
-                checked={values.anonymousToPeers}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              >
-                <span>
-                  {intl.formatMessage(messages.anonymousToPeersPost)}
-                </span>
-              </Form.Checkbox>
-            </Form.Group>
-            )}
-          </>
+            <>
+              <Form.Group>
+                <Form.Checkbox
+                  name="follow"
+                  checked={values.follow}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="mr-4.5"
+                >
+                  <span>
+                    {intl.formatMessage(messages.followPost)}
+                  </span>
+                </Form.Checkbox>
+              </Form.Group>
+              {allowAnonymousToPeers && (
+                <Form.Group>
+                  <Form.Checkbox
+                    name="anonymousToPeers"
+                    checked={values.anonymousToPeers}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  >
+                    <span>
+                      {intl.formatMessage(messages.anonymousToPeersPost)}
+                    </span>
+                  </Form.Checkbox>
+                </Form.Group>
+              )}
+            </>
           )}
         </div>
         <div className="d-flex justify-content-end">
@@ -473,10 +472,6 @@ const PostEditor = ({
 
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,
-};
-
-PostEditor.defaultProps = {
-  editExisting: false,
 };
 
 export default React.memo(PostEditor);

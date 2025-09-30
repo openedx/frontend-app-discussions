@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError } from '@openedx/frontend-base';
 
 import { getHttpErrorStatus } from '../discussions/utils';
 import { getCourseBlocks } from './api';
@@ -57,7 +56,7 @@ function normaliseCourseBlocks({
         } else {
           blocks[verticalId].children?.forEach(discussionId => {
             const discussion = camelCaseObject(blocks[discussionId]);
-            const { topicId } = discussion.studentViewData || {};
+            const { topicId } = discussion.studentViewData ?? {};
             if (topicId) {
               blockData[discussionId] = discussion;
               // Add this topic id to the list of topics for the current chapter, sequential, and vertical

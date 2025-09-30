@@ -10,11 +10,11 @@ import { useAlertBannerVisible } from '../../../data/hooks';
 
 const CommentHeader = ({
   author,
-  authorLabel,
+  authorLabel = null,
   abuseFlagged,
   closed,
   createdAt,
-  lastEdit,
+  lastEdit = null,
 }) => {
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
@@ -61,12 +61,6 @@ CommentHeader.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-};
-
-CommentHeader.defaultProps = {
-  authorLabel: null,
-  closed: undefined,
-  lastEdit: null,
 };
 
 export default React.memo(CommentHeader);

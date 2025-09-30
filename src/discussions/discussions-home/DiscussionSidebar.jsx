@@ -25,7 +25,7 @@ const LearnersView = lazy(() => import('../learners/LearnersView'));
 const PostsView = lazy(() => import('../posts/PostsView'));
 const LegacyTopicsView = lazy(() => import('../topics/TopicsView'));
 
-const DiscussionSidebar = ({ displaySidebar, postActionBarRef }) => {
+const DiscussionSidebar = ({ displaySidebar = false, postActionBarRef = null }) => {
   const isOnDesktop = useIsOnDesktop();
   const isOnXLDesktop = useIsOnXLDesktop();
   const isOnTablet = useIsOnTablet();
@@ -124,11 +124,6 @@ DiscussionSidebar.propTypes = {
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   ]),
-};
-
-DiscussionSidebar.defaultProps = {
-  displaySidebar: false,
-  postActionBarRef: null,
 };
 
 export default React.memo(DiscussionSidebar);

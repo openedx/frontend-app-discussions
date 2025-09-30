@@ -1,14 +1,9 @@
 import snakeCase from 'lodash.snakecase';
 
-import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Posts API service');
-
-export const getThreadsApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/threads/`;
-export const getCoursesApiUrl = () => `${getConfig().LMS_BASE_URL}/api/discussion/v1/courses/`;
+export const getThreadsApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v1/threads/`;
+export const getCoursesApiUrl = () => `${getSiteConfig().lmsBaseUrl}/api/discussion/v1/courses/`;
 
 /**
  * Fetches all the threads in the given course and topic.
@@ -45,7 +40,7 @@ export const getThreads = async (courseId, {
     courseId,
     page,
     pageSize,
-    topicId: topicIds && topicIds.join(','),
+    topicId: topicIds?.join(','),
     textSearch,
     threadType,
     orderBy: snakeCase(orderBy),

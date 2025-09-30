@@ -7,8 +7,8 @@ import { toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig } from '@openedx/frontend-base';
+import { useIntl } from '@openedx/frontend-base';
 
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions, getFullUrl } from '../../../data/constants';
@@ -199,7 +199,7 @@ const Post = ({ handleAddResponseButton }) => {
             destination={topicContext ? (
               topicContext.unitLink
             ) : (
-              `${getConfig().BASE_URL}/${courseId}/topics/${topicId}`
+              `${getSiteConfig().baseUrl}/${courseId}/topics/${topicId}`
             )}
           >
             {(topicContext && !topic) ? (

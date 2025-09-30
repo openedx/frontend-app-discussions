@@ -1,7 +1,28 @@
+import siteConfig from 'site.config';
+import {
+  mergeSiteConfig, addAppConfigs, configureLogging, getSiteConfig, configureAuth, MockLoggingService, MockAuthService
+} from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
 import '@testing-library/jest-dom/extend-expect';
 import 'babel-polyfill';
+
+mergeSiteConfig(siteConfig);
+addAppConfigs();
+
+export function initializeMockServices() {
+  const loggingService = configureLogging(MockLoggingService, {
+    config: getSiteConfig(),
+  });
+
+  const authService = configureAuth(MockAuthService, {
+    config: getSiteConfig(),
+    loggingService,
+  });
+
+  return { authService, loggingService };
+}
+
 
 // mock methods which are not implemented in JSDOM:
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom

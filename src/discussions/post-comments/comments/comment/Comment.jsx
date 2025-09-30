@@ -7,7 +7,7 @@ import { Button, useToggle } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';
@@ -36,7 +36,7 @@ import Reply from './Reply';
 
 const Comment = ({
   commentId,
-  marginBottom,
+  marginBottom = false,
   showFullThread = true,
 }) => {
   const comment = useSelector(selectCommentOrResponseById(commentId));
@@ -287,11 +287,6 @@ Comment.propTypes = {
   commentId: PropTypes.string.isRequired,
   marginBottom: PropTypes.bool,
   showFullThread: PropTypes.bool,
-};
-
-Comment.defaultProps = {
-  marginBottom: false,
-  showFullThread: true,
 };
 
 export default React.memo(Comment);

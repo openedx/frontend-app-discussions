@@ -3,7 +3,7 @@ import React, { useContext, useMemo } from 'react';
 import { Nav } from '@openedx/paragon';
 import { matchPath, NavLink, useLocation } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../../data/constants';
 import DiscussionContext from '../../common/context';

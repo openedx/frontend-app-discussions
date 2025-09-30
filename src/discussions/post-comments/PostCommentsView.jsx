@@ -6,7 +6,7 @@ import { Button, Icon, IconButton } from '@openedx/paragon';
 import { ArrowBack } from '@openedx/paragon/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import Spinner from '../../components/Spinner';
 import { PostsPages } from '../../data/constants';

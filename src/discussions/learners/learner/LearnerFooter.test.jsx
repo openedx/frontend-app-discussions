@@ -3,8 +3,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { initializeStore } from '../../../store';
 import messages from '../messages';

@@ -3,7 +3,7 @@ import React, { useCallback, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import DiscussionContext from '../../common/context';
 import { useIsOnTablet } from '../../data/hooks';

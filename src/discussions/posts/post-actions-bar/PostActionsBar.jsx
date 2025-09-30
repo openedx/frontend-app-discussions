@@ -7,7 +7,7 @@ import { Close } from '@openedx/paragon/icons';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import Search from '../../../components/Search';
 import { RequestStatus } from '../../../data/constants';

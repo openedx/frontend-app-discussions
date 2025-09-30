@@ -5,7 +5,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { sendTrackEvent } from '@openedx/frontend-base';
 
 import { EndorsementStatus } from '../../../data/constants';
 import useDispatchWithState from '../../../data/hooks';
@@ -39,7 +39,7 @@ export function usePost(postId) {
     }
   }, [postId]);
 
-  return thread || {};
+  return thread ?? {};
 }
 
 export function usePostComments(threadType) {
@@ -120,18 +120,18 @@ export const useDraftContent = () => {
 
   const addDraftContent = (content, parentId, id, threadId) => {
     const data = parentId ? comments : responses;
-    const draftParentId = parentId || threadId;
+    const draftParentId = parentId ?? threadId;
     const isComment = !!parentId;
     const existingObj = getObjectByParentId(data, draftParentId, isComment, id);
     const newObject = existingObj
       ? { ...existingObj, content }
       : {
-        threadId,
-        content,
-        parentId,
-        id: id || uuidv4(),
-        isNewContent: !id,
-      };
+          threadId,
+          content,
+          parentId,
+          id: id ?? uuidv4(),
+          isNewContent: !id,
+        };
 
     const updatedComments = parentId ? updateDraftData(comments, newObject) : comments;
     const updatedResponses = !parentId ? updateDraftData(responses, newObject) : responses;
@@ -145,7 +145,7 @@ export const useDraftContent = () => {
     }
 
     const data = parentId ? comments : responses;
-    const draftParentId = parentId || threadId;
+    const draftParentId = parentId ?? threadId;
     const isComment = !!parentId;
 
     return getObjectByParentId(data, draftParentId, isComment, id)?.content;

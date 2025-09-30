@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../messages';
 
@@ -13,9 +13,9 @@ const Confirmation = ({
   description,
   onClose,
   confirmAction,
-  closeButtonVariant,
-  confirmButtonVariant,
-  confirmButtonText,
+  closeButtonVariant = 'default',
+  confirmButtonVariant = 'primary',
+  confirmButtonText = '',
 }) => {
   const intl = useIntl();
 
@@ -35,7 +35,7 @@ const Confirmation = ({
             {intl.formatMessage(messages.confirmationCancel)}
           </ModalDialog.CloseButton>
           <Button variant={confirmButtonVariant} onClick={confirmAction}>
-            { confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
+            {confirmButtonText || intl.formatMessage(messages.confirmationConfirm)}
           </Button>
         </ActionRow>
       </ModalDialog.Footer>
@@ -52,12 +52,6 @@ Confirmation.propTypes = {
   closeButtonVariant: PropTypes.string,
   confirmButtonVariant: PropTypes.string,
   confirmButtonText: PropTypes.string,
-};
-
-Confirmation.defaultProps = {
-  closeButtonVariant: 'default',
-  confirmButtonVariant: 'primary',
-  confirmButtonText: '',
 };
 
 export default React.memo(Confirmation);

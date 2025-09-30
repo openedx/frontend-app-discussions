@@ -7,7 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars,import/no-extraneous-dependencies
 import tinymce from 'tinymce/tinymce';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { MAX_UPLOAD_FILE_SIZE } from '../data/constants';
 import messages from '../discussions/messages';
@@ -35,7 +35,7 @@ import 'tinymce/plugins/charmap';
 import 'tinymce/plugins/paste';
 /* eslint import/no-webpack-loader-syntax: off */
 // eslint-disable-next-line import/no-unresolved
-import edxBrandCss from '!!raw-loader!sass-loader!../index.scss';
+import edxBrandCss from '!!raw-loader!sass-loader!../app.scss';
 // eslint-disable-next-line import/no-unresolved
 import contentCss from '!!raw-loader!tinymce/skins/content/default/content.min.css';
 // eslint-disable-next-line import/no-unresolved
@@ -138,13 +138,13 @@ const TinyMCEEditor = (props) => {
           autosave_restore_when_empty: false,
           plugins: 'autoresize autosave codesample link lists image imagetools code emoticons charmap paste',
           toolbar: 'undo redo'
-                      + ' | formatselect | bold italic underline'
-                      + ' | link blockquote openedx_code image'
-                      + ' | bullist numlist outdent indent'
-                      + ' | removeformat'
-                      + ' | openedx_html'
-                      + ' | emoticons'
-                      + ' | charmap',
+            + ' | formatselect | bold italic underline'
+            + ' | link blockquote openedx_code image'
+            + ' | bullist numlist outdent indent'
+            + ' | removeformat'
+            + ' | openedx_html'
+            + ' | emoticons'
+            + ' | charmap',
           content_css: false,
           content_style: contentStyle,
           body_class: 'm-2 text-editor',

@@ -1,12 +1,11 @@
-import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
+import React, { useCallback } from 'react';
 
 import { Button } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 
 import ContentUnavailableIcon from '../../assets/ContentUnavailable';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
@@ -20,7 +19,7 @@ const ContentUnavailable = ({ subTitleMessage }) => {
   const { courseId } = useSelector(selectCourseTabs);
 
   const redirectToDashboard = useCallback(() => {
-    window.location.replace(`${getConfig().LMS_BASE_URL}/courses/${courseId}/about`);
+    window.location.replace(`${getSiteConfig().lmsBaseUrl}/courses/${courseId}/about`);
   }, [courseId]);
 
   return (

@@ -1,11 +1,6 @@
-import { ensureConfig, getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig, snakeCaseObject } from '@openedx/frontend-base';
 
-ensureConfig([
-  'LMS_BASE_URL',
-], 'Comments API service');
-
-export const getCohortsApiUrl = courseId => `${getConfig().LMS_BASE_URL}/api/cohorts/v1/courses/${courseId}/cohorts/`;
+export const getCohortsApiUrl = courseId => `${getSiteConfig().lmsBaseUrl}/api/cohorts/v1/courses/${courseId}/cohorts/`;
 
 export async function getCourseCohorts(courseId) {
   const params = snakeCaseObject({ courseId });

@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../messages';
 import Topic, { topicShape } from './Topic';
 
 const ArchivedBaseGroup = ({
   archivedTopics,
-  showDivider,
+  showDivider = false,
 }) => {
   const intl = useIntl();
 
@@ -46,7 +46,4 @@ ArchivedBaseGroup.propTypes = {
   showDivider: PropTypes.bool,
 };
 
-ArchivedBaseGroup.defaultProps = {
-  showDivider: false,
-};
 export default React.memo(ArchivedBaseGroup);

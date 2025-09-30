@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectTopicsInCategoryIds } from '../data/selectors';
 import TopicGroupBase from './TopicGroupBase';
 
-const LegacyTopicGroup = ({ categoryId }) => {
+const LegacyTopicGroup = ({ categoryId = null }) => {
   const topicsIds = useSelector(selectTopicsInCategoryIds(categoryId));
 
   return (
@@ -16,10 +16,6 @@ const LegacyTopicGroup = ({ categoryId }) => {
 
 LegacyTopicGroup.propTypes = {
   categoryId: PropTypes.string,
-};
-
-LegacyTopicGroup.defaultProps = {
-  categoryId: null,
 };
 
 export default React.memo(LegacyTopicGroup);

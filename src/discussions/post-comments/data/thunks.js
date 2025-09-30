@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError } from '@openedx/frontend-base';
 
 import { getHttpErrorStatus } from '../../utils';
 import {
@@ -45,16 +44,12 @@ function normaliseComments(data) {
       const { parentId, threadId, id } = comment;
       ids.push(id);
       if (parentId) {
-        if (!commentsInComments[parentId]) {
-          commentsInComments[parentId] = [];
-        }
+        commentsInComments[parentId] ??= [];
         if (!commentsInComments[parentId].includes(id)) {
           commentsInComments[parentId].push(id);
         }
       } else {
-        if (!commentsInThreads[threadId]) {
-          commentsInThreads[threadId] = [];
-        }
+        commentsInThreads[threadId] ??= [];
         if (!commentsInThreads[threadId].includes(id)) {
           commentsInThreads[threadId].push(id);
         }

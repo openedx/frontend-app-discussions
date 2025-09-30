@@ -1,8 +1,7 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
 // create constant for the API URL
-export const getDiscussionTourUrl = () => `${getConfig().LMS_BASE_URL}/api/user_tours/discussion_tours/`;
+export const getDiscussionTourUrl = () => `${getSiteConfig().lmsBaseUrl}/api/user_tours/discussion_tours/`;
 
 /**
  * getDiscussionTours

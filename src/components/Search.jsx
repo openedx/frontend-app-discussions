@@ -7,7 +7,7 @@ import { Search as SearchIcon } from '@openedx/paragon/icons';
 import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import DiscussionContext from '../discussions/common/context';
 import { setUsernameSearch } from '../discussions/learners/data';

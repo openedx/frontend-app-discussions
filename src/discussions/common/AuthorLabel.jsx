@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { generatePath, Link } from 'react-router-dom';
 import * as timeago from 'timeago.js';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { Routes } from '../../data/constants';
 import messages from '../messages';
@@ -16,13 +16,13 @@ import timeLocale from './time-locale';
 
 const AuthorLabel = ({
   author,
-  authorLabel,
-  linkToProfile,
-  labelColor,
-  alert,
-  postCreatedAt,
-  authorToolTip,
-  postOrComment,
+  authorLabel = null,
+  linkToProfile = false,
+  labelColor = '',
+  alert = false,
+  postCreatedAt = null,
+  authorToolTip = false,
+  postOrComment = false,
 }) => {
   timeago.register('time-locale', timeLocale);
   const intl = useIntl();
@@ -34,7 +34,7 @@ const AuthorLabel = ({
   const className = classNames('d-flex align-items-center', { 'mb-0.5': !postOrComment }, labelColor);
 
   const showUserNameAsLink = linkToProfile && author && author !== intl.formatMessage(messages.anonymous)
-                             && !enableInContextSidebar;
+    && !enableInContextSidebar;
 
   const authorName = useMemo(() => (
     <span
@@ -124,16 +124,6 @@ AuthorLabel.propTypes = {
   postCreatedAt: PropTypes.string,
   authorToolTip: PropTypes.bool,
   postOrComment: PropTypes.bool,
-};
-
-AuthorLabel.defaultProps = {
-  linkToProfile: false,
-  authorLabel: null,
-  labelColor: '',
-  alert: false,
-  postCreatedAt: null,
-  authorToolTip: false,
-  postOrComment: false,
 };
 
 export default React.memo(AuthorLabel);

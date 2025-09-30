@@ -5,8 +5,8 @@ import { Alert } from '@openedx/paragon';
 import { Report } from '@openedx/paragon/icons';
 import { useSelector } from 'react-redux';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getAuthenticatedUser } from '@openedx/frontend-base';
+import { useIntl } from '@openedx/frontend-base';
 
 import { AvatarOutlineAndLabelColors } from '../../data/constants';
 import {
@@ -17,8 +17,8 @@ import AlertBar from './AlertBar';
 
 const AlertBanner = ({
   author,
-  abuseFlagged,
-  lastEdit,
+  abuseFlagged = false,
+  lastEdit = {},
   closed,
   closedBy,
   closeReason,
@@ -44,7 +44,7 @@ const AlertBanner = ({
           {intl.formatMessage(messages.abuseFlaggedMessage)}
         </Alert>
       )}
-      { canSeeLastEditOrClosedAlert && (
+      {canSeeLastEditOrClosedAlert && (
         <>
           {lastEdit?.reason && (
             <AlertBar
@@ -82,16 +82,6 @@ AlertBanner.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-};
-
-AlertBanner.defaultProps = {
-  abuseFlagged: false,
-  closed: undefined,
-  closedBy: undefined,
-  closedByLabel: undefined,
-  closeReason: undefined,
-  editByLabel: undefined,
-  lastEdit: {},
 };
 
 export default React.memo(AlertBanner);

@@ -6,9 +6,9 @@ import { act } from 'react-dom/test-utils';
 import { IntlProvider } from 'react-intl';
 import { Factory } from 'rosie';
 
-import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { ContentActions } from '../../data/constants';
 import { initializeStore } from '../../store';

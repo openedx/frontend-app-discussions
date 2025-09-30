@@ -8,7 +8,7 @@ import { Tune } from '@openedx/paragon/icons';
 import { capitalize, toString } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl, intlShape } from '@openedx/frontend-base';
 
 import {
   PostsStatusFilter, RequestStatus,
@@ -23,7 +23,7 @@ const FilterBar = ({
   filters,
   selectedFilters,
   onFilterChange,
-  showCohortsFilter,
+  showCohortsFilter = false,
 }) => {
   const [isOpen, setOpen] = useState(false);
   const cohorts = useSelector(selectCourseCohorts);
@@ -205,10 +205,6 @@ FilterBar.propTypes = {
   }).isRequired,
   onFilterChange: PropTypes.func.isRequired,
   showCohortsFilter: PropTypes.bool,
-};
-
-FilterBar.defaultProps = {
-  showCohortsFilter: false,
 };
 
 export default injectIntl(FilterBar);

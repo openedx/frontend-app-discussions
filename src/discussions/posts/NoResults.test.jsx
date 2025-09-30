@@ -3,8 +3,8 @@ import { IntlProvider } from 'react-intl';
 import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { PostsStatusFilter } from '../../data/constants';
 import { initializeStore } from '../../store';

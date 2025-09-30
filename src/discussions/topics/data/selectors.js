@@ -8,11 +8,11 @@ export const selectCategories = state => state.topics.categoryIds;
 const selectTopicCategoryMap = state => state.topics.topicsInCategory;
 
 export const selectTopicsInCategory = (categoryId) => state => (
-  state.topics.topicsInCategory[categoryId]?.map(id => state.topics.topics[id]) || []
+  state.topics.topicsInCategory[categoryId]?.map(id => state.topics.topics[id]) ?? []
 );
 
 export const selectTopicsInCategoryIds = (categoryId) => state => (
-  state.topics.topicsInCategory[categoryId] || []
+  state.topics.topicsInCategory[categoryId] ?? []
 );
 
 export const selectTopics = state => state.topics.topics;
@@ -32,7 +32,7 @@ export const selectCoursewareTopics = createSelector(
 export const selectNonCoursewareIds = state => state.topics.nonCoursewareIds;
 
 export const selectNonCoursewareTopics = state => state.topics.nonCoursewareIds?.map(id => state.topics.topics[id])
-|| [];
+  ?? [];
 
 export const selectTopic = topicId => state => state.topics.topics[topicId];
 

@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { Factory } from 'rosie';
 
-import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@edx/frontend-platform';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';

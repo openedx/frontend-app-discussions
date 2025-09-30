@@ -9,9 +9,9 @@ import {
 } from 'react-router-dom';
 import { Factory } from 'rosie';
 
-import { initializeMockApp } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { AppProvider } from '@edx/frontend-platform/react';
+import { initializeMockApp } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
+import { AppProvider } from '@openedx/frontend-base';
 
 import { getApiBaseUrl, Routes as ROUTES, ThreadType } from '../../data/constants';
 import { initializeStore } from '../../store';

@@ -12,15 +12,15 @@ import {
   generatePath, matchPath, useLocation,
 } from 'react-router-dom';
 
-import { getConfig } from '@edx/frontend-platform';
+import { getSiteConfig } from '@openedx/frontend-base';
 
 import { DENIED, LOADED } from '../components/NavigationBar/data/slice';
 import {
   ContentActions, Routes, ThreadType,
 } from '../data/constants';
 import { ContentSelectors } from './data/constants';
-import PostCommentsContext from './post-comments/postCommentsContext';
 import messages from './messages';
+import PostCommentsContext from './post-comments/postCommentsContext';
 
 /**
  * Get HTTP Error status from generic error.
@@ -193,8 +193,8 @@ export function useActions(contentType, id) {
   const checkConditions = useCallback((item, conditions) => (
     conditions
       ? Object.keys(conditions)
-        .map(key => item[key] === conditions[key])
-        .every(condition => condition === true)
+          .map(key => item[key] === conditions[key])
+          .every(condition => condition === true)
       : true
   ), []);
 
@@ -235,8 +235,8 @@ export const discussionsPath = (path, params) => {
 export function postMessageToParent(type, payload = {}) {
   if (window.parent !== window) {
     const messageTargets = [
-      getConfig().LEARNING_BASE_URL,
-      getConfig().LMS_BASE_URL,
+      getSiteConfig().LEARNING_BASE_URL,
+      getSiteConfig().lmsBaseUrl,
     ];
     messageTargets.forEach(target => {
       window.parent.postMessage(
@@ -253,10 +253,10 @@ export function postMessageToParent(type, payload = {}) {
 export const isPostPreviewAvailable = (htmlNode) => {
   const containsImage = htmlNode.match(/(<img((?:\\.|.)*)>)/);
   const isLatex = htmlNode.match(/(\${1,2})((?:\\.|.)*)/)
-    || htmlNode.match(/(\[mathjax](.+?))+/)
-    || htmlNode.match(/(\[mathjaxinline](.+?))+/)
-    || htmlNode.match(/(\\\[(.+?))+/)
-    || htmlNode.match(/(\\\((.+?))+/);
+    ?? htmlNode.match(/(\[mathjax](.+?))+/)
+    ?? htmlNode.match(/(\[mathjaxinline](.+?))+/)
+    ?? htmlNode.match(/(\\\[(.+?))+/)
+    ?? htmlNode.match(/(\\\((.+?))+/);
 
   if (containsImage || isLatex || htmlNode === '') {
     return false;
@@ -276,12 +276,18 @@ export const filterPosts = (posts, filterBy) => uniqBy(posts, 'id').filter(
 
 export function handleKeyDown(event) {
   const { key } = event;
-  if (key !== 'ArrowDown' && key !== 'ArrowUp') { return; }
+  if (key !== 'ArrowDown' && key !== 'ArrowUp') {
+    return;
+  }
   const option = event.target;
 
   let selectedOption;
-  if (key === 'ArrowDown') { selectedOption = option.nextElementSibling; }
-  if (key === 'ArrowUp') { selectedOption = option.previousElementSibling; }
+  if (key === 'ArrowDown') {
+    selectedOption = option.nextElementSibling;
+  }
+  if (key === 'ArrowUp') {
+    selectedOption = option.previousElementSibling;
+  }
 
   if (selectedOption) {
     selectedOption.focus();
@@ -312,7 +318,7 @@ export function getAuthorLabel(intl, authorLabel) {
     },
   };
 
-  return authorLabelMappings[authorLabel] || {};
+  return authorLabelMappings[authorLabel] ?? {};
 }
 
 export const isCourseStatusValid = (courseStatus) => [DENIED, LOADED].includes(courseStatus);

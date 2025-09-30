@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Icon } from '@openedx/paragon';
 import { Search } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import { RequestStatus } from '../data/constants';
 import messages from '../discussions/posts/post-actions-bar/messages';
@@ -13,8 +13,8 @@ const SearchInfo = ({
   count,
   text,
   loadingStatus,
-  onClear,
-  textSearchRewrite,
+  onClear = () => { },
+  textSearchRewrite = null,
 }) => {
   const intl = useIntl();
 
@@ -48,11 +48,6 @@ SearchInfo.propTypes = {
   loadingStatus: PropTypes.string.isRequired,
   textSearchRewrite: PropTypes.string,
   onClear: PropTypes.func,
-};
-
-SearchInfo.defaultProps = {
-  onClear: () => {},
-  textSearchRewrite: null,
 };
 
 export default React.memo(SearchInfo);

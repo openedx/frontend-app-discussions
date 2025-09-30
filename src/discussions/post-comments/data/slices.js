@@ -41,7 +41,7 @@ const commentsSlice = createSlice({
 
       newState.pagination = {
         ...newState.pagination,
-        [threadId]: newState.pagination[threadId] || {},
+        [threadId]: newState.pagination[threadId] ?? {},
       };
 
       if (page === 1) {
@@ -53,8 +53,8 @@ const commentsSlice = createSlice({
         newState.commentsInThreads = {
           [threadId]: [
             ...new Set([
-              ...(newState.commentsInThreads[threadId] || []),
-              ...(payload.commentsInThreads[threadId] || []),
+              ...(newState.commentsInThreads[threadId] ?? []),
+              ...(payload.commentsInThreads[threadId] ?? []),
             ]),
           ],
         };
@@ -111,15 +111,15 @@ const commentsSlice = createSlice({
       if (payload.page === 1) {
         newState.commentsInComments = {
           ...newState.commentsInComments,
-          [payload.commentId]: payload.commentsInComments[payload.commentId] || [],
+          [payload.commentId]: payload.commentsInComments[payload.commentId] ?? [],
         };
       } else {
         newState.commentsInComments = {
           ...newState.commentsInComments,
           [payload.commentId]: [
             ...new Set([
-              ...(newState.commentsInComments[payload.commentId] || []),
-              ...(payload.commentsInComments[payload.commentId] || []),
+              ...(newState.commentsInComments[payload.commentId] ?? []),
+              ...(payload.commentsInComments[payload.commentId] ?? []),
             ]),
           ],
         };
@@ -164,12 +164,12 @@ const commentsSlice = createSlice({
         newState.commentsInComments = {
           ...newState.commentsInComments,
           [payload.parentId]: [
-            ...(newState.commentsInComments[payload.parentId] || []),
+            ...(newState.commentsInComments[payload.parentId] ?? []),
             payload.id,
           ],
         };
       } else {
-        const threadComments = newState.commentsInThreads[payload.threadId] || [];
+        const threadComments = newState.commentsInThreads[payload.threadId] ?? [];
         newState.commentsInThreads = {
           ...newState.commentsInThreads,
           [payload.threadId]: [...threadComments, payload.id],
@@ -240,7 +240,7 @@ const commentsSlice = createSlice({
       };
 
       newState.commentsInThreads[threadId] = [
-        ...newState.commentsInThreads[threadId]?.filter(item => item !== commentId) || [],
+        ...newState.commentsInThreads[threadId]?.filter(item => item !== commentId) ?? [],
       ];
 
       if (parentId) {

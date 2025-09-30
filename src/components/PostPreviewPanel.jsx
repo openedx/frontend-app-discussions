@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import { Button, Icon, IconButton } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 
 import messages from '../discussions/posts/post-editor/messages';
 import HTMLLoader from './HTMLLoader';
 
 const PostPreviewPanel = ({
-  htmlNode, isPost, editExisting,
+  htmlNode = '',
+  isPost = false,
+  editExisting = false,
 }) => {
   const intl = useIntl();
   const [showPreviewPane, setShowPreviewPane] = useState(false);
@@ -65,12 +67,6 @@ PostPreviewPanel.propTypes = {
   htmlNode: PropTypes.node,
   isPost: PropTypes.bool,
   editExisting: PropTypes.bool,
-};
-
-PostPreviewPanel.defaultProps = {
-  htmlNode: '',
-  isPost: false,
-  editExisting: false,
 };
 
 export default React.memo(PostPreviewPanel);

@@ -1,6 +1,6 @@
 import { reduce } from 'lodash';
 
-import { logError } from '@edx/frontend-platform/logging';
+import { logError } from '@openedx/frontend-base';
 
 import { getHttpErrorStatus } from '../../utils';
 import { getCourseTopicsV3 } from './api';

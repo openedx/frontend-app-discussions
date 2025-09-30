@@ -11,7 +11,7 @@ const usePostList = (ids) => {
 
   const sortedIds = useMemo(() => {
     posts.forEach((post) => {
-      if (post && post.pinned) {
+      if (post?.pinned) {
         pinnedPostsIds.push(post.id);
       } else if (post) {
         unpinnedPostsIds.push(post.id);

@@ -12,8 +12,8 @@ import { capitalize, isEmpty, toString } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { sendTrackEvent } from '@openedx/frontend-base';
+import { useIntl } from '@openedx/frontend-base';
 
 import {
   PostsStatusFilter, RequestStatus,
