@@ -12,7 +12,7 @@ const siteConfig: SiteConfig = {
   loginUrl: 'http://local.openedx.io:8000/login',
   logoutUrl: 'http://local.openedx.io:8000/logout',
 
-  environment: EnvironmentTypes.DEVELOPMENT,
+  environment: EnvironmentTypes.TEST,
   basename: '/discussions',
   apps: [
     shellApp,

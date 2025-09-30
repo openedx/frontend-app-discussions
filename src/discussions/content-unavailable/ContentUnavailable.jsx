@@ -1,12 +1,11 @@
-import React, { useCallback } from 'react';
 import propTypes from 'prop-types';
+import React, { useCallback } from 'react';
 
 import { Button } from '@openedx/paragon';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
-import { getSiteConfig } from '@openedx/frontend-base';
-import { useIntl } from '@openedx/frontend-base';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 
 import ContentUnavailableIcon from '../../assets/ContentUnavailable';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';

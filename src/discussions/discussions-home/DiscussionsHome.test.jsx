@@ -8,9 +8,7 @@ import { Context as ResponsiveContext } from 'react-responsive';
 import { MemoryRouter } from 'react-router-dom';
 import { Factory } from 'rosie';
 
-import { initializeMockApp } from '@openedx/frontend-base';
-import { getAuthenticatedHttpClient } from '@openedx/frontend-base';
-import { AppProvider } from '@openedx/frontend-base';
+import { AppProvider, getAuthenticatedHttpClient, initializeMockApp } from '@openedx/frontend-base';
 
 import { getCourseMetadataApiUrl } from '../../components/NavigationBar/data/api';
 import fetchTab from '../../components/NavigationBar/data/thunks';
@@ -27,10 +25,10 @@ import { fetchThreads } from '../posts/data/thunks';
 import fetchCourseTopics from '../topics/data/thunks';
 import DiscussionsHome from './DiscussionsHome';
 
-import '../posts/data/__factories__/threads.factory';
-import '../in-context-topics/data/__factories__/inContextTopics.factory';
-import '../topics/data/__factories__/topics.factory';
 import '../../components/NavigationBar/data/__factories__/navigationBar.factory';
+import '../in-context-topics/data/__factories__/inContextTopics.factory';
+import '../posts/data/__factories__/threads.factory';
+import '../topics/data/__factories__/topics.factory';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
