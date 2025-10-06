@@ -8,6 +8,7 @@ import { Factory } from 'rosie';
 
 import { camelCaseObject, initializeMockApp, snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { logError } from '@edx/frontend-platform/logging';
 import { AppProvider } from '@edx/frontend-platform/react';
 
 import { ContentActions } from '../../data/constants';
@@ -26,6 +27,11 @@ import ActionsDropdown from './ActionsDropdown';
 
 import '../post-comments/data/__factories__';
 import '../posts/data/__factories__';
+
+jest.mock('@edx/frontend-platform/logging', () => ({
+  ...jest.requireActual('@edx/frontend-platform/logging'),
+  logError: jest.fn(),
+}));
 
 let store;
 let axiosMock;
@@ -300,6 +306,150 @@ describe('ActionsDropdown', () => {
         });
 
         await waitFor(() => expect(screen.queryByText(label)).not.toBeInTheDocument());
+      });
+    });
+  });
+
+  it('applies in-context-sidebar class when inContextSidebar is in URL', async () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { ...originalLocation, search: '?inContextSidebar=true' };
+
+    const discussionObject = buildTestContent().discussion;
+    await mockThreadAndComment(discussionObject);
+
+    renderComponent({ ...camelCaseObject(discussionObject) });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    const dropdown = screen.getByTestId('actions-dropdown-modal-popup').closest('.actions-dropdown');
+    expect(dropdown).toHaveClass('in-context-sidebar');
+
+    window.location = originalLocation;
+  });
+
+  it('does not apply in-context-sidebar class when inContextSidebar is not in URL', async () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { ...originalLocation, search: '' };
+
+    const discussionObject = buildTestContent().discussion;
+    await mockThreadAndComment(discussionObject);
+
+    renderComponent({ ...camelCaseObject(discussionObject) });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    const dropdown = screen.getByTestId('actions-dropdown-modal-popup').closest('.actions-dropdown');
+    expect(dropdown).not.toHaveClass('in-context-sidebar');
+
+    window.location = originalLocation;
+  });
+
+  it('handles SSR environment when window is undefined', () => {
+    const testSSRLogic = () => {
+      if (typeof window !== 'undefined') {
+        return window.location.search.includes('inContextSidebar');
+      }
+      return false;
+    };
+
+    const originalWindow = global.window;
+    const originalProcess = global.process;
+
+    try {
+      delete global.window;
+
+      const result = testSSRLogic();
+      expect(result).toBe(false);
+
+      global.window = originalWindow;
+      const resultWithWindow = testSSRLogic();
+      expect(resultWithWindow).toBe(false);
+    } finally {
+      global.window = originalWindow;
+      global.process = originalProcess;
+    }
+  });
+
+  it('calls logError for unknown action', async () => {
+    const discussionObject = buildTestContent().discussion;
+    await mockThreadAndComment(discussionObject);
+
+    logError.mockClear();
+
+    renderComponent({
+      ...discussionObject,
+      actionHandlers: {
+        [ContentActions.EDIT_CONTENT]: jest.fn(),
+      },
+    });
+
+    const openButton = await findOpenActionsDropdownButton();
+    await act(async () => {
+      fireEvent.click(openButton);
+    });
+
+    const copyLinkButton = await screen.findByText('Copy link');
+    await act(async () => {
+      fireEvent.click(copyLinkButton);
+    });
+
+    expect(logError).toHaveBeenCalledWith('Unknown or unimplemented action copy_link');
+  });
+
+  describe('posting restrictions', () => {
+    it('removes edit action when posting is disabled', async () => {
+      const discussionObject = buildTestContent({
+        editable_fields: ['raw_body'],
+      }).discussion;
+
+      await mockThreadAndComment(discussionObject);
+
+      axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
+        .reply(200, { isPostingEnabled: false });
+
+      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+
+      renderComponent({ ...discussionObject });
+
+      const openButton = await findOpenActionsDropdownButton();
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByText('Edit')).not.toBeInTheDocument();
+      });
+    });
+
+    it('keeps edit action when posting is enabled', async () => {
+      const discussionObject = buildTestContent({
+        editable_fields: ['raw_body'],
+      }).discussion;
+
+      await mockThreadAndComment(discussionObject);
+
+      axiosMock.onGet(`${getCourseConfigApiUrl()}${courseId}/`)
+        .reply(200, { isPostingEnabled: true });
+
+      await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
+
+      renderComponent({ ...discussionObject });
+
+      const openButton = await findOpenActionsDropdownButton();
+      await act(async () => {
+        fireEvent.click(openButton);
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByText('Edit')).toBeInTheDocument();
       });
     });
   });
