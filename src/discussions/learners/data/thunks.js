@@ -12,8 +12,16 @@ import {
 } from '../../posts/data/slices';
 import { normaliseThreads } from '../../posts/data/thunks';
 import { getHttpErrorStatus } from '../../utils';
-import { getLearners, getUserPosts, getUserProfiles } from './api';
 import {
+  deleteUserPostsApi,
+  getLearners,
+  getUserPosts,
+  getUserProfiles,
+} from './api';
+import {
+  deleteUserPostsFailed,
+  deleteUserPostsRequest,
+  deleteUserPostsSuccess,
   fetchLearnersDenied,
   fetchLearnersFailed,
   fetchLearnersRequest,
@@ -121,3 +129,19 @@ export function fetchUserPosts(courseId, {
     }
   };
 }
+
+export const deleteUserPosts = (
+  courseId,
+  username,
+  courseOrOrg,
+  execute,
+) => async (dispatch) => {
+  try {
+    dispatch(deleteUserPostsRequest({ courseId, username }));
+    const response = await deleteUserPostsApi(courseId, username, courseOrOrg, execute);
+    dispatch(deleteUserPostsSuccess(camelCaseObject(response)));
+  } catch (error) {
+    dispatch(deleteUserPostsFailed());
+    logError(error);
+  }
+};

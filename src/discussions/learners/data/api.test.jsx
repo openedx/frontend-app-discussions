@@ -4,7 +4,7 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
-import { setupLearnerMockResponse, setupPostsMockResponse } from '../test-utils';
+import { setupDeleteUserPostsMockResponse, setupLearnerMockResponse, setupPostsMockResponse } from '../test-utils';
 
 import './__factories__';
 
@@ -79,5 +79,26 @@ describe('Learner api test cases', () => {
     const threads = await setupPostsMockResponse({ statusCode: 403 });
 
     expect(threads.status).toEqual('denied');
+  });
+
+  it.each([
+    { courseOrOrg: 'course', execute: false, response: { comment_count: 3, thread_count: 2 } },
+    { courseOrOrg: 'course', execute: true, response: { comment_count: 0, thread_count: 0 } },
+    { courseOrOrg: 'org', execute: false, response: { comment_count: 3, thread_count: 2 } },
+    { courseOrOrg: 'org', execute: true, response: { comment_count: 0, thread_count: 0 } },
+  ])(
+    'Successfully fetches user post stats and bulk deletes user posts based on execute',
+    async ({ courseOrOrg, execute, response }) => {
+      const learners = await setupDeleteUserPostsMockResponse({ courseOrOrg, execute, response });
+
+      expect(learners.status).toEqual('successful');
+      expect(Object.values(learners.bulkDeleteStats)).toEqual(Object.values(response));
+    },
+  );
+
+  it('Failed to bulk delete user posts', async () => {
+    const learners = await setupPostsMockResponse({ statusCode: 400 });
+
+    expect(learners.status).toEqual('failed');
   });
 });

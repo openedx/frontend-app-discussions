@@ -25,6 +25,10 @@ const learnersSlice = createSlice({
       cohort: '',
     },
     usernameSearch: null,
+    bulkDeleteStats: {
+      commentCount: 0,
+      threadCount: 0,
+    },
   },
   reducers: {
     fetchLearnersSuccess: (state, { payload }) => (
@@ -84,6 +88,25 @@ const learnersSlice = createSlice({
         postFilter: payload,
       }
     ),
+    deleteUserPostsRequest: (state) => (
+      {
+        ...state,
+        status: RequestStatus.IN_PROGRESS,
+      }
+    ),
+    deleteUserPostsSuccess: (state, { payload }) => (
+      {
+        ...state,
+        status: RequestStatus.SUCCESSFUL,
+        bulkDeleteStats: payload,
+      }
+    ),
+    deleteUserPostsFailed: (state) => (
+      {
+        ...state,
+        status: RequestStatus.FAILED,
+      }
+    ),
   },
 });
 
@@ -95,6 +118,9 @@ export const {
   setSortedBy,
   setUsernameSearch,
   setPostFilter,
+  deleteUserPostsRequest,
+  deleteUserPostsSuccess,
+  deleteUserPostsFailed,
 } = learnersSlice.actions;
 
 export const learnersReducer = learnersSlice.reducer;

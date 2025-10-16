@@ -558,7 +558,7 @@ code {
 .actions-dropdown-item {
   padding: 12px 16px;
   height: 48px !important;
-  width: 195px !important
+  min-width: 195px !important
 }
 
 .font-xl {

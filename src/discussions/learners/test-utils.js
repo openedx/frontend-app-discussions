@@ -7,8 +7,13 @@ import { initializeStore } from '../../store';
 import executeThunk from '../../test-utils';
 import { getDiscussionsConfigUrl } from '../data/api';
 import fetchCourseConfig from '../data/thunks';
-import { getUserProfileApiUrl, learnerPostsApiUrl, learnersApiUrl } from './data/api';
-import { fetchLearners, fetchUserPosts } from './data/thunks';
+import {
+  deletePostsApiUrl,
+  getUserProfileApiUrl,
+  learnerPostsApiUrl,
+  learnersApiUrl,
+} from './data/api';
+import { deleteUserPosts, fetchLearners, fetchUserPosts } from './data/thunks';
 
 const courseId = 'course-v1:edX+DemoX+Demo_Course';
 
@@ -54,9 +59,26 @@ export async function setupPostsMockResponse({
   return store.getState().threads;
 }
 
-export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges) {
+export async function setupDeleteUserPostsMockResponse({
+  username = 'abc123',
+  courseOrOrg,
+  statusCode = 202,
+  execute,
+  response,
+} = {}) {
+  const store = initializeStore();
+  const axiosMock = new MockAdapter(getAuthenticatedHttpClient());
+
+  axiosMock.onPost(deletePostsApiUrl(courseId, username, courseOrOrg, execute)).reply(statusCode, response);
+
+  await executeThunk(deleteUserPosts(courseId, username, courseOrOrg, execute), store.dispatch, store.getState);
+  return store.getState().learners;
+}
+
+export async function setUpPrivilages(axiosMock, store, hasModerationPrivileges, hasBulkDeletePrivileges) {
   axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
     hasModerationPrivileges,
+    hasBulkDeletePrivileges,
   });
 
   await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);

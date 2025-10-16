@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  fireEvent, render, screen, waitFor,
+  fireEvent, render, screen, waitFor, within,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -20,7 +20,7 @@ import executeThunk from '../../test-utils';
 import { getCohortsApiUrl } from '../cohorts/data/api';
 import fetchCourseCohorts from '../cohorts/data/thunks';
 import DiscussionContext from '../common/context';
-import { learnerPostsApiUrl } from './data/api';
+import { deletePostsApiUrl, learnerPostsApiUrl } from './data/api';
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostsView from './LearnerPostsView';
 import { setUpPrivilages } from './test-utils';
@@ -219,5 +219,129 @@ describe('Learner Posts View', () => {
 
     expect(loadMoreButton).not.toBeInTheDocument();
     expect(container.querySelectorAll('.discussion-post')).toHaveLength(4);
+  });
+
+  test('should display dropdown menu button for bulk delete user posts for privileged users', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    await renderComponent();
+    expect(within(container).queryByRole('button', { name: /actions menu/i })).toBeInTheDocument();
+  });
+
+  test('should NOT display dropdown menu button for bulk delete user posts for other users', async () => {
+    await setUpPrivilages(axiosMock, store, true, false);
+    await renderComponent();
+    expect(within(container).queryByRole('button', { name: /actions menu/i })).not.toBeInTheDocument();
+  });
+
+  test('should display confirmation dialog when delete course posts is clicked', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    axiosMock.onPost(deletePostsApiUrl(courseId, username, 'course', false))
+      .reply(202, { thread_count: 2, comment_count: 3 });
+    await renderComponent();
+
+    const actionsButton = await screen.findByRole('button', { name: /actions menu/i });
+    await act(async () => {
+      fireEvent.click(actionsButton);
+    });
+
+    const deleteCourseItem = await screen.findByTestId('delete-course-posts');
+    await act(async () => {
+      fireEvent.click(deleteCourseItem);
+    });
+
+    await waitFor(() => {
+      const dialog = screen.getByText('Are you sure you want to delete this user\'s discussion contributions?');
+      expect(dialog).toBeInTheDocument();
+      expect(screen.getByText('You are about to delete 5 discussion contributions by this user in this course. This includes all discussion threads, responses, and comments authored by them.')).toBeInTheDocument();
+      expect(screen.getByText('This action cannot be undone.')).toBeInTheDocument();
+      expect(screen.getByText('Cancel')).toBeInTheDocument();
+      expect(screen.getByText('Delete')).toBeInTheDocument();
+    });
+  });
+
+  test('should complete delete course posts flow and redirect', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    axiosMock.onPost(deletePostsApiUrl(courseId, username, 'course', false))
+      .reply(202, { thread_count: 2, comment_count: 3 });
+    axiosMock.onPost(deletePostsApiUrl(courseId, username, 'course', true))
+      .reply(202, { thread_count: 0, comment_count: 0 });
+    await renderComponent();
+
+    const actionsButton = await screen.findByRole('button', { name: /actions menu/i });
+    await act(async () => {
+      fireEvent.click(actionsButton);
+    });
+
+    const deleteCourseItem = await screen.findByTestId('delete-course-posts');
+    await act(async () => {
+      fireEvent.click(deleteCourseItem);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Are you sure you want to delete this user\'s discussion contributions?')).toBeInTheDocument();
+    });
+
+    const confirmButton = await screen.findByText('Delete');
+    await act(async () => {
+      fireEvent.click(confirmButton);
+    });
+
+    await waitFor(() => {
+      expect(lastLocation.pathname.endsWith('/learners')).toBeTruthy();
+      expect(screen.queryByText('Are you sure you want to delete this user\'s discussion contributions?')).not.toBeInTheDocument();
+    });
+  });
+
+  test('should close confirmation dialog when cancel is clicked', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    axiosMock.onPost(deletePostsApiUrl(courseId, username, 'course', false))
+      .reply(202, { thread_count: 2, comment_count: 3 });
+    await renderComponent();
+
+    const actionsButton = await screen.findByRole('button', { name: /actions menu/i });
+    await act(async () => {
+      fireEvent.click(actionsButton);
+    });
+
+    const deleteCourseItem = await screen.findByTestId('delete-course-posts');
+    await act(async () => {
+      fireEvent.click(deleteCourseItem);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Are you sure you want to delete this user\'s discussion contributions?')).toBeInTheDocument();
+    });
+
+    const cancelButton = await screen.findByText('Cancel');
+    await act(async () => {
+      fireEvent.click(cancelButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('Are you sure you want to delete this user\'s discussion contributions?')).not.toBeInTheDocument();
+    });
+  });
+
+  test('should display confirmation dialog for org posts deletion', async () => {
+    await setUpPrivilages(axiosMock, store, true, true);
+    axiosMock.onPost(deletePostsApiUrl(courseId, username, 'org', false))
+      .reply(202, { thread_count: 5, comment_count: 10 });
+    await renderComponent();
+
+    const actionsButton = await screen.findByRole('button', { name: /actions menu/i });
+    await act(async () => {
+      fireEvent.click(actionsButton);
+    });
+
+    const deleteOrgItem = await screen.findByTestId('delete-org-posts');
+    await act(async () => {
+      fireEvent.click(deleteOrgItem);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Are you sure you want to delete this user\'s discussion contributions?')).toBeInTheDocument();
+      expect(screen.getByText('You are about to delete 15 discussion contributions by this user across the organization. This includes all discussion threads, responses, and comments authored by them.')).toBeInTheDocument();
+      expect(screen.getByText('This action cannot be undone.')).toBeInTheDocument();
+    });
   });
 });
