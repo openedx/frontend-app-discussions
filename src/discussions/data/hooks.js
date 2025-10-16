@@ -239,8 +239,8 @@ export const useTourConfiguration = () => {
   ), []);
 
   const toursConfig = useMemo(() => (
-    tours?.map((tour) => Object.keys(tourCheckpoints(intl)).includes(tour.tourName) && (
-      {
+    tours?.filter((tour) => Object.keys(tourCheckpoints(intl)).includes(tour.tourName))
+      .map((tour) => ({
         tourId: tour.tourName,
         advanceButtonText: intl.formatMessage(messages.advanceButtonText),
         dismissButtonText: intl.formatMessage(messages.dismissButtonText),
@@ -249,8 +249,7 @@ export const useTourConfiguration = () => {
         onDismiss: () => handleOnDismiss(tour.id),
         onEnd: () => handleOnEnd(tour.id),
         checkpoints: tourCheckpoints(intl)[tour.tourName],
-      }
-    ))
+      }))
   ), [tours, enableInContextSidebar]);
 
   return toursConfig;
