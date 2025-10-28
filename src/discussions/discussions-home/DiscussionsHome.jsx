@@ -10,7 +10,7 @@ import {
 
 import { LearningHeader as Header } from '@edx/frontend-component-header';
 
-import { Spinner } from '../../components';
+import { SpamWarningBanner, Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
 import DiscussionContext from '../common/context';
@@ -90,6 +90,7 @@ const DiscussionsHome = () => {
         )}
         <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
           {!enableInContextSidebar && <CourseTabsNavigation />}
+          <SpamWarningBanner />
           {(isEnrolled || !isUserLearner) && (
             <div
               className={classNames('header-action-bar bg-white position-sticky', {

@@ -223,6 +223,16 @@ const messages = defineMessages({
     defaultMessage: 'Taking the course just like you',
     description: 'tooltip for course learners',
   },
+  spamWarningHeading: {
+    id: 'discussions.spamWarning.heading',
+    defaultMessage: 'Reminder',
+    description: 'Heading for the spam warning banner',
+  },
+  spamWarningMessage: {
+    id: 'discussions.spamWarning.message',
+    defaultMessage: 'Faculty and staff will never invite you to join external groups or ask for personal or financial information in the discussions. Stay safe, and if you see suspicious activity, please report it.',
+    description: 'Warning message about spam and impersonation in discussion forums',
+  },
 });
 
 export default messages;

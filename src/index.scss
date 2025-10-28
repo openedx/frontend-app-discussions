@@ -700,3 +700,66 @@ th, td {
     font-size: 10px;
   }
 }
+
+.spam-warning-banner {
+  border-left: 4px solid var(--pgn-color-warning-500);
+  margin-bottom: 0.5rem;
+  
+  .spam-warning-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 1rem;
+    color: inherit;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    line-height: 1;
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    font-weight: normal;
+    flex-shrink: 0;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.15);
+      color: var(--pgn-color-gray-900);
+      transform: scale(1.05);
+    }
+    
+    &:active {
+      background-color: rgba(0, 0, 0, 0.25);
+      transform: scale(0.95);
+    }
+    
+    &:focus {
+      outline: 2px solid var(--pgn-color-primary-500);
+      outline-offset: 2px;
+    }
+  }
+  
+  .alert-warning {
+    background-color: var(--pgn-color-warning-100);
+    color: var(--pgn-color-gray-900);
+  }
+  
+  @media (max-width: 768px) {
+    margin: 0 0.25rem 0.5rem 0.25rem;
+    border-radius: 0.375rem;
+    
+    .spam-warning-close-btn {
+      font-size: 1.25rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+      margin-left: 0.5rem;
+    }
+  }
+}
