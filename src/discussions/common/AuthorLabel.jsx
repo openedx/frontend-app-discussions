@@ -101,17 +101,22 @@ const AuthorLabel = ({
     </>
   ), [author, authorLabelMessage, authorToolTip, icon, isRetiredUser, postCreatedAt, showTextPrimary, alert]);
 
-  const learnerPostsLink = (
-    <Link
-      data-testid="learner-posts-link"
-      id="learner-posts-link"
-      to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
-      className="text-decoration-none text-reset"
-      style={{ width: 'fit-content' }}
-    >
-      {!alert && authorName}
-    </Link>
-  );
+  const learnerPostsLink = useMemo(() => {
+    if (!showUserNameAsLink) {
+      return null;
+    }
+    return (
+      <Link
+        data-testid="learner-posts-link"
+        id="learner-posts-link"
+        to={generatePath(Routes.LEARNERS.POSTS, { learnerUsername: author, courseId })}
+        className="text-decoration-none text-reset"
+        style={{ width: 'fit-content' }}
+      >
+        {!alert && authorName}
+      </Link>
+    );
+  }, [showUserNameAsLink, author, courseId, alert, authorName]);
 
   return showUserNameAsLink
     ? (
