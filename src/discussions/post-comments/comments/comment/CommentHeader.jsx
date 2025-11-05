@@ -20,6 +20,7 @@ const CommentHeader = ({
   createdAt,
   lastEdit,
   postUsers,
+  postData,
 }) => {
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
@@ -56,6 +57,7 @@ const CommentHeader = ({
           linkToProfile
           postCreatedAt={createdAt}
           postOrComment
+          postData={postData}
         />
       </div>
     </div>
@@ -73,12 +75,14 @@ CommentHeader.propTypes = {
     reason: PropTypes.string,
   }),
   postUsers: PropTypes.shape({}).isRequired,
+  postData: PropTypes.shape({}),
 };
 
 CommentHeader.defaultProps = {
   authorLabel: null,
   closed: undefined,
   lastEdit: null,
+  postData: null,
 };
 
 export default React.memo(CommentHeader);

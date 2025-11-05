@@ -59,7 +59,7 @@ import messages from './messages';
 import PostTypeCard from './PostTypeCard';
 
 const PostEditor = ({
-  editExisting, openRestrictionDialogue,
+  editExisting = false, openRestrictionDialogue,
 }) => {
   const intl = useIntl();
   const navigate = useNavigate();
@@ -554,10 +554,6 @@ const PostEditor = ({
 PostEditor.propTypes = {
   editExisting: PropTypes.bool,
   openRestrictionDialogue: PropTypes.func.isRequired,
-};
-
-PostEditor.defaultProps = {
-  editExisting: false,
 };
 
 export default React.memo(withPostingRestrictions(PostEditor));

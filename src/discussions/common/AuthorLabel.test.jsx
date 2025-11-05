@@ -21,7 +21,7 @@ let store;
 let axiosMock;
 let container;
 
-function renderComponent(author, authorLabel, linkToProfile, labelColor, enableInContextSidebar) {
+function renderComponent(author, authorLabel, linkToProfile, labelColor, enableInContextSidebar, postData = null) {
   const wrapper = render(
     <IntlProvider locale="en">
       <AppProvider store={store}>
@@ -31,6 +31,7 @@ function renderComponent(author, authorLabel, linkToProfile, labelColor, enableI
             authorLabel={authorLabel}
             linkToProfile={linkToProfile}
             labelColor={labelColor}
+            postData={postData}
           />
         </DiscussionContext.Provider>
       </AppProvider>
@@ -118,5 +119,102 @@ describe('Author label', () => {
         }
       },
     );
+  });
+
+  describe('Learner status messages', () => {
+    describe('with new learner_status API field', () => {
+      it('should display new learner message when backend provides learner_status="new"', () => {
+        const postData = { learner_status: 'new' };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.getByText('👋 Hi, I am a new learner')).toBeInTheDocument();
+      });
+
+      it('should not display new learner message when backend provides learner_status="regular"', () => {
+        const postData = { learner_status: 'regular' };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message when backend provides learner_status="staff"', () => {
+        const postData = { learner_status: 'staff' };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message when backend provides learner_status="anonymous"', () => {
+        const postData = { learner_status: 'anonymous' };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for staff users even if backend says learner_status="new"', () => {
+        const postData = { learner_status: 'new' };
+        renderComponent('testuser', 'Staff', false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('with legacy boolean API fields (backward compatibility)', () => {
+      it('should display new learner message when backend provides is_new_learner=true', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.getByText('👋 Hi, I am a new learner')).toBeInTheDocument();
+      });
+
+      it('should not display new learner message when backend provides is_new_learner=false', () => {
+        const postData = { is_new_learner: false, is_regular_learner: false };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for staff users even if backend says new learner', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('testuser', 'Staff', false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for moderators', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('testuser', 'Moderator', false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for Community TAs', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('testuser', 'Community TA', false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for anonymous users', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('anonymous', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message for retired users', () => {
+        const postData = { is_new_learner: true, is_regular_learner: false };
+        renderComponent('retired__user_123', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should prioritize new learner_status field over legacy boolean fields', () => {
+        // If both are present, learner_status should take precedence
+        const postData = { learner_status: 'regular', is_new_learner: true };
+        renderComponent('testuser', null, false, '', false, postData);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('general cases', () => {
+      it('should not display new learner message when postData is not provided', () => {
+        renderComponent('testuser', null, false, '', false, null);
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+
+      it('should not display new learner message when postData is empty object', () => {
+        renderComponent('testuser', null, false, '', false, {});
+        expect(screen.queryByText('👋 Hi, I am a new learner')).not.toBeInTheDocument();
+      });
+    });
   });
 });

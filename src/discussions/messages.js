@@ -223,6 +223,16 @@ const messages = defineMessages({
     defaultMessage: 'Taking the course just like you',
     description: 'tooltip for course learners',
   },
+  newLearnerMessage: {
+    id: 'discussions.author.newLearner.message',
+    defaultMessage: '👋 Hi, I am a new learner',
+    description: 'Message displayed below username for new learners who have only viewed the course outline',
+  },
+  learnerMessage: {
+    id: 'discussions.author.learner.message',
+    defaultMessage: 'Learner',
+    description: 'Message displayed below username for regular learners',
+  },
   spamWarningHeading: {
     id: 'discussions.spamWarning.heading',
     defaultMessage: 'Reminder',

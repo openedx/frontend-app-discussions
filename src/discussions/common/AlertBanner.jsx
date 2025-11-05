@@ -24,6 +24,7 @@ const AlertBanner = ({
   closeReason,
   editByLabel,
   closedByLabel,
+  postData,
 }) => {
   const intl = useIntl();
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
@@ -53,6 +54,7 @@ const AlertBanner = ({
               authorLabel={editByLabel}
               labelColor={editByLabelColor && `text-${editByLabelColor}`}
               reason={lastEdit.reason}
+              postData={postData}
             />
           )}
           {closed && (
@@ -62,6 +64,7 @@ const AlertBanner = ({
               authorLabel={closedByLabel}
               labelColor={closedByLabelColor && `text-${closedByLabelColor}`}
               reason={closeReason}
+              postData={postData}
             />
           )}
         </>
@@ -82,6 +85,7 @@ AlertBanner.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
+  postData: PropTypes.shape({}),
 };
 
 AlertBanner.defaultProps = {
@@ -92,6 +96,7 @@ AlertBanner.defaultProps = {
   closeReason: undefined,
   editByLabel: undefined,
   lastEdit: {},
+  postData: null,
 };
 
 export default React.memo(AlertBanner);

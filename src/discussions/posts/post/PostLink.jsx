@@ -33,11 +33,12 @@ const PostLink = ({
     category,
     learnerUsername,
   } = useContext(DiscussionContext);
+  const threadData = useSelector(selectThread(postId));
   const {
     topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
     unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
     users: postUsers,
-  } = useSelector(selectThread(postId));
+  } = threadData;
   const { pathname } = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
     courseId,
@@ -135,6 +136,7 @@ const PostLink = ({
             author={author || intl.formatMessage(messages.anonymous)}
             authorLabel={authorLabel}
             labelColor={authorLabelColor && `text-${authorLabelColor}`}
+            postData={threadData}
           />
           <PostSummaryFooter
             postId={id}

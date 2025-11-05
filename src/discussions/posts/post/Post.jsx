@@ -30,11 +30,12 @@ import PostHeader from './PostHeader';
 
 const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
   const { enableInContextSidebar, postId } = useContext(DiscussionContext);
+  const threadData = useSelector(selectThread(postId));
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
     closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,
     closedByLabel, users: postUsers,
-  } = useSelector(selectThread(postId));
+  } = threadData;
   const intl = useIntl();
   const location = useLocation();
   const navigate = useNavigate();
@@ -176,6 +177,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
         closeReason={closeReason}
         editByLabel={editByLabel}
         closedByLabel={closedByLabel}
+        postData={threadData}
       />
       <PostHeader
         abuseFlagged={abuseFlagged}
@@ -188,6 +190,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
         postType={postType}
         title={title}
         postUsers={postUsers}
+        postData={threadData}
       />
       <div className="d-flex mt-14px text-break font-style text-primary-500">
         <HTMLLoader htmlNode={renderedBody} componentId="post" cssClassName="html-loader w-100" testId={postId} />

@@ -14,6 +14,7 @@ const AlertBar = ({
   authorLabel,
   labelColor,
   reason,
+  postData,
 }) => {
   const intl = useIntl();
 
@@ -28,6 +29,7 @@ const AlertBar = ({
             labelColor={labelColor}
             linkToProfile
             postOrComment
+            postData={postData}
           />
         </span>
         <span
@@ -48,6 +50,7 @@ AlertBar.propTypes = {
   authorLabel: PropTypes.string,
   labelColor: PropTypes.string,
   reason: PropTypes.string,
+  postData: PropTypes.shape({}),
 };
 
 AlertBar.defaultProps = {
@@ -56,6 +59,7 @@ AlertBar.defaultProps = {
   authorLabel: '',
   labelColor: '',
   reason: '',
+  postData: null,
 };
 
 export default React.memo(AlertBar);

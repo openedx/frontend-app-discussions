@@ -61,7 +61,7 @@ async function renderComponent(editExisting = false, location = `/${courseId}/po
           <MemoryRouter initialEntries={[location]}>
             <Routes>
               {paths.map((path) => (
-                <Route path={path} element={<PostEditor editExisting={editExisting} />} />
+                <Route key={path} path={path} element={<PostEditor editExisting={editExisting} />} />
               ))}
             </Routes>
           </MemoryRouter>

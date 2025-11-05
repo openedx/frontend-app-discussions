@@ -23,10 +23,11 @@ import CommentEditor from './CommentEditor';
 
 const Reply = ({ responseId }) => {
   timeago.register('time-locale', timeLocale);
+  const commentData = useSelector(selectCommentOrResponseById(responseId));
   const {
     id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy,
     closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,
-  } = useSelector(selectCommentOrResponseById(responseId));
+  } = commentData;
   const intl = useIntl();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
@@ -114,6 +115,7 @@ const Reply = ({ responseId }) => {
               lastEdit={lastEdit}
               editByLabel={editByLabel}
               closedByLabel={closedByLabel}
+              postData={commentData}
             />
           </div>
         </div>
@@ -142,6 +144,7 @@ const Reply = ({ responseId }) => {
               linkToProfile
               postCreatedAt={createdAt}
               postOrComment
+              postData={commentData}
             />
             <div className="ml-auto d-flex">
               <ActionsDropdown

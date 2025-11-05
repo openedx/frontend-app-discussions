@@ -210,6 +210,7 @@ const Comment = ({
             createdAt={createdAt}
             lastEdit={lastEdit}
             postUsers={postUsers}
+            postData={comment}
           />
           {isEditing ? (
             <CommentEditor
