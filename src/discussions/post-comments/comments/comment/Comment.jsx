@@ -11,7 +11,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { ContentActions, EndorsementStatus } from '../../../../data/constants';
-import { AlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
+import { AlertBanner, AutoSpamAlertBanner, Confirmation, EndorsedAlertBanner } from '../../../common';
 import DiscussionContext from '../../../common/context';
 import HoverCard from '../../../common/HoverCard';
 import withPostingRestrictions from '../../../common/withPostingRestrictions';
@@ -46,7 +46,7 @@ const Comment = ({
   const {
     id, parentId, childCount, abuseFlagged, endorsed, threadId, endorsedAt, endorsedBy, endorsedByLabel, renderedBody,
     voted, following, voteCount, authorLabel, author, createdAt, lastEdit, rawBody, closed, closedBy, closeReason,
-    editByLabel, closedByLabel, users: postUsers,
+    editByLabel, closedByLabel, users: postUsers, is_spam,
   } = comment;
   const intl = useIntl();
   const hasChildren = childCount > 0;
@@ -67,7 +67,8 @@ const Comment = ({
   const isUserPrivilegedInPostingRestriction = useUserPostingEnabled();
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
   const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
-
+  // If is_spam is not provided in the API response, default to false
+  const isSpamFlagged = is_spam || true;
   useEffect(() => {
     // If the comment has a parent comment, it won't have any children, so don't fetch them.
     if (hasChildren && showFullThread) {
@@ -202,6 +203,7 @@ const Comment = ({
             editByLabel={editByLabel}
             closedByLabel={closedByLabel}
           />
+          <AutoSpamAlertBanner autoSpamFlagged={isSpamFlagged} />
           <CommentHeader
             author={author}
             authorLabel={authorLabel}
