@@ -2,22 +2,25 @@ import React, {
   useCallback, useContext, useEffect, useMemo,
 } from 'react';
 
-import {
-  Button, Icon, IconButton, Spinner,
-} from '@openedx/paragon';
-import { ArrowBack } from '@openedx/paragon/icons';
 import capitalize from 'lodash/capitalize';
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
+import {
+  Button, Icon, IconButton, Spinner,
+} from '@openedx/paragon';
+import { ArrowBack } from '@openedx/paragon/icons';
 
 import {
   RequestStatus,
   Routes,
 } from '../../data/constants';
 import DiscussionContext from '../common/context';
-import { selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
+import { selectEnableInContext, selectUserHasModerationPrivileges, selectUserIsStaff } from '../data/selectors';
+import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
+import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
 import usePostList from '../posts/data/hooks';
 import {
   selectAllThreadsIds,
@@ -27,7 +30,10 @@ import {
 import { clearPostsPages } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { PostLink } from '../posts/post';
+import { selectTopics } from '../topics/data/selectors';
+import fetchCourseTopics from '../topics/data/thunks';
 import { discussionsPath } from '../utils';
+
 import { fetchUserPosts } from './data/thunks';
 import LearnerPostFilterBar from './learner-post-filter-bar/LearnerPostFilterBar';
 import messages from './messages';
@@ -46,6 +52,14 @@ const LearnerPostsView = () => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const userIsStaff = useSelector(selectUserIsStaff);
   const sortedPostsIds = usePostList(postsIds);
+  const enableInContext = useSelector(selectEnableInContext);
+  const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
+
+  useEffect(() => {
+    if (isEmpty(topics)) {
+      dispatch(enableInContext ? fetchCourseTopicsV3(courseId) : fetchCourseTopics(courseId));
+    }
+  }, [topics]);
 
   const loadMorePosts = useCallback((pageNum = undefined) => {
     const params = {
