@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fireEvent, render, screen } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 import { act } from 'react-dom/test-utils';
@@ -232,7 +230,7 @@ describe('PostsView', () => {
 
     test('test that the cohorts filter works', async () => {
       await act(async () => {
-        fireEvent.click(screen.getByLabelText('Cohort 1'));
+        fireEvent.click(screen.getByLabelText('cohort 1'));
       });
 
       dropDownButton = screen.getByRole('button', {
@@ -280,7 +278,7 @@ describe('PostsView', () => {
         queryParam: { group_id: undefined },
       },
       {
-        label: 'Cohort 1',
+        label: 'cohort 1',
         queryParam: { group_id: 'cohort-1' },
       },
     ])(
