@@ -4,6 +4,7 @@ import {
 } from 'react';
 
 import { breakpoints, useWindowSize } from '@openedx/paragon';
+import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   matchPath, useLocation, useMatch, useNavigate,
@@ -20,10 +21,13 @@ import { ContentActions, RequestStatus, Routes } from '../../data/constants';
 import { selectTopicsUnderCategory } from '../../data/selectors';
 import fetchCourseBlocks from '../../data/thunks';
 import DiscussionContext from '../common/context';
+import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
+import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
 import PostCommentsContext from '../post-comments/postCommentsContext';
 import { clearRedirect } from '../posts/data';
 import { threadsLoadingStatus } from '../posts/data/selectors';
 import { selectTopics } from '../topics/data/selectors';
+import fetchCourseTopics from '../topics/data/thunks';
 import tourCheckpoints from '../tours/constants';
 import selectTours from '../tours/data/selectors';
 import { updateTourShowStatus } from '../tours/data/thunks';
@@ -32,6 +36,7 @@ import { checkPermissions, discussionsPath } from '../utils';
 import { ContentSelectors } from './constants';
 import {
   selectAreThreadsFiltered,
+  selectDiscussionProvider,
   selectEnableInContext,
   selectIsPostingEnabled,
   selectIsUserLearner,
@@ -102,6 +107,21 @@ export function useCourseBlockData(courseId) {
 
     fetchBaseData();
   }, [courseId, isEnrolled, courseStatus, isUserLearner]);
+}
+
+export function useTopicsData(courseId, enableInContextSidebar) {
+  const dispatch = useDispatch();
+  const enableInContext = useSelector(selectEnableInContext);
+  const provider = useSelector(selectDiscussionProvider);
+  const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
+
+  useEffect(() => {
+    if (isEmpty(topics) && provider) {
+      dispatch((enableInContext || enableInContextSidebar)
+        ? fetchCourseTopicsV3(courseId)
+        : fetchCourseTopics(courseId));
+    }
+  }, [topics, provider, enableInContext, enableInContextSidebar]);
 }
 
 export function useRedirectToThread(courseId, enableInContextSidebar) {
