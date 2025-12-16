@@ -165,7 +165,7 @@ const PostFilterBar = () => {
                 <ActionItem
                   key={cohort.id}
                   id={toString(cohort.id)}
-                  label={capitalize(cohort.name)}
+                  label={cohort.name}
                   value={toString(cohort.id)}
                   selected={currentFilters.cohort}
                 />
