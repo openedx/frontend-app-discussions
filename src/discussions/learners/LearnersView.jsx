@@ -1,21 +1,15 @@
 import { useCallback, useEffect, useMemo } from 'react';
 
-import isEmpty from 'lodash/isEmpty';
+import { Button, Spinner } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Spinner } from '@openedx/paragon';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
-import { selectConfigLoadingStatus, selectEnableInContext } from '../data/selectors';
-import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
-import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
+import { selectConfigLoadingStatus } from '../data/selectors';
 import NoResults from '../posts/NoResults';
-import { selectTopics } from '../topics/data/selectors';
-import fetchCourseTopics from '../topics/data/thunks';
-
 import {
   learnersLoadingStatus,
   selectAllLearners,
@@ -38,14 +32,6 @@ const LearnersView = () => {
   const usernameSearch = useSelector(selectUsernameSearch());
   const courseConfigLoadingStatus = useSelector(selectConfigLoadingStatus);
   const learners = useSelector(selectAllLearners);
-  const enableInContext = useSelector(selectEnableInContext);
-  const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
-
-  useEffect(() => {
-    if (isEmpty(topics)) {
-      dispatch(enableInContext ? fetchCourseTopicsV3(courseId) : fetchCourseTopics(courseId));
-    }
-  }, [topics]);
 
   useEffect(() => {
     if (usernameSearch) {

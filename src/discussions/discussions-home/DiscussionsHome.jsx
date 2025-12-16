@@ -16,7 +16,7 @@ import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/con
 import DiscussionContext from '../common/context';
 import ContentUnavailable from '../content-unavailable/ContentUnavailable';
 import {
-  useCourseBlockData, useCourseDiscussionData, useIsOnTablet, useRedirectToThread, useSidebarVisible,
+  useCourseBlockData, useCourseDiscussionData, useIsOnTablet, useRedirectToThread, useSidebarVisible, useTopicsData,
 } from '../data/hooks';
 import { selectDiscussionProvider, selectEnableInContext, selectIsUserLearner } from '../data/selectors';
 import { EmptyLearners, EmptyTopics } from '../empty-posts';
@@ -62,6 +62,7 @@ const DiscussionsHome = () => {
   useCourseDiscussionData(courseId);
   useRedirectToThread(courseId, enableInContextSidebar);
   useCourseBlockData(courseId);
+  useTopicsData(courseId, enableInContextSidebar);
   useFeedbackWrapper();
   /*  Display the content area if we are currently viewing/editing a post or creating one.
   If the window is larger than a particular size, show the sidebar for navigating between posts/topics.
