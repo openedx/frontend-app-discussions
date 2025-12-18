@@ -175,7 +175,7 @@ const FilterBar = ({
                       <ActionItem
                         key={toString(cohort.id)}
                         id={toString(cohort.id)}
-                        label={capitalize(cohort.name)}
+                        label={cohort.name}
                         value={toString(cohort.id)}
                         selected={selectedFilters.cohort}
                       />
