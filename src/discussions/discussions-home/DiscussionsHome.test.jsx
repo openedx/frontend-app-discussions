@@ -27,10 +27,10 @@ import { fetchThreads } from '../posts/data/thunks';
 import fetchCourseTopics from '../topics/data/thunks';
 import DiscussionsHome from './DiscussionsHome';
 
-import '../posts/data/__factories__/threads.factory';
-import '../in-context-topics/data/__factories__/inContextTopics.factory';
-import '../topics/data/__factories__/topics.factory';
 import '../../components/NavigationBar/data/__factories__/navigationBar.factory';
+import '../in-context-topics/data/__factories__/inContextTopics.factory';
+import '../posts/data/__factories__/threads.factory';
+import '../topics/data/__factories__/topics.factory';
 
 const courseConfigApiUrl = getCourseConfigApiUrl();
 let axiosMock;
@@ -224,7 +224,7 @@ describe('DiscussionsHome', () => {
 
   it('should display post editor form when click on add a post button in legacy topics view', async () => {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
-      enable_in_context: false, hasModerationPrivileges: true, isEmailVerified: true,
+      enable_in_context: false, hasModerationPrivileges: true, isEmailVerified: true, provider: 'legacy',
     });
     await executeThunk(fetchCourseConfig(courseId), store.dispatch, store.getState);
     await renderComponent(`/${courseId}/topics`);
