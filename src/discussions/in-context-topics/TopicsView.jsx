@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useContext, useEffect, useMemo,
-} from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { Spinner } from '@openedx/paragon';
 import classNames from 'classnames';
@@ -9,8 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SearchInfo from '../../components/SearchInfo';
 import { RequestStatus } from '../../data/constants';
-import DiscussionContext from '../common/context';
-import { selectAreThreadsFiltered, selectDiscussionProvider } from '../data/selectors';
+import { selectAreThreadsFiltered } from '../data/selectors';
 import { clearFilter, clearSort } from '../posts/data/slices';
 import NoResults from '../posts/NoResults';
 import { handleKeyDown } from '../utils';
@@ -19,7 +16,6 @@ import {
   selectNonCoursewareTopics, selectTopicFilter, selectTopics,
 } from './data/selectors';
 import { setFilter } from './data/slices';
-import fetchCourseTopicsV3 from './data/thunks';
 import { ArchivedBaseGroup, SectionBaseGroup, Topic } from './topic';
 
 const TopicsList = () => {
@@ -71,19 +67,11 @@ const TopicsList = () => {
 
 const TopicsView = () => {
   const dispatch = useDispatch();
-  const { courseId } = useContext(DiscussionContext);
-  const provider = useSelector(selectDiscussionProvider);
   const topicFilter = useSelector(selectTopicFilter);
   const filteredTopics = useSelector(selectFilteredTopics);
   const loadingStatus = useSelector(selectLoadingStatus);
   const isPostsFiltered = useSelector(selectAreThreadsFiltered);
   const topics = useSelector(selectTopics);
-
-  useEffect(() => {
-    if (provider) {
-      dispatch(fetchCourseTopicsV3(courseId));
-    }
-  }, [provider]);
 
   useEffect(() => {
     if (isPostsFiltered) {

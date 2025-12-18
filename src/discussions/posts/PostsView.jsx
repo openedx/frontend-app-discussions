@@ -1,19 +1,11 @@
-import React, {
-  useCallback, useContext, useEffect, useMemo,
-} from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SearchInfo from '../../components/SearchInfo';
 import { selectCurrentCategoryGrouping, selectTopicsUnderCategory } from '../../data/selectors';
 import DiscussionContext from '../common/context';
-import { selectEnableInContext } from '../data/selectors';
-import { selectTopics as selectInContextTopics } from '../in-context-topics/data/selectors';
-import fetchCourseTopicsV3 from '../in-context-topics/data/thunks';
-import { selectTopics } from '../topics/data/selectors';
-import fetchCourseTopics from '../topics/data/thunks';
 import { handleKeyDown } from '../utils';
 import { selectAllThreadsIds, selectTopicThreadsIds } from './data/selectors';
 import { setSearchQuery } from './data/slices';
@@ -51,27 +43,12 @@ CategoryPostsList.propTypes = {
 };
 
 const PostsView = () => {
-  const {
-    topicId,
-    category,
-    courseId,
-    enableInContextSidebar,
-  } = useContext(DiscussionContext);
+  const { topicId, category } = useContext(DiscussionContext);
   const dispatch = useDispatch();
-  const enableInContext = useSelector(selectEnableInContext);
   const searchString = useSelector(({ threads }) => threads.filters.search);
   const resultsFound = useSelector(({ threads }) => threads.totalThreads);
   const textSearchRewrite = useSelector(({ threads }) => threads.textSearchRewrite);
   const loadingStatus = useSelector(({ threads }) => threads.status);
-  const topics = useSelector(enableInContext ? selectInContextTopics : selectTopics);
-
-  useEffect(() => {
-    if (isEmpty(topics)) {
-      dispatch((enableInContext || enableInContextSidebar)
-        ? fetchCourseTopicsV3(courseId)
-        : fetchCourseTopics(courseId));
-    }
-  }, [topics]);
 
   const handleOnClear = useCallback(() => {
     dispatch(setSearchQuery(''));
