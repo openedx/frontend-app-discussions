@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { mergeConfig } from '@edx/frontend-platform';
+
 import '@testing-library/jest-dom/extend-expect';
 import 'babel-polyfill';
 
@@ -66,3 +68,10 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 jest.setTimeout(1000000);
+
+mergeConfig({
+  LEARNING_BASE_URL: process.env.LEARNING_BASE_URL,
+  LEARNER_FEEDBACK_URL: process.env.LEARNER_FEEDBACK_URL,
+  STAFF_FEEDBACK_URL: process.env.STAFF_FEEDBACK_URL,
+  ENABLE_PROFILE_IMAGE: process.env.ENABLE_PROFILE_IMAGE || 'false',
+}, 'DiscussionsConfig');
