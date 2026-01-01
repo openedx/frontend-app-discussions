@@ -19,7 +19,7 @@ const CommentHeader = ({
   closed,
   createdAt,
   lastEdit,
-  postUsers,
+  commentUsers,
 }) => {
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
   const hasAnyAlert = useAlertBannerVisible({
@@ -31,7 +31,7 @@ const CommentHeader = ({
   const authorAvatar = useSelector(selectAuthorAvatar(author));
 
   const profileImage = getConfig()?.ENABLE_PROFILE_IMAGE === 'true'
-    ? Object.values(postUsers ?? {})[0]?.profile?.image
+    ? Object.values(commentUsers ?? {})[0]?.profile?.image
     : null;
 
   return (
@@ -43,7 +43,7 @@ const CommentHeader = ({
         <Avatar
           className={`border-0 ml-0.5 mr-2.5 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
           alt={author}
-          src={profileImage?.hasImage ? profileImage?.imageUrlSmall : authorAvatar}
+          src={profileImage?.hasImage ? profileImage?.imageUrlSmall : authorAvatar?.imageUrlSmall}
           style={{
             width: '32px',
             height: '32px',
@@ -72,7 +72,7 @@ CommentHeader.propTypes = {
     editorUsername: PropTypes.string,
     reason: PropTypes.string,
   }),
-  postUsers: PropTypes.shape({}).isRequired,
+  commentUsers: PropTypes.shape({}).isRequired,
 };
 
 CommentHeader.defaultProps = {
