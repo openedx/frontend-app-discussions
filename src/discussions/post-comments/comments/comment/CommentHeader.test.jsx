@@ -22,7 +22,7 @@ const defaultProps = {
   closed: false,
   createdAt: '2025-09-23T10:00:00Z',
   lastEdit: null,
-  postUsers: {
+  commentUsers: {
     'test-user': {
       profile: { image: { hasImage: true, imageUrlSmall: 'http://avatar.test/img.png' } },
     },

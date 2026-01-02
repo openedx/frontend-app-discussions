@@ -30,6 +30,16 @@ Factory.define('comment')
     parent_id: null,
     children: [],
     abuse_flagged_any_user: false,
+    users: {
+      edx: {
+        profile: {
+          image: {
+            hasImage: true,
+            imageUrlSmall: 'http://test.site/default-avatar-small.png',
+          },
+        },
+      },
+    },
   });
 
 Factory.define('commentsResult')
