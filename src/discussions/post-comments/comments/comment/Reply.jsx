@@ -5,6 +5,7 @@ import { Avatar, useToggle } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import * as timeago from 'timeago.js';
 
+import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 
 import HTMLLoader from '../../../../components/HTMLLoader';
@@ -24,7 +25,7 @@ import CommentEditor from './CommentEditor';
 const Reply = ({ responseId }) => {
   timeago.register('time-locale', timeLocale);
   const {
-    id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy,
+    id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy, users: replyUsers,
     closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,
   } = useSelector(selectCommentOrResponseById(responseId));
   const intl = useIntl();
@@ -78,6 +79,10 @@ const Reply = ({ responseId }) => {
     [ContentActions.REPORT]: handleAbusedFlag,
   }), [handleEditContent, handleReplyEndorse, showDeleteConfirmation, handleAbusedFlag]);
 
+  const profileImage = getConfig()?.ENABLE_PROFILE_IMAGE === 'true'
+    ? Object.values(replyUsers ?? {})[0]?.profile?.image
+    : null;
+
   return (
     <div className="d-flex flex-column mt-2.5 " data-testid={`reply-${id}`} role="listitem">
       <Confirmation
@@ -123,7 +128,7 @@ const Reply = ({ responseId }) => {
           <Avatar
             className={`ml-0.5 mt-0.5 border-0 ${colorClass ? `outline-${colorClass}` : 'outline-anonymous'}`}
             alt={author}
-            src={authorAvatar?.imageUrlSmall}
+            src={profileImage?.hasImage ? profileImage?.imageUrlSmall : authorAvatar?.imageUrlSmall}
             style={{
               width: '32px',
               height: '32px',

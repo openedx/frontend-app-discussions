@@ -9,7 +9,9 @@ import {
 } from 'react-router-dom';
 import { Factory } from 'rosie';
 
-import { camelCaseObject, initializeMockApp } from '@edx/frontend-platform';
+import {
+  camelCaseObject, getConfig, initializeMockApp, setConfig,
+} from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { AppProvider } from '@edx/frontend-platform/react';
 
@@ -737,6 +739,20 @@ describe('ThreadView', () => {
       // check that comments from the first page are also displayed
       expect(screen.queryByTestId('comment-comment-4'))
         .toBeInTheDocument();
+    });
+
+    it('it show avatar for reply author when ENABLE_PROFILE_IMAGE is true', async () => {
+      setConfig({
+        ...getConfig(),
+        ENABLE_PROFILE_IMAGE: 'true',
+      });
+      await waitFor(() => renderComponent(discussionPostId));
+
+      const comment = await waitFor(() => screen.findByTestId('comment-comment-1'));
+
+      expect(comment).toBeInTheDocument();
+      const replyAuthorAvatar = within(comment).getAllByAltText('edx');
+      expect(replyAuthorAvatar.length).toBeGreaterThan(0);
     });
   });
 
