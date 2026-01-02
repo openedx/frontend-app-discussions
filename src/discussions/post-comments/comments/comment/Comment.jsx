@@ -226,7 +226,7 @@ const Comment = ({
             />
           ) : (
             <HTMLLoader
-              cssClassName="comment-body html-loader text-break mt-14px font-style text-primary-500"
+              cssClassName="comment-body html-loader text-break mt-14px font-style"
               componentId="comment"
               htmlNode={renderedBody}
               testId={id}
