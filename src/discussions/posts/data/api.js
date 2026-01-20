@@ -97,7 +97,7 @@ export const postThread = async (
   content,
   {
     following,
-    cohort,
+    groupId,
     anonymous,
     anonymousToPeers,
     notifyAllLearners,
@@ -114,7 +114,7 @@ export const postThread = async (
     following,
     anonymous,
     anonymousToPeers,
-    groupId: cohort,
+    groupId,
     enableInContextSidebar,
     notifyAllLearners,
     captchaToken: recaptchaToken,
@@ -154,6 +154,7 @@ export const updateThread = async (threadId, {
   pinned,
   editReasonCode,
   closeReasonCode,
+  groupId,
 } = {}) => {
   const url = `${getThreadsApiUrl()}${threadId}/`;
   const patchData = snakeCaseObject({
@@ -169,6 +170,7 @@ export const updateThread = async (threadId, {
     pinned,
     editReasonCode,
     closeReasonCode,
+    groupId,
   });
   const { data } = await getAuthenticatedHttpClient()
     .patch(url, patchData, { headers: { 'Content-Type': 'application/merge-patch+json' } });

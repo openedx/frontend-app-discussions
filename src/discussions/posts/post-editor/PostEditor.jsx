@@ -140,7 +140,7 @@ const PostEditor = ({
     notifyAllLearners: false,
     anonymous: allowAnonymous ? false : undefined,
     anonymousToPeers: allowAnonymousToPeers ? false : undefined,
-    cohort: post?.cohort || 'default',
+    cohort: post?.groupId || 'default',
     editReasonCode: post?.lastEdit?.reasonCode || (
       userIsStaff && canDisplayEditReason ? 'violates-guidelines' : undefined
     ),
@@ -175,6 +175,8 @@ const PostEditor = ({
 
   const submitForm = useCallback(async (values, { resetForm }) => {
     let recaptchaToken;
+    const groupId = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
+
     if (shouldRequireCaptcha && executeRecaptcha) {
       try {
         recaptchaToken = await executeRecaptcha('submit_post');
@@ -196,10 +198,9 @@ const PostEditor = ({
         title: values.title,
         content: values.comment,
         editReasonCode: values.editReasonCode || undefined,
+        groupId,
       }));
     } else {
-      const cohort = canSelectCohort(values.topic) ? selectedCohort(values.cohort) : undefined;
-
       await dispatchSubmit(createNewThread({
         courseId,
         topicId: values.topic,
@@ -209,7 +210,7 @@ const PostEditor = ({
         following: values.follow,
         anonymous: allowAnonymous ? values.anonymous : undefined,
         anonymousToPeers: allowAnonymousToPeers ? values.anonymousToPeers : undefined,
-        cohort,
+        groupId,
         enableInContextSidebar,
         notifyAllLearners: values.notifyAllLearners,
         ...(shouldRequireCaptcha && recaptchaToken ? { recaptchaToken } : {}),
