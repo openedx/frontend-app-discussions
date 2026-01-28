@@ -39,7 +39,7 @@
     "@tinymce/tinymce-react": "5.1.1",
     "babel-polyfill": "6.26.0",
     "classnames": "2.5.1",
-    "core-js": "3.47.0",
+    "core-js": "3.48.0",
     "dompurify": "^2.4.3",
     "formik": "2.4.9",
     "lodash.snakecase": "4.1.1",
