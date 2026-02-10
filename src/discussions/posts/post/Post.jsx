@@ -143,6 +143,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
         onClose={hideDeleteConfirmation}
         confirmAction={handleDeleteConfirmation}
         closeButtonVariant="tertiary"
+        confirmButtonVariant="danger"
         confirmButtonText={intl.formatMessage(messages.deleteConfirmationDelete)}
       />
       {!abuseFlagged && (
@@ -152,7 +153,6 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
           description={intl.formatMessage(messages.reportPostDescription)}
           onClose={hideReportConfirmation}
           confirmAction={handleReportConfirmation}
-          confirmButtonVariant="danger"
         />
       )}
       <HoverCard
