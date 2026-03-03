@@ -4,7 +4,6 @@ import React, {
 
 import { Icon, SearchField } from '@openedx/paragon';
 import { Search as SearchIcon } from '@openedx/paragon/icons';
-import camelCase from 'lodash/camelCase';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -79,7 +78,7 @@ const Search = () => {
       <SearchField.Label />
       <SearchField.Input
         style={{ paddingRight: '1rem' }}
-        placeholder={intl.formatMessage(postsMessages.search, { page: camelCase(page) })}
+        placeholder={intl.formatMessage(postsMessages.searchAllPosts)}
       />
       <span className="py-auto px-2.5 pointer-cursor-hover">
         <Icon
