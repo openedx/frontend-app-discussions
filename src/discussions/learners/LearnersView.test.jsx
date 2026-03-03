@@ -102,7 +102,7 @@ describe('LearnersView', () => {
     await executeThunk(fetchLearners(courseId, { usernameSearch: searchText }), store.dispatch, store.getState);
   }
 
-  async function assignPrivilages(hasModerationPrivileges = false) {
+  async function assignPrivileges(hasModerationPrivileges = false) {
     axiosMock.onGet(getDiscussionsConfigUrl(courseId)).reply(200, {
       user_is_privileged: true,
       hasModerationPrivileges,
@@ -113,7 +113,7 @@ describe('LearnersView', () => {
 
   test('Learners tab is enabled', async () => {
     await setUpLearnerMockResponse();
-    await assignPrivilages();
+    await assignPrivileges();
     await waitFor(() => {
       renderComponent();
     });
@@ -144,7 +144,7 @@ describe('LearnersView', () => {
     { searchBy: 'sort-reported', result: 3 },
   ])('successfully display learners by %s.', async ({ searchBy, result }) => {
     await setUpLearnerMockResponse();
-    await assignPrivilages(true);
+    await assignPrivileges(true);
     await renderComponent();
 
     const filterBar = container.querySelector('.collapsible-trigger');
@@ -168,7 +168,7 @@ describe('LearnersView', () => {
 
   it('should display a learner\'s list.', async () => {
     await setUpLearnerMockResponse();
-    await assignPrivilages();
+    await assignPrivileges();
     await waitFor(() => {
       renderComponent();
     });
@@ -205,7 +205,7 @@ describe('LearnersView', () => {
       searchText, output, learnersCount, username,
     }) => {
       await setUpLearnerMockResponse();
-      await assignPrivilages();
+      await assignPrivileges();
       await renderComponent();
 
       const searchField = within(container).getByPlaceholderText('Search learners');
@@ -220,18 +220,18 @@ describe('LearnersView', () => {
       await waitFor(() => {
         const clearButton = within(container).queryByText('Clear results');
         const searchMessage = within(container).queryByText(`${output} "${searchText}"`);
-        const leaners = container.querySelectorAll('.discussion-post') ?? [];
+        const learners = container.querySelectorAll('.discussion-post') ?? [];
 
         expect(searchMessage).toBeInTheDocument();
         expect(clearButton).toBeInTheDocument();
-        expect(leaners).toHaveLength(learnersCount);
+        expect(learners).toHaveLength(learnersCount);
       });
     },
   );
 
   test('When click on the clear button it should move to a list of all learners.', async () => {
     await setUpLearnerMockResponse();
-    await assignPrivilages(true);
+    await assignPrivileges(true);
     await renderComponent();
 
     const searchField = within(container).getByPlaceholderText('Search learners');
@@ -261,7 +261,7 @@ describe('LearnersView', () => {
     'should display reported and previously reported message by passing activeFlags or inactiveFlags',
     async () => {
       await setUpLearnerMockResponse(2, 2, 1, ['learner-1', 'learner-2'], '', 1, 1);
-      await assignPrivilages(true);
+      await assignPrivileges(true);
       await renderComponent();
       await waitFor(() => container.querySelector('.text-danger'));
 
@@ -280,7 +280,7 @@ describe('LearnersView', () => {
 
   it('should display load more button and display more learners by clicking on button.', async () => {
     await setUpLearnerMockResponse();
-    await assignPrivilages(true);
+    await assignPrivileges(true);
     await renderComponent();
 
     await waitFor(() => container.querySelector('[data-testid="load-more-learners"]'));
