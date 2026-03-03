@@ -208,7 +208,7 @@ describe('LearnersView', () => {
       await assignPrivileges();
       await renderComponent();
 
-      const searchField = within(container).getByPlaceholderText('Search learners');
+      const searchField = within(container).getByPlaceholderText('Search all posts');
       const searchButton = within(container).getByTestId('search-icon');
 
       await fireEvent.change(searchField, { target: { value: searchText } });
@@ -234,7 +234,7 @@ describe('LearnersView', () => {
     await assignPrivileges(true);
     await renderComponent();
 
-    const searchField = within(container).getByPlaceholderText('Search learners');
+    const searchField = within(container).getByPlaceholderText('Search all posts');
     const searchButton = within(container).getByTestId('search-icon');
     let clearButton;
 
