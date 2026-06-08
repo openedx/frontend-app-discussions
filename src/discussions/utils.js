@@ -29,6 +29,27 @@ import messages from './messages';
  */
 export const getHttpErrorStatus = error => error?.customAttributes?.httpErrorStatus ?? error?.response?.status;
 
+export function getAuthorRoles(authorLabel) {
+  if (Array.isArray(authorLabel)) {
+    return authorLabel
+      .map(role => (typeof role === 'string' ? role.trim() : ''))
+      .filter(Boolean);
+  }
+
+  if (typeof authorLabel === 'string') {
+    return authorLabel
+      .split(',')
+      .map(role => role.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+export function getAuthorLabelText(authorLabel) {
+  return getAuthorRoles(authorLabel).join(', ');
+}
+
 /**
  * Return true if a field has been modified and is no longer valid
  * @param {string} field Name of field
@@ -188,7 +209,113 @@ export const ACTIONS_LIST = [
 
 export function useActions(contentType, id) {
   const { postType } = useContext(PostCommentsContext);
-  const content = { ...useSelector(ContentSelectors[contentType](id)), postType };
+  const baseContent = useSelector(ContentSelectors[contentType](id));
+  const enableDiscussionBan = useSelector(state => state.config.enableDiscussionBan);
+  // Global Staff - has all permissions
+  const isGlobalStaff = useSelector(state => state.config.isUserAdmin);
+  // Discussion Admin/Moderator - has all discussion permissions
+  const hasDiscussionModeratorPrivileges = useSelector(state => state.config.hasModerationPrivileges);
+  // Check if user can perform course-level and org-level bans
+  const canBanAtCourseLevel = useSelector(selectUserCanBanAtCourseLevel);
+  const canBanAtOrgLevel = useSelector(selectUserCanBanAtOrgLevel);
+  const userRoles = useSelector(state => state.config.userRoles);
+  // Group TA - has limited permissions within their group
+  const isUserGroupTA = useSelector(state => state.config.isGroupTa);
+  // Course Staff/Admin - NO discussion privileges (treated as learners)
+  const currentUser = getAuthenticatedUser()?.username;
+  const personalMutedUsers = useSelector(state => state.learners?.mutedUsers?.personal || []);
+  const courseWideMutedUsers = useSelector(state => state.learners?.mutedUsers?.course || []);
+
+  // Calculate if current user can mute the post author
+  const canMute = useMemo(() => {
+    // If canMute is already explicitly set in baseContent, use that value
+    if (typeof baseContent?.canMute === 'boolean') {
+      return baseContent.canMute;
+    }
+
+    if (!baseContent?.author) {
+      return false;
+    }
+
+    // Users cannot mute themselves
+    if (currentUser === baseContent.author) {
+      return false;
+    }
+
+    // Only Global Staff, Discussion Moderators, and Group TAs can mute users
+    // Course Staff/Admin are excluded
+    if (isGlobalStaff || hasDiscussionModeratorPrivileges || isUserGroupTA) {
+      // Check if post author is staff (handle both new and legacy label formats)
+      // Privileged users (Global Staff, Course Staff, Discussion Admin/Moderator, Community TA) have authorLabel
+      const targetRoles = getAuthorRoles(baseContent.authorLabel);
+      const targetHasRole = targetRoles.includes('Global Staff')
+        || targetRoles.includes('Course Staff')
+        || targetRoles.includes('Course Instructor')
+        || targetRoles.includes('Administrator')
+        || targetRoles.includes('Community TA')
+        || targetRoles.includes('Group Moderator')
+        || targetRoles.includes('Staff') // Legacy
+        || targetRoles.includes('Moderator'); // Legacy
+
+      return !targetHasRole;
+    }
+
+    // Learners cannot mute staff/privileged users
+    if (baseContent.authorLabel) {
+      const targetRoles = getAuthorRoles(baseContent.authorLabel);
+      const targetHasRole = targetRoles.includes('Global Staff')
+        || targetRoles.includes('Course Staff')
+        || targetRoles.includes('Course Instructor')
+        || targetRoles.includes('Administrator')
+        || targetRoles.includes('Community TA')
+        || targetRoles.includes('Group Moderator')
+        || targetRoles.includes('Staff') // Legacy
+        || targetRoles.includes('Moderator'); // Legacy
+
+      if (targetHasRole) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [baseContent, isGlobalStaff, hasDiscussionModeratorPrivileges, isUserGroupTA, currentUser]);
+
+  // Check if user is muted by the CURRENT logged-in user ONLY
+  const muteState = useMemo(() => {
+    if (!baseContent?.author) {
+      return {
+        isMuted: false,
+        isMutedPersonal: false,
+        isMutedCourseWide: false,
+      };
+    }
+
+    // personalMutedUsers and courseWideMutedUsers are already scoped to the current viewer's permissions
+    const isMutedInPersonal = personalMutedUsers.includes(baseContent.author);
+    const isMutedInCourseWide = courseWideMutedUsers.includes(baseContent.author);
+    const hasScopedMuteState = isMutedInPersonal || isMutedInCourseWide;
+
+    // Fallback: if legacy isMuted exists but scoped arrays are empty, treat as both scopes
+    // so unmute options are still accessible and no action is accidentally hidden.
+    const isMutedFromContent = typeof baseContent?.isMuted === 'boolean' ? baseContent.isMuted : false;
+    const shouldFallbackToUnknownScope = isMutedFromContent && !hasScopedMuteState;
+
+    const isMutedPersonal = isMutedInPersonal || shouldFallbackToUnknownScope;
+    const isMutedCourseWide = isMutedInCourseWide || shouldFallbackToUnknownScope;
+
+    return {
+      isMuted: isMutedPersonal || isMutedCourseWide,
+      isMutedPersonal,
+      isMutedCourseWide,
+    };
+  }, [baseContent, personalMutedUsers, courseWideMutedUsers]);
+
+  const content = {
+    ...baseContent,
+    postType,
+    canMute,
+    ...muteState,
+  };
 
   const checkConditions = useCallback((item, conditions) => (
     conditions
@@ -298,6 +425,31 @@ export function truncatePath(path) {
 
 export function getAuthorLabel(intl, authorLabel) {
   const authorLabelMappings = {
+    'Global Staff': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    'Course Staff': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelCourseStaff),
+    },
+    'Course Instructor': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelCourseInstructor),
+    },
+    Administrator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelAdministrator),
+    },
+    'Community TA': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
+    },
+    'Group Moderator': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelGroupModerator),
+    },
+    // Legacy mappings for backward compatibility
     Staff: {
       icon: Institution,
       authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
@@ -306,13 +458,78 @@ export function getAuthorLabel(intl, authorLabel) {
       icon: School,
       authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
     },
+  };
+
+  if (!authorLabel) {
+    return {};
+  }
+
+  // Handle array or comma-separated roles: display the first matching role
+  const roles = getAuthorRoles(authorLabel);
+  for (const role of roles) {
+    if (authorLabelMappings[role]) {
+      return authorLabelMappings[role];
+    }
+  }
+
+  return {};
+}
+
+/**
+ * Returns an array of all matched role label entries for a comma-separated authorLabel string.
+ * Each entry contains { icon, authorLabelMessage, role }.
+ * Unrecognized roles are skipped. Returns an empty array if authorLabel is falsy.
+ * This function does NOT replace getAuthorLabel — it is additive for multi-role display.
+ *
+ * @param {Object} intl - react-intl intl object
+ * @param {string} authorLabel - comma-separated role string from the API
+ * @returns {Array<{icon: React.Component, authorLabelMessage: string, role: string}>}
+ */
+export function getAuthorLabels(intl, authorLabel) {
+  const authorLabelMappings = {
+    'Global Staff': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    'Course Staff': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelCourseStaff),
+    },
+    'Course Instructor': {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelCourseInstructor),
+    },
+    Administrator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelAdministrator),
+    },
     'Community TA': {
       icon: School,
       authorLabelMessage: intl.formatMessage(messages.authorLabelTA),
     },
+    'Group Moderator': {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelGroupModerator),
+    },
+    // Legacy mappings for backward compatibility
+    Staff: {
+      icon: Institution,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelStaff),
+    },
+    Moderator: {
+      icon: School,
+      authorLabelMessage: intl.formatMessage(messages.authorLabelModerator),
+    },
   };
 
-  return authorLabelMappings[authorLabel] || {};
+  if (!authorLabel) {
+    return [];
+  }
+
+  const roles = getAuthorRoles(authorLabel);
+  return roles
+    .filter(role => Boolean(authorLabelMappings[role]))
+    .map(role => ({ ...authorLabelMappings[role], role }));
 }
 
 export const isCourseStatusValid = (courseStatus) => [DENIED, LOADED].includes(courseStatus);

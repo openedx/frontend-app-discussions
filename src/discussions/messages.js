@@ -150,18 +150,53 @@ const messages = defineMessages({
   },
   authorLabelStaff: {
     id: 'discussions.authors.label.staff',
-    defaultMessage: 'Staff',
-    description: 'A label for staff users displayed next to their username.',
+    defaultMessage: 'Global Staff',
+    description: 'A label for global staff users displayed next to their username.',
   },
   authorLabelModerator: {
     id: 'discussions.authors.label.moderator',
-    defaultMessage: 'TA',
+    defaultMessage: 'Discussion Moderator',
     description: 'A label for moderators displayed next to their username.',
+  },
+  authorLabelAdministrator: {
+    id: 'discussions.authors.label.administrator',
+    defaultMessage: 'Discussion Administrator',
+    description: 'A label for administrators displayed next to their username.',
   },
   authorLabelTA: {
     id: 'discussions.authors.label.ta',
-    defaultMessage: 'CTA',
+    defaultMessage: 'Community TA',
     description: 'A label for community TAs displayed next to their username.',
+  },
+  authorLabelCourseStaff: {
+    id: 'discussions.authors.label.courseStaff',
+    defaultMessage: 'Course Staff',
+    description: 'A label for course staff displayed next to their username.',
+  },
+  authorLabelCourseInstructor: {
+    id: 'discussions.authors.label.courseInstructor',
+    defaultMessage: 'Course Instructor',
+    description: 'A label for course instructors displayed next to their username.',
+  },
+  authorLabelGroupModerator: {
+    id: 'discussions.authors.label.groupModerator',
+    defaultMessage: 'Group Moderator',
+    description: 'A label for group moderators displayed next to their username.',
+  },
+  authorLabelBanned: {
+    id: 'discussions.authors.label.banned',
+    defaultMessage: 'Banned',
+    description: 'A label for banned users displayed next to their username.',
+  },
+  bannedUserBannerTitle: {
+    id: 'discussions.bannedUser.banner.title',
+    defaultMessage: "You've been banned from discussions in this course",
+    description: 'Title for banned user banner',
+  },
+  bannedUserBannerMessage: {
+    id: 'discussions.bannedUser.banner.message',
+    defaultMessage: "You've been banned from discussions in this course",
+    description: 'Message shown in banned user banner',
   },
   loadMorePosts: {
     id: 'discussions.learner.loadMostPosts',

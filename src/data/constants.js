@@ -79,9 +79,16 @@ export const RequestStatus = {
  * @enum {string}
  */
 export const AvatarOutlineAndLabelColors = {
-  Staff: 'staff-color',
+  // New role names
+  'Global Staff': 'staff-color',
+  'Course Staff': 'staff-color',
+  'Course Instructor': 'staff-color',
+  Administrator: 'TA-color',
   Moderator: 'TA-color',
   'Community TA': 'TA-color',
+  'Group Moderator': 'TA-color',
+  // Legacy mappings for backward compatibility
+  Staff: 'staff-color',
 };
 
 /**

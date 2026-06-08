@@ -17,7 +17,10 @@ import timeLocale from '../../../common/time-locale';
 import { ContentTypes } from '../../../data/constants';
 import { useAlertBannerVisible } from '../../../data/hooks';
 import { selectAuthorAvatar } from '../../../posts/data/selectors';
-import { selectCommentOrResponseById } from '../../data/selectors';
+import { getAuthorRoles } from '../../../utils';
+import {
+  selectCommentOrResponseById,
+} from '../../data/selectors';
 import { editComment, removeComment } from '../../data/thunks';
 import messages from '../../messages';
 import CommentEditor from './CommentEditor';
@@ -25,15 +28,18 @@ import CommentEditor from './CommentEditor';
 const Reply = ({ responseId }) => {
   timeago.register('time-locale', timeLocale);
   const {
-    id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy, users: replyUsers,
-    closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,
-  } = useSelector(selectCommentOrResponseById(responseId));
+    id, abuseFlagged, author, authorLabel: rawAuthorLabel, authorLabels, endorsed, lastEdit, closed, closedBy,
+    closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel,
+    closedByLabel,
+  } = commentData;
+  const authorLabel = (authorLabels && authorLabels.length > 0) ? authorLabels : rawAuthorLabel;
   const intl = useIntl();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
-  const colorClass = AvatarOutlineAndLabelColors[authorLabel];
+  const firstRole = getAuthorRoles(authorLabel)[0];
+  const colorClass = AvatarOutlineAndLabelColors[firstRole];
   const hasAnyAlert = useAlertBannerVisible({
     author,
     abuseFlagged,

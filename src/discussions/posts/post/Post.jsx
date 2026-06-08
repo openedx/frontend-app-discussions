@@ -20,7 +20,7 @@ import withPostingRestrictions from '../../common/withPostingRestrictions';
 import { ContentTypes } from '../../data/constants';
 import { selectContentCreationRateLimited, selectShouldShowEmailConfirmation, selectUserHasModerationPrivileges } from '../../data/selectors';
 import { selectTopic } from '../../topics/data/selectors';
-import { truncatePath } from '../../utils';
+import { getAuthorRoles, truncatePath } from '../../utils';
 import { selectThread } from '../data/selectors';
 import { removeThread, updateExistingThread } from '../data/thunks';
 import ClosePostReasonModal from './ClosePostReasonModal';
@@ -31,10 +31,35 @@ import PostHeader from './PostHeader';
 const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
   const { enableInContextSidebar, postId } = useContext(DiscussionContext);
   const {
-    topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
-    closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,
-    closedByLabel, users: postUsers,
-  } = useSelector(selectThread(postId));
+    topicId,
+    abuseFlagged,
+    closed,
+    pinned,
+    voted,
+    hasEndorsed,
+    following,
+    closedBy,
+    voteCount,
+    groupId,
+    groupName,
+    closeReason,
+    authorLabel: rawAuthorLabel,
+    authorLabels,
+    type: postType,
+    author,
+    title,
+    createdAt,
+    renderedBody,
+    lastEdit,
+    editByLabel,
+    closedByLabel,
+    users: postUsers,
+  } = threadData;
+
+  // Prefer the new authorLabels array when available; fall back to the legacy string.
+  // This keeps a single variable flowing through the entire component tree.
+  const authorLabel = (authorLabels && authorLabels.length > 0) ? authorLabels : rawAuthorLabel;
+
   const intl = useIntl();
   const location = useLocation();
   const navigate = useNavigate();
@@ -47,6 +72,47 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const [isClosing, showClosePostModal, hideClosePostModal] = useToggle(false);
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
+  const userRoles = useSelector(state => state.config.userRoles);
+  const isGlobalStaff = useSelector(state => state.config.isUserAdmin);
+
+  // Compute shouldShowBanOption per authority table
+  const userIsAdmin = (userRoles || []).includes('Administrator');
+  const userIsModerator = (userRoles || []).includes('Moderator');
+  const userHasDiscussionRole = userIsAdmin || userIsModerator;
+
+  // Check target user's role badges (authorLabel can be comma-separated for multi-role users)
+  const targetRoles = getAuthorRoles(authorLabel);
+
+  const targetIsGlobalStaff = targetRoles.includes('Global Staff')
+    || targetRoles.includes('Staff');
+
+  const targetIsDiscussionAdmin = targetRoles.includes('Administrator');
+
+  const targetIsDiscussionModerator = targetRoles.includes('Moderator');
+
+  const targetHasPrivilegedRole = targetIsGlobalStaff
+    || targetIsDiscussionAdmin
+    || targetIsDiscussionModerator;
+
+  let shouldShowBanOption = true;
+
+  // Global Staff without discussion role cannot ban privileged users
+  if (
+    isGlobalStaff
+    && !userHasDiscussionRole
+    && targetHasPrivilegedRole
+  ) {
+    shouldShowBanOption = false;
+  }
+  // Discussion Moderator cannot ban another Moderator or Admin
+  if (userIsModerator && !userIsAdmin && (targetIsDiscussionModerator || targetIsDiscussionAdmin)) {
+    shouldShowBanOption = false;
+  }
+  // Discussion Admin cannot ban another Admin
+  if (userIsAdmin && targetIsDiscussionAdmin) {
+    shouldShowBanOption = false;
+  }
+
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
   const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
 
