@@ -8,11 +8,10 @@ import {
   matchPath, Route, Routes, useLocation, useMatch,
 } from 'react-router-dom';
 
-import { LearningHeader as Header } from '@edx/frontend-component-header';
-
 import { Spinner } from '../../components';
 import selectCourseTabs from '../../components/NavigationBar/data/selectors';
 import { ALL_ROUTES, DiscussionProvider, Routes as ROUTES } from '../../data/constants';
+import HeaderSlot from '../../plugin-slots/HeaderSlot';
 import DiscussionContext from '../common/context';
 import ContentUnavailable from '../content-unavailable/ContentUnavailable';
 import {
@@ -86,7 +85,7 @@ const DiscussionsHome = () => {
         {!enableInContextSidebar && (
         <>
           <DiscussionsConfirmEmailBanner />
-          <Header courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
+          <HeaderSlot courseOrg={org} courseNumber={courseNumber} courseTitle={courseTitle} />
         </>
         )}
         <main className="container-fluid d-flex flex-column p-0 w-100 font-size" id="main" tabIndex="-1">
