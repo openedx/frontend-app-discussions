@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { ActionRow, AlertModal, Button } from '@openedx/paragon';
 import { Editor } from '@tinymce/tinymce-react';
@@ -152,6 +153,7 @@ const TinyMCEEditor = (props) => {
           relative_urls: false,
           default_link_target: '_blank',
           target_list: false,
+          placeholder: props.placeholder,
           images_upload_handler: uploadHandler,
           setup,
         }}
@@ -176,6 +178,14 @@ const TinyMCEEditor = (props) => {
       </AlertModal>
     </>
   );
+};
+
+TinyMCEEditor.propTypes = {
+  placeholder: PropTypes.string,
+};
+
+TinyMCEEditor.defaultProps = {
+  placeholder: '',
 };
 
 export default React.memo(TinyMCEEditor);
