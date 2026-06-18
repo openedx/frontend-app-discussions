@@ -11,6 +11,7 @@ import { AvatarOutlineAndLabelColors } from '../../../../data/constants';
 import { AuthorLabel } from '../../../common';
 import { useAlertBannerVisible } from '../../../data/hooks';
 import { selectAuthorAvatar } from '../../../posts/data/selectors';
+import { getAuthorRoles } from '../../../utils';
 
 const CommentHeader = ({
   author,
@@ -21,7 +22,8 @@ const CommentHeader = ({
   lastEdit,
   commentUsers,
 }) => {
-  const colorClass = AvatarOutlineAndLabelColors[authorLabel];
+  const firstRole = getAuthorRoles(authorLabel)[0];
+  const colorClass = AvatarOutlineAndLabelColors[firstRole];
   const hasAnyAlert = useAlertBannerVisible({
     author,
     abuseFlagged,
@@ -64,7 +66,7 @@ const CommentHeader = ({
 
 CommentHeader.propTypes = {
   author: PropTypes.string.isRequired,
-  authorLabel: PropTypes.string,
+  authorLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   abuseFlagged: PropTypes.bool.isRequired,
   closed: PropTypes.bool,
   createdAt: PropTypes.string.isRequired,
