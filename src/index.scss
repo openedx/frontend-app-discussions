@@ -585,7 +585,19 @@ code {
 
 .author-name {
   line-height: 1.5;
-  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+// Prevent role labels from wrapping - keep on single line with ellipsis
+.author-role-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0; // Allow flex items to shrink below content size
 }
 
 .content-unavailable-desktop {

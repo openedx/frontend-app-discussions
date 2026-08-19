@@ -34,8 +34,11 @@ const AlertBanner = ({
   const canSeeLastEditOrClosedAlert = (userHasModerationPrivileges || userIsGroupTa
     || userIsGlobalStaff || userIsContentAuthor
   );
-  const editByLabelColor = AvatarOutlineAndLabelColors[editByLabel];
-  const closedByLabelColor = AvatarOutlineAndLabelColors[closedByLabel];
+  // Extract first role for color lookup (handles comma-separated multi-role strings)
+  const firstEditByRole = editByLabel?.split(',')[0]?.trim();
+  const firstClosedByRole = closedByLabel?.split(',')[0]?.trim();
+  const editByLabelColor = AvatarOutlineAndLabelColors[firstEditByRole];
+  const closedByLabelColor = AvatarOutlineAndLabelColors[firstClosedByRole];
 
   return (
     <>

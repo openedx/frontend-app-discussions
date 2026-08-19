@@ -12,7 +12,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { AvatarOutlineAndLabelColors, Routes, ThreadType } from '../../../data/constants';
 import AuthorLabel from '../../common/AuthorLabel';
 import DiscussionContext from '../../common/context';
-import { discussionsPath, isPostPreviewAvailable } from '../../utils';
+import { discussionsPath, getAuthorRoles, isPostPreviewAvailable } from '../../utils';
 import { selectThread } from '../data/selectors';
 import messages from './messages';
 import { PostAvatar } from './PostHeader';
@@ -34,10 +34,59 @@ const PostLink = ({
     learnerUsername,
   } = useContext(DiscussionContext);
   const {
-    topicId, hasEndorsed, type, author, authorLabel, abuseFlagged, abuseFlaggedCount, read, commentCount,
-    unreadCommentCount, id, pinned, previewBody, title, voted, voteCount, following, groupId, groupName, createdAt,
+    topicId,
+    hasEndorsed,
+    type,
+    author,
+    authorLabel: rawAuthorLabel,
+    authorLabels,
+    abuseFlagged,
+    abuseFlaggedCount,
+    read,
+    commentCount,
+    unreadCommentCount,
+    id,
+    pinned,
+    previewBody,
+    title,
+    voted,
+    voteCount,
+    following,
+    groupId,
+    groupName,
+    createdAt,
     users: postUsers,
-  } = useSelector(selectThread(postId));
+    threadTitle,
+    commentThreadId,
+  } = threadData;
+  const authorLabel = (authorLabels && authorLabels.length > 0) ? authorLabels : rawAuthorLabel;
+
+  // Get the type label to display
+  const getTypeLabel = () => {
+    if (type === 'response') {
+      return 'Response';
+    }
+    if (type === 'comment') {
+      return 'Comment';
+    }
+    return null;
+  };
+
+  // For comments/responses, show parent thread title with arrow
+  const displayTitle = (type === 'response' || type === 'comment') && threadTitle ? threadTitle : title;
+
+  // Strip render_id suffix (e.g., "-thread", "-response", "-comment") for navigation
+  const stripRenderIdSuffix = (idValue) => {
+    if (typeof idValue === 'string') {
+      return idValue.replace(/-(thread|response|comment)$/, '');
+    }
+    return idValue;
+  };
+
+  // For comments/responses, navigate to the parent thread instead of the comment itself
+  const rawNavigationId = (type === 'response' || type === 'comment') && commentThreadId ? commentThreadId : postId;
+  const navigationPostId = stripRenderIdSuffix(rawNavigationId);
+
   const { pathname } = discussionsPath(Routes.COMMENTS.PAGES[page], {
     0: enableInContextSidebar ? 'in-context' : undefined,
     courseId,
@@ -47,8 +96,9 @@ const PostLink = ({
     learnerUsername,
   })();
   const showAnsweredBadge = hasEndorsed && type === ThreadType.QUESTION;
-  const authorLabelColor = AvatarOutlineAndLabelColors[authorLabel];
-  const canSeeReportedBadge = abuseFlagged || abuseFlaggedCount;
+  const firstRole = getAuthorRoles(authorLabel)[0];
+  const authorLabelColor = AvatarOutlineAndLabelColors[firstRole];
+  const canSeeReportedBadge = !!(abuseFlagged || abuseFlaggedCount);
   const isPostRead = read || (!read && commentCount !== unreadCommentCount);
 
   const checkIsSelected = useMemo(
