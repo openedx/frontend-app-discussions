@@ -11,7 +11,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import HTMLLoader from '../../../../components/HTMLLoader';
 import { AvatarOutlineAndLabelColors, ContentActions } from '../../../../data/constants';
 import {
-  ActionsDropdown, AlertBanner, AuthorLabel, Confirmation,
+  ActionsDropdown, AlertBanner, AuthorLabel, AutoSpamAlertBanner, Confirmation,
 } from '../../../common';
 import timeLocale from '../../../common/time-locale';
 import { ContentTypes } from '../../../data/constants';
@@ -26,7 +26,7 @@ const Reply = ({ responseId }) => {
   timeago.register('time-locale', timeLocale);
   const {
     id, abuseFlagged, author, authorLabel, endorsed, lastEdit, closed, closedBy, users: replyUsers,
-    closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel,
+    closeReason, createdAt, threadId, parentId, rawBody, renderedBody, editByLabel, closedByLabel, isSpam,
   } = useSelector(selectCommentOrResponseById(responseId));
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -34,6 +34,8 @@ const Reply = ({ responseId }) => {
   const [isDeleting, showDeleteConfirmation, hideDeleteConfirmation] = useToggle(false);
   const [isReporting, showReportConfirmation, hideReportConfirmation] = useToggle(false);
   const colorClass = AvatarOutlineAndLabelColors[authorLabel];
+  // If isSpam is not provided in the API response, default to false
+  const isSpamFlagged = isSpam || false;
   const hasAnyAlert = useAlertBannerVisible({
     author,
     abuseFlagged,
@@ -120,6 +122,16 @@ const Reply = ({ responseId }) => {
               editByLabel={editByLabel}
               closedByLabel={closedByLabel}
             />
+          </div>
+        </div>
+      )}
+      {isSpamFlagged && (
+        <div className="d-flex">
+          <div className="d-flex invisible">
+            <Avatar />
+          </div>
+          <div className="w-100">
+            <AutoSpamAlertBanner autoSpamFlagged={isSpamFlagged} />
           </div>
         </div>
       )}
