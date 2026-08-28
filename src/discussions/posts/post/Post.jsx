@@ -13,7 +13,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import HTMLLoader from '../../../components/HTMLLoader';
 import { ContentActions, getFullUrl } from '../../../data/constants';
 import { selectorForUnitSubsection, selectTopicContext } from '../../../data/selectors';
-import { AlertBanner, Confirmation } from '../../common';
+import { AlertBanner, AutoSpamAlertBanner, Confirmation } from '../../common';
 import DiscussionContext from '../../common/context';
 import HoverCard from '../../common/HoverCard';
 import withPostingRestrictions from '../../common/withPostingRestrictions';
@@ -33,7 +33,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
   const {
     topicId, abuseFlagged, closed, pinned, voted, hasEndorsed, following, closedBy, voteCount, groupId, groupName,
     closeReason, authorLabel, type: postType, author, title, createdAt, renderedBody, lastEdit, editByLabel,
-    closedByLabel, users: postUsers,
+    closedByLabel, users: postUsers, isSpam,
   } = useSelector(selectThread(postId));
   const intl = useIntl();
   const location = useLocation();
@@ -49,6 +49,8 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
   const userHasModerationPrivileges = useSelector(selectUserHasModerationPrivileges);
   const shouldShowEmailConfirmation = useSelector(selectShouldShowEmailConfirmation);
   const contentCreationRateLimited = useSelector(selectContentCreationRateLimited);
+  // If isSpam is not provided in the API response, default to false
+  const isSpamFlagged = isSpam || false;
 
   const displayPostFooter = following || voteCount || closed || (groupId && userHasModerationPrivileges);
 
@@ -177,6 +179,7 @@ const Post = ({ handleAddResponseButton, openRestrictionDialogue }) => {
         editByLabel={editByLabel}
         closedByLabel={closedByLabel}
       />
+      <AutoSpamAlertBanner autoSpamFlagged={isSpamFlagged} />
       <PostHeader
         abuseFlagged={abuseFlagged}
         author={author}
