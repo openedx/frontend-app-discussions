@@ -51,6 +51,7 @@ const commentsSlice = createSlice({
         };
       } else {
         newState.commentsInThreads = {
+          ...newState.commentsInThreads,
           [threadId]: [
             ...new Set([
               ...(newState.commentsInThreads[threadId] || []),

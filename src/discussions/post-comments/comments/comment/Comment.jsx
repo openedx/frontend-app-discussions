@@ -76,7 +76,7 @@ const Comment = ({
         reverseOrder: sortedOrder,
       }));
     }
-  }, [id, sortedOrder]);
+  }, [id, sortedOrder, showDeleted, shouldIncludeMuted, hasChildren, showFullThread, dispatch]);
 
   const endorseIcons = useMemo(() => (
     actions.find(({ action }) => action === EndorsementStatus.ENDORSED)

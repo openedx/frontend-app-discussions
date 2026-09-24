@@ -41,6 +41,8 @@ function normaliseComments(data) {
   const commentsInComments = {};
   const commentsById = {};
   const ids = [];
+  const seenInComments = {};
+  const seenInThreads = {};
   results.forEach(
     comment => {
       const { parentId, threadId, id } = comment;
@@ -48,15 +50,19 @@ function normaliseComments(data) {
       if (parentId) {
         if (!commentsInComments[parentId]) {
           commentsInComments[parentId] = [];
+          seenInComments[parentId] = new Set();
         }
-        if (!commentsInComments[parentId].includes(id)) {
+        if (!seenInComments[parentId].has(id)) {
+          seenInComments[parentId].add(id);
           commentsInComments[parentId].push(id);
         }
       } else {
         if (!commentsInThreads[threadId]) {
           commentsInThreads[threadId] = [];
+          seenInThreads[threadId] = new Set();
         }
-        if (!commentsInThreads[threadId].includes(id)) {
+        if (!seenInThreads[threadId].has(id)) {
+          seenInThreads[threadId].add(id);
           commentsInThreads[threadId].push(id);
         }
       }
@@ -72,6 +78,8 @@ function normaliseComments(data) {
   };
 }
 
+const pendingThreadFetches = new Set();
+
 export function fetchThreadComments(
   threadId,
   {
@@ -82,7 +90,12 @@ export function fetchThreadComments(
     signal,
   } = {},
 ) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const requestKey = `${threadId}-p${page}-r${reverseOrder}-d${showDeleted}-m${includeMuted}`;
+    if (pendingThreadFetches.has(requestKey)) {
+      return;
+    }
+    pendingThreadFetches.add(requestKey);
     try {
       dispatch(fetchCommentsRequest());
       const data = await getThreadComments(threadId, {
@@ -100,12 +113,28 @@ export function fetchThreadComments(
         dispatch(fetchCommentsFailed());
       }
       logError(error);
+    } finally {
+      pendingThreadFetches.delete(requestKey);
     }
   };
 }
 
-export function fetchCommentResponses(commentId, { page = 1, reverseOrder = true } = {}) {
-  return async (dispatch) => {
+/**
+ * Tracks in-flight fetchCommentResponses calls by commentId.
+ * Prevents duplicate parallel requests for the same comment's responses
+ * when multiple re-renders or sort-order changes fire simultaneously.
+ */
+const pendingResponseFetches = new Set();
+
+export function fetchCommentResponses(commentId, {
+  page = 1, reverseOrder = true, showDeleted = false, includeMuted,
+} = {}) {
+  return async (dispatch, getState) => {
+    const requestKey = `${commentId}-p${page}-r${reverseOrder}-d${showDeleted}-m${includeMuted}`;
+    if (pendingResponseFetches.has(requestKey)) {
+      return;
+    }
+    pendingResponseFetches.add(requestKey);
     try {
       dispatch(fetchCommentResponsesRequest({ commentId }));
       const data = await getCommentResponses(commentId, { page, reverseOrder });
@@ -121,6 +150,8 @@ export function fetchCommentResponses(commentId, { page = 1, reverseOrder = true
         dispatch(fetchCommentResponsesFailed());
       }
       logError(error);
+    } finally {
+      pendingResponseFetches.delete(requestKey);
     }
   };
 }
