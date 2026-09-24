@@ -15,6 +15,7 @@ Factory.define('comment')
   .attrs({
     author: 'edx',
     author_label: 'Staff',
+    author_labels: ['Staff'],
     can_delete: true,
     created_at: () => (new Date()).toISOString(),
     updated_at: () => (new Date()).toISOString(),
