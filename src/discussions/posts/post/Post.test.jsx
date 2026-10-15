@@ -60,9 +60,12 @@ jest.mock('../../common', () => {
   // eslint-disable-next-line react/prop-types
   const MockAlertBanner = () => <div />;
 
+  const MockAutoSpamAlertBanner = () => <div />;
+
   return {
     Confirmation: MockConfirmation,
     AlertBanner: MockAlertBanner,
+    AutoSpamAlertBanner: MockAutoSpamAlertBanner,
   };
 });
 
