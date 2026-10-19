@@ -223,6 +223,46 @@ const messages = defineMessages({
     defaultMessage: 'Taking the course just like you',
     description: 'tooltip for course learners',
   },
+  spamWarningHeading: {
+    id: 'discussions.spamWarning.heading',
+    defaultMessage: 'Reminder',
+    description: 'Heading for the spam warning banner',
+  },
+  spamWarningMessage: {
+    id: 'discussions.spamWarning.message',
+    defaultMessage: 'Faculty and staff will never invite you to join external groups, such as on WhatsApp, or ask for personal or financial information in the discussions. Stay safe, and if you see suspicious activity, please report it.',
+    description: 'Warning message about spam and impersonation in discussion forums',
+  },
+  autoSpamFlaggedMessage: {
+    id: 'discussions.autoSpamFlaggedMessage',
+    defaultMessage: 'Content automatically reported as possible spam pending staff review.',
+    description: 'Message shown when a post is automatically flagged as potential spam',
+  },
+  autoSpamModalTitle: {
+    id: 'discussions.autoSpamModalTitle',
+    defaultMessage: 'What does "automatically reported" mean?',
+    description: 'Title for the modal that explains automatic spam flagging',
+  },
+  autoSpamModalBodyParagraph1: {
+    id: 'discussions.autoSpamModalBodyParagraph1',
+    defaultMessage: 'Some content is flagged by an automated system when it matches patterns commonly associated with spam. This helps reduce harmful or misleading posts in discussions.',
+    description: 'First paragraph of explanation about automatic spam flagging process shown in modal',
+  },
+  autoSpamModalBodyParagraph2: {
+    id: 'discussions.autoSpamModalBodyParagraph2',
+    defaultMessage: 'Automatically reported content is only visible to course staff and remains hidden from learners until action is taken.',
+    description: 'Second paragraph of explanation about automatic spam flagging process shown in modal',
+  },
+  autoSpamModalClose: {
+    id: 'discussions.autoSpamModalClose',
+    defaultMessage: 'Understand',
+    description: 'Button text to close the automatic spam explanation modal',
+  },
+  autoSpamModalIconAlt: {
+    id: 'discussions.autoSpamModalIconAlt',
+    defaultMessage: 'Show more information about automatic flagging',
+    description: 'Alt text for the icon that opens the automatic spam explanation modal',
+  },
 });
 
 export default messages;
