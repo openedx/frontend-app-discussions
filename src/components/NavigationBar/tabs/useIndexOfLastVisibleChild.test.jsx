@@ -75,6 +75,34 @@ describe('useIndexOfLastVisibleChild', () => {
     expect(lastVisibleIndex()).toBe(1);
   });
 
+  it('counts only the tabs when there is no overflow element', () => {
+    const NoOverflow = () => {
+      const [indexOfLastVisibleChild, containerRef] = useIndexOfLastVisibleChild();
+      return (
+        <nav ref={containerRef} data-testid="nav" data-width={250} data-index={indexOfLastVisibleChild}>
+          <a href="#tab" data-width={100}>Tab 0</a>
+          <a href="#tab" data-width={100}>Tab 1</a>
+          <a href="#tab" data-width={100}>Tab 2</a>
+        </nav>
+      );
+    };
+    render(<NoOverflow />);
+    act(() => notifySizeChange());
+
+    expect(lastVisibleIndex()).toBe(1);
+  });
+
+  it('measures nothing while no container is attached', () => {
+    const Unattached = () => {
+      const [indexOfLastVisibleChild] = useIndexOfLastVisibleChild();
+      return <span data-testid="index">{indexOfLastVisibleChild}</span>;
+    };
+    render(<Unattached />);
+
+    expect(observe).not.toHaveBeenCalled();
+    expect(screen.getByTestId('index')).toHaveTextContent('-1');
+  });
+
   it('observes the container and each of its children, and stops on unmount', () => {
     const { unmount } = renderNav({ tabWidths: [100, 100], containerWidth: 500 });
     const nav = screen.getByTestId('nav');
