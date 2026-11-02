@@ -30,12 +30,12 @@ export default function useIndexOfLastVisibleChild() {
       return undefined;
     }
     const children = [...container.children];
+    const overflow = overflowElementRef.current;
+    const items = children.filter(child => child !== overflow);
 
     const measure = () => {
-      const overflow = overflowElementRef.current;
       const availableWidth = container.getBoundingClientRect().width;
       let usedWidth = overflow ? overflow.getBoundingClientRect().width : 0;
-      const items = children.filter(child => child !== overflow);
       const firstHidden = items.findIndex(child => {
         usedWidth += child.getBoundingClientRect().width;
         return usedWidth > availableWidth;

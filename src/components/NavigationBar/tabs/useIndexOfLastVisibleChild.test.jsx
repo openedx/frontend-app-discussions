@@ -5,7 +5,7 @@ import { act, render, screen } from '@testing-library/react';
 
 import useIndexOfLastVisibleChild from './useIndexOfLastVisibleChild';
 
-const TestNav = ({ tabWidths, containerWidth }) => {
+const TestNav = ({ tabWidths, containerWidth, withOverflow = true }) => {
   const [indexOfLastVisibleChild, containerRef, , overflowRef] = useIndexOfLastVisibleChild();
   return (
     <nav ref={containerRef} data-testid="nav" data-width={containerWidth} data-index={indexOfLastVisibleChild}>
@@ -13,7 +13,7 @@ const TestNav = ({ tabWidths, containerWidth }) => {
         // eslint-disable-next-line react/no-array-index-key
         <a key={index} href="#tab" data-width={width}>{`Tab ${index}`}</a>
       ))}
-      <div ref={overflowRef} data-width={60}>More...</div>
+      {withOverflow && <div ref={overflowRef} data-width={60}>More...</div>}
     </nav>
   );
 };
@@ -21,6 +21,7 @@ const TestNav = ({ tabWidths, containerWidth }) => {
 TestNav.propTypes = {
   tabWidths: PropTypes.arrayOf(PropTypes.number).isRequired,
   containerWidth: PropTypes.number.isRequired,
+  withOverflow: PropTypes.bool,
 };
 
 describe('useIndexOfLastVisibleChild', () => {
@@ -76,18 +77,7 @@ describe('useIndexOfLastVisibleChild', () => {
   });
 
   it('counts only the tabs when there is no overflow element', () => {
-    const NoOverflow = () => {
-      const [indexOfLastVisibleChild, containerRef] = useIndexOfLastVisibleChild();
-      return (
-        <nav ref={containerRef} data-testid="nav" data-width={250} data-index={indexOfLastVisibleChild}>
-          <a href="#tab" data-width={100}>Tab 0</a>
-          <a href="#tab" data-width={100}>Tab 1</a>
-          <a href="#tab" data-width={100}>Tab 2</a>
-        </nav>
-      );
-    };
-    render(<NoOverflow />);
-    act(() => notifySizeChange());
+    renderNav({ tabWidths: [100, 100, 100], containerWidth: 250, withOverflow: false });
 
     expect(lastVisibleIndex()).toBe(1);
   });
