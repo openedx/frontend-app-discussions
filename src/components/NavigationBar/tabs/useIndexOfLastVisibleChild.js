@@ -1,7 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import { useWindowSize } from '@openedx/paragon';
-
 const invisibleStyle = {
   position: 'absolute',
   left: 0,
@@ -10,68 +8,46 @@ const invisibleStyle = {
 };
 
 /**
- * This hook will find the index of the last child of a containing element
- * that fits within its bounding rectangle. This is done by summing the widths
- * of the children until they exceed the width of the container.
+ * Finds the index of the last child of the container that still fits, leaving room for the
+ * overflow ("More...") element. Hidden children keep their width (see `invisibleStyle`), so
+ * they are measured like the visible ones.
  *
- * The hook returns an array containing:
- * [indexOfLastVisibleChild, containerElementRef, invisibleStyle, overflowElementRef]
+ * It re-measures whenever the container or any child changes size, not only when the window
+ * is resized: tab labels also get wider when a web font or a translation arrives after the
+ * first render, while the container keeps its width.
  *
- * indexOfLastVisibleChild - the index of the last visible child
- * containerElementRef - a ref to be added to the containing html node
- * invisibleStyle - a set of styles to be applied to child of the containing node
- *    if it needs to be hidden. These styles remove the element visually, from
- *    screen readers, and from normal layout flow. But, importantly, these styles
- *    preserve the width of the element, so that future width calculations will
- *    still be accurate.
- * overflowElementRef - a ref to be added to an html node inside the container
- *    that is likely to be used to contain a "More" type dropdown or other
- *    mechanism to reveal hidden children. The width of this element is always
- *    included when determining which children will fit or not. Usage of this ref
- *    is optional.
+ * Returns [indexOfLastVisibleChild, containerElementRef, invisibleStyle, overflowElementRef].
  */
 export default function useIndexOfLastVisibleChild() {
   const containerElementRef = useRef(null);
   const overflowElementRef = useRef(null);
-  const containingRectRef = useRef({});
   const [indexOfLastVisibleChild, setIndexOfLastVisibleChild] = useState(-1);
-  const windowSize = useWindowSize();
 
+  // No dependency list: the children to observe are collected again after every render.
   useLayoutEffect(() => {
-    const containingRect = containerElementRef.current.getBoundingClientRect();
-
-    // No-op if the width is unchanged.
-    // (Assumes tabs themselves don't change count or width).
-    if (!containingRect.width === containingRectRef.current.width) {
-      return;
+    const container = containerElementRef.current;
+    if (!container) {
+      return undefined;
     }
-    // Update for future comparison
-    containingRectRef.current = containingRect;
+    const children = [...container.children];
 
-    // Get array of child nodes from NodeList form
-    const childNodesArr = Array.prototype.slice.call(containerElementRef.current.children);
-    const { nextIndexOfLastVisibleChild } = childNodesArr
-      // filter out the overflow element
-      .filter(childNode => childNode !== overflowElementRef.current)
-      // sum the widths to find the last visible element's index
-      .reduce((acc, childNode, index) => {
-        // use floor to prevent rounding errors
-        acc.sumWidth += Math.floor(childNode.getBoundingClientRect().width);
-        if (acc.sumWidth <= containingRect.width) {
-          acc.nextIndexOfLastVisibleChild = index;
-        }
-        return acc;
-      }, {
-        // Include the overflow element's width to begin with. Doing this means
-        // sometimes we'll show a dropdown with one item in it when it would fit,
-        // but allowing this case dramatically simplifies the calculations we need
-        // to do above.
-        sumWidth: overflowElementRef.current ? overflowElementRef.current.getBoundingClientRect().width : 0,
-        nextIndexOfLastVisibleChild: -1,
+    const measure = () => {
+      const overflow = overflowElementRef.current;
+      const availableWidth = container.getBoundingClientRect().width;
+      let usedWidth = overflow ? overflow.getBoundingClientRect().width : 0;
+      const items = children.filter(child => child !== overflow);
+      const firstHidden = items.findIndex(child => {
+        usedWidth += child.getBoundingClientRect().width;
+        return usedWidth > availableWidth;
       });
+      setIndexOfLastVisibleChild(firstHidden === -1 ? items.length - 1 : firstHidden - 1);
+    };
 
-    setIndexOfLastVisibleChild(nextIndexOfLastVisibleChild);
-  }, [windowSize, containerElementRef.current]);
+    // Observing an element also reports its current size, which gives the first measurement.
+    const observer = new ResizeObserver(measure);
+    [container, ...children].forEach(element => observer.observe(element));
+    return () => observer.disconnect();
+  });
 
   return [indexOfLastVisibleChild, containerElementRef, invisibleStyle, overflowElementRef];
 }
