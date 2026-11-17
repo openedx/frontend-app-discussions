@@ -48,9 +48,12 @@ describe('Learner selectors test cases', () => {
       })]);
 
     axiosMock.onGet(`${userProfileApiUrl}?username=learner-1,learner-2,learner-3`)
-      .reply(() => [200, Factory.build('learnersProfile', {}, {
-        username: ['learner-1', 'learner-2', 'learner-3'],
-      }).profiles]);
+      .reply(() => [200, {
+        next: null,
+        results: Factory.build('learnersProfile', {}, {
+          username: ['learner-1', 'learner-2', 'learner-3'],
+        }).profiles,
+      }]);
 
     await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
     state = store.getState();

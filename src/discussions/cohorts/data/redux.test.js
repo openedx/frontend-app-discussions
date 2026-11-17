@@ -38,7 +38,25 @@ describe('Cohorts data layer tests', () => {
 
   it('successfully fetch course cohorts', async () => {
     axiosMock.onGet(getCohortsApiUrl(courseId))
-      .reply(200, Factory.buildList('cohort', 3));
+      .reply(200, { next: null, results: Factory.buildList('cohort', 3) });
+
+    await executeThunk(
+      fetchCourseCohorts(courseId),
+      store.dispatch,
+      store.getState,
+    );
+
+    expect(store.getState().cohorts.cohorts.map(cohort => cohort.id))
+      .toEqual(['cohort-1', 'cohort-2', 'cohort-3']);
+  });
+
+  it('fetches every page of course cohorts', async () => {
+    const [first, second, third] = Factory.buildList('cohort', 3);
+    const nextPageUrl = `${getCohortsApiUrl(courseId)}?page=2&page_size=100`;
+    axiosMock.onGet(getCohortsApiUrl(courseId))
+      .reply(200, { next: nextPageUrl, results: [first, second] });
+    axiosMock.onGet(nextPageUrl)
+      .reply(200, { next: null, results: [third] });
 
     await executeThunk(
       fetchCourseCohorts(courseId),
@@ -52,7 +70,7 @@ describe('Cohorts data layer tests', () => {
 
   it('failed fetch different course cohorts', async () => {
     axiosMock.onGet(getCohortsApiUrl(courseId))
-      .reply(200, Factory.buildList('cohort', 3));
+      .reply(200, { next: null, results: Factory.buildList('cohort', 3) });
     axiosMock.onGet(getCohortsApiUrl(courseId2))
       .reply(404);
 

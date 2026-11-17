@@ -183,7 +183,7 @@ describe('Learner Posts View', () => {
     { searchBy: 'cohort-1', result: 2 },
   ])('successfully display learners by %s.', async ({ searchBy, result }) => {
     await setUpPrivilages(axiosMock, store, true);
-    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, { next: null, results: Factory.buildList('cohort', 3) });
 
     await executeThunk(fetchCourseCohorts(courseId), store.dispatch, store.getState);
     await renderComponent();
