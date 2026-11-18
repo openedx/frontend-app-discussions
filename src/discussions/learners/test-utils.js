@@ -28,9 +28,12 @@ export async function setupLearnerMockResponse({
     })]);
 
   axiosMock.onGet(`${getUserProfileApiUrl()}?username=learner-1,learner-2,learner-3`)
-    .reply(() => [statusCode, Factory.build('learnersProfile', {}, {
-      username: ['learner-1', 'learner-2', 'learner-3'],
-    }).profiles]);
+    .reply(() => [statusCode, {
+      next: null,
+      results: Factory.build('learnersProfile', {}, {
+        username: ['learner-1', 'learner-2', 'learner-3'],
+      }).profiles,
+    }]);
 
   await executeThunk(fetchLearners(courseId), store.dispatch, store.getState);
   return store.getState().learners;

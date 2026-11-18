@@ -5,6 +5,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 
 import { setupLearnerMockResponse, setupPostsMockResponse } from '../test-utils';
+import { getUserProfiles } from './api';
 
 import './__factories__';
 
@@ -27,6 +28,11 @@ describe('Learner api test cases', () => {
 
   afterEach(() => {
     axiosMock.reset();
+  });
+
+  it('does not ask for profiles when there are no learners', async () => {
+    expect(await getUserProfiles([])).toEqual([]);
+    expect(axiosMock.history.get).toHaveLength(0);
   });
 
   it(

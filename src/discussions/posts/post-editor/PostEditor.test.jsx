@@ -111,7 +111,7 @@ describe('PostEditor submit Form', () => {
     });
     await executeThunk(fetchTab(courseId, 'outline'), store.dispatch, store.getState);
     await executeThunk(fetchCourseTopics(courseId), store.dispatch, store.getState);
-    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, { next: null, results: Factory.buildList('cohort', 3) });
   });
 
   test('successfully submits a new post with CAPTCHA', async () => {
@@ -390,7 +390,7 @@ describe('PostEditor', () => {
 
     beforeEach(async () => {
       axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
-      axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
+      axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, { next: null, results: Factory.buildList('cohort', 3) });
     });
 
     async function setupData(config = {}, settings = {}) {

@@ -96,9 +96,12 @@ describe('LearnersView', () => {
       .reply(() => [200, learnersData]);
 
     axiosMock.onGet(`${getUserProfileApiUrl()}?username=${username.join()}`)
-      .reply(() => [200, Factory.build('learnersProfile', {}, {
-        username,
-      }).profiles]);
+      .reply(() => [200, {
+        next: null,
+        results: Factory.build('learnersProfile', {}, {
+          username,
+        }).profiles,
+      }]);
     await executeThunk(fetchLearners(courseId, { usernameSearch: searchText }), store.dispatch, store.getState);
   }
 

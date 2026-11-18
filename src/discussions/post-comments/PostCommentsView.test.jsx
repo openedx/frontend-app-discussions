@@ -217,7 +217,7 @@ describe('ThreadView', () => {
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     axiosMock.onGet(`${getCourseMetadataApiUrl(courseId)}`).reply(200, (Factory.build('navigationBar', 1, { isEnrolled: true })));
     axiosMock.onGet(threadsApiUrl).reply(200, Factory.build('threadsResult'));
-    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 3));
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, { next: null, results: Factory.buildList('cohort', 3) });
     axiosMock.onPatch(new RegExp(`${commentsApiUrl}*`)).reply(({ url, data }) => {
       const commentId = url.match(/comments\/(?<id>[a-z1-9-]+)\//).groups.id;
       const { rawBody } = camelCaseObject(JSON.parse(data));

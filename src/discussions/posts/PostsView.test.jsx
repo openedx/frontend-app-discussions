@@ -97,7 +97,7 @@ describe('PostsView', () => {
     });
     Factory.resetAll();
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
-    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, Factory.buildList('cohort', 1));
+    axiosMock.onGet(getCohortsApiUrl(courseId)).reply(200, { next: null, results: Factory.buildList('cohort', 1) });
     axiosMock.onGet(threadsApiUrl)
       .reply((args) => {
         const threadAttrs = { previewBody: 'thread preview body' };
