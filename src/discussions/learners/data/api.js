@@ -27,9 +27,14 @@ export async function getLearners(courseId, params) {
 
 /**
  * Get user profile
- * @param {string} usernames
+ * @param {string[]} usernames
  */
 export async function getUserProfiles(usernames) {
+  // Without a username the accounts API lists every account the caller may see, so there is
+  // nothing to ask for when the page of learners is empty.
+  if (!usernames.length) {
+    return [];
+  }
   return getAllPages(`${getUserProfileApiUrl()}?username=${usernames.join()}`);
 }
 
